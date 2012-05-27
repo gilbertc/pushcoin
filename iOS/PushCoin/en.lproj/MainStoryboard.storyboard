@@ -18,7 +18,7 @@
                             <navigationBar contentMode="scaleToFill" id="fxF-wy-hof">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" red="0.82745105029999999" green="0.83921575550000005" blue="0.78039222959999999" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="tintColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="deviceRGB"/>
                                 <items>
                                     <navigationItem id="kfw-Dg-J3T">
                                         <barButtonItem key="leftBarButtonItem" title="Edit" id="iC8-yw-L1x">
@@ -37,7 +37,6 @@
                             <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" id="WFa-ys-yMX">
                                 <rect key="frame" x="0.0" y="44" width="320" height="367"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -306,7 +305,7 @@
                             <navigationBar contentMode="scaleToFill" barStyle="blackOpaque" id="47J-w1-1Z2">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem title="Account" id="udQ-VT-j9L">
                                         <barButtonItem key="leftBarButtonItem" title="Settings" id="FUc-T4-ihj">
@@ -473,7 +472,7 @@
                             <navigationBar contentMode="scaleToFill" id="6bA-Pm-xba">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem title="Transfer" id="Xbw-F3-Eji"/>
                                 </items>
@@ -645,6 +644,114 @@
         <image name="logo.png" width="295" height="103"/>
         <image name="second.png" width="30" height="30"/>
     </resources>
+    <classes>
+        <class className="AddPaymentController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddPaymentController.h"/>
+            <relationships>
+                <relationship kind="action" name="addButtonTapped:"/>
+                <relationship kind="action" name="backgroundTapped:"/>
+                <relationship kind="action" name="cancelButtonTapped:"/>
+                <relationship kind="outlet" name="addButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="paymentTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="BalanceCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BalanceCell.h"/>
+        </class>
+        <class className="ChallengeController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChallengeController.h"/>
+        </class>
+        <class className="HistoryController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HistoryController.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshButtonTapped:"/>
+                <relationship kind="action" name="settingsButtonTapped:"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="KeypadController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/KeypadController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelButtonTapped:"/>
+                <relationship kind="action" name="clearButtonTapped:"/>
+                <relationship kind="outlet" name="placeHolderView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="MainTabBarController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainTabBarController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tabBar" candidateClass="UITabBar"/>
+            </relationships>
+        </class>
+        <class className="PayController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PayController.h"/>
+            <relationships>
+                <relationship kind="action" name="addPayment:"/>
+                <relationship kind="action" name="editPayment:"/>
+                <relationship kind="action" name="push:"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="placeHolderView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="PaymentDetailsController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PaymentDetailsController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelButtonTapped:"/>
+                <relationship kind="outlet" name="tipTableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="PaymentTipCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PaymentTipCell.h"/>
+        </class>
+        <class className="QRViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/QRViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addTipsButtonTapped:"/>
+                <relationship kind="action" name="closeButtonTapped:"/>
+                <relationship kind="outlet" name="detailView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+            </relationships>
+        </class>
+        <class className="ReceiveController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReceiveController.h"/>
+            <relationships>
+                <relationship kind="action" name="backgroundTouched:"/>
+                <relationship kind="action" name="scan:"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="paymentTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="RegistrationController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RegistrationController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="registrationIDTextBox" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="SettingsController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsController.h"/>
+            <relationships>
+                <relationship kind="action" name="closeButtonTapped:"/>
+                <relationship kind="action" name="enablePasscode:"/>
+                <relationship kind="action" name="preAuthorizationTest:"/>
+                <relationship kind="action" name="unregister:"/>
+                <relationship kind="outlet" name="passcodeButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="preAuthorizationTestButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="unregisterButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="SettingsNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsNavigationController.h"/>
+        </class>
+        <class className="TransactionCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TransactionCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="detailTextLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="rightTextLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="titleTextLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

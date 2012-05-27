@@ -72,8 +72,8 @@
     frame.size.height = frame.size.height - 48;
     self.gridView = [[GMGridView alloc] initWithFrame: frame];
     self.gridView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    //self.gridView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"payment_grid_background.png"]];  
-    self.gridView.backgroundColor = [UIColor clearColor];
+    self.gridView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shortcut_grid_background.png"]];  
+    //self.gridView.backgroundColor = [UIColor clearColor];
     self.gridView.opaque = YES;
 
     self.gridView.actionDelegate = self;
