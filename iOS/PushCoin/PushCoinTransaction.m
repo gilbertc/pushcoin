@@ -9,10 +9,15 @@
 #import "PushCoinTransaction.h"
 
 @implementation PushCoinTransaction
-@synthesize amountScale = amountScale_;
-@synthesize amountValue = amountValue_;
+@synthesize paymentScale = paymentScale_;
+@synthesize paymentValue = paymentValue_;
+@synthesize tipScale = tipScale_;
+@synthesize tipValue = tipValue_;
+@synthesize taxScale = taxScale_;
+@synthesize taxValue = taxValue_;
 @synthesize transactionID = transactionID_;
 @synthesize transactionType = transactionType_;
+@synthesize counterpartyID = counterpartyID_;
 @synthesize merchantName = merchantName_;
 @synthesize timestamp = timestamp_;
 
@@ -22,9 +27,14 @@
     if (self)
     {
         self.transactionID = @"";
+        self.counterpartyID = @"";
         self.transactionType = 'C';
-        self.amountValue = 0;
-        self.amountScale = 0;
+        self.paymentValue = 0;
+        self.paymentScale = 0;
+        self.tipValue = 0;
+        self.tipScale = 0;
+        self.taxValue = 0;
+        self.taxScale = 0;
         self.merchantName = @"";
         self.timestamp = 0;
     }
@@ -32,20 +42,30 @@
 }
 
 -(id) initWithID:(NSString *)transactionID
+    counterpartyID:(NSString *)counterpartyID
             type:(char)transactionType
-     amountValue:(NSUInteger)amountValue
-     amountScale:(NSInteger)amountScale
+     paymentValue:(NSUInteger)paymentValue
+     paymentScale:(NSInteger)paymentScale
+    tipValue:(NSUInteger)tipValue
+    tipScale:(NSInteger)tipScale
+    taxValue:(NSUInteger)taxValue
+    taxScale:(NSInteger)taxScale
     merchantName:(NSString*)merchantName
        timestamp:(NSUInteger)timestamp
 {
     self = [super init];
     if (self)
     {
-        self.amountScale = amountScale;
-        self.amountValue = amountValue;
+        self.paymentScale = paymentScale;
+        self.paymentValue = paymentValue;
+        self.tipValue = tipValue;
+        self.tipScale = tipScale;
+        self.taxValue = taxValue;
+        self.taxScale = taxScale;
         self.merchantName = merchantName;
         self.transactionType = transactionType;
         self.transactionID = transactionID;
+        self.counterpartyID = counterpartyID;
         self.timestamp = timestamp;
     }
     return self;
@@ -54,9 +74,14 @@
 -(id) copyWithZone:(NSZone *)zone
 {
     PushCoinTransaction * other = [[PushCoinTransaction alloc] initWithID:self.transactionID
+                                                             counterpartyID:self.counterpartyID
                                                                      type:self.transactionType
-                                                              amountValue:self.amountValue
-                                                              amountScale:self.amountScale
+                                                              paymentValue:self.paymentValue
+                                                              paymentScale:self.paymentScale
+                                                              tipValue:self.tipValue
+                                                              tipScale:self.tipScale
+                                                              taxValue:self.taxValue
+                                                              taxScale:self.taxScale
                                                              merchantName:self.merchantName
                                                                 timestamp:self.timestamp];
     return other;

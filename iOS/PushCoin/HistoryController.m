@@ -171,9 +171,14 @@ andDescription:(NSString *)description
         Transaction * trx = [msg.block.tx_seq.val objectAtIndex:i];
         
         PushCoinTransaction * pTrx = [[PushCoinTransaction alloc] initWithID:trx.transaction_id.data.bytesToHexString
+                                                              counterpartyID:trx.counterparty_id.data.bytesToHexString
                                                                         type:trx.tx_type.val
-                                                                 amountValue:trx.amount.value.val
-                                                                 amountScale:trx.amount.scale.val
+                                                                paymentValue:trx.payment.value.val
+                                                                paymentScale:trx.payment.scale.val
+                                                                    tipValue:trx.tip.value.val
+                                                                    tipScale:trx.tip.value.val
+                                                                    taxValue:trx.tax.value.val
+                                                                    taxScale:trx.tax.scale.val
                                                                 merchantName:trx.merchant_name.string
                                                                    timestamp:trx.utc_transaction_time.val];
         [transactions addObject:pTrx];
@@ -253,7 +258,7 @@ andDescription:(NSString *)description
     
         PushCoinTransaction * trx = [transactions objectAtIndex:indexPath.row];
     
-        Float32 amount = trx.amountValue * pow(10.0f, (Float32)trx.amountScale);
+        Float32 amount = trx.paymentValue * pow(10.0f, (Float32)trx.paymentScale);
         if (trx.transactionType == 'D')
             amount *= -1.0f;
         

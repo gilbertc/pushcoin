@@ -40,9 +40,12 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 
 @interface Transaction : PCOSBlock
 @property (nonatomic, strong) PCOSShortArray * transaction_id;
+@property (nonatomic, strong) PCOSShortArray * counterparty_id;
 @property (nonatomic, strong) PCOSInt64 * utc_transaction_time;
 @property (nonatomic, strong) PCOSChar * tx_type;
-@property (nonatomic, strong) Amount * amount;
+@property (nonatomic, strong) Amount * payment;
+@property (nonatomic, strong) Amount * tip;
+@property (nonatomic, strong) Amount * tax;
 @property (nonatomic, strong) PCOSFixedArray * currency;
 @property (nonatomic, strong) PCOSShortArray * merchant_name;
 @property (nonatomic, strong) PCOSShortArray * merchant_account;

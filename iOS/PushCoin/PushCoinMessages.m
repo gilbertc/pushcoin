@@ -80,9 +80,12 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 
 @implementation Transaction
 @synthesize transaction_id;
+@synthesize counterparty_id;
 @synthesize utc_transaction_time;
 @synthesize tx_type;
-@synthesize amount;
+@synthesize payment;
+@synthesize tip;
+@synthesize tax;
 @synthesize currency;
 @synthesize merchant_name;
 @synthesize merchant_account;
@@ -96,9 +99,12 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     if (self)
     {
         self.transaction_id =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
+        self.counterparty_id =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
         self.utc_transaction_time = [[PCOSInt64 alloc] init];
         self.tx_type =[[PCOSChar alloc] init]; 
-        self.amount =[[Amount alloc] init]; 
+        self.payment =[[Amount alloc] init]; 
+        self.tip =[[Amount alloc] init]; 
+        self.tax =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
         self.merchant_name =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
         self.merchant_account =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
@@ -107,9 +113,12 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.invoice =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
         
         [self addField:self.transaction_id withName:@"transaction_id"];
+        [self addField:self.counterparty_id withName:@"counterparty_id"];
         [self addField:self.utc_transaction_time withName:@"utc_transaction_time"];
         [self addField:self.tx_type withName:@"tx_type"];
-        [self addField:self.amount withName:@"amount"];
+        [self addField:self.payment withName:@"payment"];
+        [self addField:self.tip withName:@"tip"];
+        [self addField:self.tax withName:@"tax"];
         [self addField:self.currency withName:@"currency"];
         [self addField:self.merchant_name withName:@"merchant_name"];
         [self addField:self.merchant_account withName:@"merchant_account"];

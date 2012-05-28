@@ -10,19 +10,26 @@
 
 @interface PushCoinTransaction : NSObject<NSCopying>
 @property (nonatomic, strong) NSString * transactionID;
+@property (nonatomic, strong) NSString * counterpartyID;
 @property (nonatomic, assign) char transactionType;
-@property (nonatomic, assign) NSUInteger amountValue;
-@property (nonatomic, assign) NSInteger amountScale;
+@property (nonatomic, assign) NSUInteger paymentValue;
+@property (nonatomic, assign) NSInteger paymentScale;
+@property (nonatomic, assign) NSUInteger tipValue;
+@property (nonatomic, assign) NSInteger tipScale;
+@property (nonatomic, assign) NSUInteger taxValue;
+@property (nonatomic, assign) NSInteger taxScale;
 @property (nonatomic, strong) NSString * merchantName;
 @property (nonatomic, assign) NSUInteger timestamp;
 
-
 -(id) initWithID:(NSString *)transactionID
+  counterpartyID:(NSString *)counterpartyID
             type:(char)transactionType
-     amountValue:(NSUInteger)amountValue
-     amountScale:(NSInteger)amountScale
+    paymentValue:(NSUInteger)paymentValue
+    paymentScale:(NSInteger)paymentScale
+        tipValue:(NSUInteger)tipValue
+        tipScale:(NSInteger)tipScale
+        taxValue:(NSUInteger)taxValue
+        taxScale:(NSInteger)taxScale
     merchantName:(NSString*)merchantName
        timestamp:(NSUInteger)timestamp;
-
-
 @end
