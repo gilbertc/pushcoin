@@ -83,15 +83,15 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 @synthesize counterparty_id;
 @synthesize utc_transaction_time;
 @synthesize tx_type;
+@synthesize tx_context;
 @synthesize payment;
 @synthesize tip;
 @synthesize tax;
 @synthesize currency;
 @synthesize merchant_name;
-@synthesize merchant_account;
 @synthesize pta_receiver;
-@synthesize pta_ref_data;
 @synthesize invoice;
+@synthesize note;
 
 -(id) init
 {
@@ -102,29 +102,29 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.counterparty_id =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
         self.utc_transaction_time = [[PCOSInt64 alloc] init];
         self.tx_type =[[PCOSChar alloc] init]; 
+        self.tx_context =[[PCOSChar alloc] init]; 
         self.payment =[[Amount alloc] init]; 
         self.tip =[[Amount alloc] init]; 
         self.tax =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
         self.merchant_name =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
-        self.merchant_account =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
         self.pta_receiver =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
-        self.pta_ref_data =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
         self.invoice =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
+        self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
         
         [self addField:self.transaction_id withName:@"transaction_id"];
         [self addField:self.counterparty_id withName:@"counterparty_id"];
         [self addField:self.utc_transaction_time withName:@"utc_transaction_time"];
         [self addField:self.tx_type withName:@"tx_type"];
+        [self addField:self.tx_context withName:@"tx_context"];
         [self addField:self.payment withName:@"payment"];
         [self addField:self.tip withName:@"tip"];
         [self addField:self.tax withName:@"tax"];
         [self addField:self.currency withName:@"currency"];
         [self addField:self.merchant_name withName:@"merchant_name"];
-        [self addField:self.merchant_account withName:@"merchant_account"];
         [self addField:self.pta_receiver withName:@"pta_receiver"];
-        [self addField:self.pta_ref_data withName:@"pta_ref_data"];
         [self addField:self.invoice withName:@"invoice"];
+        [self addField:self.note withName:@"note"];
     }
     return self;
 }

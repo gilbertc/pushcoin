@@ -43,15 +43,15 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @property (nonatomic, strong) PCOSShortArray * counterparty_id;
 @property (nonatomic, strong) PCOSInt64 * utc_transaction_time;
 @property (nonatomic, strong) PCOSChar * tx_type;
+@property (nonatomic, strong) PCOSChar * tx_context;
 @property (nonatomic, strong) Amount * payment;
 @property (nonatomic, strong) Amount * tip;
 @property (nonatomic, strong) Amount * tax;
 @property (nonatomic, strong) PCOSFixedArray * currency;
 @property (nonatomic, strong) PCOSShortArray * merchant_name;
-@property (nonatomic, strong) PCOSShortArray * merchant_account;
 @property (nonatomic, strong) PCOSShortArray * pta_receiver;
-@property (nonatomic, strong) PCOSShortArray * pta_ref_data;
 @property (nonatomic, strong) PCOSShortArray * invoice;
+@property (nonatomic, strong) PCOSShortArray * note;
 @end
 
 /* Error Message */

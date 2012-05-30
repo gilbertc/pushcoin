@@ -173,6 +173,7 @@ andDescription:(NSString *)description
         PushCoinTransaction * pTrx = [[PushCoinTransaction alloc] initWithID:trx.transaction_id.data.bytesToHexString
                                                               counterpartyID:trx.counterparty_id.data.bytesToHexString
                                                                         type:trx.tx_type.val
+                                                                     context:trx.tx_context.val
                                                                 paymentValue:trx.payment.value.val
                                                                 paymentScale:trx.payment.scale.val
                                                                     tipValue:trx.tip.value.val

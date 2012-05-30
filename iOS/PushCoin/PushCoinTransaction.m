@@ -17,6 +17,7 @@
 @synthesize taxValue = taxValue_;
 @synthesize transactionID = transactionID_;
 @synthesize transactionType = transactionType_;
+@synthesize transactionContext = transactionContext_;
 @synthesize counterpartyID = counterpartyID_;
 @synthesize merchantName = merchantName_;
 @synthesize timestamp = timestamp_;
@@ -29,6 +30,7 @@
         self.transactionID = @"";
         self.counterpartyID = @"";
         self.transactionType = 'C';
+        self.transactionContext = 'P';
         self.paymentValue = 0;
         self.paymentScale = 0;
         self.tipValue = 0;
@@ -42,14 +44,15 @@
 }
 
 -(id) initWithID:(NSString *)transactionID
-    counterpartyID:(NSString *)counterpartyID
-            type:(char)transactionType
-     paymentValue:(NSUInteger)paymentValue
-     paymentScale:(NSInteger)paymentScale
-    tipValue:(NSUInteger)tipValue
-    tipScale:(NSInteger)tipScale
-    taxValue:(NSUInteger)taxValue
-    taxScale:(NSInteger)taxScale
+  counterpartyID:(NSString *)counterpartyID
+            type:(char)type
+         context:(char)context
+    paymentValue:(NSUInteger)paymentValue
+    paymentScale:(NSInteger)paymentScale
+        tipValue:(NSUInteger)tipValue
+        tipScale:(NSInteger)tipScale
+        taxValue:(NSUInteger)taxValue
+        taxScale:(NSInteger)taxScale
     merchantName:(NSString*)merchantName
        timestamp:(NSUInteger)timestamp
 {
@@ -63,7 +66,8 @@
         self.taxValue = taxValue;
         self.taxScale = taxScale;
         self.merchantName = merchantName;
-        self.transactionType = transactionType;
+        self.transactionType = type;
+        self.transactionContext = context;
         self.transactionID = transactionID;
         self.counterpartyID = counterpartyID;
         self.timestamp = timestamp;
@@ -71,17 +75,32 @@
     return self;
 }
 
+-(NSString *) merchantName
+{
+    if (!merchantName_ || !merchantName_.length)
+    {
+        switch(self.transactionContext)
+        {
+            case 'P': return @"Payment";
+            case 'T': return @"Transfer";
+            default: return @"Unknown";
+        }
+    }
+    return merchantName_;
+}
+
 -(id) copyWithZone:(NSZone *)zone
 {
     PushCoinTransaction * other = [[PushCoinTransaction alloc] initWithID:self.transactionID
-                                                             counterpartyID:self.counterpartyID
+                                                           counterpartyID:self.counterpartyID
                                                                      type:self.transactionType
-                                                              paymentValue:self.paymentValue
-                                                              paymentScale:self.paymentScale
-                                                              tipValue:self.tipValue
-                                                              tipScale:self.tipScale
-                                                              taxValue:self.taxValue
-                                                              taxScale:self.taxScale
+                                                                  context:self.transactionContext
+                                                             paymentValue:self.paymentValue
+                                                             paymentScale:self.paymentScale
+                                                                 tipValue:self.tipValue
+                                                                 tipScale:self.tipScale
+                                                                 taxValue:self.taxValue
+                                                                 taxScale:self.taxScale
                                                              merchantName:self.merchantName
                                                                 timestamp:self.timestamp];
     return other;

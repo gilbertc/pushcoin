@@ -12,6 +12,7 @@
 @property (nonatomic, strong) NSString * transactionID;
 @property (nonatomic, strong) NSString * counterpartyID;
 @property (nonatomic, assign) char transactionType;
+@property (nonatomic, assign) char transactionContext;
 @property (nonatomic, assign) NSUInteger paymentValue;
 @property (nonatomic, assign) NSInteger paymentScale;
 @property (nonatomic, assign) NSUInteger tipValue;
@@ -23,7 +24,8 @@
 
 -(id) initWithID:(NSString *)transactionID
   counterpartyID:(NSString *)counterpartyID
-            type:(char)transactionType
+            type:(char)type
+         context:(char)context
     paymentValue:(NSUInteger)paymentValue
     paymentScale:(NSInteger)paymentScale
         tipValue:(NSUInteger)tipValue
