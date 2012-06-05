@@ -130,15 +130,26 @@ class RmoteCall:
 			tx_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(epoch_tx_time))
 			tx_type = body.read_fixed_string(1) # transaction type
 			tx_context = body.read_fixed_string(1) # transaction context: (P)ayment or (T)ransfer
+
+			#amount
 			value = body.read_int64() # value
 			scale = body.read_int16() # scale
 			amount = value * math.pow(10, scale)
-			value = body.read_int64() # value
-			scale = body.read_int16() # scale
-			tip = value * math.pow(10, scale)
-			value = body.read_int64() # value
-			scale = body.read_int16() # scale
-			tax = value * math.pow(10, scale)
+			# tax
+			if bool(body.read_byte()):
+				value = body.read_int64() # value
+				scale = body.read_int16() # scale
+				tax = value * math.pow(10, scale)
+			else:
+				tax = 'not provided'
+			#tip
+			if bool(body.read_byte()):
+				value = body.read_int64() # value
+				scale = body.read_int16() # scale
+				tip = value * math.pow(10, scale)
+			else:
+				tip = 'not provided'
+			
 			currency = body.read_fixed_string(3) # currency
 			merchant_name = body.read_short_string() # merchant name
 			pta_receiver = body.read_short_string() # PTA receiver
@@ -226,15 +237,17 @@ class RmoteCall:
 		r1.write_int64( charge_value ) # value
 		r1.write_int16( charge_scale ) # scale
 
-		# tip
-		(tip_value, tip_scale) = decimal_to_parts(Decimal(self.args['tip']))
-		r1.write_int64( tip_value ) # value
-		r1.write_int16( tip_scale ) # scale
-
 		# tax
+		p2.write_byte(1) # optional indicator
 		(tax_value, tax_scale) = decimal_to_parts(Decimal(self.args['tax']))
 		r1.write_int64( tax_value ) # value
 		r1.write_int16( tax_scale ) # scale
+
+		# tip
+		p1.write_byte(1) # optional indicator
+		(tip_value, tip_scale) = decimal_to_parts(Decimal(self.args['tip']))
+		r1.write_int64( tip_value ) # value
+		r1.write_int16( tip_scale ) # scale
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
 		r1.write_short_string( 'inv-123', max=24 ) # invoice ID
@@ -260,6 +273,7 @@ class RmoteCall:
 		now = long( time.time() + 0.5 )
 		p1.write_int64( now ) # certificate create-time
 		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
+		# p1.write_int64( now + 60*2 ) # certificate expiry
 
 		# payment-limit
 		(payment_int, payment_scale) = decimal_to_parts(Decimal(self.args['limit']))
@@ -343,7 +357,7 @@ class RmoteCall:
 		# optionally generate qr-code
 		try:
 			import qrcode
-			qr = qrcode.QRCode(version=None, error_correction=qrcode.constants.ERROR_CORRECT_L)
+			qr = qrcode.QRCode(version=None, box_size=3, error_correction=qrcode.constants.ERROR_CORRECT_L)
 			qr.add_data( encoded )
 			qr.make(fit=True)
 			img = qr.make_image()
@@ -361,7 +375,7 @@ class RmoteCall:
 		bo = pcos.Block( 'Bo', 512, 'O' )
 		bo.write_short_string( self.args['registration_id'], max=64 ) # registration ID
 		bo.write_long_string( base64.b64decode(TEST_DSA_KEY_PUB_PEM) )
-		bo.write_short_string( ';'.join( ('IceBreaker/1.0', sys.version) ), max=128 )
+		bo.write_long_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ) )
 		req.add( bo )
 
 		res = self.send( req )
