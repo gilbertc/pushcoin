@@ -9,6 +9,7 @@
 @synthesize payment = _payment;
 @synthesize amountLabel = _amountlabel;
 @synthesize centLabel = _centlabel;
+@synthesize currencyLabel = _currencyLabel;
 @synthesize tipLabel = _tipLabel;
 
 -(id) initWithFrame:(CGRect)frame
@@ -55,7 +56,7 @@
     
     CGRect amountFrame = CGRectMake(frame.origin.x + 20, 
                                     frame.origin.y,
-                                    frame.size.width - 50, 
+                                    frame.size.width - 65, 
                                     frame.size.height);
     
     CGRect tipFrame = CGRectMake(frame.origin.x, 
@@ -92,6 +93,22 @@
 	centLabel.layer.shadowOpacity = 0.7f;
 	centLabel.layer.shadowRadius = 0.5;
     self.centLabel = centLabel;
+    
+    UILabel *currencyLabel;
+    currencyLabel = [[UILabel alloc] init];
+	currencyLabel.textAlignment = UITextAlignmentLeft;
+    currencyLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    currencyLabel.text = @"";
+	currencyLabel.backgroundColor = [UIColor clearColor];
+	currencyLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+	currencyLabel.font = [UIFont fontWithName:@"Helvetica" size:10.0f];
+    currencyLabel.opaque = YES;
+	currencyLabel.layer.masksToBounds = NO;
+	currencyLabel.layer.shadowOffset = CGSizeMake(0,-1);
+	currencyLabel.layer.shadowOpacity = 0.7f;
+	currencyLabel.layer.shadowRadius = 0.5;
+    self.currencyLabel = currencyLabel;
+
 
     
     UILabel *tipLabel = [[UILabel alloc] initWithFrame:tipFrame];
@@ -111,6 +128,7 @@
     [[self.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.contentView addSubview: amountLabel];
     [self.contentView addSubview: centLabel];
+    [self.contentView addSubview: currencyLabel];
     [self.contentView addSubview: tipLabel];
 
 }
@@ -125,6 +143,14 @@
                                       26.0f,
                                       self.centLabel.frame.size.width,
                                       self.centLabel.frame.size.height);
+    
+    self.currencyLabel.text = @"USD";
+    [self.currencyLabel sizeToFit];
+    
+    self.currencyLabel.frame = CGRectMake(self.amountLabel.frame.origin.x + self.amountLabel.frame.size.width + 3,
+                                      42.0f,
+                                      self.currencyLabel.frame.size.width,
+                                      self.currencyLabel.frame.size.height);
     
     if (tip != 0.0f)
         self.tipLabel.text = [NSString stringWithFormat:@"+ %d%% tips", (int) (tip * 100)];

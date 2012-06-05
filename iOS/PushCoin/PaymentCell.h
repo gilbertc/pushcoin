@@ -7,6 +7,7 @@
 @property (nonatomic, strong) PushCoinPayment * payment;
 @property (nonatomic, strong) UILabel * amountLabel;
 @property (nonatomic, strong) UILabel * centLabel;
+@property (nonatomic, strong) UILabel * currencyLabel;
 @property (nonatomic, strong) UILabel * tipLabel;
 
 

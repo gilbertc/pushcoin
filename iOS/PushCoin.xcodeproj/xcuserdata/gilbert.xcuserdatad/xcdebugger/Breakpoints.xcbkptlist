@@ -60,11 +60,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/PaymentCell.m"
-         timestampString = "360566551.850083"
+         timestampString = "360573427.372676"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "129"
-         endingLineNumber = "129"
+         startingLineNumber = "155"
+         endingLineNumber = "155"
          landmarkName = "-setAmount:andTip:"
          landmarkType = "5">
       </FileBreakpoint>
