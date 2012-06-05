@@ -280,6 +280,20 @@
     return controller;
 }
 
+-(KKPasscodeViewController *)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
+                                    navigationController:(UINavigationController *)navController
+{
+    KKPasscodeViewController * controller = [[KKPasscodeViewController alloc] init];
+    controller.delegate = delegate;
+    controller.mode = KKPasscodeModeEnter;
+    controller.passcodeLockOn = YES;
+    controller.eraseData = NO;
+    controller.passcode = @"";
+
+    [navController pushViewController:controller animated:YES];
+    return controller;
+}
+
 -(id)viewControllerWithIdentifier:(NSString *) identifier
 {
     UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:[NSBundle mainBundle]];

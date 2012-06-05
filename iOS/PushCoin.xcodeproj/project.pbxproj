@@ -108,6 +108,10 @@
 		0D887E4315689F20004228F3 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E4215689F20004228F3 /* logo.png */; };
 		0D887E461568A0CD004228F3 /* shortcut_grid_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E441568A0CD004228F3 /* shortcut_grid_background.png */; };
 		0D887E471568A0CD004228F3 /* shortcut_grid_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E451568A0CD004228F3 /* shortcut_grid_background@2x.png */; };
+		0DA259DD157DBB2C009AB9A6 /* AccountNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA259DC157DBB2C009AB9A6 /* AccountNavigationController.m */; };
+		0DA259E0157DBB4B009AB9A6 /* ReceiveNavigationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0DA259DF157DBB4B009AB9A6 /* ReceiveNavigationController.mm */; };
+		0DA259E3157DBB5C009AB9A6 /* PayNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA259E2157DBB5C009AB9A6 /* PayNavigationController.m */; };
+		0DA259E5157DD1F7009AB9A6 /* aluminium.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0DA259E4157DD1F7009AB9A6 /* aluminium.jpg */; };
 		0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DACCD731558A02A00A69DED /* PCOSParser.m */; };
 		0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
@@ -118,7 +122,6 @@
 		0DDD095A156F19FC001C36BB /* PaymentDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDD0959156F19FC001C36BB /* PaymentDetailsController.m */; };
 		0DDD095D156F1A42001C36BB /* PaymentTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDD095C156F1A41001C36BB /* PaymentTipCell.m */; };
 		0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */; };
-		0DED6564156DB2AF00E27A72 /* KeypadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DED6563156DB2AF00E27A72 /* KeypadController.m */; };
 		0DED6567156DCDE400E27A72 /* remove.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DED6565156DCDE400E27A72 /* remove.png */; };
 		0DED6568156DCDE400E27A72 /* remove@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DED6566156DCDE400E27A72 /* remove@2x.png */; };
 		0DF680261545B28500F5E784 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 0DF680251545B28500F5E784 /* README */; };
@@ -343,6 +346,13 @@
 		0D887E4215689F20004228F3 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		0D887E441568A0CD004228F3 /* shortcut_grid_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shortcut_grid_background.png; sourceTree = "<group>"; };
 		0D887E451568A0CD004228F3 /* shortcut_grid_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shortcut_grid_background@2x.png"; sourceTree = "<group>"; };
+		0DA259DB157DBB2C009AB9A6 /* AccountNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountNavigationController.h; sourceTree = "<group>"; };
+		0DA259DC157DBB2C009AB9A6 /* AccountNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountNavigationController.m; sourceTree = "<group>"; };
+		0DA259DE157DBB4B009AB9A6 /* ReceiveNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReceiveNavigationController.h; sourceTree = "<group>"; };
+		0DA259DF157DBB4B009AB9A6 /* ReceiveNavigationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReceiveNavigationController.mm; sourceTree = "<group>"; };
+		0DA259E1157DBB5B009AB9A6 /* PayNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayNavigationController.h; sourceTree = "<group>"; };
+		0DA259E2157DBB5C009AB9A6 /* PayNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PayNavigationController.m; sourceTree = "<group>"; };
+		0DA259E4157DD1F7009AB9A6 /* aluminium.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = aluminium.jpg; sourceTree = "<group>"; };
 		0DACCD721558A02A00A69DED /* PCOSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSParser.h; sourceTree = "<group>"; };
 		0DACCD731558A02A00A69DED /* PCOSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSParser.m; sourceTree = "<group>"; };
 		0DAFD23115478E5E0010459A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
@@ -361,8 +371,6 @@
 		0DDD095C156F1A41001C36BB /* PaymentTipCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentTipCell.m; sourceTree = "<group>"; };
 		0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationController.h; sourceTree = "<group>"; };
 		0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationController.m; sourceTree = "<group>"; };
-		0DED6562156DB2AF00E27A72 /* KeypadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeypadController.h; sourceTree = "<group>"; };
-		0DED6563156DB2AF00E27A72 /* KeypadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeypadController.m; sourceTree = "<group>"; };
 		0DED6565156DCDE400E27A72 /* remove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = remove.png; sourceTree = "<group>"; };
 		0DED6566156DCDE400E27A72 /* remove@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "remove@2x.png"; sourceTree = "<group>"; };
 		0DF680251545B28500F5E784 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
@@ -571,8 +579,6 @@
 				0D3EA63E154936C50088EFE1 /* ChallengeController.m */,
 				0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */,
 				0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */,
-				0DED6562156DB2AF00E27A72 /* KeypadController.h */,
-				0DED6563156DB2AF00E27A72 /* KeypadController.m */,
 				0DF8D8DF156E139300AEA91D /* HistoryController.h */,
 				0DF8D8E0156E139300AEA91D /* HistoryController.m */,
 				0DF8D8ED156EFF3100AEA91D /* TransactionCell.h */,
@@ -585,6 +591,12 @@
 				0D041DC415707BDF00F3AABB /* BalanceCell.m */,
 				0D402EE515715AF200DE35EB /* SettingsNavigationController.h */,
 				0D402EE615715AF200DE35EB /* SettingsNavigationController.m */,
+				0DA259DB157DBB2C009AB9A6 /* AccountNavigationController.h */,
+				0DA259DC157DBB2C009AB9A6 /* AccountNavigationController.m */,
+				0DA259DE157DBB4B009AB9A6 /* ReceiveNavigationController.h */,
+				0DA259DF157DBB4B009AB9A6 /* ReceiveNavigationController.mm */,
+				0DA259E1157DBB5B009AB9A6 /* PayNavigationController.h */,
+				0DA259E2157DBB5C009AB9A6 /* PayNavigationController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -708,6 +720,7 @@
 				0D041DC915708D0C00F3AABB /* box_empty@2x.png */,
 				0D041DCA15708D0C00F3AABB /* box_empty.png */,
 				0D041DCB15708D0C00F3AABB /* box_filled@2x.png */,
+				0DA259E4157DD1F7009AB9A6 /* aluminium.jpg */,
 				0D041DCC15708D0C00F3AABB /* box_filled.png */,
 				0DF8D8EB156E255B00AEA91D /* Default@2x.png */,
 				0DF8D8E9156E255600AEA91D /* Default.png */,
@@ -929,6 +942,7 @@
 				0D041DCE15708D0C00F3AABB /* box_empty.png in Resources */,
 				0D041DCF15708D0C00F3AABB /* box_filled@2x.png in Resources */,
 				0D041DD015708D0C00F3AABB /* box_filled.png in Resources */,
+				0DA259E5157DD1F7009AB9A6 /* aluminium.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -964,7 +978,6 @@
 				0D37760E15683949003FB8B3 /* PaymentCell.m in Sources */,
 				0D377612156839BC003FB8B3 /* Common.m in Sources */,
 				0D37761615684E8B003FB8B3 /* PushCoinPayment.m in Sources */,
-				0DED6564156DB2AF00E27A72 /* KeypadController.m in Sources */,
 				0DF8D8E1156E139300AEA91D /* HistoryController.m in Sources */,
 				0DF8D8E4156E1E1800AEA91D /* PushCoinTransaction.m in Sources */,
 				0DF8D8EF156EFF3200AEA91D /* TransactionCell.m in Sources */,
@@ -974,6 +987,9 @@
 				0D041DC515707BDF00F3AABB /* BalanceCell.m in Sources */,
 				0D041DC815708AD000F3AABB /* PasscodeViewController.m in Sources */,
 				0D402EE715715AF300DE35EB /* SettingsNavigationController.m in Sources */,
+				0DA259DD157DBB2C009AB9A6 /* AccountNavigationController.m in Sources */,
+				0DA259E0157DBB4B009AB9A6 /* ReceiveNavigationController.mm in Sources */,
+				0DA259E3157DBB5C009AB9A6 /* PayNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 @implementation PaymentCell
 @synthesize payment = _payment;
 @synthesize amountLabel = _amountlabel;
+@synthesize centLabel = _centlabel;
 @synthesize tipLabel = _tipLabel;
 
 -(id) initWithFrame:(CGRect)frame
@@ -52,9 +53,9 @@
                                         self.contentView.bounds.size.height),
                              self.outerMargin, self.outerMargin);
     
-    CGRect amountFrame = CGRectMake(frame.origin.x, 
+    CGRect amountFrame = CGRectMake(frame.origin.x + 20, 
                                     frame.origin.y,
-                                    frame.size.width, 
+                                    frame.size.width - 50, 
                                     frame.size.height);
     
     CGRect tipFrame = CGRectMake(frame.origin.x, 
@@ -64,12 +65,12 @@
     
 	UILabel *amountLabel;
     amountLabel = [[UILabel alloc] initWithFrame:amountFrame];
-	amountLabel.textAlignment = UITextAlignmentCenter;
+	amountLabel.textAlignment = UITextAlignmentRight;
     amountLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     amountLabel.text = @"";
 	amountLabel.backgroundColor = [UIColor clearColor];
 	amountLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-	amountLabel.font = [UIFont boldSystemFontOfSize:22.0f];
+	amountLabel.font = [UIFont fontWithName:@"Helvetica" size:30.0f];
     amountLabel.opaque = YES;
 	amountLabel.layer.masksToBounds = NO;
 	amountLabel.layer.shadowOffset = CGSizeMake(0,-1);
@@ -77,13 +78,29 @@
 	amountLabel.layer.shadowRadius = 0.5;
     self.amountLabel = amountLabel;
     
+    UILabel *centLabel;
+    centLabel = [[UILabel alloc] init];
+	centLabel.textAlignment = UITextAlignmentLeft;
+    centLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    centLabel.text = @"";
+	centLabel.backgroundColor = [UIColor clearColor];
+	centLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+	centLabel.font = [UIFont fontWithName:@"Helvetica" size:15.0f];
+    centLabel.opaque = YES;
+	centLabel.layer.masksToBounds = NO;
+	centLabel.layer.shadowOffset = CGSizeMake(0,-1);
+	centLabel.layer.shadowOpacity = 0.7f;
+	centLabel.layer.shadowRadius = 0.5;
+    self.centLabel = centLabel;
+
+    
     UILabel *tipLabel = [[UILabel alloc] initWithFrame:tipFrame];
 	tipLabel.textAlignment = UITextAlignmentCenter;
     tipLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 	tipLabel.text = @"";
 	tipLabel.backgroundColor = [UIColor clearColor];
 	tipLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-	tipLabel.font = [UIFont boldSystemFontOfSize:10.0f];
+	tipLabel.font = [UIFont fontWithName:@"Helvetica" size:10.0f];
     tipLabel.opaque = YES;
 	tipLabel.layer.masksToBounds = NO;
 	tipLabel.layer.shadowOffset = CGSizeMake(0,-1);
@@ -93,16 +110,24 @@
     
     [[self.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.contentView addSubview: amountLabel];
+    [self.contentView addSubview: centLabel];
     [self.contentView addSubview: tipLabel];
 
 }
 
 - (void) setAmount:(Float32) amount andTip:(Float32)tip
 {
-    self.amountLabel.text = [NSString stringWithFormat:@"$%.2f", amount];
+    self.amountLabel.text = [NSString stringWithFormat:@"%d", (int)amount];
+    self.centLabel.text = [NSString stringWithFormat:@"%02d", (int)(amount * 100) % 100];
+    [self.centLabel sizeToFit];
+    
+    self.centLabel.frame = CGRectMake(self.amountLabel.frame.origin.x + self.amountLabel.frame.size.width + 3,
+                                      26.0f,
+                                      self.centLabel.frame.size.width,
+                                      self.centLabel.frame.size.height);
     
     if (tip != 0.0f)
-        self.tipLabel.text = [NSString stringWithFormat:@"+ %.2f%% tips", tip * 100];
+        self.tipLabel.text = [NSString stringWithFormat:@"+ %d%% tips", (int) (tip * 100)];
     else
         self.tipLabel.text = @"";
     

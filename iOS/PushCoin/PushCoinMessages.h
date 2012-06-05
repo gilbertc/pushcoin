@@ -45,8 +45,8 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @property (nonatomic, strong) PCOSChar * tx_type;
 @property (nonatomic, strong) PCOSChar * tx_context;
 @property (nonatomic, strong) Amount * payment;
-@property (nonatomic, strong) Amount * tip;
-@property (nonatomic, strong) Amount * tax;
+@property (nonatomic, strong) PCOSShortArray * tax;
+@property (nonatomic, strong) PCOSShortArray * tip;
 @property (nonatomic, strong) PCOSFixedArray * currency;
 @property (nonatomic, strong) PCOSShortArray * merchant_name;
 @property (nonatomic, strong) PCOSShortArray * pta_receiver;
@@ -152,7 +152,7 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @interface RegisterMessageBlock : PCOSBlock
 @property (nonatomic, strong) PCOSShortArray * registration_id;
 @property (nonatomic, strong) PCOSLongArray * public_key;
-@property (nonatomic, strong) PCOSShortArray * user_agent;
+@property (nonatomic, strong) PCOSLongArray * user_agent;
 @end
 
 @interface RegisterMessage : PCOSMessage

@@ -31,7 +31,6 @@
 
 - (IBAction)unregister:(id)sender;
 - (IBAction)preAuthorizationTest:(id)sender;
-- (IBAction)closeButtonTapped:(id)sender;
 - (IBAction)enablePasscode:(id)sender;
 
 @end

@@ -47,9 +47,12 @@
 -(void) setDsaPrivateKey:(NSData *)dsaPrivateKey withPasscode:(NSString *)passcode;
 -(BOOL) unlockDsaPrivateKeyWithPasscode:(NSString *)passcode;
 
+
 -(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate;
 -(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
                                            viewController:(UIViewController *)controller;
+-(KKPasscodeViewController *)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
+                                    navigationController:(UINavigationController *)controller;
 
 -(RegistrationController *) requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate;
 -(RegistrationController *) requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate

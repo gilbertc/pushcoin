@@ -128,7 +128,7 @@
         [self updateRegisterButtonStatus];
         [self updatePasscodeButtonStatus];
         
-        [self dismissModalViewControllerAnimated:NO];
+        [self.navigationController popToViewController:self animated:NO];
         [self.appDelegate requestRegistrationWithDelegate:self];
     }
 }
@@ -173,7 +173,8 @@
 - (IBAction)preAuthorizationTest:(id)sender 
 {
     if (self.appDelegate.hasPasscode)
-        preAuthTestPasscodeController = [self.appDelegate requestPasscodeWithDelegate:self viewController:self];
+        preAuthTestPasscodeController = [self.appDelegate requestPasscodeWithDelegate:self 
+                                                                 navigationController:self.navigationController];
     else
         [self doPreAuthorizationTestWithPasscode:nil];
 }
@@ -222,11 +223,6 @@
     [webService sendMessage:dataOut2.consumedData];
 }
 
-- (IBAction)closeButtonTapped:(id)sender 
-{
-    [self dismissModalViewControllerAnimated:YES];
-}
-
 - (IBAction)enablePasscode:(id)sender {
     
     setPasscodeController = [[KKPasscodeViewController alloc] init];
@@ -263,33 +259,19 @@
 
 -(void)didPasscodeCancel:(KKPasscodeViewController *)viewController
 {
-    if (viewController == setPasscodeController)
-    {
-        [self.navigationController popToViewController:self animated:YES];
-    }
-    else
-    {
-        [self dismissModalViewControllerAnimated:YES];
-    }
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 -(void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController *)viewController
 {
-    if (viewController == setPasscodeController)
-    {
-        [self.navigationController popToViewController:self animated:YES];
-    }
-    else
-    {
-        [self dismissModalViewControllerAnimated:YES];    
-    }
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 -(void)didPasscodeEnteredCorrectly:(KKPasscodeViewController *)viewController
 {
     if (viewController == preAuthTestPasscodeController)
     {
-        [self dismissModalViewControllerAnimated:YES];
+        [self.navigationController popToViewController:self animated:YES];
         [self doPreAuthorizationTestWithPasscode:viewController.passcode];
     }
 }

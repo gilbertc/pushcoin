@@ -15,10 +15,10 @@
 @property (nonatomic, assign) char transactionContext;
 @property (nonatomic, assign) NSUInteger paymentValue;
 @property (nonatomic, assign) NSInteger paymentScale;
-@property (nonatomic, assign) NSUInteger tipValue;
-@property (nonatomic, assign) NSInteger tipScale;
 @property (nonatomic, assign) NSUInteger taxValue;
 @property (nonatomic, assign) NSInteger taxScale;
+@property (nonatomic, assign) NSUInteger tipValue;
+@property (nonatomic, assign) NSInteger tipScale;
 @property (nonatomic, strong) NSString * merchantName;
 @property (nonatomic, assign) NSUInteger timestamp;
 
@@ -28,10 +28,10 @@
          context:(char)context
     paymentValue:(NSUInteger)paymentValue
     paymentScale:(NSInteger)paymentScale
-        tipValue:(NSUInteger)tipValue
-        tipScale:(NSInteger)tipScale
         taxValue:(NSUInteger)taxValue
         taxScale:(NSInteger)taxScale
+        tipValue:(NSUInteger)tipValue
+        tipScale:(NSInteger)tipScale
     merchantName:(NSString*)merchantName
        timestamp:(NSUInteger)timestamp;
 @end

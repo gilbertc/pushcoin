@@ -25,8 +25,6 @@
 
 
 @property (strong, nonatomic) GMGridView * gridView;
-@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
-@property (weak, nonatomic) IBOutlet UIView *placeHolderView;
 
 - (IBAction)push:(id)sender;
 - (IBAction)editPayment:(id)sender;

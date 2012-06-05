@@ -124,8 +124,7 @@
     
     if (controller)
     {
-        controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        [self presentModalViewController:controller animated:YES];
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 
@@ -176,10 +175,10 @@ andDescription:(NSString *)description
                                                                      context:trx.tx_context.val
                                                                 paymentValue:trx.payment.value.val
                                                                 paymentScale:trx.payment.scale.val
-                                                                    tipValue:trx.tip.value.val
-                                                                    tipScale:trx.tip.value.val
-                                                                    taxValue:trx.tax.value.val
-                                                                    taxScale:trx.tax.scale.val
+                                                                    taxValue:trx.tax.itemCount == 0 ? 0 : ((Amount *)[trx.tax.val objectAtIndex:0]).value.val
+                                                                    taxScale:trx.tax.itemCount == 0 ? 0 : ((Amount *)[trx.tax.val objectAtIndex:0]).scale.val
+                                                                    tipValue:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).value.val
+                                                                    tipScale:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).scale.val
                                                                 merchantName:trx.merchant_name.string
                                                                    timestamp:trx.utc_transaction_time.val];
         [transactions addObject:pTrx];

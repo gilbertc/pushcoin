@@ -57,33 +57,11 @@
     return YES;
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range 
+    replacementString:(NSString *)string 
 {
-    NSCharacterSet *charSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"];
-    NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    int charCount = [newString length];
-    
-    if ([newString rangeOfCharacterFromSet:[charSet invertedSet]].location != NSNotFound
-        || [string rangeOfString:@"-"].location != NSNotFound
-        || charCount > 19) {
-        return NO;
-    }
-    
-    if ([newString characterAtIndex:newString.length -1] == '-')
-    {
-        newString = [newString substringToIndex:newString.length - 1];
-    }
-    else
-    {
-        if (charCount == 5 || charCount == 10 || charCount == 15) 
-        {
-            NSMutableString * mutableString = [NSMutableString stringWithString:newString];
-            [mutableString insertString:@"-" atIndex:mutableString.length - 1];
-            newString = mutableString;
-        }
-    }
-    textField.text = newString;
-    return NO;
+    NSUInteger newLength = textField.text.length + string.length - range.length;
+    return (newLength > 8) ? NO : YES;
 }
 
 - (AppDelegate *)appDelegate

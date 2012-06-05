@@ -11,10 +11,10 @@
 @implementation PushCoinTransaction
 @synthesize paymentScale = paymentScale_;
 @synthesize paymentValue = paymentValue_;
-@synthesize tipScale = tipScale_;
-@synthesize tipValue = tipValue_;
 @synthesize taxScale = taxScale_;
 @synthesize taxValue = taxValue_;
+@synthesize tipScale = tipScale_;
+@synthesize tipValue = tipValue_;
 @synthesize transactionID = transactionID_;
 @synthesize transactionType = transactionType_;
 @synthesize transactionContext = transactionContext_;
@@ -33,10 +33,10 @@
         self.transactionContext = 'P';
         self.paymentValue = 0;
         self.paymentScale = 0;
-        self.tipValue = 0;
-        self.tipScale = 0;
         self.taxValue = 0;
         self.taxScale = 0;
+        self.tipValue = 0;
+        self.tipScale = 0;
         self.merchantName = @"";
         self.timestamp = 0;
     }
@@ -49,10 +49,10 @@
          context:(char)context
     paymentValue:(NSUInteger)paymentValue
     paymentScale:(NSInteger)paymentScale
-        tipValue:(NSUInteger)tipValue
-        tipScale:(NSInteger)tipScale
         taxValue:(NSUInteger)taxValue
         taxScale:(NSInteger)taxScale
+        tipValue:(NSUInteger)tipValue
+        tipScale:(NSInteger)tipScale
     merchantName:(NSString*)merchantName
        timestamp:(NSUInteger)timestamp
 {
@@ -61,10 +61,10 @@
     {
         self.paymentScale = paymentScale;
         self.paymentValue = paymentValue;
-        self.tipValue = tipValue;
-        self.tipScale = tipScale;
         self.taxValue = taxValue;
         self.taxScale = taxScale;
+        self.tipValue = tipValue;
+        self.tipScale = tipScale;
         self.merchantName = merchantName;
         self.transactionType = type;
         self.transactionContext = context;
@@ -97,10 +97,10 @@
                                                                   context:self.transactionContext
                                                              paymentValue:self.paymentValue
                                                              paymentScale:self.paymentScale
-                                                                 tipValue:self.tipValue
-                                                                 tipScale:self.tipScale
                                                                  taxValue:self.taxValue
                                                                  taxScale:self.taxScale
+                                                                 tipValue:self.tipValue
+                                                                 tipScale:self.tipScale
                                                              merchantName:self.merchantName
                                                                 timestamp:self.timestamp];
     return other;
