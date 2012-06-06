@@ -13,7 +13,6 @@
 #import "NSString+HexStringToBytes.h"
 
 @implementation QRViewController
-@synthesize detailView;
 @synthesize payment = payment_;
 @synthesize navigationBar;
 @synthesize delegate;
@@ -21,6 +20,10 @@
 @synthesize parser;
 @synthesize buffer;
 @synthesize passcode;
+@synthesize amountLabel;
+@synthesize centLabel;
+@synthesize tipLabel;
+@synthesize toolbar;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -104,16 +107,19 @@
                                             imageDimension:qrcodeImageDimension];
         
         self.imageView.image = qrcodeImage;
+        self.amountLabel.text = [NSString stringWithFormat:@"%d", (int)self.payment.amount];
+        self.centLabel.text = [NSString stringWithFormat:@"%02d", (int)(self.payment.amount * 100) % 100];
         
-        CGRect frame = CGRectMake(0,0,                                                                            self.detailView.bounds.size.width,                                                                           self.detailView.bounds.size.height);
+        if (self.payment.tip != 0)
+        {
+            [self.tipLabel setHidden:false];
+            self.tipLabel.text = [NSString stringWithFormat:@"+ %d%% tips", (int)(self.payment.tip * 100)];        
+        }
+        else
+        {
+            [self.tipLabel setHidden:true];
+        }
         
-        PaymentCell * cell = [[PaymentCell alloc] 
-                              initWithFrame:frame];
-        
-        cell.payment = self.payment;
-        
-        [self.detailView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
-        [self.detailView addSubview:cell];
     }
     else 
     {
@@ -129,8 +135,11 @@
 - (void)viewDidUnload
 {
     [self setImageView:nil];
-    [self setDetailView:nil];
     [self setNavigationBar:nil];
+    [self setAmountLabel:nil];
+    [self setCentLabel:nil];
+    [self setTipLabel:nil];
+    [self setToolbar:nil];
     [super viewDidUnload];
 }
 
@@ -152,6 +161,23 @@
 - (IBAction)addTipsButtonTapped:(id)sender 
 {
     [self showPaymentDetails];
+}
+
+- (IBAction)actionButtonTapped:(id)sender 
+{
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"PushCoin Coupon" delegate:self cancelButtonTitle:@"Cancel"destructiveButtonTitle:nil otherButtonTitles:@"Set Receiver", @"Email to Receiver", nil];
+    
+    [sheet showFromToolbar:self.toolbar];
+}
+
+-(void)actionSheetCancel:(UIActionSheet *)actionSheet
+{
+    
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
 }
 
 - (void) showPaymentDetails

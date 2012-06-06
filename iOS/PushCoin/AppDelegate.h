@@ -62,4 +62,10 @@
 
 -(id)viewControllerWithIdentifier:(NSString *) identifier;
 -(UIImage *) imageForAmountType:(PushCoinPaymentAmountType) type;
+
+-(void) clearDevice;
+
+-(bool) handleErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
+-(bool) handleUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
+
 @end

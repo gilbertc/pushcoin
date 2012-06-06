@@ -23,9 +23,9 @@
                                 <action selector="editPayment:" destination="2" id="OQj-8z-849"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="WcJ-iP-9oW">
+                        <barButtonItem key="rightBarButtonItem" title="Quick Pay" id="WcJ-iP-9oW">
                             <connections>
-                                <action selector="addPayment:" destination="2" id="iYG-UT-2aZ"/>
+                                <action selector="quickPayment:" destination="2" id="6lS-Wh-jou"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -33,31 +33,17 @@
             </objects>
             <point key="canvasLocation" x="1069" y="-122"/>
         </scene>
-        <!--Add Payment Controller-->
+        <!--Add Payment Controller - Add Payment-->
         <scene sceneID="XyP-oB-goK">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RzN-Tw-0J1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="AddPaymentController" id="QEu-Ql-gc9" customClass="AddPaymentController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddPaymentController" title="Add Payment" hidesBottomBarWhenPushed="YES" id="QEu-Ql-gc9" customClass="AddPaymentController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="51A-p0-72v" customClass="UIControl">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" id="Lg4-cL-4AC">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                <items>
-                                    <navigationItem title="Add Payment" id="CNu-bV-u72">
-                                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="3KD-It-0we">
-                                            <connections>
-                                                <action selector="cancelButtonTapped:" destination="QEu-Ql-gc9" id="zwb-Bd-fkg"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Qfr-Qj-9wF">
-                                <rect key="frame" x="20" y="187" width="280" height="37"/>
+                                <rect key="frame" x="20" y="153" width="280" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <state key="normal" title="Add">
@@ -73,14 +59,14 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="$0.00" borderStyle="bezel" textAlignment="right" adjustsFontSizeToFit="NO" minimumFontSize="50" background="display_background.png" clearButtonMode="always" id="fv7-zq-A8C">
-                                <rect key="frame" x="20" y="84" width="280" height="87"/>
+                                <rect key="frame" x="20" y="50" width="280" height="87"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="50"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                             </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Payment Limit" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="Lk6-Cj-a6o">
-                                <rect key="frame" x="20" y="54" width="280" height="22"/>
+                                <rect key="frame" x="20" y="20" width="280" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" red="0.28306949710000001" green="0.33550960330000001" blue="0.43887515939999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -93,13 +79,14 @@
                             <action selector="backgroundTapped:" destination="QEu-Ql-gc9" eventType="touchDown" id="wkZ-lM-sRR"/>
                         </connections>
                     </view>
+                    <navigationItem key="navigationItem" title="Add Payment" id="RHw-ed-G7p"/>
                     <connections>
                         <outlet property="addButton" destination="Qfr-Qj-9wF" id="3Eg-jS-Oyj"/>
                         <outlet property="paymentTextField" destination="fv7-zq-A8C" id="Uxa-2d-Ezw"/>
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1943" y="-127"/>
+            <point key="canvasLocation" x="1567" y="-96"/>
         </scene>
         <!--Payment Details Controller-->
         <scene sceneID="Xnl-xf-ADC">
@@ -157,7 +144,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="2381" y="-116"/>
+            <point key="canvasLocation" x="1957" y="-734"/>
         </scene>
         <!--Pay Navigation Controller - PushCoin-->
         <scene sceneID="2I8-z9-c3f">
@@ -171,6 +158,7 @@
                     </navigationBar>
                     <connections>
                         <segue destination="2" kind="relationship" relationship="rootViewController" id="8pz-gf-7wn"/>
+                        <segue destination="QEu-Ql-gc9" kind="push" id="hDB-jj-e43"/>
                     </connections>
                 </navigationController>
             </objects>
@@ -412,7 +400,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="50"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                             </textField>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Receive Amount" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="tL9-ar-1YV">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Received Amount" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="tL9-ar-1YV">
                                 <rect key="frame" x="20" y="20" width="280" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -504,45 +492,119 @@
                                 <color key="tintColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 <items>
                                     <navigationItem title="Scan Now" id="Ps6-lu-geC">
-                                        <barButtonItem key="leftBarButtonItem" title="Add Tips" id="rJn-Xf-I1R">
-                                            <connections>
-                                                <action selector="addTipsButtonTapped:" destination="WWO-ub-brD" id="cgx-xQ-cWi"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="JBA-gh-5Y2">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="JBA-gh-5Y2">
                                             <connections>
                                                 <action selector="closeButtonTapped:" destination="WWO-ub-brD" id="x3n-Wp-lRa"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="jz6-43-heg">
+                                            <connections>
+                                                <action selector="actionButtonTapped:" destination="WWO-ub-brD" id="Sr9-Pt-QsT"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
                             <view autoresizesSubviews="NO" contentMode="scaleToFill" id="afo-bV-kFH">
-                                <rect key="frame" x="20" y="62" width="280" height="280"/>
+                                <rect key="frame" x="60" y="72" width="200" height="200"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="azC-Id-3zJ">
-                                        <rect key="frame" x="60" y="60" width="160" height="160"/>
+                                        <rect key="frame" x="20" y="20" width="160" height="160"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <view autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" id="TTn-ff-YZ1">
-                                <rect key="frame" x="85" y="360" width="150" height="80"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="coupon expires in 1 minute" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="BUm-8I-adn">
+                                <rect key="frame" x="27" y="323" width="135" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="10"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="single use only" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="06D-gW-yPb">
+                                <rect key="frame" x="27" y="350" width="135" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="10"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="swipe down to dismiss" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="GJD-l2-YEp">
+                                <rect key="frame" x="24" y="401" width="273" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="10"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="+ 15% tips" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="IzD-G9-IBt">
+                                <rect key="frame" x="170" y="366" width="130" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="10"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" id="MOI-5A-Qoa">
+                                <rect key="frame" x="170" y="310" width="130" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="100" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="d0L-zd-S3L">
+                                        <rect key="frame" x="19" y="11" width="70" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="30"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="sKo-c0-aHa">
+                                        <rect key="frame" x="90" y="14" width="40" height="15"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="USD" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="BV1-wL-5oX">
+                                        <rect key="frame" x="90" y="26" width="40" height="15"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="10"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="thank you for using PushCoin" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="uOU-Dp-pQD">
+                                <rect key="frame" x="27" y="311" width="135" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="10"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="sQv-32-Wgy">
+                                <rect key="frame" x="0.0" y="416" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Add Tips" id="rJn-Xf-I1R">
+                                        <connections>
+                                            <action selector="addTipsButtonTapped:" destination="WWO-ub-brD" id="cgx-xQ-cWi"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                                <color key="tintColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="0.53107446729447727" green="0.54083625637755106" blue="0.50949836291246464" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <connections>
-                        <outlet property="detailView" destination="TTn-ff-YZ1" id="id7-sX-A8a"/>
+                        <outlet property="amountLabel" destination="d0L-zd-S3L" id="Upo-3b-yPT"/>
+                        <outlet property="centLabel" destination="sKo-c0-aHa" id="jWK-en-LCQ"/>
                         <outlet property="imageView" destination="azC-Id-3zJ" id="HR0-ZZ-A2Y"/>
                         <outlet property="navigationBar" destination="lHL-DN-3dX" id="iu8-gj-R8a"/>
+                        <outlet property="tipLabel" destination="IzD-G9-IBt" id="jKx-uk-yCc"/>
+                        <outlet property="toolbar" destination="sQv-32-Wgy" id="kbU-Ci-BfL"/>
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1506" y="-138"/>
+            <point key="canvasLocation" x="1530" y="-734"/>
         </scene>
         <!--Main Tab Bar Controller-->
         <scene sceneID="15">
@@ -595,6 +657,74 @@
             </objects>
             <point key="canvasLocation" x="630" y="503"/>
         </scene>
+        <!--Quick Payment Controller-->
+        <scene sceneID="2gS-Bj-9nU">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="z6f-1M-rap" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="QuickPaymentController" id="RDo-ix-xV1" customClass="QuickPaymentController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ojM-3U-vY4" customClass="UIControl">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" id="t0F-2J-DEy">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <navigationItem title="Quick Payment" id="rbP-aM-mx8">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="7H1-Gp-wsX">
+                                            <connections>
+                                                <action selector="cancelButtonTapped:" destination="RDo-ix-xV1" id="UUG-Ow-3uq"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="czD-61-Wdv">
+                                <rect key="frame" x="20" y="187" width="280" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <state key="normal" title="Quick Pay">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" red="0.5706521739" green="0.087135120460000007" blue="0.03997412602" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="quickPayButtonTapped:" destination="RDo-ix-xV1" eventType="touchUpInside" id="L28-pA-atl"/>
+                                    <action selector="scan:" destination="3" eventType="touchUpInside" id="gfs-xZ-xwS"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="$0.00" borderStyle="bezel" textAlignment="right" adjustsFontSizeToFit="NO" minimumFontSize="50" background="display_background.png" clearButtonMode="always" id="2o9-1f-pOm">
+                                <rect key="frame" x="20" y="84" width="280" height="87"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
+                            </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Payment Limit" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="DJe-dP-Mw8">
+                                <rect key="frame" x="20" y="54" width="280" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" red="0.28306949710000001" green="0.33550960330000001" blue="0.43887515939999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.91372555494308472" green="0.92156869173049927" blue="0.85490202903747559" alpha="1" colorSpace="deviceRGB"/>
+                        <connections>
+                            <action selector="backgroundTapped:" destination="RDo-ix-xV1" eventType="touchDown" id="Exz-X8-WWl"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="paymentTextField" destination="2o9-1f-pOm" id="c5f-Ha-PSD"/>
+                        <outlet property="quickPayButton" destination="czD-61-Wdv" id="kd0-Ww-Sf3"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1069" y="-751"/>
+        </scene>
     </scenes>
     <resources>
         <image name="display_background.png" width="7" height="88"/>
@@ -602,6 +732,121 @@
         <image name="logo.png" width="295" height="103"/>
         <image name="second.png" width="30" height="30"/>
     </resources>
+    <classes>
+        <class className="AccountNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AccountNavigationController.h"/>
+        </class>
+        <class className="AddPaymentController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddPaymentController.h"/>
+            <relationships>
+                <relationship kind="action" name="addButtonTapped:"/>
+                <relationship kind="action" name="backgroundTapped:"/>
+                <relationship kind="outlet" name="addButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="paymentTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="BalanceCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BalanceCell.h"/>
+        </class>
+        <class className="ChallengeController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChallengeController.h"/>
+        </class>
+        <class className="HistoryController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HistoryController.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshButtonTapped:"/>
+                <relationship kind="action" name="settingsButtonTapped:"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="MainTabBarController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainTabBarController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tabBar" candidateClass="UITabBar"/>
+            </relationships>
+        </class>
+        <class className="PayController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PayController.h"/>
+            <relationships>
+                <relationship kind="action" name="addPayment:"/>
+                <relationship kind="action" name="editPayment:"/>
+                <relationship kind="action" name="push:"/>
+            </relationships>
+        </class>
+        <class className="PayNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PayNavigationController.h"/>
+        </class>
+        <class className="PaymentDetailsController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PaymentDetailsController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelButtonTapped:"/>
+                <relationship kind="outlet" name="tipTableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="PaymentTipCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PaymentTipCell.h"/>
+        </class>
+        <class className="QRViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/QRViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionButtonTapped:"/>
+                <relationship kind="action" name="addTipsButtonTapped:"/>
+                <relationship kind="action" name="closeButtonTapped:"/>
+                <relationship kind="outlet" name="amountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="centLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="tipLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+            </relationships>
+        </class>
+        <class className="QuickPaymentController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/QuickPaymentController.h"/>
+            <relationships>
+                <relationship kind="action" name="backgroundTapped:"/>
+                <relationship kind="action" name="cancelButtonTapped:"/>
+                <relationship kind="action" name="quickPayButtonTapped:"/>
+                <relationship kind="outlet" name="paymentTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="quickPayButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="ReceiveController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReceiveController.h"/>
+            <relationships>
+                <relationship kind="action" name="backgroundTouched:"/>
+                <relationship kind="action" name="submitButtonTapped:"/>
+                <relationship kind="outlet" name="paymentTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="ReceiveNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReceiveNavigationController.h"/>
+        </class>
+        <class className="RegistrationController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RegistrationController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="registrationIDTextBox" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="SettingsController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsController.h"/>
+            <relationships>
+                <relationship kind="action" name="enablePasscode:"/>
+                <relationship kind="action" name="preAuthorizationTest:"/>
+                <relationship kind="action" name="unregister:"/>
+                <relationship kind="outlet" name="passcodeButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="preAuthorizationTestButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="unregisterButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="TransactionCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TransactionCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="detailTextLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="rightTextLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="titleTextLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

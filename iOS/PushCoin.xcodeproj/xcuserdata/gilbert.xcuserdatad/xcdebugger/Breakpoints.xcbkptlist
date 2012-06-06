@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/HistoryController.m"
-         timestampString = "360564533.240119"
+         timestampString = "360653873.025955"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "172"
-         endingLineNumber = "172"
+         startingLineNumber = "169"
+         endingLineNumber = "169"
          landmarkName = "-didDecodeTransactionHistoryReportMessage:withHeader:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/HistoryController.m"
-         timestampString = "360564533.240119"
+         timestampString = "360653873.025955"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "270"
-         endingLineNumber = "270"
+         startingLineNumber = "267"
+         endingLineNumber = "267"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -60,11 +60,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/PaymentCell.m"
-         timestampString = "360573427.372676"
+         timestampString = "360638291.473649"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "155"
-         endingLineNumber = "155"
+         startingLineNumber = "137"
+         endingLineNumber = "137"
          landmarkName = "-setAmount:andTip:"
          landmarkType = "5">
       </FileBreakpoint>

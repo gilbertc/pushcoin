@@ -77,6 +77,93 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 }
 @end
 
+@implementation Address
+@synthesize street;
+@synthesize city;
+@synthesize state;
+@synthesize zip;
+@synthesize country;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.street =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.city =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.state =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.zip =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.country =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:2]; 
+        
+        [self addField:self.street withName:@"street"];
+        [self addField:self.city withName:@"city"];
+        [self addField:self.state withName:@"state"];
+        [self addField:self.zip withName:@"zip"];
+        [self addField:self.country withName:@"country"];
+    }
+    return self;
+}
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    Address * other = [[Address alloc] init];
+    return other;
+}
+
+@end
+
+@implementation Contact
+@synthesize phone;
+@synthesize email;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.phone =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.email =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        
+        [self addField:self.phone withName:@"phone"];
+        [self addField:self.email withName:@"email"];
+    }
+    return self;
+}
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    Contact * other = [[Contact alloc] init];
+    return other;
+}
+@end
+
+@implementation GeoLocation
+@synthesize latitude;
+@synthesize longitude;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.latitude =[[PCOSDouble alloc] init];
+        self.longitude =[[PCOSDouble alloc] init];
+        
+        [self addField:self.latitude withName:@"latitude"];
+        [self addField:self.longitude withName:@"longitude"];
+    }
+    return self;
+}
+
+
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    GeoLocation * other = [[GeoLocation alloc] init];
+    return other;
+}
+
+@end
 
 @implementation Transaction
 @synthesize transaction_id;
@@ -89,9 +176,12 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 @synthesize tip;
 @synthesize currency;
 @synthesize merchant_name;
-@synthesize pta_receiver;
+@synthesize ref_data;
 @synthesize invoice;
 @synthesize note;
+@synthesize address;
+@synthesize contact;
+@synthesize geolocation;
 
 -(id) init
 {
@@ -108,10 +198,13 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.tip =[[PCOSShortArray alloc] initWithItemPrototype:[[Amount alloc] init]]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
         self.merchant_name =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
-        self.pta_receiver =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
+        self.ref_data =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
         self.invoice =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
         self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
-        
+        self.address = [[PCOSShortArray alloc] initWithItemPrototype:[[Address alloc] init]];
+        self.contact = [[PCOSShortArray alloc] initWithItemPrototype:[[Contact alloc] init]];
+        self.geolocation = [[PCOSShortArray alloc] initWithItemPrototype:[[GeoLocation alloc] init]];
+                
         [self addField:self.transaction_id withName:@"transaction_id"];
         [self addField:self.counterparty_id withName:@"counterparty_id"];
         [self addField:self.utc_transaction_time withName:@"utc_transaction_time"];
@@ -122,9 +215,12 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         [self addField:self.tip withName:@"tip"];
         [self addField:self.currency withName:@"currency"];
         [self addField:self.merchant_name withName:@"merchant_name"];
-        [self addField:self.pta_receiver withName:@"pta_receiver"];
+        [self addField:self.ref_data withName:@"ref_data"];
         [self addField:self.invoice withName:@"invoice"];
         [self addField:self.note withName:@"note"];
+        [self addField:self.address withName:@"address"];
+        [self addField:self.contact withName:@"contact"];
+        [self addField:self.geolocation withName:@"geolocation"];
     }
     return self;
 }

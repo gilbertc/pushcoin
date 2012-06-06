@@ -73,10 +73,6 @@
 	amountLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
 	amountLabel.font = [UIFont fontWithName:@"Helvetica" size:30.0f];
     amountLabel.opaque = YES;
-	amountLabel.layer.masksToBounds = NO;
-	amountLabel.layer.shadowOffset = CGSizeMake(0,-1);
-	amountLabel.layer.shadowOpacity = 0.7f;
-	amountLabel.layer.shadowRadius = 0.5;
     self.amountLabel = amountLabel;
     
     UILabel *centLabel;
@@ -88,10 +84,6 @@
 	centLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
 	centLabel.font = [UIFont fontWithName:@"Helvetica" size:15.0f];
     centLabel.opaque = YES;
-	centLabel.layer.masksToBounds = NO;
-	centLabel.layer.shadowOffset = CGSizeMake(0,-1);
-	centLabel.layer.shadowOpacity = 0.7f;
-	centLabel.layer.shadowRadius = 0.5;
     self.centLabel = centLabel;
     
     UILabel *currencyLabel;
@@ -103,13 +95,7 @@
 	currencyLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
 	currencyLabel.font = [UIFont fontWithName:@"Helvetica" size:10.0f];
     currencyLabel.opaque = YES;
-	currencyLabel.layer.masksToBounds = NO;
-	currencyLabel.layer.shadowOffset = CGSizeMake(0,-1);
-	currencyLabel.layer.shadowOpacity = 0.7f;
-	currencyLabel.layer.shadowRadius = 0.5;
     self.currencyLabel = currencyLabel;
-
-
     
     UILabel *tipLabel = [[UILabel alloc] initWithFrame:tipFrame];
 	tipLabel.textAlignment = UITextAlignmentCenter;
@@ -119,10 +105,6 @@
 	tipLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
 	tipLabel.font = [UIFont fontWithName:@"Helvetica" size:10.0f];
     tipLabel.opaque = YES;
-	tipLabel.layer.masksToBounds = NO;
-	tipLabel.layer.shadowOffset = CGSizeMake(0,-1);
-	tipLabel.layer.shadowOpacity = 0.7f;
-	tipLabel.layer.shadowRadius = 0.5;
     self.tipLabel = tipLabel;
     
     [[self.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -157,6 +139,11 @@
     else
         self.tipLabel.text = @"";
     
+}
+
+- (AppDelegate *)appDelegate
+{
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 /* Generate Background Image
@@ -253,10 +240,7 @@
 }
 */                           
                               
-- (AppDelegate *)appDelegate
-{
-    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
-}
+
 
 
 @end

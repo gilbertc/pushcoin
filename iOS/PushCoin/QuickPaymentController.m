@@ -1,17 +1,17 @@
 //
-//  AddPaymentController.m
+//  QuickPaymentController.m
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/25/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "AddPaymentController.h"
+#import "QuickPaymentController.h"
 #import "AppDelegate.h"
 
-@implementation AddPaymentController
+@implementation QuickPaymentController
 @synthesize paymentTextField;
-@synthesize addButton;
+@synthesize quickPayButton;
 @synthesize paymentValue;
 @synthesize delegate;
 
@@ -45,7 +45,7 @@
 - (void)viewDidUnload
 {
     [self setPaymentTextField:nil];
-    [self setAddButton:nil];
+    [self setQuickPayButton:nil];
     [super viewDidUnload];
 }
 
@@ -59,12 +59,16 @@
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-- (IBAction)addButtonTapped:(id)sender {
-    [self.delegate addPaymentControllerDidAddPayment:self];
+- (IBAction)cancelButtonTapped:(id)sender {
+    [self.delegate quickPaymentControllerDidCancel:self];
+}
+
+- (IBAction)quickPayButtonTapped:(id)sender {
+    [self.delegate quickPaymentControllerDidClose:self];
 }
 
 - (IBAction)backgroundTapped:(id)sender {
-     //[self.paymentTextField resignFirstResponder];
+    //[self.paymentTextField resignFirstResponder];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -87,7 +91,7 @@
     NSString *newAmount = [self formatCurrencyValue:(value/100)];
     [textField setText:[NSString stringWithFormat:@"%@",newAmount]];
     return NO;
-
+    
 }
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField

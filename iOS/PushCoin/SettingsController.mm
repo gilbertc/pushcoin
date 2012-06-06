@@ -120,10 +120,7 @@
 {
     if (buttonIndex == 1)
     {
-        NSData * emptyData = [[NSData alloc] init];
-        self.appDelegate.authToken = @"";
-        [self.appDelegate setPasscode:@"" oldPasscode:@""];
-        [self.appDelegate setDsaPrivateKey:emptyData withPasscode:@""];
+        [self.appDelegate clearDevice];
         
         [self updateRegisterButtonStatus];
         [self updatePasscodeButtonStatus];
@@ -135,7 +132,6 @@
 
 -(void) registrationControllerDidClose:(RegistrationController *)controller
 {
-    [self dismissModalViewControllerAnimated:YES];
     [self updateRegisterButtonStatus];
 }
 - (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
@@ -153,21 +149,18 @@
 
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    [[self appDelegate] showAlert:msg.block.reason.string 
-                        withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
+    [self.appDelegate handleErrorMessage:msg withHeader:hdr];
+}
+
+-(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    [self.appDelegate handleUnknownMessage:msg withHeader:hdr];
 }
 
 -(void) didDecodeSuccessMessage:(SuccessMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
     [[self appDelegate] showAlert:@"Success"
                         withTitle:@"Success!"];
-}
-
--(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
-{
-    [[self appDelegate] showAlert:[NSString stringWithFormat:@"unexpected message received: [%@]",
-                                   hdr.message_id.string]
-                        withTitle:@"Error"];
 }
 
 - (IBAction)preAuthorizationTest:(id)sender 

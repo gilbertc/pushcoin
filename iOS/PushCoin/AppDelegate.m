@@ -301,6 +301,13 @@
     return controller;
 }
 
+-(void) clearDevice
+{
+    NSData * emptyData = [[NSData alloc] init];
+    self.authToken = @"";
+    [self setPasscode:@"" oldPasscode:@""];
+    [self setDsaPrivateKey:emptyData withPasscode:@""];
+}
 
 - (UIAlertView *) showAlert:(NSString *)message withTitle:(NSString *)title
 {
@@ -311,6 +318,30 @@
                                           otherButtonTitles:nil];
     [alert show];
     return alert;
+}
+
+-(bool) handleErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    SInt32 errorCode = msg.block.error_code.val;
+    
+    switch(errorCode)
+    {
+        case 201: //invalid mat
+            [self clearDevice];
+            [self requestRegistrationWithDelegate:nil];
+            break;
+        default:
+            [self showAlert:msg.block.reason.string 
+                  withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
+    }
+    return YES;
+}
+
+-(bool) handleUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    [self showAlert:[NSString stringWithFormat:@"unexpected message received: [%@]", hdr.message_id.string]
+          withTitle:@"Error"];
+    return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

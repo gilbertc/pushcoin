@@ -143,23 +143,20 @@ andDescription:(NSString *)description
 
 #pragma mark PushCoinMessageParserDelegate
 
-
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-[self.appDelegate showAlert:msg.block.reason.string 
-                  withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
+    [self.appDelegate handleErrorMessage:msg withHeader:hdr];
+}
+
+-(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    [self.appDelegate handleUnknownMessage:msg withHeader:hdr];
 }
 
 -(void) didDecodeSuccessMessage:(SuccessMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
 [self.appDelegate showAlert:@"Success!" 
                   withTitle:@"Success"];
-}
-
--(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
-{
-[self.appDelegate showAlert:@"Unknown message received." 
-                  withTitle:@"Unknown"];
 }
 
 -(void) didDecodeTransactionHistoryReportMessage:(TransactionHistoryReportMessage *)msg withHeader:(PCOSHeaderBlock *)hdr

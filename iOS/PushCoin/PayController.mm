@@ -102,6 +102,7 @@
 {
 	[super viewWillDisappear:animated];
     [self gridView].editing = NO;
+    [self updateButtonStatus];
     [self saveAndCleanup];
 }
 
@@ -164,21 +165,25 @@
 
 - (void) updateButtonStatus
 {
-    UIBarButtonItem * addItem = self.navigationItem.rightBarButtonItem;
-    
     if (self.gridView.editing)
     {
-        UIBarButtonItem * item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editDonePayment:)];
+        UIBarButtonItem * doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editDonePayment:)];
         
-        self.navigationItem.leftBarButtonItem = item;
-        addItem.enabled = NO;
+        self.navigationItem.leftBarButtonItem = doneItem;
+        
+        UIBarButtonItem * addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addPayment:)];
+        
+        self.navigationItem.rightBarButtonItem = addItem;
     }
     else
     {
-        UIBarButtonItem * item = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editPayment:)];
+        UIBarButtonItem * editItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editPayment:)];
         
-        self.navigationItem.leftBarButtonItem = item;
-        addItem.enabled = YES;    
+        self.navigationItem.leftBarButtonItem = editItem;
+
+        UIBarButtonItem * quickPayItem = [[UIBarButtonItem alloc] initWithTitle:@"Quick Pay" style:UIBarButtonItemStyleBordered target:self action:@selector(quickPayment:)];
+        
+        self.navigationItem.rightBarButtonItem = quickPayItem;
     }
 }
 
@@ -189,18 +194,46 @@
     if (controller)
     {
         controller.delegate = self;
-        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [self presentModalViewController:controller animated:YES];
+        [self.navigationController pushViewController:controller animated:YES];
     }
+}
+
+- (IBAction)quickPayment:(id)sender
+{
+    QuickPaymentController * controller = [self.appDelegate viewControllerWithIdentifier:@"QuickPaymentController"];
+    if (controller)
+    {
+        controller.delegate = self;
+        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentViewController:controller animated:YES completion:nil];
+    }
+}
+
+#pragma mark -
+#pragma mark QuickPaymentController
+-(void)quickPaymentControllerDidClose:(QuickPaymentController *)controller
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (controller.paymentValue != 0)
+        {
+            PushCoinPayment * payment = [[PushCoinPayment alloc] init];
+            payment.amountValue = controller.paymentValue;
+            payment.amountScale = controller.paymentScale;
+            [self push:self payment:payment];
+        }
+    }];
+}
+
+-(void)quickPaymentControllerDidCancel:(QuickPaymentController *)controller
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
 #pragma mark -
 #pragma mark AddPaymentController
--(void)addPaymentControllerDidClose:(AddPaymentController *)controller
+-(void)addPaymentControllerDidAddPayment:(AddPaymentController *)controller
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
     if (controller.paymentValue != 0)
     {
         PushCoinPayment * payment = [[PushCoinPayment alloc] init];
@@ -210,11 +243,7 @@
         [payments_ addObject:payment];
         [self.gridView insertObjectAtIndex:payments_.count-1 withAnimation:GMGridViewItemAnimationFade];
     }
-}
-
--(void)addPaymentControllerDidCancel:(AddPaymentController *)controller
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 #pragma mark -

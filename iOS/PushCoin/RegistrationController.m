@@ -108,26 +108,23 @@
 
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    [[self appDelegate] showAlert:msg.block.reason.string 
-                        withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
+    [self.appDelegate handleErrorMessage:msg withHeader:hdr];
     [self.registrationIDTextBox becomeFirstResponder];
+}
 
+-(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    [self.appDelegate handleUnknownMessage:msg withHeader:hdr];
+    [self.registrationIDTextBox becomeFirstResponder];    
 }
 
 -(void) didDecodeRegisterAckMessage:(RegisterAckMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
     self.appDelegate.authToken = [msg.register_ack_block.mat.data bytesToHexString];
-    [self.delegate registrationControllerDidClose:self];
+    [self dismissModalViewControllerAnimated:YES];
+    
+    if (self.delegate != nil)
+        [self.delegate registrationControllerDidClose:self];
 }
-
--(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
-{
-    [[self appDelegate] showAlert:[NSString stringWithFormat:@"unexpected message received: [%@]",
-                                   hdr.message_id.string]
-                        withTitle:@"Error"];
-    [self.registrationIDTextBox becomeFirstResponder];
-}
-
-
 
 @end

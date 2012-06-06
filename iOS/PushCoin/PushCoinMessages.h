@@ -38,6 +38,24 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @property (nonatomic, strong) Amount * add;
 @end
 
+@interface Address : PCOSBlock
+@property (nonatomic, strong) PCOSShortArray * street;
+@property (nonatomic, strong) PCOSShortArray * city;
+@property (nonatomic, strong) PCOSShortArray * state;
+@property (nonatomic, strong) PCOSShortArray * zip;
+@property (nonatomic, strong) PCOSFixedArray * country;
+@end
+
+@interface Contact : PCOSBlock
+@property (nonatomic, strong) PCOSShortArray * phone;
+@property (nonatomic, strong) PCOSShortArray * email;
+@end
+
+@interface GeoLocation : PCOSBlock
+@property (nonatomic, strong) PCOSDouble * latitude;
+@property (nonatomic, strong) PCOSDouble * longitude;
+@end
+
 @interface Transaction : PCOSBlock
 @property (nonatomic, strong) PCOSShortArray * transaction_id;
 @property (nonatomic, strong) PCOSShortArray * counterparty_id;
@@ -49,9 +67,12 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @property (nonatomic, strong) PCOSShortArray * tip;
 @property (nonatomic, strong) PCOSFixedArray * currency;
 @property (nonatomic, strong) PCOSShortArray * merchant_name;
-@property (nonatomic, strong) PCOSShortArray * pta_receiver;
+@property (nonatomic, strong) PCOSShortArray * ref_data;
 @property (nonatomic, strong) PCOSShortArray * invoice;
 @property (nonatomic, strong) PCOSShortArray * note;
+@property (nonatomic, strong) PCOSShortArray * address;
+@property (nonatomic, strong) PCOSShortArray * contact;
+@property (nonatomic, strong) PCOSShortArray * geolocation;
 @end
 
 /* Error Message */
