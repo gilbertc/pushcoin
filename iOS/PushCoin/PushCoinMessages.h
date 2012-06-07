@@ -28,6 +28,12 @@ extern NSString * const MID_TRANSFER_REQUEST;
 extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 
 /* Common Types */
+@interface KeyStringValue : PCOSBlock
+@property (nonatomic, strong) PCOSShortArray * key;
+@property (nonatomic, strong) PCOSShortArray * value;
+- (id) initWithKey:(NSString*)k andValue:(NSString*)v;
+@end
+
 @interface Amount : PCOSBlock
 @property (nonatomic, strong) PCOSInt64 * value;
 @property (nonatomic, strong) PCOSInt16 * scale;
@@ -173,7 +179,7 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @interface RegisterMessageBlock : PCOSBlock
 @property (nonatomic, strong) PCOSShortArray * registration_id;
 @property (nonatomic, strong) PCOSLongArray * public_key;
-@property (nonatomic, strong) PCOSLongArray * user_agent;
+@property (nonatomic, strong) PCOSShortArray * user_agent;
 @end
 
 @interface RegisterMessage : PCOSMessage

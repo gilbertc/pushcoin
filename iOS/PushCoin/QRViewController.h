@@ -10,8 +10,10 @@
 #import "PushCoinMessages.h"
 #import "PushCoinPayment.h"
 #import "PaymentDetailsController.h"
+#import "SelectReceiverController.h"
 
 @class QRViewController;
+@class Entity;
 
 @protocol QRViewControllerDelegate <NSObject>
 
@@ -20,11 +22,12 @@
 
 @end
 
-@interface QRViewController : UIViewController<PaymentDetailsControllerDelegate, UIActionSheetDelegate>
+@interface QRViewController : UIViewController<PaymentDetailsControllerDelegate, SelectReceiverControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) PushCoinMessageParser * parser;
 @property (nonatomic, strong) NSMutableData * buffer;
 @property (nonatomic, strong) PushCoinPayment * payment;
+@property (nonatomic, strong) Entity * receiver;
 @property (nonatomic, weak) id <QRViewControllerDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
@@ -33,6 +36,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *centLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (weak, nonatomic) IBOutlet UILabel *receiverLabel;
 
 - (IBAction)closeButtonTapped:(id)sender;
 - (IBAction)addTipsButtonTapped:(id)sender;

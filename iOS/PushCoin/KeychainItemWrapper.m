@@ -207,6 +207,7 @@
     [keychainItemData setObject:@"" forKey:(id)kSecAttrLabel];
     [keychainItemData setObject:@"" forKey:(id)kSecAttrDescription];
     
+    
     // Default data for keychain item.
     [keychainItemData setObject:@"" forKey:(id)kSecValueData];
 }
@@ -271,7 +272,7 @@
     NSMutableDictionary *updateItem = NULL;
     OSStatus result;
     
-    if (SecItemCopyMatching((CFDictionaryRef)genericPasswordQuery, (CFTypeRef *)&attributes) == noErr)
+    if ((result = SecItemCopyMatching((CFDictionaryRef)genericPasswordQuery, (CFTypeRef *)&attributes)) == noErr)
     {
         // First we need the attributes from the Keychain.
         updateItem = [NSMutableDictionary dictionaryWithDictionary:attributes];

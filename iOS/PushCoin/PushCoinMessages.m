@@ -26,6 +26,42 @@ NSString * const MID_TRANSFER_REQUEST = @"Tt";
 NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 
 /* Common Types */
+@implementation KeyStringValue
+@synthesize key;
+@synthesize value;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.key =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.value =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        
+        [self addField:self.key withName:@"key"];
+        [self addField:self.value withName:@"value"];
+    }
+    return self;
+}
+
+-(id) initWithKey:(NSString *)k andValue:(NSString *)v
+{
+    self = [self init];
+    if (self)
+    {
+        self.key.string = k;
+        self.value.string = v;
+    }
+    return self;
+}
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    KeyStringValue * other = [[KeyStringValue alloc] init];
+    return other;
+}
+@end
+
 @implementation Amount
 @synthesize value;
 @synthesize scale;
@@ -540,7 +576,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     {
         self.registration_id =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
         self.public_key =[[PCOSLongArray alloc] initWithItemPrototype:protoByte]; 
-        self.user_agent =[[PCOSLongArray alloc] initWithItemPrototype:protoChar]; 
+        self.user_agent =[[PCOSShortArray alloc] initWithItemPrototype:[[KeyStringValue alloc] init]]; 
         
         [self addField:self.registration_id withName:@"registration_id"];
         [self addField:self.public_key withName:@"public_key"];

@@ -85,8 +85,17 @@
     
     msgOut.register_block.registration_id.string = self.registrationIDTextBox.text;
     msgOut.register_block.public_key.data = [NSData dataFromBase64String:self.appDelegate.pemDsaPublicKey];
-    msgOut.register_block.user_agent.string = PushCoinAppUserAgent;
     
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"appname" andValue:@"PushCoin"]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"appver" andValue:@"1.0"]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"appurl" andValue:@"https://pushcoin.com/Pub/Apps/PushCoinIOSGC"]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"author" andValue:@"Gilbert Cheung <gilbertc@asurada.org>"]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"manufacturer" andValue:@"Apple Inc."]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"model" andValue:[[UIDevice currentDevice] name]]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"os" andValue:[NSString stringWithFormat:@"%@/%@",
+                                                                                                        [[UIDevice currentDevice] systemName],
+                                                                                                        [[UIDevice currentDevice] systemVersion]]]];
+
     [parser encodeMessage:msgOut to:dataOut];
     [webService sendMessage:dataOut.consumedData];
 }
@@ -108,7 +117,15 @@
 
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    [self.appDelegate handleErrorMessage:msg withHeader:hdr];
+    if (msg.block.error_code.val == 201)
+    {
+        [self.appDelegate showAlert:@"Registration Code not found."
+              withTitle:@"Error"];
+    }
+    else
+    {
+        [self.appDelegate handleErrorMessage:msg withHeader:hdr];
+    }
     [self.registrationIDTextBox becomeFirstResponder];
 }
 

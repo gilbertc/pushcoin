@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "EmailBook.h"
 #import "OpenSSLWrapper.h"
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
@@ -44,10 +45,11 @@
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize keychain = _keychain;
+@synthesize keychainItem = _keychainItem;
 @synthesize images = _images;
 @synthesize pemDsaPublicKey = _pemDsaPublicKey;
 @synthesize dsaDecryptedKey = _dsaDecryptedKey;
+@synthesize emailBook = _emailBook;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -57,6 +59,10 @@
     [self prepareKeyChain];
     [self prepareOpenSSLWrapper];
     [self prepareImageCache];
+
+    self.emailBook = [[EmailBook alloc] init];
+    [self refreshEmailBook];
+    
     return YES;
 }
 
@@ -120,7 +126,9 @@
 
 -(BOOL) prepareKeyChain
 {
-    self.keychain = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
+    self.keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
+    [self.keychainItem setObject:PushCoinKeychainId forKey:(__bridge id)kSecAttrService];
+    
     return YES;
 }
 
@@ -131,11 +139,21 @@
     return YES;
 }
 
+-(void) refreshEmailBook
+{
+    [self.emailBook refresh];
+}
+
 - (BOOL) registered
 {
     return self.authToken.length != 0;
 }
 
+- (BOOL) hasPasscode
+{
+    NSString * saltedHash = [self.keychainItem objectForKey:(__bridge id)kSecAttrDescription];            
+    return (saltedHash && saltedHash.length != 0);
+}
 
 - (void) setPasscode:(NSString *)passcode oldPasscode:(NSString *)oldPasscode
 {
@@ -149,46 +167,52 @@
 
     if (passcode && passcode.length != 0)
     {
-        OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-        NSData * data = [ssl sha1_hashData:[passcode dataUsingEncoding:NSASCIIStringEncoding]];
-        [self.keychain setObject:data.bytesToHexString forKey:(__bridge id)kSecAttrDescription];
+        NSString * salt = [NSString stringWithFormat:@"%u", arc4random()];
+        NSString * saltedPasscode = [NSString stringWithFormat:@"%@%@", salt, passcode];
+        NSString * hash = [[OpenSSLWrapper instance] sha1_hashData:[saltedPasscode dataUsingEncoding:NSASCIIStringEncoding]].bytesToHexString;
+        
+        NSString * saltedHash =  [NSString stringWithFormat:@"%@|%@", salt, hash];
+        [self.keychainItem setObject:saltedHash forKey:(__bridge id)kSecAttrDescription];
     }
     else
     {
-        [self.keychain setObject:@"" forKey:(__bridge id)kSecAttrDescription];            
+        [self.keychainItem setObject:@"" forKey:(__bridge id)kSecAttrDescription];      
     }
-}
-
-- (BOOL) hasPasscode
-{
-    NSString * hash = [self.keychain objectForKey:(__bridge id)kSecAttrDescription];            
-    return (hash && hash.length != 0);
 }
 
 -(BOOL) validatePasscode:(NSString *)passcode
 {
-    NSString * hash = [self.keychain objectForKey:(__bridge id)kSecAttrDescription];            
-    if (!hash || hash.length == 0) return YES;
+    NSString * saltedHash = [self.keychainItem objectForKey:(__bridge id)kSecAttrDescription];
+    NSArray * array = [saltedHash componentsSeparatedByString:@"|"]; 
+
+    if (array.count != 2) 
+        return NO;
     
-    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-    NSData * data = [ssl sha1_hashData:[passcode dataUsingEncoding:NSASCIIStringEncoding]];
+    NSString * salt = (NSString *) [array objectAtIndex:0];
+    NSString * hash = (NSString *) [array objectAtIndex:1];
+    NSString * saltedPasscode = [NSString stringWithFormat:@"%@%@", salt, passcode];
     
+    if (!hash || hash.length == 0) 
+        return YES;
+    
+    NSData * data = [[OpenSSLWrapper instance] sha1_hashData:[saltedPasscode dataUsingEncoding:NSASCIIStringEncoding]];
     return [data isEqualToData:hash.hexStringToBytes];
 }
 
 - (NSString *) authToken
 {
-    return [self.keychain objectForKey:(__bridge id)kSecAttrAccount];
+    return [self.keychainItem objectForKey:(__bridge id)kSecAttrAccount];
 }
 
 - (void) setAuthToken:(NSString *)authToken
 {
-    [self.keychain setObject:authToken forKey:(__bridge id)kSecAttrAccount];
+    [self.keychainItem setObject:authToken forKey:(__bridge id)kSecAttrAccount];
 }
 
 -(NSString *) pemDsaPublicKey
 {
-    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.documentPath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] encoding:NSASCIIStringEncoding error:nil];
+    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.documentPath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] 
+                                                        encoding:NSASCIIStringEncoding error:nil];
     
     NSRange headerRange = [pemPublicKey rangeOfString:@"---\n"];
     pemPublicKey = [pemPublicKey substringFromIndex:headerRange.location + headerRange.length];
@@ -201,7 +225,7 @@
 
 - (BOOL) unlockDsaPrivateKeyWithPasscode:(NSString *)passcode
 {
-    NSData * encryptedKey = ((NSString *)[self.keychain objectForKey:(__bridge id)kSecValueData]).hexStringToBytes;
+    NSData * encryptedKey = ((NSString *)[self.keychainItem objectForKey:(__bridge id)kSecValueData]).hexStringToBytes;
     if (encryptedKey && encryptedKey.length)
     {
         if (passcode && passcode.length)
@@ -225,12 +249,12 @@
 - (void) setDsaPrivateKey:(NSData *)dsaPrivateKey withPasscode:(NSString *)passcode
 {
     if (!passcode || passcode.length == 0)
-        [self.keychain setObject:dsaPrivateKey.bytesToHexString forKey:(__bridge id)kSecValueData];
+        [self.keychainItem setObject:dsaPrivateKey.bytesToHexString forKey:(__bridge id)kSecValueData];
     else
     {
         OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
         NSData * encryptedKey = [ssl des3_encrypt:dsaPrivateKey withKey:passcode];
-        [self.keychain setObject:encryptedKey.bytesToHexString forKey:(__bridge id)kSecValueData];
+        [self.keychainItem setObject:encryptedKey.bytesToHexString forKey:(__bridge id)kSecValueData];
     }
 }
 

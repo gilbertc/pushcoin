@@ -11,6 +11,8 @@
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
 #import "NSData+Base64.h"
+#import <AddressBook/AddressBook.h>
+
 
 @implementation SettingsController
 @synthesize unregisterButton;
@@ -105,7 +107,7 @@
 {
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
-    
+ 
 - (IBAction)unregister:(id)sender 
 {
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Unregistering device"

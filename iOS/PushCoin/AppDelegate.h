@@ -13,6 +13,7 @@
 #import "PushCoinPayment.h"
 #import "OpenSSLWrapper.h"
 
+@class EmailBook;
 
 @interface SingleUseData : NSObject
 {
@@ -26,7 +27,8 @@
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, OpenSSLWrapperDSAPrivateKeyDelegate>
-@property (strong, nonatomic) KeychainItemWrapper * keychain;
+@property (strong, nonatomic) KeychainItemWrapper * keychainItem;
+
 @property (strong, nonatomic) UIWindow * window;
 @property (strong, nonatomic) NSArray * images;
 
@@ -40,6 +42,9 @@
 @property (nonatomic, readonly) NSData * dsaPrivateKey;
 
 @property (nonatomic, strong) SingleUseData * dsaDecryptedKey;
+@property (nonatomic, strong) EmailBook * emailBook;
+
+-(void) refreshEmailBook;
 
 -(void) setPasscode:(NSString *)passcode oldPasscode:(NSString *)oldPasscode;
 -(BOOL) validatePasscode:(NSString *)passcode;

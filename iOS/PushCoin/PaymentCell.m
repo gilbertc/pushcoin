@@ -39,6 +39,12 @@
     _payment = payment;
     self.contentView.backgroundColor = [UIColor colorWithPatternImage:
                                         [self.appDelegate imageForAmountType:payment.amountType]];
+    
+    //self.contentView.backgroundColor = [UIColor darkGrayColor];
+    //self.contentView.layer.borderColor = [UIColor greenColor].CGColor;
+    //self.contentView.layer.borderWidth = 1.0f;
+    //self.contentView.alpha = 0.75f;
+    
     [self setAmount:self.payment.amount andTip:self.payment.tip];
 }
 

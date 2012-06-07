@@ -14,6 +14,7 @@
 
 @implementation QRViewController
 @synthesize payment = payment_;
+@synthesize receiver = receiver_;
 @synthesize navigationBar;
 @synthesize delegate;
 @synthesize imageView;
@@ -24,6 +25,7 @@
 @synthesize centLabel;
 @synthesize tipLabel;
 @synthesize toolbar;
+@synthesize receiverLabel;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -89,7 +91,7 @@
     
     msgOut.pub_block.currency.string = @"USD";
     msgOut.pub_block.keyid.data = [PushCoinRSAPublicKeyID hexStringToBytes];
-    msgOut.pub_block.receiver.string = @"";
+    msgOut.pub_block.receiver.string = [self.receiver email] ? self.receiver.email : @"";
     msgOut.pub_block.note.string = @"";
     
     [self.parser encodeMessage:msgOut to:dataOut];
@@ -112,12 +114,20 @@
         
         if (self.payment.tip != 0)
         {
-            [self.tipLabel setHidden:false];
             self.tipLabel.text = [NSString stringWithFormat:@"+ %d%% tips", (int)(self.payment.tip * 100)];        
         }
         else
         {
-            [self.tipLabel setHidden:true];
+            self.tipLabel.text = @"";
+        }
+        
+        if (self.receiver)
+        {
+            self.receiverLabel.text = self.receiver.name;
+        }
+        else 
+        {
+            self.receiverLabel.text = @"Any";
         }
         
     }
@@ -140,6 +150,7 @@
     [self setCentLabel:nil];
     [self setTipLabel:nil];
     [self setToolbar:nil];
+    [self setReceiverLabel:nil];
     [super viewDidUnload];
 }
 
@@ -177,7 +188,37 @@
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if (buttonIndex == 0)
+    {
+        //set receiver
+        [self showSelectReceiver];
+    }
+}
+
+-(void) showSelectReceiver
+{   
+    SelectReceiverController * controller = [self.appDelegate viewControllerWithIdentifier:@"SelectReceiverController"];
     
+    if (controller)
+    {
+        controller.delegate = self;
+        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentModalViewController:controller animated:YES];
+    }
+}
+
+-(void) selectReceiverControllerDidCancel:(SelectReceiverController *)controller
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+
+-(void) selectReceiverControllerDidClose:(SelectReceiverController *)controller
+{
+    [self dismissModalViewControllerAnimated:YES];
+    self.receiver = [controller.receiver copy];
+    [self prepareQR];
+
 }
 
 - (void) showPaymentDetails
