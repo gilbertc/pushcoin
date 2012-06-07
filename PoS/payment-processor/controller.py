@@ -30,7 +30,10 @@ class AppController(QThread):
 	onBusy = Signal(object)
 
 	def error(self, txt):
-		self.onStatus.emit('<font color="red">%s</font>' % txt)
+		self.onStatus.emit(txt)
+
+	def normal(self, txt):
+		self.onStatus.emit(txt)
 
 	def on_payment_authorization(self):
 		'''Handles PTA'''
@@ -147,11 +150,15 @@ class AppController(QThread):
 	def run(self):
 		# Submits transactions on background thread
 		while True:
-			self.onBusy.emit(False)
-			self.__wakeup.wait(self.__mtx)
+			if not self.__exiting:
+				self.normal("Ready")
+				self.onBusy.emit(False)
+				self.__wakeup.wait(self.__mtx)
+			# check again, after waiting
 			if self.__exiting:
 				break
 			else:
+				self.normal("Processing, please wait...")
 				self.onBusy.emit(True)
 
 			'''Submits PTA to the server'''
@@ -244,8 +251,11 @@ class AppController(QThread):
 		# Get encoded PCOS data 	
 		encoded = req.encoded()
 
-		remote_call = urllib2.urlopen(const.PUSHCOIN_SERVER_URL, encoded )
-		response = remote_call.read()
+		try:
+			remote_call = urllib2.urlopen(const.PUSHCOIN_SERVER_URL, encoded, const.CONNECTION_TIMEOUT_SECS )
+			response = remote_call.read()
+		except urllib2.URLError, e:
+			raise RuntimeError('Connection error: %s' % e.reason) 
 
 		res = pcos.Doc( response )
 		# check if response is not an error

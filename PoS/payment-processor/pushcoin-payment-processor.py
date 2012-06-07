@@ -42,7 +42,7 @@ if __name__ == '__main__':
 	# handle PTA from the scanner
 	proc.onDataArrived.connect(main.process_data)
 	proc.onStatus.connect(main.statusbar.showMessage)
-	proc.onBusy.connect(main.showBusy)
+	proc.onBusy.connect(main.show_busy)
 	scanner.onData.connect(proc.parse_pcos)
 	scanner.onStatus.connect(main.scannerStatus.setText)
 

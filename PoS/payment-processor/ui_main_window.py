@@ -5,6 +5,7 @@ from decimal import Decimal
 from PySide.QtGui import *
 from PySide.QtCore import *
 from gen_ui_main import Ui_MainWindow
+import settings as const
 
 # Templates for rendering PTAs
 PTA_WITH_TIP_TMPL = '''<center><h2><hr />Payment Authorization<hr /></h2></center>
@@ -51,7 +52,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		'''Mandatory initialisation of a class.'''
 		super(MainWindow, self).__init__(parent)
 		self.setupUi(self)
+		self.animationArea.hide()
 		self.view_display.setReadOnly(True)
+
+		# prepare busy-animation
+		self.busyAnim = QMovie("img/3d_arrows.gif")
+		self.animationArea.setMovie(self.busyAnim)
 
 		# status bar
 		self.scannerStatus = QLabel()
@@ -161,10 +167,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.input_cost.setFocus()
 
 
-	def showBusy(self, state):
+	def show_busy(self, is_busy):
 		'''Turns animation on/off depending on busy status'''
-		print "busy: %s" % state
+		
+		# only start anim if not already playing
+		if is_busy and self.animationArea.isHidden():
+			self.busyAnim.start()
+			self.view_display.hide()
+			self.animationArea.show()
 
+		# only stop anim if actually playing
+		elif self.view_display.isHidden():
+			# delay the shutoff so the animation won't just flicker
+			QTimer.singleShot(250, self, SLOT('animation_off()'))
+
+
+	@Slot()
+	def animation_off(self):
+		self.animationArea.hide()
+		self.view_display.show()
+		self.busyAnim.stop()
+		
 
 	def process_data(self, data):
 		'''Displays data arriving from the controller'''
@@ -173,7 +196,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		if data.msgid == 'Er':
 			self.__reset()
 			self.view_display.setText( data.what )
-			self.certificateStatus.setText('ERROR...')
+			self.certificateStatus.clear()
 			return
 		elif data.msgid == 'Ok':
 			self.__reset()
