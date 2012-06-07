@@ -161,6 +161,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.input_cost.setFocus()
 
 
+	def showBusy(self, state):
+		'''Turns animation on/off depending on busy status'''
+		print "busy: %s" % state
+
+
 	def process_data(self, data):
 		'''Displays data arriving from the controller'''
 
