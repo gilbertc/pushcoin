@@ -152,10 +152,40 @@ class RmoteCall:
 			
 			currency = body.read_fixed_string(3) # currency
 			merchant_name = body.read_short_string() # merchant name
-			pta_receiver = body.read_short_string() # PTA receiver
+			recipient = body.read_short_string() # PTA recipient
+			ref_data = binascii.hexlify( body.read_short_string() ) # ref_data
 			invoice = body.read_short_string() # invoice
 			note = body.read_short_string() # note
-			print "--- %s/%s ---\ntx-id: %s\ntx_time: %s\ntx_type: %s\ntx_context: %s\namount: %s\ntip: %s\ntax: %s\ncurrency: %s\nmerchant_name: %s\npta_receiver: %s\ninvoice: %s\nnote: %s\n" % (i, count, tx_id, tx_time, tx_type, tx_context, amount, tip, tax, currency, merchant_name, pta_receiver, invoice, note)
+
+			# address of the POS station
+			if bool(body.read_byte()):
+				street = body.read_short_string()
+				city = body.read_short_string()
+				state = body.read_short_string()
+				zipc = body.read_short_string()
+				country = body.read_int16() # scale
+				address = '%s, %s, %s %s, %s' % (street, city, state, zipc, country)
+			else:
+				address = 'not provided'
+
+			# contact info at the place of transaction origination
+			if bool(body.read_byte()):
+				phone = body.read_short_string()
+				email = body.read_short_string()
+				contact = 'phone: %s, email: %s' % (phone, email)
+			else:
+				contact = 'not provided'
+
+			# geo-location of the place of transaction origination
+			if bool(body.read_byte()):
+				latitude = body.read_double()
+				longitude = body.read_double()
+				geolocation = '%s, %s' % (latitude, longitude)
+			else:
+				geolocation = 'not provided'
+
+			print "--- %s/%s ---\ntx-id: %s\ncounterparty: %s\ntx_time: %s\naddress: %s\ngeolocation: %s\ncontact: %s\ntx_type: %s\ntx_context: %s\namount: %s\ntip: %s\ntax: %s\ncurrency: %s\nmerchant_name: %s\nrecipient: %s\nref-data: %s\ninvoice: %s\nnote: %s\n" % (i, count, tx_id, counterparty, tx_time, address, geolocation, contact, tx_type, tx_context, amount, tip, tax, currency, merchant_name, recipient, ref_data, invoice, note)
+
 		log.info('Returned %s records', count)
 
 
@@ -209,6 +239,9 @@ class RmoteCall:
 		r1.write_fixed_string( "USD", size=3 ) # currency
 		r1.write_short_string( 'John paid his dept', max=127 ) # note
 
+		# no geo-location available
+		r1.write_byte(0)
+
 		# package everything and ship out
 		req = pcos.Doc( name="Tt" )
 		req.add( pta )
@@ -238,13 +271,13 @@ class RmoteCall:
 		r1.write_int16( charge_scale ) # scale
 
 		# tax
-		p2.write_byte(1) # optional indicator
+		r1.write_byte(1) # optional indicator
 		(tax_value, tax_scale) = decimal_to_parts(Decimal(self.args['tax']))
 		r1.write_int64( tax_value ) # value
 		r1.write_int16( tax_scale ) # scale
 
 		# tip
-		p1.write_byte(1) # optional indicator
+		r1.write_byte(1) # optional indicator
 		(tip_value, tip_scale) = decimal_to_parts(Decimal(self.args['tip']))
 		r1.write_int64( tip_value ) # value
 		r1.write_int16( tip_scale ) # scale
@@ -253,6 +286,9 @@ class RmoteCall:
 		r1.write_short_string( 'inv-123', max=24 ) # invoice ID
 		r1.write_short_string( 'happy meal', max=127 ) # note
 		r1.write_int16(0) # list of purchased goods
+
+		# no geo-location available
+		r1.write_byte(0)
 
 		# package everything and ship out
 		req = pcos.Doc( name="Pt" )
@@ -375,12 +411,28 @@ class RmoteCall:
 		bo = pcos.Block( 'Bo', 512, 'O' )
 		bo.write_short_string( self.args['registration_id'], max=64 ) # registration ID
 		bo.write_long_string( base64.b64decode(TEST_DSA_KEY_PUB_PEM) )
-		bo.write_long_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ) )
-		req.add( bo )
+		# user-agent attributes
+		user_agent = [
+			('appname', 'IceBreaker'), 
+			('appver', '1.0'), 
+			('appurl', 'https://pushcoin.com/Pub/SDK/WelcomeDevelopers'), 
+			('author', 'PushCoin <ask@pushcoin.com>'), 
+			('os', '%s %s' % (sys.platform, sys.version)), 
+		]
+		bo.write_byte( len(user_agent) )
+		for kv in user_agent:
+			bo.write_short_string( kv[0], max=32 )
+			bo.write_short_string( kv[1], max=127 )
 
+		req.add( bo )
 		res = self.send( req )
 
+		assert res.message_id == 'Ac'
 		# jump to the block of interest
+		tm = res.block( 'Bo' )
+		mat = tm.read_fixed_string(20);
+		log.info('Success (mat: %s)', binascii.hexlify( mat ))
+
 
 	# CMD: `ping'
 	def ping(self):
