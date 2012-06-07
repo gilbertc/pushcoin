@@ -156,7 +156,36 @@ class RmoteCall:
 			ref_data = binascii.hexlify( body.read_short_string() ) # ref_data
 			invoice = body.read_short_string() # invoice
 			note = body.read_short_string() # note
-			print "--- %s/%s ---\ntx-id: %s\ntx_time: %s\ntx_type: %s\ntx_context: %s\namount: %s\ntip: %s\ntax: %s\ncurrency: %s\nmerchant_name: %s\nrecipient: %s\nref-data: %s\ninvoice: %s\nnote: %s\n" % (i, count, tx_id, tx_time, tx_type, tx_context, amount, tip, tax, currency, merchant_name, recipient, ref_data, invoice, note)
+
+			# address of the POS station
+			if bool(body.read_byte()):
+				street = body.read_short_string()
+				city = body.read_short_string()
+				state = body.read_short_string()
+				zipc = body.read_short_string()
+				country = body.read_int16() # scale
+				address = '%s, %s, %s %s, %s' % (street, city, state, zipc, country)
+			else:
+				address = 'not provided'
+
+			# contact info at the place of transaction origination
+			if bool(body.read_byte()):
+				phone = body.read_short_string()
+				email = body.read_short_string()
+				contact = 'phone: %s, email: %s' % (phone, email)
+			else:
+				contact = 'not provided'
+
+			# geo-location of the place of transaction origination
+			if bool(body.read_byte()):
+				latitude = body.read_double()
+				longitude = body.read_double()
+				geolocation = '%s, %s' % (latitude, longitude)
+			else:
+				geolocation = 'not provided'
+
+			print "--- %s/%s ---\ntx-id: %s\ncounterparty: %s\ntx_time: %s\naddress: %s\ngeolocation: %s\ncontact: %s\ntx_type: %s\ntx_context: %s\namount: %s\ntip: %s\ntax: %s\ncurrency: %s\nmerchant_name: %s\nrecipient: %s\nref-data: %s\ninvoice: %s\nnote: %s\n" % (i, count, tx_id, counterparty, tx_time, address, geolocation, contact, tx_type, tx_context, amount, tip, tax, currency, merchant_name, recipient, ref_data, invoice, note)
+
 		log.info('Returned %s records', count)
 
 
@@ -209,6 +238,9 @@ class RmoteCall:
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
 		r1.write_short_string( 'John paid his dept', max=127 ) # note
+
+		# no geo-location available
+		r1.write_byte(0)
 
 		# package everything and ship out
 		req = pcos.Doc( name="Tt" )
