@@ -35,9 +35,8 @@ class QrCodeScanner (QThread):
 		self.onStatus.emit('<font color="green">%s</font>' % txt)
 
 	def stop(self):
-		self.__mtx.lock()
+		lock = QMutexLocker(self.__mtx)
 		self.__exiting = True
-		self.__mtx.unlock()
 
 	def __init__(self, model, vendor_id, product_id, end_tag):
 		QThread.__init__( self )
@@ -52,9 +51,8 @@ class QrCodeScanner (QThread):
 		self.__mtx = QMutex()
 
 	def __is_exiting(self):
-		self.__mtx.lock()
+		lock = QMutexLocker(self.__mtx)
 		exiting = self.__exiting
-		self.__mtx.unlock()
 		return exiting
 
 	def __present(self):

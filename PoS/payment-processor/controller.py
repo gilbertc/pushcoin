@@ -22,13 +22,18 @@ from decimal import Decimal
 from PySide.QtCore import *
 import settings as const
 
-class AppController(QObject):
+class AppController(QThread):
 	'''Handles data events, communicates with the PushCoin backend'''
 
 	onDataArrived = Signal(object)
 	onStatus = Signal(object)
+	onBusy = Signal(object)
+
 	def error(self, txt):
-		self.onStatus.emit('<font color="red">%s</font>' % txt)
+		self.onStatus.emit(txt)
+
+	def normal(self, txt):
+		self.onStatus.emit(txt)
 
 	def on_payment_authorization(self):
 		'''Handles PTA'''
@@ -79,7 +84,15 @@ class AppController(QObject):
 	#  register handlers here
 	#-------------------------------
 	def __init__(self):
-		QObject.__init__(self)
+		QThread.__init__( self )
+
+		# sync primitives
+		self.__mtx = QMutex()
+		self.__wakeup = QWaitCondition()
+		self.__queue = None
+
+		# flag for telling the worker-thread we are exiting
+		self.__exiting = False
 
 		# empty payload
 		self.payload = None
@@ -91,6 +104,7 @@ class AppController(QObject):
 
 
 	def parse_pcos(self, data):
+		'''Invoked by the outside reader (NFC or QR-scanner) when data arrives.'''
 		try:
 			self.payload = Segment('Body')
 			self.payload.data = data
@@ -107,62 +121,103 @@ class AppController(QObject):
 		except Exception, e:
 			err = Segment('Er')
 			err.what = str(e)
-			self.onDataArrived(err)
+			self.onDataArrived.emit(err)
 
 
 	def submit(self, form):
-		'''Submits PTA to the server'''
-		try:
-			if not (self.payload and hasattr(self.payload, 'pta')):
-				raise RuntimeError("No Payment Certificate")
+		# schedules submission on another thread
+		# makes sure we only process one request at a time
+		lock = QMutexLocker(self.__mtx)
 
-			# package PTA into a block
-			pta = pcos.Block( 'Pa', 512, 'O' )
-			pta.write_fixed_string(self.payload.data, size=len(self.payload.data))
-
-			# create payment-request block
-			r1 = pcos.Block( 'R1', 1024, 'O' )
-			r1.write_fixed_string( binascii.unhexlify( const.MERCHANT_MAT ), size=20 ) # mat
-			r1.write_short_string( '', max=127 ) # ref_data
-			r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
-
-			# charge amount
-			(charge_value, charge_scale) = decimal_to_parts(form.charge)
-			r1.write_int64( charge_value ) # value
-			r1.write_int16( charge_scale ) # scale
-
-			# tax: basic terminal app doesn't expect user to enter this
-			r1.write_byte(0) # no tax info
-
-			# tip
-			if form.tip:
-				r1.write_byte(1) # has tip info
-				(tip_value, tip_scale) = decimal_to_parts(form.tip)
-				r1.write_int64( tip_value ) # value
-				r1.write_int16( tip_scale ) # scale
-			else:
-				r1.write_byte(0) # no tip info
-
-			r1.write_fixed_string( const.CURRENCY_CODE, size=3 ) # currency
-			r1.write_short_string( form.order_id, max=24 ) # invoice ID
-			r1.write_short_string( form.note, max=127 ) # note
-			r1.write_int16(0) # list of purchased goods
-
-			# package everything and ship out
-			req = pcos.Doc( name="Pt" )
-			req.add( pta )
-			req.add( r1 )
-
-			res = self.send( req )
-			self.expect_success( res, form.charge, form.order_id, form.note )
-
-		except Exception, e:
-#TODO			log.error('Success (tx_id: %s, ref_data: %s)', binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ))
+		# check if we aren't already processing a transaction
+		if self.__queue:
 			err = Segment('Er')
-			err.what = str(e)
-
-			# emit the message
+			err.what = "Transaction in progress..."
+			lock.unlock()
 			self.onDataArrived.emit(err)
+		else:
+			self.__queue = self.payload
+			self.__queue.form = form
+			self.__wakeup.wakeOne()
+
+
+	def stop(self):
+		lock = QMutexLocker(self.__mtx)
+		self.__exiting = True
+		self.__wakeup.wakeAll()
+
+
+	def run(self):
+		# Submits transactions on background thread
+		while True:
+			if not self.__exiting:
+				self.normal("Ready")
+				self.onBusy.emit(False)
+				self.__wakeup.wait(self.__mtx)
+			# check again, after waiting
+			if self.__exiting:
+				break
+			else:
+				self.normal("Processing, please wait...")
+				self.onBusy.emit(True)
+
+			'''Submits PTA to the server'''
+			ok = None
+			try:
+				if not (self.__queue and hasattr(self.__queue, 'pta')):
+					raise RuntimeError("No Payment Certificate")
+
+				# package PTA into a block
+				pta = pcos.Block( 'Pa', 512, 'O' )
+				pta.write_fixed_string(self.__queue.data, size=len(self.__queue.data))
+
+				# create payment-request block
+				r1 = pcos.Block( 'R1', 1024, 'O' )
+				r1.write_fixed_string( binascii.unhexlify( const.MERCHANT_MAT ), size=20 ) # mat
+				r1.write_short_string( '', max=127 ) # ref_data
+				r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
+
+				# charge amount
+				(charge_value, charge_scale) = decimal_to_parts(self.__queue.form.charge)
+				r1.write_int64( charge_value ) # value
+				r1.write_int16( charge_scale ) # scale
+
+				# tax: basic terminal app doesn't expect user to enter this
+				r1.write_byte(0) # no tax info
+
+				# tip
+				if self.__queue.form.tip:
+					r1.write_byte(1) # has tip info
+					(tip_value, tip_scale) = decimal_to_parts(self.__queue.form.tip)
+					r1.write_int64( tip_value ) # value
+					r1.write_int16( tip_scale ) # scale
+				else:
+					r1.write_byte(0) # no tip info
+
+				r1.write_fixed_string( const.CURRENCY_CODE, size=3 ) # currency
+				r1.write_short_string( self.__queue.form.order_id, max=24 ) # invoice ID
+				r1.write_short_string( self.__queue.form.note, max=127 ) # note
+
+				r1.write_byte(0) # no geolocation data
+				r1.write_int16(0) # no list of purchased goods
+
+				# package everything and ship out
+				req = pcos.Doc( name="Pt" )
+				req.add( pta )
+				req.add( r1 )
+
+				res = AppController.send( req )
+				ok = AppController.expect_success( res, self.__queue.form.charge, self.__queue.form.order_id, self.__queue.form.note )
+
+			except Exception, e:
+	#TODO			log.error('Success (tx_id: %s, ref_data: %s)', binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ))
+				ok = Segment('Er')
+				ok.what = str(e)
+
+			# after submission, reset state
+			self.__queue = None
+			self.__mtx.unlock()
+			self.onDataArrived.emit(ok)
 
 
 	def reset(self):
@@ -170,40 +225,37 @@ class AppController(QObject):
 		self.onDataArrived.emit( Segment('Clear') )
 
 
-	def expect_success( self, res, charge, order_id, note ):
+	@staticmethod
+	def expect_success( res, charge, order_id, note ):
 		'''Shows details of Success PCOS message'''
-		if res.message_id == "Ok":
-			bo = res.block( 'Bo' )
-			ref_data = bo.read_short_string() # ref_data
-			transaction_id = bo.read_short_string() # tx-id
+		assert res.message_id == "Ok"
+		bo = res.block( 'Bo' )
+		ref_data = bo.read_short_string() # ref_data
+		transaction_id = bo.read_short_string() # tx-id
 
-			ok = Segment('Ok')
-			time_prt = time.strftime("%x %X", time.localtime(time.time()))
-			ok.what = '<p align="right">%s</p><center><h1><font color="#90ff90"><strong>Approved</strong></font></h1></center><center><h2>$%s</h2></center>' % (time_prt, charge)
-			ok.what += '<br /><font size="2">ID: %s</font>' % binascii.hexlify( transaction_id )
-			if order_id:
-				ok.what += '<br /><font size="2">Order: %s</font>' % order_id
-			if note:
-				ok.what += '<br /><font size="2">Note: %s</font>' % note
-
-			# after submission and successful return, reset state
-			self.payload = None
-
-			# emit the message
-			self.onDataArrived.emit(ok)
-
+		ok = Segment('Ok')
+		time_prt = time.strftime("%x %X", time.localtime(time.time()))
+		ok.what = '<p align="right">%s</p><center><h1><font color="#90ff90"><strong>Approved</strong></font></h1></center><center><h2>$%s</h2></center>' % (time_prt, charge)
+		ok.what += '<br /><font size="2">ID: %s</font>' % binascii.hexlify( transaction_id )
+		if order_id:
+			ok.what += '<br /><font size="2">Order: %s</font>' % order_id
+		if note:
+			ok.what += '<br /><font size="2">Note: %s</font>' % note
 #TODO			log.info('Success (tx_id: %s, ref_data: %s)', binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ))
-		else:
-			raise RuntimeError("'%s' not a Success message" % res.message_id)
+		return ok
 
 
-	def send(self, req):
+	@staticmethod
+	def send(req):
 		'''Sends request to the server, returns result'''
 		# Get encoded PCOS data 	
 		encoded = req.encoded()
 
-		remote_call = urllib2.urlopen(const.PUSHCOIN_SERVER_URL, encoded )
-		response = remote_call.read()
+		try:
+			remote_call = urllib2.urlopen(const.PUSHCOIN_SERVER_URL, encoded, const.CONNECTION_TIMEOUT_SECS )
+			response = remote_call.read()
+		except urllib2.URLError, e:
+			raise RuntimeError('Connection error: %s' % e.reason) 
 
 		res = pcos.Doc( response )
 		# check if response is not an error

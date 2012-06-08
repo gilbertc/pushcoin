@@ -42,20 +42,24 @@ if __name__ == '__main__':
 	# handle PTA from the scanner
 	proc.onDataArrived.connect(main.process_data)
 	proc.onStatus.connect(main.statusbar.showMessage)
+	proc.onBusy.connect(main.show_busy)
 	scanner.onData.connect(proc.parse_pcos)
 	scanner.onStatus.connect(main.scannerStatus.setText)
 
 	# show main window
 	main.show()
 
-	# start the scanner
+	# start the scanner and controller background threads
+	proc.start()
 	scanner.start()
 	
 	# enter Qt main loop
 	rc = app.exec_()
 
 	# exit workers
+	proc.stop()
 	scanner.stop()
+	proc.wait()
 	scanner.wait()
 
 	sys.exit(rc)
