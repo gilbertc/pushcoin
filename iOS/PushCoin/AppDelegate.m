@@ -46,7 +46,9 @@
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize keychainItem = _keychainItem;
+@synthesize privateKeyKeychainItem;
+@synthesize pinHashKeychainItem;
+@synthesize authTokenKeychainItem;
 @synthesize images = _images;
 @synthesize pemDsaPublicKey = _pemDsaPublicKey;
 @synthesize dsaDecryptedKey = _dsaDecryptedKey;
@@ -127,9 +129,15 @@
 
 -(BOOL) prepareKeyChain
 {
-    self.keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
-    [self.keychainItem setObject:PushCoinKeychainId forKey:(__bridge id)kSecAttrService];
+    self.privateKeyKeychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"com.pushcoin.privatekey" accessGroup:nil];
+    [self.privateKeyKeychainItem setObject:@"com.pushcoin.privatekey" forKey:(__bridge id)kSecAttrService];
     
+    self.authTokenKeychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"com.pushcoin.authtoken" accessGroup:nil];
+    [self.authTokenKeychainItem setObject:@"com.pushcoin.authtoken" forKey:(__bridge id)kSecAttrService];
+    
+    self.pinHashKeychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"com.pushcoin.pinhash" accessGroup:nil];
+    [self.pinHashKeychainItem setObject:@"com.pushcoin.pinhash" forKey:(__bridge id)kSecAttrService];
+        
     return YES;
 }
 
@@ -152,7 +160,7 @@
 
 - (BOOL) hasPasscode
 {
-    NSString * saltedHash = [self.keychainItem objectForKey:(__bridge id)kSecAttrDescription];            
+    NSString * saltedHash = [self.pinHashKeychainItem objectForKey:(__bridge id)kSecValueData];            
     return (saltedHash && saltedHash.length != 0);
 }
 
@@ -173,17 +181,17 @@
         NSString * hash = [[OpenSSLWrapper instance] sha1_hashData:[saltedPasscode dataUsingEncoding:NSASCIIStringEncoding]].bytesToHexString;
         
         NSString * saltedHash =  [NSString stringWithFormat:@"%@|%@", salt, hash];
-        [self.keychainItem setObject:saltedHash forKey:(__bridge id)kSecAttrDescription];
+        [self.pinHashKeychainItem setObject:saltedHash forKey:(__bridge id)kSecValueData];
     }
     else
     {
-        [self.keychainItem setObject:@"" forKey:(__bridge id)kSecAttrDescription];      
+        [self.pinHashKeychainItem setObject:@"" forKey:(__bridge id)kSecValueData];      
     }
 }
 
 -(BOOL) validatePasscode:(NSString *)passcode
 {
-    NSString * saltedHash = [self.keychainItem objectForKey:(__bridge id)kSecAttrDescription];
+    NSString * saltedHash = [self.pinHashKeychainItem objectForKey:(__bridge id)kSecValueData];
     NSArray * array = [saltedHash componentsSeparatedByString:@"|"]; 
 
     if (array.count != 2) 
@@ -202,12 +210,12 @@
 
 - (NSString *) authToken
 {
-    return [self.keychainItem objectForKey:(__bridge id)kSecAttrAccount];
+    return [self.authTokenKeychainItem objectForKey:(__bridge id)kSecValueData];
 }
 
 - (void) setAuthToken:(NSString *)authToken
 {
-    [self.keychainItem setObject:authToken forKey:(__bridge id)kSecAttrAccount];
+    [self.authTokenKeychainItem setObject:authToken forKey:(__bridge id)kSecValueData];
 }
 
 -(NSString *) pemDsaPublicKey
@@ -226,7 +234,7 @@
 
 - (BOOL) unlockDsaPrivateKeyWithPasscode:(NSString *)passcode
 {
-    NSData * encryptedKey = ((NSString *)[self.keychainItem objectForKey:(__bridge id)kSecValueData]).hexStringToBytes;
+    NSData * encryptedKey = ((NSString *)[self.privateKeyKeychainItem objectForKey:(__bridge id)kSecValueData]).hexStringToBytes;
     if (encryptedKey && encryptedKey.length)
     {
         if (passcode && passcode.length)
@@ -250,12 +258,12 @@
 - (void) setDsaPrivateKey:(NSData *)dsaPrivateKey withPasscode:(NSString *)passcode
 {
     if (!passcode || passcode.length == 0)
-        [self.keychainItem setObject:dsaPrivateKey.bytesToHexString forKey:(__bridge id)kSecValueData];
+        [self.privateKeyKeychainItem setObject:dsaPrivateKey.bytesToHexString forKey:(__bridge id)kSecValueData];
     else
     {
         OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
         NSData * encryptedKey = [ssl des3_encrypt:dsaPrivateKey withKey:passcode];
-        [self.keychainItem setObject:encryptedKey.bytesToHexString forKey:(__bridge id)kSecValueData];
+        [self.privateKeyKeychainItem setObject:encryptedKey.bytesToHexString forKey:(__bridge id)kSecValueData];
     }
 }
 

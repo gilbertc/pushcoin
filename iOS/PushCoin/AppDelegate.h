@@ -27,7 +27,9 @@
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, OpenSSLWrapperDSAPrivateKeyDelegate>
-@property (strong, nonatomic) KeychainItemWrapper * keychainItem;
+@property (strong, nonatomic) KeychainItemWrapper * privateKeyKeychainItem;
+@property (strong, nonatomic) KeychainItemWrapper * authTokenKeychainItem;
+@property (strong, nonatomic) KeychainItemWrapper * pinHashKeychainItem;
 
 @property (strong, nonatomic) UIWindow * window;
 @property (strong, nonatomic) NSArray * images;
