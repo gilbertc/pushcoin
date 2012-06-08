@@ -13,6 +13,7 @@
 #import "PushCoinPayment.h"
 #import "OpenSSLWrapper.h"
 
+@class PushCoinAddressBook;
 
 @interface SingleUseData : NSObject
 {
@@ -26,7 +27,10 @@
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, OpenSSLWrapperDSAPrivateKeyDelegate>
-@property (strong, nonatomic) KeychainItemWrapper * keychain;
+@property (strong, nonatomic) KeychainItemWrapper * privateKeyKeychainItem;
+@property (strong, nonatomic) KeychainItemWrapper * authTokenKeychainItem;
+@property (strong, nonatomic) KeychainItemWrapper * pinHashKeychainItem;
+
 @property (strong, nonatomic) UIWindow * window;
 @property (strong, nonatomic) NSArray * images;
 
@@ -40,6 +44,9 @@
 @property (nonatomic, readonly) NSData * dsaPrivateKey;
 
 @property (nonatomic, strong) SingleUseData * dsaDecryptedKey;
+@property (nonatomic, strong) PushCoinAddressBook * addressBook;
+
+-(void) refreshAddressBook;
 
 -(void) setPasscode:(NSString *)passcode oldPasscode:(NSString *)oldPasscode;
 -(BOOL) validatePasscode:(NSString *)passcode;
@@ -47,9 +54,12 @@
 -(void) setDsaPrivateKey:(NSData *)dsaPrivateKey withPasscode:(NSString *)passcode;
 -(BOOL) unlockDsaPrivateKeyWithPasscode:(NSString *)passcode;
 
+
 -(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate;
 -(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
                                            viewController:(UIViewController *)controller;
+-(KKPasscodeViewController *)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
+                                    navigationController:(UINavigationController *)controller;
 
 -(RegistrationController *) requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate;
 -(RegistrationController *) requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate
@@ -59,4 +69,10 @@
 
 -(id)viewControllerWithIdentifier:(NSString *) identifier;
 -(UIImage *) imageForAmountType:(PushCoinPaymentAmountType) type;
+
+-(void) clearDevice;
+
+-(bool) handleErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
+-(bool) handleUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
+
 @end

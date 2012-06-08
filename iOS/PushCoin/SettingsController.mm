@@ -11,6 +11,8 @@
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
 #import "NSData+Base64.h"
+#import <AddressBook/AddressBook.h>
+
 
 @implementation SettingsController
 @synthesize unregisterButton;
@@ -105,7 +107,7 @@
 {
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
-    
+ 
 - (IBAction)unregister:(id)sender 
 {
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Unregistering device"
@@ -120,22 +122,18 @@
 {
     if (buttonIndex == 1)
     {
-        NSData * emptyData = [[NSData alloc] init];
-        self.appDelegate.authToken = @"";
-        [self.appDelegate setPasscode:@"" oldPasscode:@""];
-        [self.appDelegate setDsaPrivateKey:emptyData withPasscode:@""];
+        [self.appDelegate clearDevice];
         
         [self updateRegisterButtonStatus];
         [self updatePasscodeButtonStatus];
         
-        [self dismissModalViewControllerAnimated:NO];
+        [self.navigationController popToViewController:self animated:NO];
         [self.appDelegate requestRegistrationWithDelegate:self];
     }
 }
 
 -(void) registrationControllerDidClose:(RegistrationController *)controller
 {
-    [self dismissModalViewControllerAnimated:YES];
     [self updateRegisterButtonStatus];
 }
 - (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
@@ -153,8 +151,12 @@
 
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    [[self appDelegate] showAlert:msg.block.reason.string 
-                        withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
+    [self.appDelegate handleErrorMessage:msg withHeader:hdr];
+}
+
+-(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    [self.appDelegate handleUnknownMessage:msg withHeader:hdr];
 }
 
 -(void) didDecodeSuccessMessage:(SuccessMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
@@ -163,17 +165,11 @@
                         withTitle:@"Success!"];
 }
 
--(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
-{
-    [[self appDelegate] showAlert:[NSString stringWithFormat:@"unexpected message received: [%@]",
-                                   hdr.message_id.string]
-                        withTitle:@"Error"];
-}
-
 - (IBAction)preAuthorizationTest:(id)sender 
 {
     if (self.appDelegate.hasPasscode)
-        preAuthTestPasscodeController = [self.appDelegate requestPasscodeWithDelegate:self viewController:self];
+        preAuthTestPasscodeController = [self.appDelegate requestPasscodeWithDelegate:self 
+                                                                 navigationController:self.navigationController];
     else
         [self doPreAuthorizationTestWithPasscode:nil];
 }
@@ -222,11 +218,6 @@
     [webService sendMessage:dataOut2.consumedData];
 }
 
-- (IBAction)closeButtonTapped:(id)sender 
-{
-    [self dismissModalViewControllerAnimated:YES];
-}
-
 - (IBAction)enablePasscode:(id)sender {
     
     setPasscodeController = [[KKPasscodeViewController alloc] init];
@@ -263,33 +254,19 @@
 
 -(void)didPasscodeCancel:(KKPasscodeViewController *)viewController
 {
-    if (viewController == setPasscodeController)
-    {
-        [self.navigationController popToViewController:self animated:YES];
-    }
-    else
-    {
-        [self dismissModalViewControllerAnimated:YES];
-    }
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 -(void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController *)viewController
 {
-    if (viewController == setPasscodeController)
-    {
-        [self.navigationController popToViewController:self animated:YES];
-    }
-    else
-    {
-        [self dismissModalViewControllerAnimated:YES];    
-    }
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 -(void)didPasscodeEnteredCorrectly:(KKPasscodeViewController *)viewController
 {
     if (viewController == preAuthTestPasscodeController)
     {
-        [self dismissModalViewControllerAnimated:YES];
+        [self.navigationController popToViewController:self animated:YES];
         [self doPreAuthorizationTestWithPasscode:viewController.passcode];
     }
 }

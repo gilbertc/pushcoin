@@ -564,7 +564,7 @@
 
 -(NSUInteger) size
 {
-    [NSException raise:@"operation not supported" format:@"size of and encrypted block is not supported"];
+    //[NSException raise:@"operation not supported" format:@"size of and encrypted block is not supported"];
     return 0;
 }
 
@@ -585,7 +585,7 @@
 
 -(NSUInteger) decode:(PCOSRawData *)data
 {
-    [NSException raise:@"operation not supported" format:@"decoding encrypted block is not supported"];
+    //[NSException raise:@"operation not supported" format:@"decoding encrypted block is not supported"];
     return 0;
 }
 

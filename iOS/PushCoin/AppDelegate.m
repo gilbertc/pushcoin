@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 #import "OpenSSLWrapper.h"
+#import "PushCoinAddressBook.h"
+
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
 
@@ -44,10 +46,13 @@
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize keychain = _keychain;
+@synthesize privateKeyKeychainItem;
+@synthesize pinHashKeychainItem;
+@synthesize authTokenKeychainItem;
 @synthesize images = _images;
 @synthesize pemDsaPublicKey = _pemDsaPublicKey;
 @synthesize dsaDecryptedKey = _dsaDecryptedKey;
+@synthesize addressBook = _addressBook;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -57,6 +62,10 @@
     [self prepareKeyChain];
     [self prepareOpenSSLWrapper];
     [self prepareImageCache];
+
+    self.addressBook = [[PushCoinAddressBook alloc] init];
+    [self refreshAddressBook];
+    
     return YES;
 }
 
@@ -120,7 +129,15 @@
 
 -(BOOL) prepareKeyChain
 {
-    self.keychain = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
+    self.privateKeyKeychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"com.pushcoin.privatekey" accessGroup:nil];
+    [self.privateKeyKeychainItem setObject:@"com.pushcoin.privatekey" forKey:(__bridge id)kSecAttrService];
+    
+    self.authTokenKeychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"com.pushcoin.authtoken" accessGroup:nil];
+    [self.authTokenKeychainItem setObject:@"com.pushcoin.authtoken" forKey:(__bridge id)kSecAttrService];
+    
+    self.pinHashKeychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"com.pushcoin.pinhash" accessGroup:nil];
+    [self.pinHashKeychainItem setObject:@"com.pushcoin.pinhash" forKey:(__bridge id)kSecAttrService];
+        
     return YES;
 }
 
@@ -131,11 +148,21 @@
     return YES;
 }
 
+-(void) refreshAddressBook
+{
+    [self.addressBook refresh];
+}
+
 - (BOOL) registered
 {
     return self.authToken.length != 0;
 }
 
+- (BOOL) hasPasscode
+{
+    NSString * saltedHash = [self.pinHashKeychainItem objectForKey:(__bridge id)kSecValueData];            
+    return (saltedHash && saltedHash.length != 0);
+}
 
 - (void) setPasscode:(NSString *)passcode oldPasscode:(NSString *)oldPasscode
 {
@@ -149,46 +176,52 @@
 
     if (passcode && passcode.length != 0)
     {
-        OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-        NSData * data = [ssl sha1_hashData:[passcode dataUsingEncoding:NSASCIIStringEncoding]];
-        [self.keychain setObject:data.bytesToHexString forKey:(__bridge id)kSecAttrDescription];
+        NSString * salt = [NSString stringWithFormat:@"%u", arc4random()];
+        NSString * saltedPasscode = [NSString stringWithFormat:@"%@%@", salt, passcode];
+        NSString * hash = [[OpenSSLWrapper instance] sha1_hashData:[saltedPasscode dataUsingEncoding:NSASCIIStringEncoding]].bytesToHexString;
+        
+        NSString * saltedHash =  [NSString stringWithFormat:@"%@|%@", salt, hash];
+        [self.pinHashKeychainItem setObject:saltedHash forKey:(__bridge id)kSecValueData];
     }
     else
     {
-        [self.keychain setObject:@"" forKey:(__bridge id)kSecAttrDescription];            
+        [self.pinHashKeychainItem setObject:@"" forKey:(__bridge id)kSecValueData];      
     }
-}
-
-- (BOOL) hasPasscode
-{
-    NSString * hash = [self.keychain objectForKey:(__bridge id)kSecAttrDescription];            
-    return (hash && hash.length != 0);
 }
 
 -(BOOL) validatePasscode:(NSString *)passcode
 {
-    NSString * hash = [self.keychain objectForKey:(__bridge id)kSecAttrDescription];            
-    if (!hash || hash.length == 0) return YES;
+    NSString * saltedHash = [self.pinHashKeychainItem objectForKey:(__bridge id)kSecValueData];
+    NSArray * array = [saltedHash componentsSeparatedByString:@"|"]; 
+
+    if (array.count != 2) 
+        return NO;
     
-    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-    NSData * data = [ssl sha1_hashData:[passcode dataUsingEncoding:NSASCIIStringEncoding]];
+    NSString * salt = (NSString *) [array objectAtIndex:0];
+    NSString * hash = (NSString *) [array objectAtIndex:1];
+    NSString * saltedPasscode = [NSString stringWithFormat:@"%@%@", salt, passcode];
     
+    if (!hash || hash.length == 0) 
+        return YES;
+    
+    NSData * data = [[OpenSSLWrapper instance] sha1_hashData:[saltedPasscode dataUsingEncoding:NSASCIIStringEncoding]];
     return [data isEqualToData:hash.hexStringToBytes];
 }
 
 - (NSString *) authToken
 {
-    return [self.keychain objectForKey:(__bridge id)kSecAttrAccount];
+    return [self.authTokenKeychainItem objectForKey:(__bridge id)kSecValueData];
 }
 
 - (void) setAuthToken:(NSString *)authToken
 {
-    [self.keychain setObject:authToken forKey:(__bridge id)kSecAttrAccount];
+    [self.authTokenKeychainItem setObject:authToken forKey:(__bridge id)kSecValueData];
 }
 
 -(NSString *) pemDsaPublicKey
 {
-    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.documentPath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] encoding:NSASCIIStringEncoding error:nil];
+    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.documentPath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] 
+                                                        encoding:NSASCIIStringEncoding error:nil];
     
     NSRange headerRange = [pemPublicKey rangeOfString:@"---\n"];
     pemPublicKey = [pemPublicKey substringFromIndex:headerRange.location + headerRange.length];
@@ -201,7 +234,7 @@
 
 - (BOOL) unlockDsaPrivateKeyWithPasscode:(NSString *)passcode
 {
-    NSData * encryptedKey = ((NSString *)[self.keychain objectForKey:(__bridge id)kSecValueData]).hexStringToBytes;
+    NSData * encryptedKey = ((NSString *)[self.privateKeyKeychainItem objectForKey:(__bridge id)kSecValueData]).hexStringToBytes;
     if (encryptedKey && encryptedKey.length)
     {
         if (passcode && passcode.length)
@@ -225,12 +258,12 @@
 - (void) setDsaPrivateKey:(NSData *)dsaPrivateKey withPasscode:(NSString *)passcode
 {
     if (!passcode || passcode.length == 0)
-        [self.keychain setObject:dsaPrivateKey.bytesToHexString forKey:(__bridge id)kSecValueData];
+        [self.privateKeyKeychainItem setObject:dsaPrivateKey.bytesToHexString forKey:(__bridge id)kSecValueData];
     else
     {
         OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
         NSData * encryptedKey = [ssl des3_encrypt:dsaPrivateKey withKey:passcode];
-        [self.keychain setObject:encryptedKey.bytesToHexString forKey:(__bridge id)kSecValueData];
+        [self.privateKeyKeychainItem setObject:encryptedKey.bytesToHexString forKey:(__bridge id)kSecValueData];
     }
 }
 
@@ -280,6 +313,20 @@
     return controller;
 }
 
+-(KKPasscodeViewController *)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
+                                    navigationController:(UINavigationController *)navController
+{
+    KKPasscodeViewController * controller = [[KKPasscodeViewController alloc] init];
+    controller.delegate = delegate;
+    controller.mode = KKPasscodeModeEnter;
+    controller.passcodeLockOn = YES;
+    controller.eraseData = NO;
+    controller.passcode = @"";
+
+    [navController pushViewController:controller animated:YES];
+    return controller;
+}
+
 -(id)viewControllerWithIdentifier:(NSString *) identifier
 {
     UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:[NSBundle mainBundle]];
@@ -287,6 +334,13 @@
     return controller;
 }
 
+-(void) clearDevice
+{
+    NSData * emptyData = [[NSData alloc] init];
+    self.authToken = @"";
+    [self setPasscode:@"" oldPasscode:@""];
+    [self setDsaPrivateKey:emptyData withPasscode:@""];
+}
 
 - (UIAlertView *) showAlert:(NSString *)message withTitle:(NSString *)title
 {
@@ -297,6 +351,30 @@
                                           otherButtonTitles:nil];
     [alert show];
     return alert;
+}
+
+-(bool) handleErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    SInt32 errorCode = msg.block.error_code.val;
+    
+    switch(errorCode)
+    {
+        case 201: //invalid mat
+            [self clearDevice];
+            [self requestRegistrationWithDelegate:nil];
+            break;
+        default:
+            [self showAlert:msg.block.reason.string 
+                  withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
+    }
+    return YES;
+}
+
+-(bool) handleUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    [self showAlert:[NSString stringWithFormat:@"unexpected message received: [%@]", hdr.message_id.string]
+          withTitle:@"Error"];
+    return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

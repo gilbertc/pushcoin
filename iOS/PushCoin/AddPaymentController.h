@@ -11,9 +11,7 @@
 @class AddPaymentController;
 @protocol AddPaymentControllerDelegate <NSObject>
 
-- (void) addPaymentControllerDidClose:(AddPaymentController *)controller;
-- (void) addPaymentControllerDidCancel:(AddPaymentController *)controller;
-
+- (void) addPaymentControllerDidAddPayment:(AddPaymentController *)controller;
 
 @end
 
@@ -29,7 +27,6 @@
 @property (weak, nonatomic) NSObject<AddPaymentControllerDelegate> * delegate;
 
 
-- (IBAction)cancelButtonTapped:(id)sender;
 - (IBAction)addButtonTapped:(id)sender;
 - (IBAction)backgroundTapped:(id)sender;
 

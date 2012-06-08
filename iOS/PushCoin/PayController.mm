@@ -12,8 +12,6 @@
 
 
 @implementation PayController
-@synthesize navigationBar;
-@synthesize placeHolderView;
 @synthesize gridView;
 
 - (void)didReceiveMemoryWarning
@@ -62,33 +60,31 @@
 {
     UIImageView * logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"title.png"]];
     logoView.contentMode = UIViewContentModeScaleAspectFit;
-    logoView.bounds = CGRectInset(self.navigationBar.bounds, 0, 5.0f);
-    self.navigationBar.topItem.titleView = logoView;
+    logoView.bounds = CGRectInset(self.navigationController.navigationBar.bounds, 0, 5.0f);
+    self.navigationItem.titleView = logoView;
 }
 
 -(void) preparePaymentGrid
 {
-    CGRect frame = self.placeHolderView.bounds;
-    frame.size.height = frame.size.height - 48;
+    CGRect frame = self.view.bounds;
     self.gridView = [[GMGridView alloc] initWithFrame: frame];
     self.gridView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    //self.gridView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"payment_grid_background.png"]];  
-    self.gridView.backgroundColor = [UIColor clearColor];
+    self.gridView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shortcut_grid_background.png"]];  
     self.gridView.opaque = YES;
+    self.gridView.alwaysBounceVertical = YES;
+    self.gridView.centerGrid = NO;
 
     self.gridView.actionDelegate = self;
     self.gridView.sortingDelegate = self;
     self.gridView.dataSource = self;
     self.gridView.scrollEnabled = YES;
-    [self.placeHolderView addSubview:self.gridView];    
+    [self.view addSubview:self.gridView];    
     [self.gridView reloadData];
 }
 - (void)viewDidUnload
 {
     self.gridView = nil;
     
-    [self setNavigationBar:nil];
-    [self setPlaceHolderView:nil];
     [self setGridView:nil];
     [super viewDidUnload];
 }
@@ -108,6 +104,7 @@
 {
 	[super viewWillDisappear:animated];
     [self gridView].editing = NO;
+    [self updateButtonStatus];
     [self saveAndCleanup];
 }
 
@@ -130,7 +127,8 @@
 {
     savedPayment_ = [payment copy];
     if (self.appDelegate.hasPasscode)
-        [self.appDelegate requestPasscodeWithDelegate:self];
+        [self.appDelegate requestPasscodeWithDelegate:self 
+                                 navigationController:self.navigationController];
     else
         [self processPaymentWithPasscode:nil];
 }
@@ -157,27 +155,37 @@
 
 - (IBAction)editPayment:(id)sender 
 {
-    self.gridView.editing = !self.gridView.editing;
+    self.gridView.editing = YES;
+    [self updateButtonStatus];
+}
+
+- (IBAction)editDonePayment:(id)sender 
+{
+    self.gridView.editing = NO;
     [self updateButtonStatus];
 }
 
 - (void) updateButtonStatus
 {
-    UIBarButtonItem * editItem = self.navigationBar.topItem.leftBarButtonItem;
-    UIBarButtonItem * addItem = self.navigationBar.topItem.rightBarButtonItem;
-    
     if (self.gridView.editing)
     {
-        //editItem.tintColor = UIColorFromRGB(0xC84131);
-        editItem.tintColor = [UIColor colorWithHue:0.6 saturation:0.33 brightness:0.69 alpha:0];
-        editItem.title = @"Done";
-        addItem.enabled = NO;
+        UIBarButtonItem * doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editDonePayment:)];
+        
+        self.navigationItem.leftBarButtonItem = doneItem;
+        
+        UIBarButtonItem * addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addPayment:)];
+        
+        self.navigationItem.rightBarButtonItem = addItem;
     }
     else
     {
-        editItem.tintColor = nil;
-        editItem.title = @"Edit";
-        addItem.enabled = YES;    
+        UIBarButtonItem * editItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editPayment:)];
+        
+        self.navigationItem.leftBarButtonItem = editItem;
+
+        UIBarButtonItem * quickPayItem = [[UIBarButtonItem alloc] initWithTitle:@"Quick Pay" style:UIBarButtonItemStyleBordered target:self action:@selector(quickPayment:)];
+        
+        self.navigationItem.rightBarButtonItem = quickPayItem;
     }
 }
 
@@ -188,18 +196,46 @@
     if (controller)
     {
         controller.delegate = self;
-        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [self presentModalViewController:controller animated:YES];
+        [self.navigationController pushViewController:controller animated:YES];
     }
+}
+
+- (IBAction)quickPayment:(id)sender
+{
+    QuickPaymentController * controller = [self.appDelegate viewControllerWithIdentifier:@"QuickPaymentController"];
+    if (controller)
+    {
+        controller.delegate = self;
+        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentViewController:controller animated:YES completion:nil];
+    }
+}
+
+#pragma mark -
+#pragma mark QuickPaymentController
+-(void)quickPaymentControllerDidClose:(QuickPaymentController *)controller
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (controller.paymentValue != 0)
+        {
+            PushCoinPayment * payment = [[PushCoinPayment alloc] init];
+            payment.amountValue = controller.paymentValue;
+            payment.amountScale = controller.paymentScale;
+            [self push:self payment:payment];
+        }
+    }];
+}
+
+-(void)quickPaymentControllerDidCancel:(QuickPaymentController *)controller
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
 #pragma mark -
 #pragma mark AddPaymentController
--(void)addPaymentControllerDidClose:(AddPaymentController *)controller
+-(void)addPaymentControllerDidAddPayment:(AddPaymentController *)controller
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
     if (controller.paymentValue != 0)
     {
         PushCoinPayment * payment = [[PushCoinPayment alloc] init];
@@ -209,11 +245,7 @@
         [payments_ addObject:payment];
         [self.gridView insertObjectAtIndex:payments_.count-1 withAnimation:GMGridViewItemAnimationFade];
     }
-}
-
--(void)addPaymentControllerDidCancel:(AddPaymentController *)controller
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 #pragma mark -
@@ -222,57 +254,6 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
-
-#pragma mark -
-#pragma mark peoplePicker delegates
-/*
-- (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker
-{
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
-      shouldContinueAfterSelectingPerson:(ABRecordRef)person 
-{
-    [self selectReceiver:person];
-    [self dismissModalViewControllerAnimated:YES];
-    
-    return NO;
-}
-
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
-      shouldContinueAfterSelectingPerson:(ABRecordRef)person
-                                property:(ABPropertyID)property
-                              identifier:(ABMultiValueIdentifier)identifier
-{
-    return NO;
-}
-
-
-- (void)selectReceiver:(ABRecordRef)receiver
-{
-    NSString* name = (__bridge_transfer NSString*)ABRecordCopyValue(receiver,                                                                    
-                                                                    kABPersonFirstNameProperty);
-    NSString* email = nil;
-    ABMultiValueRef emails = ABRecordCopyValue(receiver, kABPersonEmailProperty);
-    
-    if (ABMultiValueGetCount(emails) > 0) 
-    {
-        email = (__bridge_transfer NSString*)
-        ABMultiValueCopyValueAtIndex(emails, 0);
-    } 
-    else 
-    {
-        email = @"[None]";
-    }
-    
-    // Do something here.
-}
-*/
-
-
 
 //////////////////////////////////////////////////////////////
 #pragma mark GMGridViewDataSource
@@ -386,14 +367,13 @@
 
 - (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController*)viewController
 {
-    [viewController dismissViewControllerAnimated:YES completion:^
-    {
-        [self processPaymentWithPasscode:viewController.passcode];
-    }];
+    [self.navigationController popToViewController:self animated:YES];
+    [self processPaymentWithPasscode:viewController.passcode];
 }
+
 - (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 

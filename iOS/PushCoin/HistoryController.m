@@ -13,6 +13,7 @@
 #import "NSData+BytesToHexString.h"
 #import "NSData+Base64.h"
 #import "PushCoinTransaction.h"
+#import "TransactionDetailController.h"
 #import "TransactionCell.h"
 #import "BalanceCell.h"
 
@@ -60,6 +61,7 @@
     [numberFormatter setLocale:usLocale];
     
     self.tableView.dataSource = self;
+    self.tableView.delegate = self;
 }
 
 - (void)viewDidUnload
@@ -124,8 +126,7 @@
     
     if (controller)
     {
-        controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        [self presentModalViewController:controller animated:YES];
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 
@@ -144,23 +145,20 @@ andDescription:(NSString *)description
 
 #pragma mark PushCoinMessageParserDelegate
 
-
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-[self.appDelegate showAlert:msg.block.reason.string 
-                  withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
+    [self.appDelegate handleErrorMessage:msg withHeader:hdr];
+}
+
+-(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    [self.appDelegate handleUnknownMessage:msg withHeader:hdr];
 }
 
 -(void) didDecodeSuccessMessage:(SuccessMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
 [self.appDelegate showAlert:@"Success!" 
                   withTitle:@"Success"];
-}
-
--(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
-{
-[self.appDelegate showAlert:@"Unknown message received." 
-                  withTitle:@"Unknown"];
 }
 
 -(void) didDecodeTransactionHistoryReportMessage:(TransactionHistoryReportMessage *)msg withHeader:(PCOSHeaderBlock *)hdr
@@ -171,11 +169,36 @@ andDescription:(NSString *)description
         Transaction * trx = [msg.block.tx_seq.val objectAtIndex:i];
         
         PushCoinTransaction * pTrx = [[PushCoinTransaction alloc] initWithID:trx.transaction_id.data.bytesToHexString
+                                                              counterpartyID:trx.counterparty_id.data.bytesToHexString
                                                                         type:trx.tx_type.val
-                                                                 amountValue:trx.amount.value.val
-                                                                 amountScale:trx.amount.scale.val
+                                                                     context:trx.tx_context.val
+                                                                paymentValue:trx.payment.value.val
+                                                                paymentScale:trx.payment.scale.val
+                                                                    taxValue:trx.tax.itemCount == 0 ? 0 : ((Amount *)[trx.tax.val objectAtIndex:0]).value.val
+                                                                    taxScale:trx.tax.itemCount == 0 ? 0 : ((Amount *)[trx.tax.val objectAtIndex:0]).scale.val
+                                                                    tipValue:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).value.val
+                                                                    tipScale:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).scale.val
                                                                 merchantName:trx.merchant_name.string
+                                                                     invoice:trx.invoice.string
                                                                    timestamp:trx.utc_transaction_time.val];
+        
+        if (trx.address.itemCount)
+        {
+            Address * addr = [trx.address.val objectAtIndex:0];
+            pTrx.addressStreet = addr.street.string;
+            pTrx.addressCity = addr.city.string;
+            pTrx.addressState = addr.state.string;
+            pTrx.addressZip = addr.zip.string;
+            pTrx.addressCountry = addr.country.string;
+        }
+        
+        if (trx.contact.itemCount)
+        {
+            Contact * contact = [trx.contact.val objectAtIndex:0];
+            pTrx.contactEmail = contact.email.string;
+            pTrx.contactPhone = contact.phone.string;
+        }
+        
         [transactions addObject:pTrx];
     }
     
@@ -253,7 +276,7 @@ andDescription:(NSString *)description
     
         PushCoinTransaction * trx = [transactions objectAtIndex:indexPath.row];
     
-        Float32 amount = trx.amountValue * pow(10.0f, (Float32)trx.amountScale);
+        Float32 amount = trx.paymentValue * pow(10.0f, (Float32)trx.paymentScale);
         if (trx.transactionType == 'D')
             amount *= -1.0f;
         
@@ -265,6 +288,35 @@ andDescription:(NSString *)description
         cell.rightTextLabel.text = [numberFormatter stringFromNumber:c];
         
         return cell;
+    }
+}
+
+-(void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self tableView:tv openTransactionDetailWithIndexPath:indexPath];    
+}
+
+-(void)tableView:(UITableView *)tv accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    [self tableView:tv openTransactionDetailWithIndexPath:indexPath];
+}
+
+-(void)tableView:(UITableView *)tv openTransactionDetailWithIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0)
+        return;
+    
+    TransactionDetailController * controller = [self.appDelegate viewControllerWithIdentifier:@"TransactionDetailController"];
+    
+    if (controller)
+    {
+        PushCoinTransaction * trx = [transactions objectAtIndex:indexPath.row];
+        PushCoinEntity * entity = [self.appDelegate.addressBook.dataStore objectForKey:trx.counterpartyID];
+        
+        controller.entity = entity;
+        controller.transaction = trx;
+        
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 

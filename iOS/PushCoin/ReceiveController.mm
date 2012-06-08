@@ -13,11 +13,9 @@
 #import "NSData+BytesToHexString.h"
 #import "NSData+Base64.h"
 
-
-
 @implementation ReceiveController
-@synthesize navigationBar;
 @synthesize paymentTextField;
+@synthesize ptaData;
 
 - (void)didReceiveMemoryWarning
 {
@@ -29,7 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     
     numberFormatter = [[NSNumberFormatter alloc] init];
@@ -45,12 +43,13 @@
     storedValue = [NSMutableString stringWithString:@""];
     self.paymentTextField.delegate = self;
     self.paymentTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    [self processData];
 }
 
 - (void)viewDidUnload
 {
     [self setPaymentTextField:nil];
-    [self setNavigationBar:nil];
     [super viewDidUnload];
 }
 
@@ -85,36 +84,14 @@
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-- (IBAction)scan:(id)sender 
-{
-    [self.paymentTextField resignFirstResponder];
-    
-    if (storedValue.intValue == 0)
-        return;
-        
-    ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:self
-                                                                                showCancel:YES 
-                                                                                  OneDMode:NO];
-    
-    QRCodeReader* qrcodeReader = [[QRCodeReader alloc] init];
-    widController.readers = [[NSSet alloc] initWithObjects:qrcodeReader, nil];
-    widController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-
-    [self presentModalViewController:widController animated:YES];
-}
-
 - (IBAction)backgroundTouched:(id)sender 
 {
-    //[self.paymentTextField resignFirstResponder];
+    [self.paymentTextField resignFirstResponder];
 }
 
-#pragma mark -
-#pragma mark ZXingDelegateMethods
-
-- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSData*)data
+- (IBAction)submitButtonTapped:(id)sender 
 {
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    [self dismissModalViewControllerAnimated:NO];
+    [self.paymentTextField resignFirstResponder];
     
     NSDate * now = [NSDate date];
     
@@ -132,15 +109,15 @@
     msgOut.block.currency.string = @"USD";
     msgOut.block.note.string = @"";
     
-    msgOut.pta_block.data = data;
+    msgOut.pta_block.data = self.ptaData;
     
     [parser encodeMessage:msgOut to:dataOut];
     [webService sendMessage:dataOut.consumedData];
 }
 
-- (void)zxingControllerDidCancel:(ZXingWidgetController*)controller 
+- (void) processData
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [parser decode:self.ptaData toReceiver:self];
 }
 
 
@@ -151,19 +128,23 @@
     [parser decode:data toReceiver:self];
 }
 
-
 - (void)webService:(PushCoinWebService *)webService didFailWithStatusCode:(NSInteger)statusCode 
     andDescription:(NSString *)description
 {
+    [self.appDelegate showAlert:description
+                      withTitle:[NSString stringWithFormat:@"HTTP Error - %d", statusCode]];
 }
 
 #pragma mark PushCoinMessageParserDelegate
 
-
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    [self.appDelegate showAlert:msg.block.reason.string 
-                      withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
+    [self.appDelegate handleErrorMessage:msg withHeader:hdr];
+}
+
+-(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    [self.appDelegate handleUnknownMessage:msg withHeader:hdr];
 }
 
 -(void) didDecodeSuccessMessage:(SuccessMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
@@ -172,10 +153,12 @@
                       withTitle:@"Success"];
 }
 
--(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+-(void) didDecodePaymentTransferAuthorizationMessage:(PaymentTransferAuthorizationMessage *)msg withHeader:(PCOSHeaderBlock *)hdr
 {
-    [self.appDelegate showAlert:@"Unknown message received." 
-                      withTitle:@"Unknown"];
+    Amount * amountField = msg.pub_block.payment_limit;
+    Float32 amount = amountField.value.val * pow(10, (float) amountField.scale.val);
+    self.paymentTextField.text = [NSString stringWithFormat:@"$ %.2f", amount];
+    storedValue = [NSMutableString stringWithFormat:@"%d", (int) (amount * 100)];
 }
 
 
@@ -190,7 +173,7 @@
     }
     else
     {
-        if (storedValue.length + string.length <= 6)
+        if (storedValue.length + string.length <= 5)
             [storedValue appendString:string];
     }
     
@@ -220,20 +203,16 @@
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    UINavigationItem * item = [self.navigationBar.items objectAtIndex:self.navigationBar.items.count - 1];
     UIBarButtonItem * hideItem = [[UIBarButtonItem alloc] initWithTitle:@"Hide" style:UIBarButtonItemStyleBordered
                                                                    target:self action:@selector(hideButtonTapped:)];
     hideItem.tintColor = UIColorFromRGB(0xC84131);
     
-    if (item)
-        item.rightBarButtonItem = hideItem;
+    self.navigationItem.rightBarButtonItem = hideItem;
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
-    UINavigationItem * item = [self.navigationBar.items objectAtIndex:self.navigationBar.items.count - 1];
-    if (item)
-        item.rightBarButtonItem = nil;
+    self.navigationItem.rightBarButtonItem = nil;
 }
 
 -(void) hideButtonTapped:(id)sender

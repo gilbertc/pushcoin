@@ -57,33 +57,11 @@
     return YES;
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range 
+    replacementString:(NSString *)string 
 {
-    NSCharacterSet *charSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"];
-    NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    int charCount = [newString length];
-    
-    if ([newString rangeOfCharacterFromSet:[charSet invertedSet]].location != NSNotFound
-        || [string rangeOfString:@"-"].location != NSNotFound
-        || charCount > 19) {
-        return NO;
-    }
-    
-    if ([newString characterAtIndex:newString.length -1] == '-')
-    {
-        newString = [newString substringToIndex:newString.length - 1];
-    }
-    else
-    {
-        if (charCount == 5 || charCount == 10 || charCount == 15) 
-        {
-            NSMutableString * mutableString = [NSMutableString stringWithString:newString];
-            [mutableString insertString:@"-" atIndex:mutableString.length - 1];
-            newString = mutableString;
-        }
-    }
-    textField.text = newString;
-    return NO;
+    NSUInteger newLength = textField.text.length + string.length - range.length;
+    return (newLength > 8) ? NO : YES;
 }
 
 - (AppDelegate *)appDelegate
@@ -107,8 +85,17 @@
     
     msgOut.register_block.registration_id.string = self.registrationIDTextBox.text;
     msgOut.register_block.public_key.data = [NSData dataFromBase64String:self.appDelegate.pemDsaPublicKey];
-    msgOut.register_block.user_agent.string = PushCoinAppUserAgent;
     
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"appname" andValue:@"PushCoin"]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"appver" andValue:@"1.0"]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"appurl" andValue:@"https://pushcoin.com/Pub/Apps/PushCoinIOSGC"]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"author" andValue:@"Gilbert Cheung <gilbertc@asurada.org>"]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"manufacturer" andValue:@"Apple Inc."]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"model" andValue:[[UIDevice currentDevice] name]]];
+    [msgOut.register_block.user_agent.val addObject:[[KeyStringValue alloc] initWithKey:@"os" andValue:[NSString stringWithFormat:@"%@/%@",
+                                                                                                        [[UIDevice currentDevice] systemName],
+                                                                                                        [[UIDevice currentDevice] systemVersion]]]];
+
     [parser encodeMessage:msgOut to:dataOut];
     [webService sendMessage:dataOut.consumedData];
 }
@@ -130,26 +117,31 @@
 
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    [[self appDelegate] showAlert:msg.block.reason.string 
-                        withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
+    if (msg.block.error_code.val == 201)
+    {
+        [self.appDelegate showAlert:@"Registration Code not found."
+              withTitle:@"Error"];
+    }
+    else
+    {
+        [self.appDelegate handleErrorMessage:msg withHeader:hdr];
+    }
     [self.registrationIDTextBox becomeFirstResponder];
+}
 
+-(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    [self.appDelegate handleUnknownMessage:msg withHeader:hdr];
+    [self.registrationIDTextBox becomeFirstResponder];    
 }
 
 -(void) didDecodeRegisterAckMessage:(RegisterAckMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
     self.appDelegate.authToken = [msg.register_ack_block.mat.data bytesToHexString];
-    [self.delegate registrationControllerDidClose:self];
+    [self dismissModalViewControllerAnimated:YES];
+    
+    if (self.delegate != nil)
+        [self.delegate registrationControllerDidClose:self];
 }
-
--(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
-{
-    [[self appDelegate] showAlert:[NSString stringWithFormat:@"unexpected message received: [%@]",
-                                   hdr.message_id.string]
-                        withTitle:@"Error"];
-    [self.registrationIDTextBox becomeFirstResponder];
-}
-
-
 
 @end

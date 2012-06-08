@@ -26,6 +26,42 @@ NSString * const MID_TRANSFER_REQUEST = @"Tt";
 NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 
 /* Common Types */
+@implementation KeyStringValue
+@synthesize key;
+@synthesize value;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.key =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.value =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        
+        [self addField:self.key withName:@"key"];
+        [self addField:self.value withName:@"value"];
+    }
+    return self;
+}
+
+-(id) initWithKey:(NSString *)k andValue:(NSString *)v
+{
+    self = [self init];
+    if (self)
+    {
+        self.key.string = k;
+        self.value.string = v;
+    }
+    return self;
+}
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    KeyStringValue * other = [[KeyStringValue alloc] init];
+    return other;
+}
+@end
+
 @implementation Amount
 @synthesize value;
 @synthesize scale;
@@ -77,18 +113,111 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 }
 @end
 
+@implementation Address
+@synthesize street;
+@synthesize city;
+@synthesize state;
+@synthesize zip;
+@synthesize country;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.street =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.city =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.state =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.zip =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.country =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:2]; 
+        
+        [self addField:self.street withName:@"street"];
+        [self addField:self.city withName:@"city"];
+        [self addField:self.state withName:@"state"];
+        [self addField:self.zip withName:@"zip"];
+        [self addField:self.country withName:@"country"];
+    }
+    return self;
+}
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    Address * other = [[Address alloc] init];
+    return other;
+}
+
+@end
+
+@implementation Contact
+@synthesize phone;
+@synthesize email;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.phone =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.email =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        
+        [self addField:self.phone withName:@"phone"];
+        [self addField:self.email withName:@"email"];
+    }
+    return self;
+}
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    Contact * other = [[Contact alloc] init];
+    return other;
+}
+@end
+
+@implementation GeoLocation
+@synthesize latitude;
+@synthesize longitude;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.latitude =[[PCOSDouble alloc] init];
+        self.longitude =[[PCOSDouble alloc] init];
+        
+        [self addField:self.latitude withName:@"latitude"];
+        [self addField:self.longitude withName:@"longitude"];
+    }
+    return self;
+}
+
+
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    GeoLocation * other = [[GeoLocation alloc] init];
+    return other;
+}
+
+@end
 
 @implementation Transaction
 @synthesize transaction_id;
+@synthesize counterparty_id;
 @synthesize utc_transaction_time;
 @synthesize tx_type;
-@synthesize amount;
+@synthesize tx_context;
+@synthesize payment;
+@synthesize tax;
+@synthesize tip;
 @synthesize currency;
 @synthesize merchant_name;
-@synthesize merchant_account;
-@synthesize pta_receiver;
-@synthesize pta_ref_data;
+@synthesize ref_data;
 @synthesize invoice;
+@synthesize note;
+@synthesize address;
+@synthesize contact;
+@synthesize geolocation;
 
 -(id) init
 {
@@ -96,26 +225,38 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     if (self)
     {
         self.transaction_id =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
+        self.counterparty_id =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
         self.utc_transaction_time = [[PCOSInt64 alloc] init];
         self.tx_type =[[PCOSChar alloc] init]; 
-        self.amount =[[Amount alloc] init]; 
+        self.tx_context =[[PCOSChar alloc] init]; 
+        self.payment =[[Amount alloc] init]; 
+        self.tax =[[PCOSShortArray alloc] initWithItemPrototype:[[Amount alloc] init]];
+        self.tip =[[PCOSShortArray alloc] initWithItemPrototype:[[Amount alloc] init]]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
         self.merchant_name =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
-        self.merchant_account =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
-        self.pta_receiver =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
-        self.pta_ref_data =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
+        self.ref_data =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
         self.invoice =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
-        
+        self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
+        self.address = [[PCOSShortArray alloc] initWithItemPrototype:[[Address alloc] init]];
+        self.contact = [[PCOSShortArray alloc] initWithItemPrototype:[[Contact alloc] init]];
+        self.geolocation = [[PCOSShortArray alloc] initWithItemPrototype:[[GeoLocation alloc] init]];
+                
         [self addField:self.transaction_id withName:@"transaction_id"];
+        [self addField:self.counterparty_id withName:@"counterparty_id"];
         [self addField:self.utc_transaction_time withName:@"utc_transaction_time"];
         [self addField:self.tx_type withName:@"tx_type"];
-        [self addField:self.amount withName:@"amount"];
+        [self addField:self.tx_context withName:@"tx_context"];
+        [self addField:self.payment withName:@"payment"];
+        [self addField:self.tax withName:@"tax"];
+        [self addField:self.tip withName:@"tip"];
         [self addField:self.currency withName:@"currency"];
         [self addField:self.merchant_name withName:@"merchant_name"];
-        [self addField:self.merchant_account withName:@"merchant_account"];
-        [self addField:self.pta_receiver withName:@"pta_receiver"];
-        [self addField:self.pta_ref_data withName:@"pta_ref_data"];
+        [self addField:self.ref_data withName:@"ref_data"];
         [self addField:self.invoice withName:@"invoice"];
+        [self addField:self.note withName:@"note"];
+        [self addField:self.address withName:@"address"];
+        [self addField:self.contact withName:@"contact"];
+        [self addField:self.geolocation withName:@"geolocation"];
     }
     return self;
 }
@@ -435,7 +576,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     {
         self.registration_id =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
         self.public_key =[[PCOSLongArray alloc] initWithItemPrototype:protoByte]; 
-        self.user_agent =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.user_agent =[[PCOSShortArray alloc] initWithItemPrototype:[[KeyStringValue alloc] init]]; 
         
         [self addField:self.registration_id withName:@"registration_id"];
         [self addField:self.public_key withName:@"public_key"];
@@ -531,6 +672,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.keyid =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:4]; 
         self.receiver =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
         self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+
         
         [self addField:self.utc_ctime withName:@"utc_ctime"];
         [self addField:self.utc_etime withName:@"utc_etime"];
@@ -583,6 +725,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 @synthesize transfer;
 @synthesize currency;
 @synthesize note;
+@synthesize geolocation;
 
 -(id) init
 {
@@ -595,6 +738,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.transfer =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
         self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.geolocation = [[PCOSShortArray alloc] initWithItemPrototype:[[GeoLocation alloc] init]];
 
         [self addField:self.mat withName:@"mat"];
         [self addField:self.ref_data withName:@"ref_data"];
@@ -602,6 +746,8 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         [self addField:self.transfer withName:@"transfer"];
         [self addField:self.currency withName:@"currency"];     
         [self addField:self.note withName:@"note"];     
+        [self addField:self.geolocation withName:@"geolocation"];     
+
     }
     return self;
 }
