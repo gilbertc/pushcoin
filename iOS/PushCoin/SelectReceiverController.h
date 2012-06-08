@@ -8,7 +8,7 @@
 
 
 #import <UIKit/UIKit.h>
-#import "EmailBook.h"
+#import "PushCoinAddressBook.h"
 
 @class SelectReceiverController;
 
@@ -26,6 +26,6 @@
 @property (nonatomic, weak) NSObject<SelectReceiverControllerDelegate> * delegate;
 @property (nonatomic, strong) NSArray * dataStore;
 @property (weak, nonatomic) IBOutlet UITableView *receiverTableView;
-@property (nonatomic, strong) Entity * receiver;
+@property (nonatomic, strong) PushCoinEntity * receiver;
 - (IBAction)cancelButtonTapped:(id)sender;
 @end

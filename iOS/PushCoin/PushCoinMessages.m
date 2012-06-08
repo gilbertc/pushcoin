@@ -672,6 +672,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.keyid =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:4]; 
         self.receiver =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
         self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+
         
         [self addField:self.utc_ctime withName:@"utc_ctime"];
         [self addField:self.utc_etime withName:@"utc_etime"];
@@ -724,6 +725,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 @synthesize transfer;
 @synthesize currency;
 @synthesize note;
+@synthesize geolocation;
 
 -(id) init
 {
@@ -736,6 +738,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.transfer =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
         self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.geolocation = [[PCOSShortArray alloc] initWithItemPrototype:[[GeoLocation alloc] init]];
 
         [self addField:self.mat withName:@"mat"];
         [self addField:self.ref_data withName:@"ref_data"];
@@ -743,6 +746,8 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         [self addField:self.transfer withName:@"transfer"];
         [self addField:self.currency withName:@"currency"];     
         [self addField:self.note withName:@"note"];     
+        [self addField:self.geolocation withName:@"geolocation"];     
+
     }
     return self;
 }

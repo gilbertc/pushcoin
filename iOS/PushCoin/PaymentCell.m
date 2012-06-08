@@ -123,7 +123,7 @@
 
 - (void) setAmount:(Float32) amount andTip:(Float32)tip
 {
-    self.amountLabel.text = [NSString stringWithFormat:@"%d", (int)amount];
+    self.amountLabel.text = [NSString stringWithFormat:@"$%d", (int)amount];
     self.centLabel.text = [NSString stringWithFormat:@"%02d", (int)(amount * 100) % 100];
     [self.centLabel sizeToFit];
     

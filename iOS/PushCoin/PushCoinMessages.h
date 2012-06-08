@@ -230,6 +230,7 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @property (nonatomic, strong) Amount * transfer;
 @property (nonatomic, strong) PCOSFixedArray * currency;
 @property (nonatomic, strong) PCOSShortArray * note;
+@property (nonatomic, strong) PCOSShortArray * geolocation;
 @end
 
 @interface TransferRequestMessage : PCOSMessage

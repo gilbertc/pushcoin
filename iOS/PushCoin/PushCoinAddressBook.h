@@ -9,12 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "AppDelegate.h"
 
-@interface Entity: NSObject<NSCopying>
+@interface PushCoinEntity: NSObject<NSCopying>
 @property (nonatomic, strong) NSString * name;
 @property (nonatomic, strong) NSString * email;
+@property (nonatomic, assign) NSInteger recordID;
+
+-(id) initWithRecordID:(NSInteger) rID;
 @end
 
-@interface EmailBook : NSObject
+@interface PushCoinAddressBook : NSObject
 @property (nonatomic, strong) NSMutableDictionary * dataStore;
 -(void) refresh;
 @end

@@ -9,7 +9,6 @@
 #import "SelectReceiverController.h"
 #import "ReceiverCell.h"
 #import "AppDelegate.h"
-#import "EmailBook.h"
 
 @implementation SelectReceiverController
 @synthesize receiverTableView;
@@ -36,9 +35,9 @@
     [super viewDidLoad];
     self.receiverTableView.delegate = self;
     self.receiverTableView.dataSource = self;
-    self.dataStore = [[self.appDelegate.emailBook.dataStore allValues] copy];
+    self.dataStore = [[self.appDelegate.addressBook.dataStore allValues] copy];
     self.dataStore = [self.dataStore sortedArrayUsingComparator:
-                      ^NSComparisonResult(Entity * a, Entity * b)
+                      ^NSComparisonResult(PushCoinEntity * a, PushCoinEntity * b)
                       {
                           return [a.name localizedCaseInsensitiveCompare:b.name];
                       }];
@@ -67,28 +66,53 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.appDelegate.emailBook.dataStore count];
+    return [self.appDelegate.addressBook.dataStore count] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ReceiverCell * cell = [self.receiverTableView dequeueReusableCellWithIdentifier:@"ReceiverCell"];
-    if (!cell)
-    {
-        cell = [[ReceiverCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"ReceiverCell"];
-    }
+    UITableViewCell * ret;
     
-    Entity * entity = [self.dataStore objectAtIndex:indexPath.row];
-     
-    cell.textLabel.text = entity.name;
-    cell.detailTextLabel.text = entity.email;
+    if (indexPath.row == 0)
+    {
+        ReceiverCell * cell = [self.receiverTableView dequeueReusableCellWithIdentifier:@"AnyReceiverCell"];
+        if (!cell)
+        {
+            cell = [[ReceiverCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AnyReceiverCell"];
+        }
         
-    return cell;
+        cell.textLabel.text = @"Any";
+        ret = cell;
+    }
+    else
+    {
+        ReceiverCell * cell = [self.receiverTableView dequeueReusableCellWithIdentifier:@"ReceiverCell"];
+        if (!cell)
+        {
+            cell = [[ReceiverCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"ReceiverCell"];
+        }
+    
+        PushCoinEntity * entity = [self.dataStore objectAtIndex:indexPath.row - 1];
+     
+        cell.textLabel.text = entity.name;
+        cell.detailTextLabel.text = entity.email;
+        
+        ret = cell;
+    }
+    return ret;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.receiver = [self.dataStore objectAtIndex:indexPath.row];
+    if (indexPath.row == 0)
+    {
+        self.receiver = nil;
+    }
+    else
+    {
+        self.receiver = [self.dataStore objectAtIndex:indexPath.row - 1];
+    }
+    
     [self.delegate selectReceiverControllerDidClose:self];
 }
 

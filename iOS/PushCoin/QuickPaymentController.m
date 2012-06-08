@@ -80,7 +80,7 @@
     }
     else
     {
-        if (storedValue.length + string.length <= 6)
+        if (storedValue.length + string.length <= 5)
             [storedValue appendString:string];
     }
     

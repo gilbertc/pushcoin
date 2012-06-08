@@ -13,7 +13,7 @@
 #import "PushCoinPayment.h"
 #import "OpenSSLWrapper.h"
 
-@class EmailBook;
+@class PushCoinAddressBook;
 
 @interface SingleUseData : NSObject
 {
@@ -42,9 +42,9 @@
 @property (nonatomic, readonly) NSData * dsaPrivateKey;
 
 @property (nonatomic, strong) SingleUseData * dsaDecryptedKey;
-@property (nonatomic, strong) EmailBook * emailBook;
+@property (nonatomic, strong) PushCoinAddressBook * addressBook;
 
--(void) refreshEmailBook;
+-(void) refreshAddressBook;
 
 -(void) setPasscode:(NSString *)passcode oldPasscode:(NSString *)oldPasscode;
 -(BOOL) validatePasscode:(NSString *)passcode;

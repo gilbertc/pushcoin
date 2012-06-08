@@ -81,7 +81,12 @@
 		0DA259F0157F2E89009AB9A6 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DA259EF157F2E89009AB9A6 /* logo.png */; };
 		0DA25A09158084C2009AB9A6 /* SelectReceiverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A08158084C2009AB9A6 /* SelectReceiverController.m */; };
 		0DA25A0C15808637009AB9A6 /* ReceiverCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A0B15808636009AB9A6 /* ReceiverCell.m */; };
-		0DA25A0F15808A2A009AB9A6 /* EmailBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A0E15808A2A009AB9A6 /* EmailBook.m */; };
+		0DA25A0F15808A2A009AB9A6 /* PushCoinAddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A0E15808A2A009AB9A6 /* PushCoinAddressBook.m */; };
+		0DA25A1515818EF9009AB9A6 /* TransactionDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A1415818EF8009AB9A6 /* TransactionDetailCell.m */; };
+		0DA25A181581920F009AB9A6 /* TransactionDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A171581920D009AB9A6 /* TransactionDetailController.m */; };
+		0DA25A1B1581991A009AB9A6 /* TransactionDetailSenderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A1A15819918009AB9A6 /* TransactionDetailSenderCell.m */; };
+		0DA25A1D1581BDB0009AB9A6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA25A1C1581BDAF009AB9A6 /* MessageUI.framework */; };
+		0DA25A201581CD13009AB9A6 /* TransactionDetailAddressCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A1F1581CD11009AB9A6 /* TransactionDetailAddressCell.m */; };
 		0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DACCD731558A02A00A69DED /* PCOSParser.m */; };
 		0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
@@ -294,8 +299,17 @@
 		0DA25A08158084C2009AB9A6 /* SelectReceiverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectReceiverController.m; sourceTree = "<group>"; };
 		0DA25A0A15808636009AB9A6 /* ReceiverCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReceiverCell.h; sourceTree = "<group>"; };
 		0DA25A0B15808636009AB9A6 /* ReceiverCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReceiverCell.m; sourceTree = "<group>"; };
-		0DA25A0D15808A2A009AB9A6 /* EmailBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailBook.h; path = PushCoin/EmailBook.h; sourceTree = "<group>"; };
-		0DA25A0E15808A2A009AB9A6 /* EmailBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmailBook.m; path = PushCoin/EmailBook.m; sourceTree = "<group>"; };
+		0DA25A0D15808A2A009AB9A6 /* PushCoinAddressBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinAddressBook.h; sourceTree = "<group>"; };
+		0DA25A0E15808A2A009AB9A6 /* PushCoinAddressBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinAddressBook.m; sourceTree = "<group>"; };
+		0DA25A1315818EF7009AB9A6 /* TransactionDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionDetailCell.h; sourceTree = "<group>"; };
+		0DA25A1415818EF8009AB9A6 /* TransactionDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionDetailCell.m; sourceTree = "<group>"; };
+		0DA25A161581920B009AB9A6 /* TransactionDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionDetailController.h; sourceTree = "<group>"; };
+		0DA25A171581920D009AB9A6 /* TransactionDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionDetailController.m; sourceTree = "<group>"; };
+		0DA25A1915819916009AB9A6 /* TransactionDetailSenderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionDetailSenderCell.h; sourceTree = "<group>"; };
+		0DA25A1A15819918009AB9A6 /* TransactionDetailSenderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionDetailSenderCell.m; sourceTree = "<group>"; };
+		0DA25A1C1581BDAF009AB9A6 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		0DA25A1E1581CD0E009AB9A6 /* TransactionDetailAddressCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionDetailAddressCell.h; sourceTree = "<group>"; };
+		0DA25A1F1581CD11009AB9A6 /* TransactionDetailAddressCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionDetailAddressCell.m; sourceTree = "<group>"; };
 		0DACCD721558A02A00A69DED /* PCOSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSParser.h; sourceTree = "<group>"; };
 		0DACCD731558A02A00A69DED /* PCOSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSParser.m; sourceTree = "<group>"; };
 		0DAFD23115478E5E0010459A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
@@ -336,6 +350,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DA25A1D1581BDB0009AB9A6 /* MessageUI.framework in Frameworks */,
 				0D4923D7156B274400626AC2 /* libGMGridView.a in Frameworks */,
 				0D4923CA1568C37A00626AC2 /* libiconv.dylib in Frameworks */,
 				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
@@ -411,6 +426,7 @@
 		0D19E2BD1541CCAE00C8671B = {
 			isa = PBXGroup;
 			children = (
+				0DA25A1C1581BDAF009AB9A6 /* MessageUI.framework */,
 				0D19E2D21541CCAE00C8671B /* PushCoin.App */,
 				0D7A8F7A154202A800634A79 /* Dependencies */,
 				0DBC491D1543C59A00E56EDF /* Resources */,
@@ -491,8 +507,6 @@
 				0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */,
 				0D377610156839BC003FB8B3 /* Common.h */,
 				0D377611156839BC003FB8B3 /* Common.m */,
-				0DA25A0D15808A2A009AB9A6 /* EmailBook.h */,
-				0DA25A0E15808A2A009AB9A6 /* EmailBook.m */,
 			);
 			name = Utilities;
 			path = ..;
@@ -545,6 +559,14 @@
 				0DA25A08158084C2009AB9A6 /* SelectReceiverController.m */,
 				0DA25A0A15808636009AB9A6 /* ReceiverCell.h */,
 				0DA25A0B15808636009AB9A6 /* ReceiverCell.m */,
+				0DA25A1315818EF7009AB9A6 /* TransactionDetailCell.h */,
+				0DA25A1415818EF8009AB9A6 /* TransactionDetailCell.m */,
+				0DA25A161581920B009AB9A6 /* TransactionDetailController.h */,
+				0DA25A171581920D009AB9A6 /* TransactionDetailController.m */,
+				0DA25A1915819916009AB9A6 /* TransactionDetailSenderCell.h */,
+				0DA25A1A15819918009AB9A6 /* TransactionDetailSenderCell.m */,
+				0DA25A1E1581CD0E009AB9A6 /* TransactionDetailAddressCell.h */,
+				0DA25A1F1581CD11009AB9A6 /* TransactionDetailAddressCell.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -592,6 +614,8 @@
 				0D37761515684E8B003FB8B3 /* PushCoinPayment.m */,
 				0DF8D8E2156E1E1800AEA91D /* PushCoinTransaction.h */,
 				0DF8D8E3156E1E1800AEA91D /* PushCoinTransaction.m */,
+				0DA25A0D15808A2A009AB9A6 /* PushCoinAddressBook.h */,
+				0DA25A0E15808A2A009AB9A6 /* PushCoinAddressBook.m */,
 			);
 			name = PushCoin;
 			sourceTree = "<group>";
@@ -853,7 +877,11 @@
 				0DA259EE157F0D22009AB9A6 /* QuickPaymentController.m in Sources */,
 				0DA25A09158084C2009AB9A6 /* SelectReceiverController.m in Sources */,
 				0DA25A0C15808637009AB9A6 /* ReceiverCell.m in Sources */,
-				0DA25A0F15808A2A009AB9A6 /* EmailBook.m in Sources */,
+				0DA25A0F15808A2A009AB9A6 /* PushCoinAddressBook.m in Sources */,
+				0DA25A1515818EF9009AB9A6 /* TransactionDetailCell.m in Sources */,
+				0DA25A181581920F009AB9A6 /* TransactionDetailController.m in Sources */,
+				0DA25A1B1581991A009AB9A6 /* TransactionDetailSenderCell.m in Sources */,
+				0DA25A201581CD13009AB9A6 /* TransactionDetailAddressCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,8 @@
 //
 
 #import "PushCoinTransaction.h"
+#import "PushCoinAddressBook.h"
+#import "AppDelegate.h"
 
 @implementation PushCoinTransaction
 @synthesize paymentScale = paymentScale_;
@@ -20,7 +22,16 @@
 @synthesize transactionContext = transactionContext_;
 @synthesize counterpartyID = counterpartyID_;
 @synthesize merchantName = merchantName_;
+@synthesize invoice = invoice_;
 @synthesize timestamp = timestamp_;
+
+@synthesize addressStreet;
+@synthesize addressCity;
+@synthesize addressState;
+@synthesize addressZip;
+@synthesize addressCountry;
+@synthesize contactPhone;
+@synthesize contactEmail;
 
 -(id) init
 {
@@ -38,7 +49,16 @@
         self.tipValue = 0;
         self.tipScale = 0;
         self.merchantName = @"";
+        self.invoice = @"";
         self.timestamp = 0;
+        
+        self.addressStreet = @"";
+        self.addressCity = @"";
+        self.addressState = @"";
+        self.addressZip = @"";
+        self.addressCountry = @"";
+        self.contactPhone = @"";
+        self.contactEmail = @"";
     }
     return self;
 }
@@ -54,9 +74,10 @@
         tipValue:(NSUInteger)tipValue
         tipScale:(NSInteger)tipScale
     merchantName:(NSString*)merchantName
+         invoice:(NSString*)invoice
        timestamp:(NSUInteger)timestamp
 {
-    self = [super init];
+    self = [self init];
     if (self)
     {
         self.paymentScale = paymentScale;
@@ -70,15 +91,31 @@
         self.transactionContext = context;
         self.transactionID = transactionID;
         self.counterpartyID = counterpartyID;
+        self.invoice = invoice;
         self.timestamp = timestamp;
     }
     return self;
+}
+
+- (AppDelegate *)appDelegate
+{
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 -(NSString *) merchantName
 {
     if (!merchantName_ || !merchantName_.length)
     {
+        // search the email book
+        PushCoinEntity * entity = [self.appDelegate.addressBook.dataStore 
+                                   objectForKey:self.counterpartyID];
+        if (entity)
+        {
+            if (entity.name && entity.name.length)
+                return entity.name;
+            return entity.email;
+        }
+        
         switch(self.transactionContext)
         {
             case 'P': return @"Payment";
@@ -102,7 +139,18 @@
                                                                  tipValue:self.tipValue
                                                                  tipScale:self.tipScale
                                                              merchantName:self.merchantName
+                                                                  invoice:self.invoice
                                                                 timestamp:self.timestamp];
+    if (other)
+    {
+        other.addressStreet = self.addressStreet;
+        other.addressCity = self.addressCity;
+        other.addressState = self.addressState;
+        other.addressZip = self.addressZip;
+        other.addressCountry = self.addressCountry;
+        other.contactPhone = self.contactPhone;
+        other.contactEmail = self.contactEmail;
+    }
     return other;
     
 }

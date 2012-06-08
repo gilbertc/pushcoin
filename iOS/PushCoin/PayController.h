@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import <AddressBookUI/AddressBookUI.h>
 #import "QRViewController.h"
 #import "GMGridView.h"
 #import "PaymentCell.h"
@@ -16,7 +15,7 @@
 #import "PasscodeViewController.h"
 
 
-@interface PayController : UIViewController <QRViewControllerDelegate, AddPaymentControllerDelegate, QuickPaymentControllerDelegate,/*ABPeoplePickerNavigationControllerDelegate,*/ GMGridViewDataSource, GMGridViewSortingDelegate,  GMGridViewActionDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate, KKPasscodeViewControllerDelegate>
+@interface PayController : UIViewController <QRViewControllerDelegate, AddPaymentControllerDelegate, QuickPaymentControllerDelegate, GMGridViewDataSource, GMGridViewSortingDelegate,  GMGridViewActionDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate, KKPasscodeViewControllerDelegate>
 {
     NSMutableArray *payments_;
     NSInteger lastDeleteItemIndexAsked_;

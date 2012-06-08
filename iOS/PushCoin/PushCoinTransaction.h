@@ -20,7 +20,18 @@
 @property (nonatomic, assign) NSUInteger tipValue;
 @property (nonatomic, assign) NSInteger tipScale;
 @property (nonatomic, strong) NSString * merchantName;
+@property (nonatomic, strong) NSString * invoice;
 @property (nonatomic, assign) NSUInteger timestamp;
+
+@property (nonatomic, strong) NSString * addressStreet;
+@property (nonatomic, strong) NSString * addressCity;
+@property (nonatomic, strong) NSString * addressState;
+@property (nonatomic, strong) NSString * addressZip;
+@property (nonatomic, strong) NSString * addressCountry;
+@property (nonatomic, strong) NSString * contactPhone;
+@property (nonatomic, strong) NSString * contactEmail;
+
+
 
 -(id) initWithID:(NSString *)transactionID
   counterpartyID:(NSString *)counterpartyID
@@ -33,5 +44,6 @@
         tipValue:(NSUInteger)tipValue
         tipScale:(NSInteger)tipScale
     merchantName:(NSString*)merchantName
+         invoice:(NSString*)invoice
        timestamp:(NSUInteger)timestamp;
 @end

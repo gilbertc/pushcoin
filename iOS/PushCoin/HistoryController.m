@@ -13,6 +13,7 @@
 #import "NSData+BytesToHexString.h"
 #import "NSData+Base64.h"
 #import "PushCoinTransaction.h"
+#import "TransactionDetailController.h"
 #import "TransactionCell.h"
 #import "BalanceCell.h"
 
@@ -60,6 +61,7 @@
     [numberFormatter setLocale:usLocale];
     
     self.tableView.dataSource = self;
+    self.tableView.delegate = self;
 }
 
 - (void)viewDidUnload
@@ -177,7 +179,26 @@ andDescription:(NSString *)description
                                                                     tipValue:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).value.val
                                                                     tipScale:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).scale.val
                                                                 merchantName:trx.merchant_name.string
+                                                                     invoice:trx.invoice.string
                                                                    timestamp:trx.utc_transaction_time.val];
+        
+        if (trx.address.itemCount)
+        {
+            Address * addr = [trx.address.val objectAtIndex:0];
+            pTrx.addressStreet = addr.street.string;
+            pTrx.addressCity = addr.city.string;
+            pTrx.addressState = addr.state.string;
+            pTrx.addressZip = addr.zip.string;
+            pTrx.addressCountry = addr.country.string;
+        }
+        
+        if (trx.contact.itemCount)
+        {
+            Contact * contact = [trx.contact.val objectAtIndex:0];
+            pTrx.contactEmail = contact.email.string;
+            pTrx.contactPhone = contact.phone.string;
+        }
+        
         [transactions addObject:pTrx];
     }
     
@@ -267,6 +288,35 @@ andDescription:(NSString *)description
         cell.rightTextLabel.text = [numberFormatter stringFromNumber:c];
         
         return cell;
+    }
+}
+
+-(void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self tableView:tv openTransactionDetailWithIndexPath:indexPath];    
+}
+
+-(void)tableView:(UITableView *)tv accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    [self tableView:tv openTransactionDetailWithIndexPath:indexPath];
+}
+
+-(void)tableView:(UITableView *)tv openTransactionDetailWithIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0)
+        return;
+    
+    TransactionDetailController * controller = [self.appDelegate viewControllerWithIdentifier:@"TransactionDetailController"];
+    
+    if (controller)
+    {
+        PushCoinTransaction * trx = [transactions objectAtIndex:indexPath.row];
+        PushCoinEntity * entity = [self.appDelegate.addressBook.dataStore objectForKey:trx.counterpartyID];
+        
+        controller.entity = entity;
+        controller.transaction = trx;
+        
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 

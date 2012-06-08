@@ -71,6 +71,8 @@
     self.gridView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     self.gridView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shortcut_grid_background.png"]];  
     self.gridView.opaque = YES;
+    self.gridView.alwaysBounceVertical = YES;
+    self.gridView.centerGrid = NO;
 
     self.gridView.actionDelegate = self;
     self.gridView.sortingDelegate = self;
@@ -252,57 +254,6 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
-
-#pragma mark -
-#pragma mark peoplePicker delegates
-/*
-- (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker
-{
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
-      shouldContinueAfterSelectingPerson:(ABRecordRef)person 
-{
-    [self selectReceiver:person];
-    [self dismissModalViewControllerAnimated:YES];
-    
-    return NO;
-}
-
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
-      shouldContinueAfterSelectingPerson:(ABRecordRef)person
-                                property:(ABPropertyID)property
-                              identifier:(ABMultiValueIdentifier)identifier
-{
-    return NO;
-}
-
-
-- (void)selectReceiver:(ABRecordRef)receiver
-{
-    NSString* name = (__bridge_transfer NSString*)ABRecordCopyValue(receiver,                                                                    
-                                                                    kABPersonFirstNameProperty);
-    NSString* email = nil;
-    ABMultiValueRef emails = ABRecordCopyValue(receiver, kABPersonEmailProperty);
-    
-    if (ABMultiValueGetCount(emails) > 0) 
-    {
-        email = (__bridge_transfer NSString*)
-        ABMultiValueCopyValueAtIndex(emails, 0);
-    } 
-    else 
-    {
-        email = @"[None]";
-    }
-    
-    // Do something here.
-}
-*/
-
-
 
 //////////////////////////////////////////////////////////////
 #pragma mark GMGridViewDataSource

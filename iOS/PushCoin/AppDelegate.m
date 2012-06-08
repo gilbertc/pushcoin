@@ -7,8 +7,9 @@
 //
 
 #import "AppDelegate.h"
-#import "EmailBook.h"
 #import "OpenSSLWrapper.h"
+#import "PushCoinAddressBook.h"
+
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
 
@@ -49,7 +50,7 @@
 @synthesize images = _images;
 @synthesize pemDsaPublicKey = _pemDsaPublicKey;
 @synthesize dsaDecryptedKey = _dsaDecryptedKey;
-@synthesize emailBook = _emailBook;
+@synthesize addressBook = _addressBook;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -60,8 +61,8 @@
     [self prepareOpenSSLWrapper];
     [self prepareImageCache];
 
-    self.emailBook = [[EmailBook alloc] init];
-    [self refreshEmailBook];
+    self.addressBook = [[PushCoinAddressBook alloc] init];
+    [self refreshAddressBook];
     
     return YES;
 }
@@ -139,9 +140,9 @@
     return YES;
 }
 
--(void) refreshEmailBook
+-(void) refreshAddressBook
 {
-    [self.emailBook refresh];
+    [self.addressBook refresh];
 }
 
 - (BOOL) registered
