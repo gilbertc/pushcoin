@@ -80,11 +80,25 @@ class AppController(QThread):
 		return self.payload.pta
 
 
+	def assert_key(self, key):
+		if not self.settings.contains( key ):
+			raise RuntimeError("Missing configuration: %s" % key)
+
+	def check_required_settings( self ):
+		self.assert_key( const.CONFKEY_MAT )
+
+
 	#-------------------------------
 	#  register handlers here
 	#-------------------------------
-	def __init__(self):
+	def __init__(self, settings):
 		QThread.__init__( self )
+
+		# configuration store
+		self.settings = settings
+
+		# iterate over required settings, fail if something's missing
+		self.check_required_settings()
 
 		# sync primitives
 		self.__mtx = QMutex()
@@ -206,7 +220,10 @@ class AppController(QThread):
 				req.add( pta )
 				req.add( r1 )
 
-				res = AppController.send( req )
+				res = AppController.send( 
+					req, 
+					self.settings.value( const.CONFKEY_SERVER_URL, const.CONFDEFAULT_SERVER_URL),
+					self.settings.value( const.CONFKEY_CONNECTION_TIMEOUT_SECS, const.CONFDEFAULT_CONNECTION_TIMEOUT_SECS))
 				ok = AppController.expect_success( res, self.__queue.form.charge, self.__queue.form.order_id, self.__queue.form.note )
 
 			except Exception, e:
@@ -246,13 +263,13 @@ class AppController(QThread):
 
 
 	@staticmethod
-	def send(req):
+	def send(req, url, timeout):
 		'''Sends request to the server, returns result'''
 		# Get encoded PCOS data 	
 		encoded = req.encoded()
 
 		try:
-			remote_call = urllib2.urlopen(const.PUSHCOIN_SERVER_URL, encoded, const.CONNECTION_TIMEOUT_SECS )
+			remote_call = urllib2.urlopen(url, encoded, timeout )
 			response = remote_call.read()
 		except urllib2.URLError, e:
 			raise RuntimeError('Connection error: %s' % e.reason) 

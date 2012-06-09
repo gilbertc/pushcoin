@@ -33,8 +33,15 @@ ERR_DUPLICATE_PTA=209
 ERR_INSUFFICIENT_FUNDS=300
 
 MAX_SCALE_VAL = 6
-
-MERCHANT_MAT = '9e52270ad5956ea5eb1d8d22132e093ab383886f'
 CURRENCY_CODE = 'USD'
-PUSHCOIN_SERVER_URL = 'https://api.pushcoin.com:20001/pcos/'
-CONNECTION_TIMEOUT_SECS = 15
+
+# configuration keys
+CONFKEY_MAT = 'access/mat'
+CONFKEY_SERVER_URL = 'access/server_url'
+CONFKEY_CONNECTION_TIMEOUT_SECS = 'access/connection_timeout_sec'
+
+# configuration defaults
+CONFDEFAULT_SERVER_URL = 'https://api.pushcoin.com:20001/pcos/'
+CONFDEFAULT_CONNECTION_TIMEOUT_SECS = 15
+
+

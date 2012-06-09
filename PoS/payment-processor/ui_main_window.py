@@ -5,6 +5,7 @@ from decimal import Decimal
 from PySide.QtGui import *
 from PySide.QtCore import *
 from gen_ui_main import Ui_MainWindow
+from ui_settings_window import SettingsWindow
 import settings as const
 
 # Templates for rendering PTAs
@@ -47,10 +48,11 @@ class Form():
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
-
-	def __init__(self, parent=None):
+	def __init__(self, settings, parent=None):
 		'''Mandatory initialisation of a class.'''
 		super(MainWindow, self).__init__(parent)
+		self.settings = settings
+		self.settingsDialog = SettingsWindow(settings, self)
 		self.setupUi(self)
 		self.animationArea.hide()
 		self.view_display.setReadOnly(True)
@@ -74,6 +76,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.timer = QTimer(self)
 		self.connect(self.timer, SIGNAL("timeout()"), self.__update_expiry)
 		self.timer.start(1000)
+
+		# when user wants to change configuration, open default text editor
+		self.btn_settings.clicked.connect(self.settingsDialog.show)
 
 		# reset all UI states
 		self.__reset();
