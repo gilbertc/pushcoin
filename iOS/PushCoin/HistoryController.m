@@ -199,6 +199,13 @@ andDescription:(NSString *)description
             pTrx.contactPhone = contact.phone.string;
         }
         
+        if (trx.geolocation.itemCount)
+        {
+            GeoLocation * loc = [trx.geolocation.val objectAtIndex:0];
+            pTrx.longitude = loc.longitude.val;
+            pTrx.latitude = loc.latitude.val;
+        }
+        
         [transactions addObject:pTrx];
     }
     

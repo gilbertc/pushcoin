@@ -19,13 +19,14 @@
 @class PushCoinEntity;
 
 @protocol QRViewControllerDelegate <NSObject>
-
-- (void)qrViewControllerDidClose:
-(QRViewController *)controller;
-
+- (void)qrViewControllerDidClose:(QRViewController *)controller;
 @end
 
 @interface QRViewController : UIViewController<PaymentDetailsControllerDelegate, SelectReceiverControllerDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
+{
+    CGFloat savedBrightness;
+}
+
 @property (weak, nonatomic) IBOutlet UILabel *receiverLabel;
 @property (weak, nonatomic) IBOutlet UILabel *expirationLabel;
 @property (weak, nonatomic) IBOutlet UIView *receiverBackground;

@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
+//#define AUTOBRIGHTNESS
+
 #import "QRViewController.h"
 #import "QREncoder.h"
 #import "PaymentCell.h"
@@ -60,11 +62,17 @@
     self.parser = [[PushCoinMessageParser alloc] init];
     self.ttl = MAX(60, self.ttl);
     
-    UISwipeGestureRecognizer * swipeRecognizer = 
-        [[UISwipeGestureRecognizer alloc] initWithTarget:self   
-                                                  action:@selector(handleSwipe:)];
+    UISwipeGestureRecognizer * swipeRecognizer;
+    swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self   
+                                                                action:@selector(handleSwipeDown:)];
     swipeRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
     [self.view addGestureRecognizer:swipeRecognizer];
+    
+    swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self   
+                                                                action:@selector(handleSwipeUp:)];
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:swipeRecognizer];
+    
     [self prepareQRWithTTL:self.ttl];    
 }
 
@@ -152,9 +160,14 @@
     }
 }
 
-- (IBAction) handleSwipe:(UISwipeGestureRecognizer *) recognizer
+- (IBAction) handleSwipeDown:(UISwipeGestureRecognizer *) recognizer
 {
     [self.delegate qrViewControllerDidClose:self];
+}
+
+- (IBAction) handleSwipeUp:(UISwipeGestureRecognizer *) recognizer
+{
+    [self showActionSheet];
 }
 
 - (void) timerDidTick:(id) sender
@@ -178,7 +191,7 @@
         else
         {
             self.expirationLabel.backgroundColor = [UIColor redColor];
-            self.expirationLabel.text = @"coupon expired!";
+            self.expirationLabel.text = @"coupon expired - please renew";
             
             [self.timer invalidate];
             self.timer = nil;
@@ -195,8 +208,34 @@
     
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    
+#ifdef AUTOBRIGHTNESS    
+    savedBrightness = [[UIScreen mainScreen] brightness];
+    if (savedBrightness < 0.5f)
+    {
+        [[UIScreen mainScreen] setBrightness:0.5f];
+    }    
+#endif
+    
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    
+#ifdef AUTOBRIGHTNESS
+    if (savedBrightness != [[UIScreen mainScreen] brightness])
+    {
+        [[UIScreen mainScreen] setBrightness:savedBrightness];
+    }
+#endif
+    
+}
+
 - (void)viewDidUnload
 {
+    
     [self setImageView:nil];
     [self setNavigationBar:nil];
     [self setAmountLabel:nil];
@@ -230,6 +269,11 @@
 }
 
 - (IBAction)actionButtonTapped:(id)sender 
+{
+    [self showActionSheet];
+}
+
+- (void) showActionSheet
 {
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:@"Cancel"destructiveButtonTitle:nil otherButtonTitles:@"Renew Coupon", @"Add Tips", @"Set Receiver", @"Email Coupon", nil];
     

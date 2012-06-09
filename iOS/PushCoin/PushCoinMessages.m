@@ -251,6 +251,10 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         [self addField:self.tip withName:@"tip"];
         [self addField:self.currency withName:@"currency"];
         [self addField:self.merchant_name withName:@"merchant_name"];
+        
+        // TODO: BUG FIX
+        [self addField:[[PCOSShortArray alloc] initWithItemPrototype:protoChar] withName:@"pta_receiver"];
+        
         [self addField:self.ref_data withName:@"ref_data"];
         [self addField:self.invoice withName:@"invoice"];
         [self addField:self.note withName:@"note"];

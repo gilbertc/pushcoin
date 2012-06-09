@@ -33,6 +33,9 @@
 @synthesize contactPhone;
 @synthesize contactEmail;
 
+@synthesize longitude;
+@synthesize latitude;
+
 -(id) init
 {
     self = [super init];
@@ -59,6 +62,9 @@
         self.addressCountry = @"";
         self.contactPhone = @"";
         self.contactEmail = @"";
+        
+        self.longitude = 0.0;
+        self.latitude = 0.0;
     }
     return self;
 }
@@ -150,6 +156,9 @@
         other.addressCountry = self.addressCountry;
         other.contactPhone = self.contactPhone;
         other.contactEmail = self.contactEmail;
+        
+        other.longitude = self.longitude;
+        other.latitude = self.latitude;
     }
     return other;
     

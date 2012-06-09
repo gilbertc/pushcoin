@@ -219,7 +219,7 @@
                                                     <size key="shadowOffset" width="0.0" height="1"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="Z3m-dh-0PU">
-                                                    <rect key="frame" x="71" y="11" width="186" height="21"/>
+                                                    <rect key="frame" x="71" y="11" width="201" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.096711027755239085" green="0.22949883779706345" blue="0.43869579081632648" alpha="1" colorSpace="calibratedRGB"/>
@@ -288,14 +288,14 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Gilbert Cheung" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="3nV-yZ-Cwt">
-                                            <rect key="frame" x="88" y="20" width="192" height="37"/>
+                                            <rect key="frame" x="88" y="22" width="192" height="37"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="gilbertc@asurada.org" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="gvZ-wr-3wI">
-                                            <rect key="frame" x="88" y="50" width="192" height="20"/>
+                                            <rect key="frame" x="88" y="49" width="192" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" red="0.45490199329999997" green="0.46666669849999998" blue="0.45098042490000001" alpha="1" colorSpace="deviceRGB"/>
@@ -310,62 +310,25 @@
                                     <outlet property="nameLabel" destination="3nV-yZ-Cwt" id="tBQ-lb-Axe"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TransactionDetailAddressCell" rowHeight="102" id="aHP-Gp-6l9" customClass="TransactionDetailAddressCell">
-                                <rect key="frame" x="0.0" y="148" width="320" height="102"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="10" y="0.0" width="280" height="101"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Street" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="jir-cl-5RL">
-                                            <rect key="frame" x="20" y="20" width="238" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="City, State, Zip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="r4E-Xp-8uN">
-                                            <rect key="frame" x="20" y="40" width="238" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Country" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="Wsz-eS-rcp">
-                                            <rect key="frame" x="20" y="60" width="238" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <connections>
-                                    <outlet property="cityLabel" destination="r4E-Xp-8uN" id="SBp-Qb-6n0"/>
-                                    <outlet property="countryLabel" destination="Wsz-eS-rcp" id="Jy9-sB-nJv"/>
-                                    <outlet property="streetLabel" destination="jir-cl-5RL" id="WQf-zm-OOB"/>
-                                </connections>
-                            </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TransactionDetailCell" textLabel="bDm-E0-kHh" detailTextLabel="ST9-9L-cYh" rowHeight="39" style="IBUITableViewCellStyleValue1" id="qmC-ye-rlz" customClass="TransactionDetailCell">
-                                <rect key="frame" x="0.0" y="250" width="320" height="40"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TransactionDetailCell" textLabel="bDm-E0-kHh" detailTextLabel="ST9-9L-cYh" rowHeight="39" style="IBUITableViewCellStyleValue2" id="qmC-ye-rlz" customClass="TransactionDetailCell">
+                                <rect key="frame" x="0.0" y="148" width="320" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="10" y="0.0" width="300" height="38"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Amount" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bDm-E0-kHh">
-                                            <rect key="frame" x="10" y="9" width="65" height="21"/>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Amount" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bDm-E0-kHh">
+                                            <rect key="frame" x="10" y="13" width="67" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                            <color key="textColor" red="0.32156862745098042" green="0.40000000000000002" blue="0.56862745098039214" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="$5.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ST9-9L-cYh">
-                                            <rect key="frame" x="247" y="9" width="43" height="21"/>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="$5.00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ST9-9L-cYh">
+                                            <rect key="frame" x="83" y="10" width="38" height="19"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.2196078431372549" green="0.32941176470588235" blue="0.52941176470588236" alpha="1" colorSpace="calibratedRGB"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </label>
                                     </subviews>
@@ -408,7 +371,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="tpb-Ay-GYK">
-                                <rect key="frame" x="20" y="37" width="280" height="37"/>
+                                <rect key="frame" x="20" y="92" width="280" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <state key="normal" title="Pre-Authorization Test">
@@ -423,7 +386,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="VrR-M8-yCF">
-                                <rect key="frame" x="20" y="82" width="280" height="37"/>
+                                <rect key="frame" x="20" y="47" width="280" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <state key="normal" title="Enable Passcode">
@@ -668,7 +631,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Gilbert Cheung" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="RX5-Jf-g5n">
-                                        <rect key="frame" x="20" y="2" width="240" height="16"/>
+                                        <rect key="frame" x="20" y="0.0" width="240" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -677,7 +640,7 @@
                                 </subviews>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" id="BUm-8I-adn">
-                                <rect key="frame" x="20" y="425" width="280" height="15"/>
+                                <rect key="frame" x="20" y="440" width="280" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -897,6 +860,147 @@
         <image name="logo.png" width="295" height="103"/>
         <image name="second.png" width="30" height="30"/>
     </resources>
+    <classes>
+        <class className="AccountNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AccountNavigationController.h"/>
+        </class>
+        <class className="AddPaymentController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddPaymentController.h"/>
+            <relationships>
+                <relationship kind="action" name="addButtonTapped:"/>
+                <relationship kind="action" name="backgroundTapped:"/>
+                <relationship kind="outlet" name="addButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="paymentTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="BalanceCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BalanceCell.h"/>
+        </class>
+        <class className="ChallengeController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChallengeController.h"/>
+        </class>
+        <class className="HistoryController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HistoryController.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshButtonTapped:"/>
+                <relationship kind="action" name="settingsButtonTapped:"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="MainTabBarController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainTabBarController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tabBar" candidateClass="UITabBar"/>
+            </relationships>
+        </class>
+        <class className="PayController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PayController.h"/>
+            <relationships>
+                <relationship kind="action" name="addPayment:"/>
+                <relationship kind="action" name="editPayment:"/>
+                <relationship kind="action" name="push:"/>
+            </relationships>
+        </class>
+        <class className="PayNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PayNavigationController.h"/>
+        </class>
+        <class className="PaymentDetailsController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PaymentDetailsController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelButtonTapped:"/>
+                <relationship kind="outlet" name="tipTableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="PaymentTipCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PaymentTipCell.h"/>
+        </class>
+        <class className="QRViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/QRViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionButtonTapped:"/>
+                <relationship kind="action" name="closeButtonTapped:"/>
+                <relationship kind="outlet" name="actionBarButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="amountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="centLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="expirationLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="receiverBackground" candidateClass="UIView"/>
+                <relationship kind="outlet" name="receiverLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tipLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="QuickPaymentController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/QuickPaymentController.h"/>
+            <relationships>
+                <relationship kind="action" name="backgroundTapped:"/>
+                <relationship kind="action" name="cancelButtonTapped:"/>
+                <relationship kind="action" name="quickPayButtonTapped:"/>
+                <relationship kind="outlet" name="paymentTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="quickPayButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="ReceiveController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReceiveController.h"/>
+            <relationships>
+                <relationship kind="action" name="backgroundTouched:"/>
+                <relationship kind="action" name="submitButtonTapped:"/>
+                <relationship kind="outlet" name="paymentTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="ReceiveNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReceiveNavigationController.h"/>
+        </class>
+        <class className="ReceiverCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReceiverCell.h"/>
+        </class>
+        <class className="RegistrationController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RegistrationController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="registrationIDTextBox" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="SelectReceiverController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectReceiverController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelButtonTapped:"/>
+                <relationship kind="outlet" name="receiverTableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="SettingsController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsController.h"/>
+            <relationships>
+                <relationship kind="action" name="enablePasscode:"/>
+                <relationship kind="action" name="preAuthorizationTest:"/>
+                <relationship kind="action" name="unregister:"/>
+                <relationship kind="outlet" name="passcodeButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="preAuthorizationTestButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="unregisterButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="TransactionCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TransactionCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="detailTextLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="rightTextLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="titleTextLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="TransactionDetailCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TransactionDetailCell.h"/>
+        </class>
+        <class className="TransactionDetailController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TransactionDetailController.h"/>
+        </class>
+        <class className="TransactionDetailSenderCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TransactionDetailSenderCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="emailLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="nameLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

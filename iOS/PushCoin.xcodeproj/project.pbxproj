@@ -86,7 +86,7 @@
 		0DA25A181581920F009AB9A6 /* TransactionDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A171581920D009AB9A6 /* TransactionDetailController.m */; };
 		0DA25A1B1581991A009AB9A6 /* TransactionDetailSenderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A1A15819918009AB9A6 /* TransactionDetailSenderCell.m */; };
 		0DA25A1D1581BDB0009AB9A6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA25A1C1581BDAF009AB9A6 /* MessageUI.framework */; };
-		0DA25A201581CD13009AB9A6 /* TransactionDetailAddressCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA25A1F1581CD11009AB9A6 /* TransactionDetailAddressCell.m */; };
+		0DA25A7A1582EDF0009AB9A6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA25A791582EDF0009AB9A6 /* CoreLocation.framework */; };
 		0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DACCD731558A02A00A69DED /* PCOSParser.m */; };
 		0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
@@ -308,8 +308,7 @@
 		0DA25A1915819916009AB9A6 /* TransactionDetailSenderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionDetailSenderCell.h; sourceTree = "<group>"; };
 		0DA25A1A15819918009AB9A6 /* TransactionDetailSenderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionDetailSenderCell.m; sourceTree = "<group>"; };
 		0DA25A1C1581BDAF009AB9A6 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		0DA25A1E1581CD0E009AB9A6 /* TransactionDetailAddressCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionDetailAddressCell.h; sourceTree = "<group>"; };
-		0DA25A1F1581CD11009AB9A6 /* TransactionDetailAddressCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionDetailAddressCell.m; sourceTree = "<group>"; };
+		0DA25A791582EDF0009AB9A6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0DACCD721558A02A00A69DED /* PCOSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSParser.h; sourceTree = "<group>"; };
 		0DACCD731558A02A00A69DED /* PCOSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSParser.m; sourceTree = "<group>"; };
 		0DAFD23115478E5E0010459A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
@@ -350,6 +349,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DA25A7A1582EDF0009AB9A6 /* CoreLocation.framework in Frameworks */,
 				0DA25A1D1581BDB0009AB9A6 /* MessageUI.framework in Frameworks */,
 				0D4923D7156B274400626AC2 /* libGMGridView.a in Frameworks */,
 				0D4923CA1568C37A00626AC2 /* libiconv.dylib in Frameworks */,
@@ -426,7 +426,6 @@
 		0D19E2BD1541CCAE00C8671B = {
 			isa = PBXGroup;
 			children = (
-				0DA25A1C1581BDAF009AB9A6 /* MessageUI.framework */,
 				0D19E2D21541CCAE00C8671B /* PushCoin.App */,
 				0D7A8F7A154202A800634A79 /* Dependencies */,
 				0DBC491D1543C59A00E56EDF /* Resources */,
@@ -448,6 +447,8 @@
 			isa = PBXGroup;
 			children = (
 				0D7A8F8A1542031C00634A79 /* libiconv.dylib */,
+				0DA25A791582EDF0009AB9A6 /* CoreLocation.framework */,
+				0DA25A1C1581BDAF009AB9A6 /* MessageUI.framework */,
 				0DAFD24D1547ACBA0010459A /* Security.framework */,
 				0D7A8FBE154218B700634A79 /* QuartzCore.framework */,
 				0D7A8FBB154217CD00634A79 /* CoreAudio.framework */,
@@ -517,56 +518,54 @@
 			children = (
 				0D041DBC15706EE600F3AABB /* Passcode */,
 				0D19E2DE1541CCAE00C8671B /* MainStoryboard.storyboard */,
+				0DA259DB157DBB2C009AB9A6 /* AccountNavigationController.h */,
+				0DA259DC157DBB2C009AB9A6 /* AccountNavigationController.m */,
+				0D041DC0157071FC00F3AABB /* AddPaymentController.h */,
+				0D041DC1157071FC00F3AABB /* AddPaymentController.m */,
+				0D041DC315707BDF00F3AABB /* BalanceCell.h */,
+				0D041DC415707BDF00F3AABB /* BalanceCell.m */,
+				0D3EA63D154936C50088EFE1 /* ChallengeController.h */,
+				0D3EA63E154936C50088EFE1 /* ChallengeController.m */,
+				0DF8D8DF156E139300AEA91D /* HistoryController.h */,
+				0DF8D8E0156E139300AEA91D /* HistoryController.m */,
 				0DF6C5C61563446500E28B99 /* MainTabBarController.h */,
 				0DF6C5C71563446600E28B99 /* MainTabBarController.m */,
 				0D19E2E11541CCAE00C8671B /* PayController.h */,
 				0D19E2E21541CCAE00C8671B /* PayController.mm */,
 				0D37760C15683949003FB8B3 /* PaymentCell.h */,
 				0D37760D15683949003FB8B3 /* PaymentCell.m */,
-				0D041DC0157071FC00F3AABB /* AddPaymentController.h */,
-				0D041DC1157071FC00F3AABB /* AddPaymentController.m */,
-				0D19E2E81541CCAE00C8671B /* ReceiveController.h */,
-				0D19E2E91541CCAE00C8671B /* ReceiveController.mm */,
-				0D7A8FE31542609600634A79 /* SettingsController.h */,
-				0D7A8FE41542609600634A79 /* SettingsController.mm */,
-				0D7A8FF51543614000634A79 /* QRViewController.h */,
-				0D7A8FF61543614000634A79 /* QRViewController.mm */,
-				0D3EA63D154936C50088EFE1 /* ChallengeController.h */,
-				0D3EA63E154936C50088EFE1 /* ChallengeController.m */,
-				0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */,
-				0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */,
-				0DF8D8DF156E139300AEA91D /* HistoryController.h */,
-				0DF8D8E0156E139300AEA91D /* HistoryController.m */,
-				0DF8D8ED156EFF3100AEA91D /* TransactionCell.h */,
-				0DF8D8EE156EFF3200AEA91D /* TransactionCell.m */,
 				0DDD0958156F19FC001C36BB /* PaymentDetailsController.h */,
 				0DDD0959156F19FC001C36BB /* PaymentDetailsController.m */,
 				0DDD095B156F1A41001C36BB /* PaymentTipCell.h */,
 				0DDD095C156F1A41001C36BB /* PaymentTipCell.m */,
-				0D041DC315707BDF00F3AABB /* BalanceCell.h */,
-				0D041DC415707BDF00F3AABB /* BalanceCell.m */,
-				0D402EE515715AF200DE35EB /* SettingsNavigationController.h */,
-				0D402EE615715AF200DE35EB /* SettingsNavigationController.m */,
-				0DA259DB157DBB2C009AB9A6 /* AccountNavigationController.h */,
-				0DA259DC157DBB2C009AB9A6 /* AccountNavigationController.m */,
-				0DA259DE157DBB4B009AB9A6 /* ReceiveNavigationController.h */,
-				0DA259DF157DBB4B009AB9A6 /* ReceiveNavigationController.mm */,
 				0DA259E1157DBB5B009AB9A6 /* PayNavigationController.h */,
 				0DA259E2157DBB5C009AB9A6 /* PayNavigationController.m */,
+				0D7A8FF51543614000634A79 /* QRViewController.h */,
+				0D7A8FF61543614000634A79 /* QRViewController.mm */,
 				0DA259EC157F0D1B009AB9A6 /* QuickPaymentController.h */,
 				0DA259ED157F0D1D009AB9A6 /* QuickPaymentController.m */,
-				0DA25A07158084C2009AB9A6 /* SelectReceiverController.h */,
-				0DA25A08158084C2009AB9A6 /* SelectReceiverController.m */,
+				0D19E2E81541CCAE00C8671B /* ReceiveController.h */,
+				0D19E2E91541CCAE00C8671B /* ReceiveController.mm */,
+				0DA259DE157DBB4B009AB9A6 /* ReceiveNavigationController.h */,
+				0DA259DF157DBB4B009AB9A6 /* ReceiveNavigationController.mm */,
 				0DA25A0A15808636009AB9A6 /* ReceiverCell.h */,
 				0DA25A0B15808636009AB9A6 /* ReceiverCell.m */,
+				0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */,
+				0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */,
+				0DA25A07158084C2009AB9A6 /* SelectReceiverController.h */,
+				0DA25A08158084C2009AB9A6 /* SelectReceiverController.m */,
+				0D7A8FE31542609600634A79 /* SettingsController.h */,
+				0D7A8FE41542609600634A79 /* SettingsController.mm */,
+				0D402EE515715AF200DE35EB /* SettingsNavigationController.h */,
+				0D402EE615715AF200DE35EB /* SettingsNavigationController.m */,
+				0DF8D8ED156EFF3100AEA91D /* TransactionCell.h */,
+				0DF8D8EE156EFF3200AEA91D /* TransactionCell.m */,
 				0DA25A1315818EF7009AB9A6 /* TransactionDetailCell.h */,
 				0DA25A1415818EF8009AB9A6 /* TransactionDetailCell.m */,
 				0DA25A161581920B009AB9A6 /* TransactionDetailController.h */,
 				0DA25A171581920D009AB9A6 /* TransactionDetailController.m */,
 				0DA25A1915819916009AB9A6 /* TransactionDetailSenderCell.h */,
 				0DA25A1A15819918009AB9A6 /* TransactionDetailSenderCell.m */,
-				0DA25A1E1581CD0E009AB9A6 /* TransactionDetailAddressCell.h */,
-				0DA25A1F1581CD11009AB9A6 /* TransactionDetailAddressCell.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -881,7 +880,6 @@
 				0DA25A1515818EF9009AB9A6 /* TransactionDetailCell.m in Sources */,
 				0DA25A181581920F009AB9A6 /* TransactionDetailController.m in Sources */,
 				0DA25A1B1581991A009AB9A6 /* TransactionDetailSenderCell.m in Sources */,
-				0DA25A201581CD13009AB9A6 /* TransactionDetailAddressCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

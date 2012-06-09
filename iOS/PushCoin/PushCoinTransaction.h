@@ -30,8 +30,8 @@
 @property (nonatomic, strong) NSString * addressCountry;
 @property (nonatomic, strong) NSString * contactPhone;
 @property (nonatomic, strong) NSString * contactEmail;
-
-
+@property (nonatomic, assign) CGFloat longitude;
+@property (nonatomic, assign) CGFloat latitude;
 
 -(id) initWithID:(NSString *)transactionID
   counterpartyID:(NSString *)counterpartyID

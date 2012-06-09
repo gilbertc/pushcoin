@@ -10,9 +10,14 @@
 #import <QuartzCore/QuartzCore.h>
 #import <ZXingWidgetController.h>
 #import <QRCodeReader.h>
+#import <CoreLocation/CoreLocation.h>
 
 
-@interface ReceiveNavigationController : UINavigationController<ZXingDelegate>
+@interface ReceiveNavigationController : UINavigationController<ZXingDelegate, CLLocationManagerDelegate>
+{
+    CLLocationManager * locationManager;
+}
+
 @property (strong, nonatomic) ZXingWidgetController * zxingController;
-
+@property (strong, nonatomic) CLLocation * lastKnownLocation;
 @end

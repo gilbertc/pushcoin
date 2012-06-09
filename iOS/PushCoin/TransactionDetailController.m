@@ -8,7 +8,6 @@
 
 #import "TransactionDetailController.h"
 #import "TransactionDetailSenderCell.h"
-#import "TransactionDetailAddressCell.h"
 #import "TransactionDetailCell.h"
 
 
@@ -59,7 +58,7 @@
     [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
     [numberFormatter setLocale:usLocale];
     
-    self.navigationItem.title = self.transaction.merchantName;
+    self.navigationItem.title = self.transaction.transactionContext == 'T' ? @"Transfer" : @"Payment";
     
     ABAddressBookRef addressBook = ABAddressBookCreate();
     ABRecordRef person = ABAddressBookGetPersonWithRecordID(addressBook, self.entity.recordID);
@@ -98,7 +97,11 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 5;
+    
+    if (self.transaction.transactionContext == 'T')
+        return 4;
+    else
+        return 5;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -107,15 +110,30 @@
     switch (section)
     {
         case 0:
-            return self.entity? 1 : 0;
+            return 1;
         case 1:
             return 3;
         case 2:
-            return 4;
-        case 3:
-            return 1;
-        case 4:
-            return 2;
+            return self.transaction.transactionContext == 'T' ? 3 : 4; //skipping invoice 
+    }
+    
+    if (self.transaction.transactionContext == 'T')
+    {
+        switch (section)
+        {
+            case 3:
+                return 2;
+        }
+    }
+    else
+    {
+        switch (section)
+        {
+            case 3:
+                return 1;
+            case 4:
+                return 2;
+        }
     }
     
     return 0;
@@ -130,12 +148,28 @@
         case 1:
             return @"Payment";
         case 2:
-            return @"Transaction Details";
-        case 3:
-            return @"Address";
-        case 4:
-            return @"Contact";
+            return @"Transaction";
     }
+    
+    if (self.transaction.transactionContext == 'T')
+    {
+        switch (section)
+        {
+            case 3:
+                return @"Location";
+        }
+    }
+    else
+    {
+        switch (section)
+        {
+            case 3:
+                return @"Address";
+            case 4:
+                return @"Contact";
+        }
+    }
+    
     return @"";
 }
 
@@ -151,7 +185,7 @@
                 cell = [[TransactionDetailSenderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TransactionDetailSenderCell"];
             }
         
-            if (self.transaction.transactionContext != 'P')
+            if (self.transaction.transactionContext == 'T')
             {
                 cell.image.image = image;
                 cell.nameLabel.text = self.entity.name;
@@ -171,7 +205,7 @@
             TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailCell"];
             if (!cell)
             {
-                cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailCell"];
+                cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"TransactionDetailCell"];
             }
             
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -186,7 +220,7 @@
                 
                     NSNumber *c = [NSNumber numberWithFloat:amount];
                 
-                    cell.textLabel.text = @"Amount";
+                    cell.textLabel.text = @"amount";
                     cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
                     break;
                 }
@@ -198,7 +232,7 @@
                     
                     NSNumber *c = [NSNumber numberWithFloat:tax];
                     
-                    cell.textLabel.text = @"Tax";
+                    cell.textLabel.text = @"tax";
                     cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
                     break;
                 }
@@ -210,7 +244,7 @@
                     
                     NSNumber *c = [NSNumber numberWithFloat:tips];
                     
-                    cell.textLabel.text = @"Tips";
+                    cell.textLabel.text = @"tips";
                     cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
                     break;
                 }
@@ -223,7 +257,7 @@
             TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailCell"];
             if (!cell)
             {
-                cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailCell"];
+                cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"TransactionDetailCell"];
             }
             
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -233,87 +267,133 @@
                 case 0:
                 {
                     NSDate * date = [NSDate dateWithTimeIntervalSince1970:self.transaction.timestamp];
-                    cell.textLabel.text = @"Date";
+                    cell.textLabel.text = @"date";
                     cell.detailTextLabel.text = [dateFormatter stringFromDate:date];
                     break;
                 }
                 case 1:
                 {
                     NSDate * date = [NSDate dateWithTimeIntervalSince1970:self.transaction.timestamp];
-                    cell.textLabel.text = @"Time";
+                    cell.textLabel.text = @"time";
                     cell.detailTextLabel.text = [timeFormatter stringFromDate:date];
                     break;
                 }
                 case 2:
                 {
-                    cell.textLabel.text = @"Context";
+                    cell.textLabel.text = @"context";
                     cell.detailTextLabel.text = self.transaction.transactionContext == 'P' ? @"Payment" : @"Transfer";
                     break;
                 }
                 case 3:
                 {
-                    cell.textLabel.text = @"Invoice";
+                    cell.textLabel.text = @"invoice";
                     cell.detailTextLabel.text = self.transaction.invoice;
                     break;
                 }
             }
             return cell;
         }
-        case 3:
+    }        
+    
+    if (self.transaction.transactionContext == 'T')
+    {
+        switch (indexPath.section)
         {
-            TransactionDetailAddressCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailAddressCell"];
-            if (!cell)
+            case 3:
             {
-                cell = [[TransactionDetailAddressCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TransactionDetailAddressCell"];
-            }
-            
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            
-            cell.streetLabel.text = self.transaction.addressStreet;
-            
-            if (self.transaction.addressCity.length || self.transaction.addressState.length || self.transaction.addressZip.length)
-            {
-                cell.cityLabel.text = [NSString stringWithFormat:@"%@, %@ %@", 
-                                       self.transaction.addressCity,
-                                       self.transaction.addressState,
-                                       self.transaction.addressZip];
-            }
-            else
-            {
-                cell.cityLabel.text = @""; 
-            }
-            
-            cell.countryLabel.text = self.transaction.addressCountry;
-            
-            return cell;
-        }
-        case 4:
-        {
-            TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailCell"];
-            if (!cell)
-            {
-                cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailCell"];
+                TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailCell"];
+                if (!cell)
+                {
+                    cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailCell"];
+                    
+                }
                 
+                switch(indexPath.row)
+                {
+                    case 0:
+                    {
+                        cell.textLabel.text = @"latitude";
+                        cell.detailTextLabel.text = [NSString stringWithFormat:@"%.6f", self.transaction.latitude];
+                        break;
+                    }
+                    case 1:
+                    {
+                        cell.textLabel.text = @"longitude";
+                        cell.detailTextLabel.text = [NSString stringWithFormat:@"%.6f", self.transaction.longitude];
+                        break;
+                    }
+                }
+                return cell;
             }
-            
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            
-            switch(indexPath.row)
+        }
+    }
+    else
+    {
+        switch (indexPath.section)
+        {
+            case 3:
             {
-                case 0:
+                TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailAddressCell"];
+                if (!cell)
                 {
-                    cell.textLabel.text = @"Email";
-                    cell.detailTextLabel.text = self.transaction.contactEmail;
-                    break;
+                    cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TransactionDetailAddressCell"];
                 }
-                case 1:
+            
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            
+                cell.textLabel.text = @"address";
+                
+                if (self.transaction.addressCity.length 
+                    || self.transaction.addressState.length 
+                    || self.transaction.addressZip.length
+                    || self.transaction.addressStreet.length
+                    || self.transaction.addressCountry.length)
                 {
-                    cell.textLabel.text = @"Phone";
-                    cell.detailTextLabel.text = self.transaction.contactPhone;
-                    break;
+                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\n%@, %@ %@\n%@",
+                                                 self.transaction.addressStreet,
+                                                 self.transaction.addressCity,
+                                                 self.transaction.addressState,
+                                                 self.transaction.addressZip,
+                                                 self.transaction.addressCountry];
                 }
+                else
+                {
+                    cell.detailTextLabel.text = @"\n\n";
+                }
+                
+                cell.detailTextLabel.numberOfLines = 3;
+                cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+            
+                return cell;
             }
-            return cell;
+            case 4:
+            {
+                TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailCell"];
+                if (!cell)
+                {
+                    cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailCell"];
+                
+                }
+            
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            
+                switch(indexPath.row)
+                {
+                    case 0:
+                    {
+                        cell.textLabel.text = @"email";
+                        cell.detailTextLabel.text = self.transaction.contactEmail;
+                        break;
+                    }
+                    case 1:
+                    {
+                        cell.textLabel.text = @"phone";
+                        cell.detailTextLabel.text = self.transaction.contactPhone;
+                        break;
+                    }
+                }
+                return cell;
+            }
         }
     }
     return nil;
@@ -351,11 +431,27 @@
             return 40;
         case 2:
             return 40;
-        case 3:
-            return 102;
-        case 4:
-            return 40;
     }
+    
+    if (self.transaction.transactionContext == 'T')
+    {
+        switch (indexPath.section)
+        {
+            case 3:
+                return 40;
+        }
+    }
+    else
+    {
+        switch (indexPath.section)
+        {
+            case 3:
+                return 44 + 2 * 19;
+            case 4:
+                return 40;
+        }
+    }
+    
     return 0;
 }
 

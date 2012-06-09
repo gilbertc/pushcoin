@@ -16,6 +16,7 @@
 
 @implementation ReceiveNavigationController
 @synthesize zxingController;
+@synthesize lastKnownLocation;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,6 +32,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
  
+    self.lastKnownLocation = nil;
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+    locationManager.distanceFilter = 100.0f;
+    locationManager.delegate = self;
+    [locationManager startUpdatingLocation];
+    
     self.zxingController = [[ZXingWidgetController alloc] initWithDelegate:self
                                                                 showCancel:NO 
                                                                   OneDMode:NO];
@@ -39,7 +47,7 @@
     self.zxingController.readers = [[NSSet alloc] initWithObjects:qrcodeReader, nil];
     self.zxingController.navigationItem.title = @"Scan Payment";
     self.zxingController.overlayView.displayedMessage = @"";
-    
+       
     [self pushViewController:self.zxingController animated:NO];    
 }
 
@@ -47,7 +55,11 @@
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    [locationManager stopUpdatingLocation];
     
+    locationManager = nil;
+    self.lastKnownLocation = nil;
+
     self.zxingController = nil;
 }
 
@@ -80,6 +92,15 @@
 - (void)zxingControllerDidCancel:(ZXingWidgetController*)controller 
 {
 }
+
+#pragma mark -
+#pragma mark CLLocationManagerDelegate
+
+-(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    self.lastKnownLocation = [newLocation copy];
+}
+
 
 
 @end
