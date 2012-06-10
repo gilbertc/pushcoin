@@ -163,7 +163,7 @@ class RmoteCall:
 				city = body.read_short_string()
 				state = body.read_short_string()
 				zipc = body.read_short_string()
-				country = body.read_short_string()
+				country = body.read_fixed_string(2)
 				address = '%s, %s, %s %s, %s' % (street, city, state, zipc, country)
 			else:
 				address = 'not provided'
