@@ -73,6 +73,7 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @property (nonatomic, strong) PCOSShortArray * tip;
 @property (nonatomic, strong) PCOSFixedArray * currency;
 @property (nonatomic, strong) PCOSShortArray * merchant_name;
+@property (nonatomic, strong) PCOSShortArray * recipient;
 @property (nonatomic, strong) PCOSShortArray * ref_data;
 @property (nonatomic, strong) PCOSShortArray * invoice;
 @property (nonatomic, strong) PCOSShortArray * note;

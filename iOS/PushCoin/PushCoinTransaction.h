@@ -20,6 +20,7 @@
 @property (nonatomic, assign) NSUInteger tipValue;
 @property (nonatomic, assign) NSInteger tipScale;
 @property (nonatomic, strong) NSString * merchantName;
+@property (nonatomic, strong) NSString * recipient;
 @property (nonatomic, strong) NSString * invoice;
 @property (nonatomic, assign) NSUInteger timestamp;
 
@@ -44,6 +45,7 @@
         tipValue:(NSUInteger)tipValue
         tipScale:(NSInteger)tipScale
     merchantName:(NSString*)merchantName
+       recipient:(NSString*)recipient
          invoice:(NSString*)invoice
        timestamp:(NSUInteger)timestamp;
 @end

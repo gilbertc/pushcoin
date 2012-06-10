@@ -1,5 +1,5 @@
 //
-//  HistoryController.h
+//  AccountController.h
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/24/12.
@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "SettingsController.h"
+#import "InAppSettingsKit/Controllers/IASKAppSettingsViewController.h"
 
 #import "PushCoinWebService.h"
 #import "PushCoinMessages.h"
 
-@interface HistoryController : UIViewController<PushCoinWebServiceDelegate, PushCoinMessageReceiver, UITableViewDataSource, UITableViewDelegate>
+@interface AccountController : UIViewController<PushCoinWebServiceDelegate, PushCoinMessageReceiver, UITableViewDataSource, UITableViewDelegate, IASKSettingsDelegate>
 {
     PushCoinMessageParser * parser;
     PushCoinWebService * webService;

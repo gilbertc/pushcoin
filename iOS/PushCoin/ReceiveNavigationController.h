@@ -20,4 +20,6 @@
 
 @property (strong, nonatomic) ZXingWidgetController * zxingController;
 @property (strong, nonatomic) CLLocation * lastKnownLocation;
+
+-(void) handleURL:(NSURL *) url;
 @end

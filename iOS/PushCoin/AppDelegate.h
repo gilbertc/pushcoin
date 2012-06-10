@@ -46,6 +46,8 @@
 @property (nonatomic, strong) SingleUseData * dsaDecryptedKey;
 @property (nonatomic, strong) PushCoinAddressBook * addressBook;
 
+@property (nonatomic, strong) NSURL * fileURL;
+
 -(void) refreshAddressBook;
 
 -(void) setPasscode:(NSString *)passcode oldPasscode:(NSString *)oldPasscode;

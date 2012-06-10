@@ -164,11 +164,11 @@
             </objects>
             <point key="canvasLocation" x="638" y="-122"/>
         </scene>
-        <!--History Controller - Account-->
+        <!--Account Controller - Account-->
         <scene sceneID="6Co-WK-YoD">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O5Y-3T-SdW" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="XX1-HE-H7h" customClass="HistoryController" sceneMemberID="viewController">
+                <viewController id="XX1-HE-H7h" customClass="AccountController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FxC-EA-sLc">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -352,26 +352,12 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lbT-4v-r8w" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="SettingsController" title="Settings" hidesBottomBarWhenPushed="YES" id="7UX-UQ-CVN" customClass="SettingsController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="4D0-bq-vDJ">
+                    <scrollView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" id="Psh-iz-dMh">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="74F-NS-oDw" userLabel="Button - Unregister Device">
-                                <rect key="frame" x="20" y="265" width="280" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <state key="normal" title="Unregister Device">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="unregister:" destination="7UX-UQ-CVN" eventType="touchUpInside" id="W77-xZ-cdh"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="tpb-Ay-GYK">
-                                <rect key="frame" x="20" y="92" width="280" height="37"/>
+                                <rect key="frame" x="20" y="86" width="280" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <state key="normal" title="Pre-Authorization Test">
@@ -385,8 +371,22 @@
                                     <action selector="preAuthorizationTest:" destination="7UX-UQ-CVN" eventType="touchUpInside" id="Mhx-Vc-1lh"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="74F-NS-oDw" userLabel="Button - Unregister Device">
+                                <rect key="frame" x="20" y="131" width="280" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <state key="normal" title="Unregister Device">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="unregister:" destination="7UX-UQ-CVN" eventType="touchUpInside" id="W77-xZ-cdh"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="VrR-M8-yCF">
-                                <rect key="frame" x="20" y="47" width="280" height="37"/>
+                                <rect key="frame" x="20" y="41" width="280" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <state key="normal" title="Enable Passcode">
@@ -402,7 +402,7 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                    </view>
+                    </scrollView>
                     <navigationItem key="navigationItem" title="Settings" id="bGa-33-RZv"/>
                     <connections>
                         <outlet property="passcodeButton" destination="VrR-M8-yCF" id="X2O-li-iHj"/>
@@ -452,11 +452,11 @@
             </objects>
             <point key="canvasLocation" x="-66" y="-138"/>
         </scene>
-        <!--Receive Controller - Receive-->
+        <!--Receive Controller - Accept Payment-->
         <scene sceneID="13">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="12" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="ReceiveController" title="Receive" id="3" customClass="ReceiveController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ReceiveController" id="3" customClass="ReceiveController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="awf-JG-MDP" customClass="UIControl">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -497,7 +497,7 @@
                             <action selector="backgroundTouched:" destination="3" eventType="touchDown" id="MJ5-0m-hh1"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Accept" id="WrG-sF-Iw1"/>
+                    <navigationItem key="navigationItem" title="Accept Payment" id="WrG-sF-Iw1"/>
                     <connections>
                         <outlet property="paymentTextField" destination="UIh-Jd-7CH" id="ke1-mb-N6C"/>
                     </connections>
@@ -861,6 +861,14 @@
         <image name="second.png" width="30" height="30"/>
     </resources>
     <classes>
+        <class className="AccountController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AccountController.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshButtonTapped:"/>
+                <relationship kind="action" name="settingsButtonTapped:"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
         <class className="AccountNavigationController" superclassName="UINavigationController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/AccountNavigationController.h"/>
         </class>
@@ -878,14 +886,6 @@
         </class>
         <class className="ChallengeController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChallengeController.h"/>
-        </class>
-        <class className="HistoryController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/HistoryController.h"/>
-            <relationships>
-                <relationship kind="action" name="refreshButtonTapped:"/>
-                <relationship kind="action" name="settingsButtonTapped:"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
         </class>
         <class className="MainTabBarController" superclassName="UITabBarController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MainTabBarController.h"/>

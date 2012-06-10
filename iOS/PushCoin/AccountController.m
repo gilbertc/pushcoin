@@ -1,12 +1,12 @@
 //
-//  HistoryController.m
+//  AccountController.m
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/24/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "HistoryController.h"
+#import "AccountController.h"
 #import "PushCoinMessages.h"
 #import "AppDelegate.h"
 #import "NSString+HexStringToBytes.h"
@@ -17,7 +17,7 @@
 #import "TransactionCell.h"
 #import "BalanceCell.h"
 
-@implementation HistoryController
+@implementation AccountController
 @synthesize tableView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -122,11 +122,27 @@
 
 - (IBAction)settingsButtonTapped:(id)sender 
 {
+    IASKAppSettingsViewController * controller = [[IASKAppSettingsViewController alloc] init];
+    if (controller)
+    {
+        controller.showDoneButton = NO;
+        [self.navigationController pushViewController:controller animated:YES];
+    }
+    /*
     SettingsController * controller = [self.appDelegate viewControllerWithIdentifier:@"SettingsController"];
     
     if (controller)
     {
         [self.navigationController pushViewController:controller animated:YES];
+    }
+     */
+}
+
+-(void) settingsViewController:(IASKAppSettingsViewController *)sender buttonTappedForKey:(NSString *)key
+{
+    if (key == @"preauth-test")
+    {
+        
     }
 }
 
@@ -179,6 +195,7 @@ andDescription:(NSString *)description
                                                                     tipValue:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).value.val
                                                                     tipScale:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).scale.val
                                                                 merchantName:trx.merchant_name.string
+                                                                   recipient:trx.recipient.string
                                                                      invoice:trx.invoice.string
                                                                    timestamp:trx.utc_transaction_time.val];
         

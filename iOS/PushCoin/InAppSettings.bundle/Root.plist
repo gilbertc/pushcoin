@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>General</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Passcode</string>
+			<key>Key</key>
+			<string>passcode</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>QR Auto-brightness</string>
+			<key>Key</key>
+			<string>auto-brightness</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+        <dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Registration</string>
+		</dict>
+        <dict>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Title</key>
+			<string>Pre-Authorization Test</string>
+			<key>Key</key>
+			<string>preauth-test</string>
+		</dict>
+        <dict>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Title</key>
+			<string>Unregister Device</string>
+			<key>Key</key>
+			<string>unregister-device</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -48,7 +48,8 @@
     self.zxingController.navigationItem.title = @"Scan Payment";
     self.zxingController.overlayView.displayedMessage = @"";
        
-    [self pushViewController:self.zxingController animated:NO];    
+    [self pushViewController:self.zxingController animated:NO];
+    
 }
 
 - (void)viewDidUnload
@@ -63,6 +64,17 @@
     self.zxingController = nil;
 }
 
+-(void) handleURL:(NSURL *) url
+{
+    if ([url isFileURL])
+    {
+        // handle pcos file accept once
+
+        [self popToViewController:self.zxingController animated:NO];
+        [self receiveData:[NSData dataWithContentsOfURL:url]];
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -74,19 +86,23 @@
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
+- (void) receiveData:(NSData *) data
+{
+    ReceiveController * receiveController = [self.appDelegate viewControllerWithIdentifier:@"ReceiveController"];
+    if (receiveController)
+    {
+        receiveController.ptaData = data;
+        [self pushViewController:receiveController animated:YES];
+    }    
+}
+
 #pragma mark -
 #pragma mark ZXingDelegateMethods
 
 - (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSData*)data
 {
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    
-    ReceiveController * receiveController = [self.appDelegate viewControllerWithIdentifier:@"ReceiveController"];
-    if (receiveController)
-    {
-        receiveController.ptaData = data;
-        [self pushViewController:receiveController animated:YES];
-    }
+    [self receiveData:data];
 }
 
 - (void)zxingControllerDidCancel:(ZXingWidgetController*)controller 

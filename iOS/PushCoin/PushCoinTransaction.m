@@ -22,6 +22,7 @@
 @synthesize transactionContext = transactionContext_;
 @synthesize counterpartyID = counterpartyID_;
 @synthesize merchantName = merchantName_;
+@synthesize recipient = recipient_;
 @synthesize invoice = invoice_;
 @synthesize timestamp = timestamp_;
 
@@ -52,6 +53,7 @@
         self.tipValue = 0;
         self.tipScale = 0;
         self.merchantName = @"";
+        self.recipient = @"";
         self.invoice = @"";
         self.timestamp = 0;
         
@@ -80,6 +82,7 @@
         tipValue:(NSUInteger)tipValue
         tipScale:(NSInteger)tipScale
     merchantName:(NSString*)merchantName
+       recipient:(NSString*)recipient
          invoice:(NSString*)invoice
        timestamp:(NSUInteger)timestamp
 {
@@ -93,6 +96,7 @@
         self.tipValue = tipValue;
         self.tipScale = tipScale;
         self.merchantName = merchantName;
+        self.recipient = recipient;
         self.transactionType = type;
         self.transactionContext = context;
         self.transactionID = transactionID;
@@ -145,6 +149,7 @@
                                                                  tipValue:self.tipValue
                                                                  tipScale:self.tipScale
                                                              merchantName:self.merchantName
+                                                                recipient:self.recipient
                                                                   invoice:self.invoice
                                                                 timestamp:self.timestamp];
     if (other)

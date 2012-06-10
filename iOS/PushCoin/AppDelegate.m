@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "OpenSSLWrapper.h"
 #import "PushCoinAddressBook.h"
+#import "MainTabBarController.h"
 
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
@@ -53,18 +54,48 @@
 @synthesize pemDsaPublicKey = _pemDsaPublicKey;
 @synthesize dsaDecryptedKey = _dsaDecryptedKey;
 @synthesize addressBook = _addressBook;
+@synthesize fileURL = _fileURL;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     self.dsaDecryptedKey = [[SingleUseData alloc] init];
+    self.addressBook = [[PushCoinAddressBook alloc] init];
     
     [self prepareKeyFiles];
     [self prepareKeyChain];
     [self prepareOpenSSLWrapper];
     [self prepareImageCache];
-
-    self.addressBook = [[PushCoinAddressBook alloc] init];
     [self refreshAddressBook];
+
+    // Handle files
+    NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
+    if ([url isFileURL])
+    {
+        MainTabBarController * controller = (MainTabBarController *) self.window.rootViewController;
+        [controller handleURL:url];
+    }    
+   
+    return YES;
+}
+
+-(BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    if ([url isFileURL])
+    {
+        MainTabBarController * controller = (MainTabBarController *) self.window.rootViewController;
+        [controller handleURL:url];
+    }    
+    return YES;
+}
+
+-(BOOL) application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if ([url isFileURL])
+    {
+        MainTabBarController * controller = (MainTabBarController *) self.window.rootViewController;
+        [controller handleURL:url];
+    }    
     
     return YES;
 }
@@ -356,11 +387,22 @@
 -(bool) handleErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
     SInt32 errorCode = msg.block.error_code.val;
-    
+    /*
+    if (errorCode >= 100 && errorCode < 200)
+    {
+        //critical errors
+        [self clearDevice];
+        [self showAlert:msg.block.reason.string 
+              withTitle:[NSString stringWithFormat:@"Critical Error - %d", msg.block.error_code.val]];
+        [self requestRegistrationWithDelegate:nil];
+        return YES;
+    }
+    */
     switch(errorCode)
     {
         case 201: //invalid mat
             [self clearDevice];
+            [self showAlert:msg.block.reason.string withTitle:@"Registration Error"];
             [self requestRegistrationWithDelegate:nil];
             break;
         default:

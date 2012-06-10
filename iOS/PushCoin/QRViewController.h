@@ -25,6 +25,7 @@
 @interface QRViewController : UIViewController<PaymentDetailsControllerDelegate, SelectReceiverControllerDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 {
     CGFloat savedBrightness;
+    BOOL sendEmailAfterReceiverSet;
 }
 
 @property (weak, nonatomic) IBOutlet UILabel *receiverLabel;

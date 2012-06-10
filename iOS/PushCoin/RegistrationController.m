@@ -138,8 +138,9 @@
 -(void) didDecodeRegisterAckMessage:(RegisterAckMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
     self.appDelegate.authToken = [msg.register_ack_block.mat.data bytesToHexString];
-    [self dismissModalViewControllerAnimated:YES];
+    [self.appDelegate refreshAddressBook]; // Refresh addressbook cache with the new MAT
     
+    [self dismissModalViewControllerAnimated:YES];
     if (self.delegate != nil)
         [self.delegate registrationControllerDidClose:self];
 }
