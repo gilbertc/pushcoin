@@ -40,7 +40,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) 
     {
-        // Custom initialization
+        sendEmailAfterReceiverSet = NO;
     }
     return self;
 }
@@ -58,20 +58,24 @@
 
     self.buffer = [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
     self.parser = [[PushCoinMessageParser alloc] init];
-    self.ttl = MAX(60, self.ttl);
+    self.ttl = MAX(60, [[NSUserDefaults standardUserDefaults] integerForKey:@"qr-expiration"]);
     
-    UISwipeGestureRecognizer * swipeRecognizer = 
-        [[UISwipeGestureRecognizer alloc] initWithTarget:self   
-                                                  action:@selector(handleSwipe:)];
+    UISwipeGestureRecognizer * swipeRecognizer;
+    swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self   
+                                                                action:@selector(handleSwipeDown:)];
     swipeRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
     [self.view addGestureRecognizer:swipeRecognizer];
-    [self prepareQRWithTTL:self.ttl];    
+    
+    swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self   
+                                                                action:@selector(handleSwipeUp:)];
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:swipeRecognizer];
+    
+    [self prepareQR];    
 }
 
-- (void) prepareQRWithTTL:(SInt64) timeToLive
+-(NSData *)generatePTAWithCreationTime:(SInt64) ctime andExpirationTime:(SInt64) etime
 {
-    NSDate * now = [NSDate date];
-    
     [self.appDelegate unlockDsaPrivateKeyWithPasscode:self.passcode];
     
     //set data
@@ -81,8 +85,8 @@
     msgOut.prv_block.mat.data = self.appDelegate.authToken.hexStringToBytes;
     msgOut.prv_block.ref_data.string=@"";
     
-    msgOut.pub_block.utc_ctime.val = (SInt64)[now timeIntervalSince1970];
-    msgOut.pub_block.utc_etime.val = (self.expiration = (SInt64)[now timeIntervalSince1970] + timeToLive);    
+    msgOut.pub_block.utc_ctime.val = ctime;
+    msgOut.pub_block.utc_etime.val = etime;    
     msgOut.pub_block.payment_limit.value.val = self.payment.amountValue;
     msgOut.pub_block.payment_limit.scale.val = self.payment.amountScale;
     
@@ -102,8 +106,11 @@
     msgOut.pub_block.note.string = @"";
     
     [self.parser encodeMessage:msgOut to:dataOut];
-    NSData * data = dataOut.consumedData;
-    
+    return dataOut.consumedData;
+}
+
+- (UIImage *) generateQRWithData:(NSData *)data
+{
     if (data.length)
     {
         int qrcodeImageDimension = self.imageView.frame.size.width;    
@@ -112,9 +119,24 @@
                                                     version:QR_VERSION_AUTO
                                                       bytes:data];
         
-        UIImage *qrcodeImage = [QREncoder renderDataMatrix:qrMatrix 
-                                            imageDimension:qrcodeImageDimension];
+        return [QREncoder renderDataMatrix:qrMatrix 
+                            imageDimension:qrcodeImageDimension];
         
+    }
+    return nil;
+}
+
+- (void) prepareQR
+{
+    NSDate * now = [NSDate date];
+    SInt64 ctime = (SInt64)[now timeIntervalSince1970];
+    SInt64 etime = (SInt64)ctime + self.ttl;
+    
+    UIImage * qrcodeImage = [self generateQRWithData:[self generatePTAWithCreationTime:ctime 
+                                                                     andExpirationTime:etime]];
+    if (qrcodeImage)
+    {
+        self.expiration = etime;
         self.imageView.image = qrcodeImage;
         self.amountLabel.text = [NSString stringWithFormat:@"$%d", (int)self.payment.amount];
         self.centLabel.text = [NSString stringWithFormat:@"%02d", (int)(self.payment.amount * 100) % 100];
@@ -152,9 +174,14 @@
     }
 }
 
-- (IBAction) handleSwipe:(UISwipeGestureRecognizer *) recognizer
+- (IBAction) handleSwipeDown:(UISwipeGestureRecognizer *) recognizer
 {
     [self.delegate qrViewControllerDidClose:self];
+}
+
+- (IBAction) handleSwipeUp:(UISwipeGestureRecognizer *) recognizer
+{
+    [self showActionSheet];
 }
 
 - (void) timerDidTick:(id) sender
@@ -178,7 +205,7 @@
         else
         {
             self.expirationLabel.backgroundColor = [UIColor redColor];
-            self.expirationLabel.text = @"coupon expired!";
+            self.expirationLabel.text = @"coupon expired - please renew";
             
             [self.timer invalidate];
             self.timer = nil;
@@ -193,6 +220,26 @@
         self.timer = nil;
     }
     
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    savedBrightness = [[UIScreen mainScreen] brightness];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"auto-brightness"])
+    {
+        if (savedBrightness < 0.5f)
+        {
+            [[UIScreen mainScreen] setBrightness:0.5f];
+        }    
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    if (savedBrightness != [[UIScreen mainScreen] brightness])
+    {
+        [[UIScreen mainScreen] setBrightness:savedBrightness];
+    }
 }
 
 - (void)viewDidUnload
@@ -231,7 +278,12 @@
 
 - (IBAction)actionButtonTapped:(id)sender 
 {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:@"Cancel"destructiveButtonTitle:nil otherButtonTitles:@"Renew Coupon", @"Add Tips", @"Set Receiver", @"Email Coupon", nil];
+    [self showActionSheet];
+}
+
+- (void) showActionSheet
+{
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:@"Cancel"destructiveButtonTitle:nil otherButtonTitles:@"Renew Coupon", @"Add Tips", @"Set Receiver", @"Clear Receiver", @"Email Coupon", nil];
     
     [sheet showFromBarButtonItem:self.actionBarButton animated:YES];
 }
@@ -248,7 +300,7 @@
         case 0:
         {
             //renew coupon
-            [self prepareQRWithTTL:self.ttl];
+            [self prepareQR];
             break;
         }
         case 1:
@@ -265,6 +317,13 @@
         }
         case 3:
         {
+            //clear receiver
+            self.receiver = nil;
+            [self prepareQR];
+            break;
+        }
+        case 4:
+        {
             // email coupon
             [self emailCoupon];
             break;
@@ -276,27 +335,73 @@
 {
     if (!self.receiver || !self.receiver.email || !self.receiver.email.length)
     {
-        [self.appDelegate showAlert:@"For security reasons, please set a receiver before emailing." 
+        sendEmailAfterReceiverSet = YES;
+        [self showSelectReceiver];
+    }
+    else 
+    {
+        [self doEmailCoupon];
+    }
+}
+
+-(void) doEmailCoupon
+{
+    if (!self.receiver || !self.receiver.email || !self.receiver.email.length)
+    {
+        [self.appDelegate showAlert:@"For security reasons, please set a receiver before email."
                           withTitle:@"Security Alert"];
         return;
     }
     
-    NSMutableString *emailBody = [[NSMutableString alloc] 
-                                  initWithString:@"Please accept this using PushCoin. The coupon will be expired in 24 hours."];
-
-    [self prepareQRWithTTL:24*60*60]; //24 hours
+    // reset flag
+    sendEmailAfterReceiverSet = NO;
     
-    UIImage *emailImage = [self.imageView.image copy];
-    NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(emailImage)];
-   
-    //Create the mail composer window
+    NSDate * now = [NSDate date];
+    SInt64 ctime = (SInt64)[now timeIntervalSince1970];
+    SInt64 etime = (SInt64)ctime + MAX(60, [[NSUserDefaults standardUserDefaults] integerForKey:@"email-expiration"]);
+
+    NSData * ptaData = [self generatePTAWithCreationTime:ctime andExpirationTime:etime];
+    UIImage * ptaImage = [self generateQRWithData:ptaData];
+    NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(ptaImage)];
+
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"email_template" ofType:@"html"];  
+    NSMutableString * emailBody = [[NSMutableString alloc] initWithContentsOfFile:filePath
+                                                                         encoding:NSUTF8StringEncoding 
+                                                                            error:nil];
+    
+    NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
+    
+    [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm:ss a"];
+    NSString * expirationString = [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:etime]];
+    
+    [emailBody replaceOccurrencesOfString:@"<%%EXPIRATION%%>"
+                               withString:expirationString 
+                                  options:NSCaseInsensitiveSearch 
+                                    range:NSMakeRange(0, emailBody.length)];
+    
+    [emailBody replaceOccurrencesOfString:@"<%%AMOUNT%%>"
+                               withString:[NSString stringWithFormat:@"$%.2f", self.payment.amount]
+                                  options:NSCaseInsensitiveSearch 
+                                    range:NSMakeRange(0, emailBody.length)];
+    
+    [emailBody replaceOccurrencesOfString:@"<%%NOTE%%>"
+                               withString:@""
+                                  options:NSCaseInsensitiveSearch 
+                                    range:NSMakeRange(0, emailBody.length)];
+    
+    [dateFormatter setDateFormat:@"'PushCoin'-yyyyMMdd-HHmmss"];
+    NSString * attachmentNameString = [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:etime]];
+        
+    //Create the mail composer window with all attachments
     MFMailComposeViewController *controller = [[MFMailComposeViewController alloc] init];
     controller.mailComposeDelegate = self;
-    [controller setSubject:@"PushCoin Payment"];
+    [controller setSubject:[NSString stringWithFormat:@"You received $%.2f via PushCoin", self.payment.amount]];
     [controller setToRecipients:[NSArray arrayWithObject:[NSString stringWithFormat:@"%@ <%@>", self.receiver.name, self.receiver.email]]];
-    [controller setMessageBody:emailBody isHTML:NO];
-    [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"PushCoin.png"];
-   
+    [controller setMessageBody:emailBody isHTML:YES];
+    [controller addAttachmentData:imageData mimeType:@"image/png" fileName:[NSString stringWithFormat:@"%@.png", attachmentNameString]];
+    [controller addAttachmentData:ptaData mimeType:@"application/pcos" fileName:[NSString stringWithFormat:@"%@.pcos", attachmentNameString]];
+       
+    controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentViewController:controller animated:YES completion:nil];
 }
 
@@ -306,23 +411,34 @@
     
     if (controller)
     {
+        controller.allowAnyOne = YES;
         controller.delegate = self;
         controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [self presentModalViewController:controller animated:YES];
+        [self presentViewController:controller animated:YES completion:nil];
     }
 }
 
 -(void) selectReceiverControllerDidCancel:(SelectReceiverController *)controller
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
 -(void) selectReceiverControllerDidClose:(SelectReceiverController *)controller
 {
-    [self dismissModalViewControllerAnimated:YES];
     self.receiver = [controller.receiver copy];
-    [self prepareQRWithTTL:self.ttl];
+    [self prepareQR];
+    
+    if (sendEmailAfterReceiverSet)
+    {
+        [self dismissViewControllerAnimated:YES completion:^{
+            [self doEmailCoupon];
+        }];
+    }
+    else
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (void) showPaymentDetails
@@ -348,7 +464,7 @@
 {
     [self dismissModalViewControllerAnimated:YES];
     self.payment = controller.payment;
-    [self prepareQRWithTTL:self.ttl];
+    [self prepareQR];
 }
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
@@ -358,10 +474,6 @@
         if (result == MFMailComposeResultSent || result == MFMailComposeResultSent)
         {
             [self.delegate qrViewControllerDidClose:self];
-        }
-        else
-        {
-            [self prepareQRWithTTL:self.ttl];
         }
     }];
 }

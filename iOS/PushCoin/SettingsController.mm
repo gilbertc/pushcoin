@@ -12,12 +12,9 @@
 #import "NSData+BytesToHexString.h"
 #import "NSData+Base64.h"
 #import <AddressBook/AddressBook.h>
-
+#import "InAppSettingsKit/Models/IASKSettingsReader.h"
 
 @implementation SettingsController
-@synthesize unregisterButton;
-@synthesize preAuthorizationTestButton;
-@synthesize passcodeButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,13 +40,17 @@
 {
     [super viewDidLoad];
     
-    [unregisterButton setTitle:@"Unregister Device" forState:UIControlStateNormal];
-    [unregisterButton setTitle:@"Unregister Device" forState:UIControlStateDisabled];
+   
+    self.showDoneButton = NO;
+    self.showCreditsFooter = NO;
     
     webService = [[PushCoinWebService alloc] initWithDelegate:self];
     buffer =  [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
     parser = [[PushCoinMessageParser alloc] init];
     
+    self.delegate = self;
+    
+    /*
     [self.unregisterButton setBackgroundImage:[[UIImage imageNamed:@"iphone_delete_button.png"]
                                            stretchableImageWithLeftCapWidth:8.0f
                                            topCapHeight:0.0f]
@@ -59,11 +60,13 @@
     self.unregisterButton.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     self.unregisterButton.titleLabel.shadowColor = [UIColor lightGrayColor];
     self.unregisterButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
+    */
     
-    [self updateRegisterButtonStatus];  
-    [self updatePasscodeButtonStatus];
+    //[self updateRegisterButtonStatus];  
+    //[self updatePasscodeButtonStatus];
 }
 
+/*
 - (void) updateRegisterButtonStatus
 {
     if (!self.appDelegate.registered)
@@ -89,11 +92,26 @@
         [self.passcodeButton setTitle:@"Disable Passcode" forState:UIControlStateNormal];
     }
 }
+*/
+
+-(void) viewDidAppear:(BOOL)animated
+{
+    [self.appDelegate synchronizeDefaults];
+    [[NSNotificationCenter defaultCenter] addObserver: self 
+                                             selector: @selector(settingsChanged:) 
+                                                 name: kIASKAppSettingChanged 
+                                               object: nil];
+    [super viewDidAppear:animated];
+}
+
+-(void) viewDidDisappear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidUnload
 {
-    [self setUnregisterButton:nil];
-    [self setPreAuthorizationTestButton:nil];
-    [self setPasscodeButton:nil];
     [super viewDidUnload];
 }
 
@@ -107,8 +125,35 @@
 {
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
+
+- (void)settingsViewController:(IASKAppSettingsViewController *)sender buttonTappedForKey:(NSString *)key
+{
+    if ([key isEqualToString:@"preauth-test"])
+    {
+        [self preAuthorizationTest];
+    }
+    else if ([key isEqualToString:@"unregister-device"])
+    {
+        [self unregister];
+    }
+}
+
+- (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController *)sender
+{
+    
+    
+}
+
+- (void)settingsChanged:(id)key
+{
+    if ([[key object] isEqualToString:@"passcode"])
+    {
+        [self enablePasscode];
+        return;
+    }
+}
  
-- (IBAction)unregister:(id)sender 
+- (IBAction)unregister
 {
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Unregistering device"
                                                      message:@"Are you sure?"
@@ -124,8 +169,8 @@
     {
         [self.appDelegate clearDevice];
         
-        [self updateRegisterButtonStatus];
-        [self updatePasscodeButtonStatus];
+//        [self updateRegisterButtonStatus];
+//        [self updatePasscodeButtonStatus];
         
         [self.navigationController popToViewController:self animated:NO];
         [self.appDelegate requestRegistrationWithDelegate:self];
@@ -134,8 +179,9 @@
 
 -(void) registrationControllerDidClose:(RegistrationController *)controller
 {
-    [self updateRegisterButtonStatus];
+//    [self updateRegisterButtonStatus];
 }
+
 - (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
 {
     [parser decode:data toReceiver:self];
@@ -165,7 +211,7 @@
                         withTitle:@"Success!"];
 }
 
-- (IBAction)preAuthorizationTest:(id)sender 
+- (void) preAuthorizationTest
 {
     if (self.appDelegate.hasPasscode)
         preAuthTestPasscodeController = [self.appDelegate requestPasscodeWithDelegate:self 
@@ -218,8 +264,8 @@
     [webService sendMessage:dataOut2.consumedData];
 }
 
-- (IBAction)enablePasscode:(id)sender {
-    
+- (void) enablePasscode
+{
     setPasscodeController = [[KKPasscodeViewController alloc] init];
     setPasscodeController.delegate = self;
     setPasscodeController.passcodeLockOn = self.appDelegate.hasPasscode;
@@ -244,11 +290,14 @@
         [self.navigationController popToViewController:self animated:YES];
 
         if (viewController.passcodeLockOn)
+        {
             [self.appDelegate setPasscode:viewController.passcode oldPasscode:@""];
+        }
         else
+        {
             [self.appDelegate setPasscode:@"" oldPasscode:viewController.passcode];
-    
-        [self updatePasscodeButtonStatus];
+        }
+//        [self updatePasscodeButtonStatus];
     }
 }
 

@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
+#import "ReceiveNavigationController.h"
 #import "ReceiveController.h"
 #import "PushCoinMessages.h"
 #import "AppDelegate.h"
@@ -43,7 +44,7 @@
     storedValue = [NSMutableString stringWithString:@""];
     self.paymentTextField.delegate = self;
     self.paymentTextField.keyboardType = UIKeyboardTypeNumberPad;
-    
+
     [self processData];
 }
 
@@ -84,6 +85,11 @@
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
+- (CLLocation *) lastKnownLocation
+{
+    return [(ReceiveNavigationController *)self.navigationController lastKnownLocation];
+}
+
 - (IBAction)backgroundTouched:(id)sender 
 {
     [self.paymentTextField resignFirstResponder];
@@ -109,6 +115,14 @@
     msgOut.block.currency.string = @"USD";
     msgOut.block.note.string = @"";
     
+    if (self.lastKnownLocation != nil)
+    {
+        GeoLocation * location = [[GeoLocation alloc] init];
+        location.latitude.val = self.lastKnownLocation.coordinate.latitude;
+        location.longitude.val = self.lastKnownLocation.coordinate.longitude;
+        [msgOut.block.geolocation.val addObject:location];
+    }
+
     msgOut.pta_block.data = self.ptaData;
     
     [parser encodeMessage:msgOut to:dataOut];
@@ -219,6 +233,7 @@
 {
     [self.paymentTextField resignFirstResponder];
 }
+
 
 @end
 

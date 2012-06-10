@@ -46,6 +46,8 @@
 @property (nonatomic, strong) SingleUseData * dsaDecryptedKey;
 @property (nonatomic, strong) PushCoinAddressBook * addressBook;
 
+@property (nonatomic, strong) NSURL * fileURL;
+
 -(void) refreshAddressBook;
 
 -(void) setPasscode:(NSString *)passcode oldPasscode:(NSString *)oldPasscode;
@@ -54,6 +56,7 @@
 -(void) setDsaPrivateKey:(NSData *)dsaPrivateKey withPasscode:(NSString *)passcode;
 -(BOOL) unlockDsaPrivateKeyWithPasscode:(NSString *)passcode;
 
+-(void) synchronizeDefaults;
 
 -(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate;
 -(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate

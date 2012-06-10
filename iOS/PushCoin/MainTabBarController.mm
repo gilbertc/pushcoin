@@ -7,6 +7,7 @@
 //
 
 #import "MainTabBarController.h"
+#import "ReceiveNavigationController.h"
 #import "AppDelegate.h"
 
 @interface MainTabBarController ()
@@ -44,6 +45,28 @@
     [self.appDelegate requestRegistrationWithDelegate:self];
 }
 
+-(void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+}
+
+-(void) handleURL:(NSURL *)url
+{
+    if ([url isFileURL])
+    {
+        //handle file
+        [self dismissModalViewControllerAnimated:NO];
+        [self.appDelegate requestRegistrationWithDelegate:self];
+        
+        ReceiveNavigationController * controller = (ReceiveNavigationController *) [self.viewControllers objectAtIndex:1];
+        if (controller)
+        {
+            [controller handleURL:url];
+            [self setSelectedViewController:controller];
+        }
+    }
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

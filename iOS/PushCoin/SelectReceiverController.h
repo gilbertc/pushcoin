@@ -27,5 +27,6 @@
 @property (nonatomic, strong) NSArray * dataStore;
 @property (weak, nonatomic) IBOutlet UITableView *receiverTableView;
 @property (nonatomic, strong) PushCoinEntity * receiver;
+@property (nonatomic, assign) BOOL allowAnyOne;
 - (IBAction)cancelButtonTapped:(id)sender;
 @end

@@ -12,6 +12,6 @@
 
 @interface MainTabBarController : UITabBarController<RegistrationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITabBar *tabBar;
-    
+-(void) handleURL:(NSURL *)url;
 
 @end

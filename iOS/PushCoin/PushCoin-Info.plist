@@ -6,6 +6,21 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>CFBundleTypeName</key>
+			<string>PushCoin Object Serialization</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.pushcoin.pcos</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
@@ -28,6 +43,26 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>PushCoin Object Serialization</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string></string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>com.pushcoin.pcos</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>pcos</string>
+				<key>public.mime-type</key>
+				<string>application/pcos</string>
+			</dict>
+		</dict>
+	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.pushcoin.gc</string>
 	<key>CFBundleInfoDictionaryVersion</key>

@@ -15,12 +15,14 @@
 @synthesize dataStore;
 @synthesize delegate;
 @synthesize receiver;
+@synthesize allowAnyOne;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-     
+    if (self) 
+    {
+        self.allowAnyOne = YES;
     }
     return self;
 }
@@ -66,14 +68,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.appDelegate.addressBook.dataStore count] + 1;
+    return [self.appDelegate.addressBook.dataStore count] + (self.allowAnyOne ? 1: 0);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell * ret;
     
-    if (indexPath.row == 0)
+    if (indexPath.row == 0 && self.allowAnyOne)
     {
         ReceiverCell * cell = [self.receiverTableView dequeueReusableCellWithIdentifier:@"AnyReceiverCell"];
         if (!cell)
@@ -81,7 +83,7 @@
             cell = [[ReceiverCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AnyReceiverCell"];
         }
         
-        cell.textLabel.text = @"Any";
+        cell.textLabel.text = @"Any One";
         ret = cell;
     }
     else
@@ -92,7 +94,7 @@
             cell = [[ReceiverCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"ReceiverCell"];
         }
     
-        PushCoinEntity * entity = [self.dataStore objectAtIndex:indexPath.row - 1];
+        PushCoinEntity * entity = [self.dataStore objectAtIndex:indexPath.row - (self.allowAnyOne ? 1: 0)];
      
         cell.textLabel.text = entity.name;
         cell.detailTextLabel.text = entity.email;
@@ -104,13 +106,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0)
+    if (indexPath.row == 0 && self.allowAnyOne)
     {
         self.receiver = nil;
     }
     else
     {
-        self.receiver = [self.dataStore objectAtIndex:indexPath.row - 1];
+        self.receiver = [self.dataStore objectAtIndex:indexPath.row - (self.allowAnyOne ? 1: 0)];
     }
     
     [self.delegate selectReceiverControllerDidClose:self];
