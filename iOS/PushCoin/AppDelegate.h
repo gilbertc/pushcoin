@@ -56,6 +56,7 @@
 -(void) setDsaPrivateKey:(NSData *)dsaPrivateKey withPasscode:(NSString *)passcode;
 -(BOOL) unlockDsaPrivateKeyWithPasscode:(NSString *)passcode;
 
+-(void) synchronizeDefaults;
 
 -(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate;
 -(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate

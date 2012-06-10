@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
-//#define AUTOBRIGHTNESS
-
 #import "QRViewController.h"
 #import "QREncoder.h"
 #import "PaymentCell.h"
@@ -60,7 +58,7 @@
 
     self.buffer = [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
     self.parser = [[PushCoinMessageParser alloc] init];
-    self.ttl = MAX(60, self.ttl);
+    self.ttl = MAX(60, [[NSUserDefaults standardUserDefaults] integerForKey:@"qr-expiration"]);
     
     UISwipeGestureRecognizer * swipeRecognizer;
     swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self   
@@ -226,27 +224,22 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    
-#ifdef AUTOBRIGHTNESS    
     savedBrightness = [[UIScreen mainScreen] brightness];
-    if (savedBrightness < 0.5f)
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"auto-brightness"])
     {
-        [[UIScreen mainScreen] setBrightness:0.5f];
-    }    
-#endif
-    
+        if (savedBrightness < 0.5f)
+        {
+            [[UIScreen mainScreen] setBrightness:0.5f];
+        }    
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    
-#ifdef AUTOBRIGHTNESS
     if (savedBrightness != [[UIScreen mainScreen] brightness])
     {
         [[UIScreen mainScreen] setBrightness:savedBrightness];
     }
-#endif
-    
 }
 
 - (void)viewDidUnload
@@ -365,7 +358,7 @@
     
     NSDate * now = [NSDate date];
     SInt64 ctime = (SInt64)[now timeIntervalSince1970];
-    SInt64 etime = (SInt64)ctime + 24 * 60 * 60; // 24 hours
+    SInt64 etime = (SInt64)ctime + MAX(60, [[NSUserDefaults standardUserDefaults] integerForKey:@"email-expiration"]);
 
     NSData * ptaData = [self generatePTAWithCreationTime:ctime andExpirationTime:etime];
     UIImage * ptaImage = [self generateQRWithData:ptaData];

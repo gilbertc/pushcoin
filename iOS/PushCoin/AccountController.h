@@ -8,12 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "SettingsController.h"
-#import "InAppSettingsKit/Controllers/IASKAppSettingsViewController.h"
-
 #import "PushCoinWebService.h"
 #import "PushCoinMessages.h"
 
-@interface AccountController : UIViewController<PushCoinWebServiceDelegate, PushCoinMessageReceiver, UITableViewDataSource, UITableViewDelegate, IASKSettingsDelegate>
+@interface AccountController : UIViewController<PushCoinWebServiceDelegate, PushCoinMessageReceiver, UITableViewDataSource, UITableViewDelegate>
 {
     PushCoinMessageParser * parser;
     PushCoinWebService * webService;

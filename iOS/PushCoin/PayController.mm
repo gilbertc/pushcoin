@@ -30,12 +30,25 @@
                                              selector: @selector(saveAndCleanup) 
                                                  name: @"handleCleanup" 
                                                object: nil];
-    
    
     if ([[[NSFileManager alloc] init] fileExistsAtPath:self.dataFilePath] == YES)
+    {
         payments_ = [NSKeyedUnarchiver unarchiveObjectWithFile:self.dataFilePath];
+    }
     else
+    {
+        static SInt64 bootstrapAmounts[] = {1, 5, 10, 20, 50, 100};
+        
         payments_ = [[NSMutableArray alloc] init];    
+        
+        for (int i = 0; i < 6; ++i)
+        {
+            PushCoinPayment * payment = [[PushCoinPayment alloc] init];
+            payment.amountValue = bootstrapAmounts[i];
+            payment.amountScale = 0;
+            [payments_ addObject:payment];
+        }
+    }
     
     movingCell_ = NO;
     

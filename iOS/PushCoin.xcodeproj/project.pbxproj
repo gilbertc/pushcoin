@@ -80,6 +80,7 @@
 		0D4E9841158477810009622B /* IASKPSToggleSwitchSpecifierViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E982C158477810009622B /* IASKPSToggleSwitchSpecifierViewCell.xib */; };
 		0D4E9842158477810009622B /* IASKSpecifierValuesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E982D158477810009622B /* IASKSpecifierValuesView.xib */; };
 		0D4E9846158489BD0009622B /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E9845158489BD0009622B /* InAppSettings.bundle */; };
+		0D4E98491584A8F20009622B /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E98481584A8F20009622B /* NSString+URLEncoding.m */; };
 		0D7A8F80154202EC00634A79 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7E154202EC00634A79 /* AddressBook.framework */; };
 		0D7A8F81154202EC00634A79 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */; };
 		0D7A8F83154202F700634A79 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F82154202F700634A79 /* AudioToolbox.framework */; };
@@ -323,6 +324,8 @@
 		0D4E982C158477810009622B /* IASKPSToggleSwitchSpecifierViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IASKPSToggleSwitchSpecifierViewCell.xib; sourceTree = "<group>"; };
 		0D4E982D158477810009622B /* IASKSpecifierValuesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IASKSpecifierValuesView.xib; sourceTree = "<group>"; };
 		0D4E9845158489BD0009622B /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
+		0D4E98471584A8F20009622B /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+URLEncoding.h"; path = "PushCoin/NSString+URLEncoding.h"; sourceTree = "<group>"; };
+		0D4E98481584A8F20009622B /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+URLEncoding.m"; path = "PushCoin/NSString+URLEncoding.m"; sourceTree = "<group>"; };
 		0D7A8F7E154202EC00634A79 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		0D7A8F82154202F700634A79 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -570,6 +573,8 @@
 				0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */,
 				0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */,
 				0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */,
+				0D4E98471584A8F20009622B /* NSString+URLEncoding.h */,
+				0D4E98481584A8F20009622B /* NSString+URLEncoding.m */,
 				0D377610156839BC003FB8B3 /* Common.h */,
 				0D377611156839BC003FB8B3 /* Common.m */,
 			);
@@ -1044,6 +1049,7 @@
 				0D4E983A158477810009622B /* IASKSlider.m in Sources */,
 				0D4E983B158477810009622B /* IASKSwitch.m in Sources */,
 				0D4E983C158477810009622B /* IASKTextField.m in Sources */,
+				0D4E98491584A8F20009622B /* NSString+URLEncoding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

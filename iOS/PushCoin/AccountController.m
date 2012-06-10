@@ -122,28 +122,13 @@
 
 - (IBAction)settingsButtonTapped:(id)sender 
 {
-    IASKAppSettingsViewController * controller = [[IASKAppSettingsViewController alloc] init];
-    if (controller)
-    {
-        controller.showDoneButton = NO;
-        [self.navigationController pushViewController:controller animated:YES];
-    }
-    /*
-    SettingsController * controller = [self.appDelegate viewControllerWithIdentifier:@"SettingsController"];
+    SettingsController * controller = [[SettingsController alloc] init];
     
     if (controller)
     {
         [self.navigationController pushViewController:controller animated:YES];
     }
-     */
-}
 
--(void) settingsViewController:(IASKAppSettingsViewController *)sender buttonTappedForKey:(NSString *)key
-{
-    if (key == @"preauth-test")
-    {
-        
-    }
 }
 
 #pragma mark PushCoinWebserviceDelegate

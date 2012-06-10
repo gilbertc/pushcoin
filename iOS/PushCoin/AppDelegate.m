@@ -58,6 +58,16 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:@"YES", @"first-time", nil];
+    [defaults registerDefaults:dict];
+    
+    if ([defaults objectForKey:@"first-time"])
+    {
+        [self setDefaults];
+        [defaults setObject:@"NO" forKey:@"first-time"];
+        [defaults synchronize];
+    }
     
     self.dsaDecryptedKey = [[SingleUseData alloc] init];
     self.addressBook = [[PushCoinAddressBook alloc] init];
@@ -67,6 +77,8 @@
     [self prepareOpenSSLWrapper];
     [self prepareImageCache];
     [self refreshAddressBook];
+    
+    
 
     // Handle files
     NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
@@ -99,6 +111,41 @@
     
     return YES;
 }
+
+- (void)setDefaults {
+    
+    //get the plist location from the settings bundle
+    NSString *settingsPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"InAppSettings.bundle"];
+    NSString *plistPath = [settingsPath stringByAppendingPathComponent:@"Root.plist"];
+    
+    //get the preference specifiers array which contains the settings
+    NSDictionary *settingsDictionary = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    NSArray *preferencesArray = [settingsDictionary objectForKey:@"PreferenceSpecifiers"];
+    
+    //use the shared defaults object
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    //for each preference item, set its default if there is no value set
+    for(NSDictionary *item in preferencesArray) {
+        
+        //get the item key, if there is no key then we can skip it
+        NSString *key = [item objectForKey:@"Key"];
+        if (key) {
+            
+            //check to see if the value and default value are set
+            //if a default value exists and the value is not set, use the default
+            id value = [defaults objectForKey:key];
+            id defaultValue = [item objectForKey:@"DefaultValue"];
+            if(defaultValue && !value) {
+                [defaults setObject:defaultValue forKey:key];
+            }
+        }
+    }
+    
+    //write the changes to disk
+    [defaults synchronize];
+}
+
 
 -(BOOL) prepareKeyFiles
 {
@@ -218,6 +265,14 @@
     {
         [self.pinHashKeychainItem setObject:@"" forKey:(__bridge id)kSecValueData];      
     }
+}
+
+-(void) synchronizeDefaults
+{
+    //passcode
+    
+    [[NSUserDefaults standardUserDefaults] setBool:self.hasPasscode forKey:@"passcode"];
+    [[NSUserDefaults standardUserDefaults] synchronize];        
 }
 
 -(BOOL) validatePasscode:(NSString *)passcode

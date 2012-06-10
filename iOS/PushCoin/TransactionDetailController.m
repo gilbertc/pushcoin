@@ -10,6 +10,7 @@
 #import "TransactionDetailSenderCell.h"
 #import "TransactionDetailCell.h"
 
+#import "NSString+URLEncoding.h"
 
 @interface TransactionDetailController ()
 @end
@@ -122,7 +123,7 @@
         switch (section)
         {
             case 3:
-                return 2;
+                return 1;
         }
     }
     else
@@ -181,6 +182,9 @@
                 cell = [[TransactionDetailSenderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TransactionDetailSenderCell"];
             }
         
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            
             if (self.transaction.transactionContext == 'T')
             {
                 cell.image.image = image;
@@ -205,6 +209,7 @@
             }
             
             cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
             switch (indexPath.row)
             {
@@ -257,6 +262,7 @@
             }
             
             cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
             switch(indexPath.row)
             {
@@ -303,28 +309,23 @@
         {
             case 3:
             {
-                TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailCell"];
+                TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailLatLongCell"];
                 if (!cell)
                 {
-                    cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailCell"];
-                    
+                    cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailLatLongCell"];
                 }
                 
-                switch(indexPath.row)
-                {
-                    case 0:
-                    {
-                        cell.textLabel.text = @"latitude";
-                        cell.detailTextLabel.text = [NSString stringWithFormat:@"%.6f", self.transaction.latitude];
-                        break;
-                    }
-                    case 1:
-                    {
-                        cell.textLabel.text = @"longitude";
-                        cell.detailTextLabel.text = [NSString stringWithFormat:@"%.6f", self.transaction.longitude];
-                        break;
-                    }
-                }
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                cell.textLabel.text = @"lat/long";
+                
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%f\n%f",
+                                             self.transaction.latitude,
+                                             self.transaction.longitude];
+                
+                cell.detailTextLabel.numberOfLines = 2;
+                cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+                
                 return cell;
             }
         }
@@ -377,7 +378,7 @@
                     cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailCell"];
                 
                 }
-            
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             
                 switch(indexPath.row)
@@ -404,19 +405,22 @@
 
 - (void) openEmail:(NSString*) recipient
 {
-    NSMutableString *emailBody = [[NSMutableString alloc] 
+    if (recipient && recipient.length)
+    {
+        NSMutableString *emailBody = [[NSMutableString alloc] 
                                   initWithString:@"Join PushCoin today at https://pushcoin.com"];
     
-    //Create the mail composer window
-    MFMailComposeViewController *controller = [[MFMailComposeViewController alloc] init];
-    controller.mailComposeDelegate = self;
-    controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        //Create the mail composer window
+        MFMailComposeViewController *controller = [[MFMailComposeViewController alloc] init];
+        controller.mailComposeDelegate = self;
+        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     
-    [controller setSubject:@"PushCoin"];
-    [controller setToRecipients:[NSArray arrayWithObject:recipient]];
-    [controller setMessageBody:emailBody isHTML:NO];
+        [controller setSubject:@"PushCoin"];
+        [controller setToRecipients:[NSArray arrayWithObject:recipient]];
+        [controller setMessageBody:emailBody isHTML:NO];
     
-    [self presentViewController:controller animated:YES completion:nil];
+        [self presentViewController:controller animated:YES completion:nil];
+    }
 }
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
@@ -441,7 +445,7 @@
         switch (indexPath.section)
         {
             case 3:
-                return 40;
+                return 44 + 1 * 19;
         }
     }
     else
@@ -474,37 +478,63 @@
 
 -(void)tableView:(UITableView *)tableView actOnItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch(indexPath.section)
+    switch (indexPath.section)
     {
-        case 0:
+        case 0: [self openEmail:self.entity.email]; return;
+        case 1: return;
+        case 2: return;
+    }
+    
+    if (self.transaction.transactionContext == 'T')
+    {
+        switch (indexPath.section)
         {
-            if (self.entity.email && self.entity.email.length)
-                [self openEmail:self.entity.email];
-            break;
-        }
-        case 3:
-        {
-            break;
-        }
-            
-        case 4:
-        {
-            switch (indexPath.row)
+            //long/latitude
+            case 3:
             {
-                case 0:
+                UIApplication * app = [UIApplication sharedApplication];
+                [app openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/maps?ll=%f,%f",
+                                                   self.transaction.latitude, self.transaction.longitude]]];
+                return;
+            }
+        }
+    }
+    else
+    {
+        switch (indexPath.section)
+        {
+            case 3:
+            {
+                switch (indexPath.row)
                 {
-                    if (self.transaction.contactEmail && self.transaction.contactEmail.length)
-                        [self openEmail:self.transaction.contactEmail];
-                    break;
-                }
-                case 1:
-                {
-                    break;
+                    //address
+                    case 0: 
+                    {
+                        UIApplication * app = [UIApplication sharedApplication];
+                        NSMutableString * addressString = [NSString stringWithFormat:@"%@ %@ %@ %@ %@",
+                                                           self.transaction.addressStreet, 
+                                                           self.transaction.addressCity, 
+                                                           self.transaction.addressState,
+                                                           self.transaction.addressZip,
+                                                           self.transaction.addressCountry];
+                        
+                        NSMutableString * urlString = [NSString stringWithFormat:@"http://maps.google.com/maps?q=%@",
+                                                       [addressString urlEncodeUsingEncoding:NSUTF8StringEncoding]];
+
+                        [app openURL:[NSURL URLWithString:urlString]];
+                        NSLog(@"%@", urlString);
+                        return;
+                    }
+                        
+                    //contact email
+                    case 1: [self openEmail:self.transaction.contactEmail]; return;
+                    
+                    //contact phone
+                    case 2: return;
                 }
             }
         }
     }
-    
 }
 
 @end
