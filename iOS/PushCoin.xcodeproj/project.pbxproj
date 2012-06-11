@@ -14,7 +14,6 @@
 		0D041DCE15708D0C00F3AABB /* box_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D041DCA15708D0C00F3AABB /* box_empty.png */; };
 		0D041DCF15708D0C00F3AABB /* box_filled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D041DCB15708D0C00F3AABB /* box_filled@2x.png */; };
 		0D041DD015708D0C00F3AABB /* box_filled.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D041DCC15708D0C00F3AABB /* box_filled.png */; };
-		0D0B3831155A0D15002BF845 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D0B37D1155A0B73002BF845 /* libcrypto.a */; };
 		0D0B3832155A0D15002BF845 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D0B37E4155A0B94002BF845 /* libqrencoder.a */; };
 		0D0B3833155A0D15002BF845 /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D0B37DA155A0B86002BF845 /* libZXingWidget.a */; };
 		0D19E2CD1541CCAE00C8671B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D19E2CC1541CCAE00C8671B /* UIKit.framework */; };
@@ -57,6 +56,7 @@
 		0D4923ED156B3CA900626AC2 /* 100.00@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923E1156B3CA900626AC2 /* 100.00@2x.png */; };
 		0D4923EE156B3CA900626AC2 /* 500.00.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923E2156B3CA900626AC2 /* 500.00.png */; };
 		0D4923EF156B3CA900626AC2 /* 500.00@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923E3156B3CA900626AC2 /* 500.00@2x.png */; };
+		0D4AEA621585BBBA0090EE81 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D4AEA611585BBAA0090EE81 /* libcrypto.a */; };
 		0D4E9803158452240009622B /* email_template.html in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E9802158452240009622B /* email_template.html */; };
 		0D4E982E158477810009622B /* IASKAppSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E9807158477810009622B /* IASKAppSettingsViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0D4E982F158477810009622B /* IASKAppSettingsWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E9809158477810009622B /* IASKAppSettingsWebViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -151,13 +151,6 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
-		0D0B37D0155A0B73002BF845 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0DAFD23115478E5E0010459A /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9069D28C0FCE659A0042E34C;
-			remoteInfo = crypto;
-		};
 		0D0B37D9155A0B86002BF845 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */;
@@ -186,13 +179,6 @@
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = ZXingWidget;
 		};
-		0D0B382D155A0D06002BF845 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0DAFD23115478E5E0010459A /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9069D28B0FCE659A0042E34C;
-			remoteInfo = crypto;
-		};
 		0D0B382F155A0D06002BF845 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0D7A8FC015421B7000634A79 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
@@ -213,6 +199,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 78509311149FAC2E000787E4;
 			remoteInfo = GMGridView;
+		};
+		0D4AEA601585BBAA0090EE81 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D4AEA591585BBAA0090EE81 /* openssl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9069D28C0FCE659A0042E34C;
+			remoteInfo = crypto;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -285,6 +278,7 @@
 		0D4923E1156B3CA900626AC2 /* 100.00@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "100.00@2x.png"; sourceTree = "<group>"; };
 		0D4923E2156B3CA900626AC2 /* 500.00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 500.00.png; sourceTree = "<group>"; };
 		0D4923E3156B3CA900626AC2 /* 500.00@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "500.00@2x.png"; sourceTree = "<group>"; };
+		0D4AEA591585BBAA0090EE81 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
 		0D4E9802158452240009622B /* email_template.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = email_template.html; sourceTree = "<group>"; };
 		0D4E9806158477810009622B /* IASKAppSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IASKAppSettingsViewController.h; sourceTree = "<group>"; };
 		0D4E9807158477810009622B /* IASKAppSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IASKAppSettingsViewController.m; sourceTree = "<group>"; };
@@ -376,7 +370,6 @@
 		0DA25A791582EDF0009AB9A6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0DACCD721558A02A00A69DED /* PCOSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSParser.h; sourceTree = "<group>"; };
 		0DACCD731558A02A00A69DED /* PCOSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSParser.m; sourceTree = "<group>"; };
-		0DAFD23115478E5E0010459A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
 		0DAFD24A1547A8180010459A /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		0DAFD24D1547ACBA0010459A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -414,12 +407,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D4AEA621585BBBA0090EE81 /* libcrypto.a in Frameworks */,
 				0DA25A7A1582EDF0009AB9A6 /* CoreLocation.framework in Frameworks */,
 				0DA25A1D1581BDB0009AB9A6 /* MessageUI.framework in Frameworks */,
 				0D4923D7156B274400626AC2 /* libGMGridView.a in Frameworks */,
 				0D4923CA1568C37A00626AC2 /* libiconv.dylib in Frameworks */,
 				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
-				0D0B3831155A0D15002BF845 /* libcrypto.a in Frameworks */,
 				0D0B3832155A0D15002BF845 /* libqrencoder.a in Frameworks */,
 				0D0B3833155A0D15002BF845 /* libZXingWidget.a in Frameworks */,
 				0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */,
@@ -461,14 +454,6 @@
 				0D041DC715708AD000F3AABB /* PasscodeViewController.m */,
 			);
 			name = Passcode;
-			sourceTree = "<group>";
-		};
-		0D0B37CD155A0B73002BF845 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0D0B37D1155A0B73002BF845 /* libcrypto.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		0D0B37D5155A0B86002BF845 /* Products */ = {
@@ -657,6 +642,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0D4AEA5A1585BBAA0090EE81 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D4AEA611585BBAA0090EE81 /* libcrypto.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0D4E9804158477810009622B /* InAppSettingsKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -736,8 +729,8 @@
 		0D7A8F7A154202A800634A79 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				0D4AEA591585BBAA0090EE81 /* openssl.xcodeproj */,
 				0D4923CC156B272C00626AC2 /* GMGridView.xcodeproj */,
-				0DAFD23115478E5E0010459A /* openssl.xcodeproj */,
 				0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */,
 				0D7A8FC015421B7000634A79 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
 			);
@@ -838,7 +831,6 @@
 			dependencies = (
 				0D4923D6156B273F00626AC2 /* PBXTargetDependency */,
 				0D0B382A155A0D06002BF845 /* PBXTargetDependency */,
-				0D0B382E155A0D06002BF845 /* PBXTargetDependency */,
 				0D0B3830155A0D06002BF845 /* PBXTargetDependency */,
 			);
 			name = PushCoin;
@@ -870,8 +862,8 @@
 					ProjectRef = 0D4923CC156B272C00626AC2 /* GMGridView.xcodeproj */;
 				},
 				{
-					ProductGroup = 0D0B37CD155A0B73002BF845 /* Products */;
-					ProjectRef = 0DAFD23115478E5E0010459A /* openssl.xcodeproj */;
+					ProductGroup = 0D4AEA5A1585BBAA0090EE81 /* Products */;
+					ProjectRef = 0D4AEA591585BBAA0090EE81 /* openssl.xcodeproj */;
 				},
 				{
 					ProductGroup = 0D0B37E0155A0B94002BF845 /* Products */;
@@ -890,13 +882,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		0D0B37D1155A0B73002BF845 /* libcrypto.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libcrypto.a;
-			remoteRef = 0D0B37D0155A0B73002BF845 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		0D0B37DA155A0B86002BF845 /* libZXingWidget.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -923,6 +908,13 @@
 			fileType = archive.ar;
 			path = libGMGridView.a;
 			remoteRef = 0D4923D3156B272C00626AC2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0D4AEA611585BBAA0090EE81 /* libcrypto.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libcrypto.a;
+			remoteRef = 0D4AEA601585BBAA0090EE81 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1061,11 +1053,6 @@
 			name = ZXingWidget;
 			targetProxy = 0D0B3829155A0D06002BF845 /* PBXContainerItemProxy */;
 		};
-		0D0B382E155A0D06002BF845 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = crypto;
-			targetProxy = 0D0B382D155A0D06002BF845 /* PBXContainerItemProxy */;
-		};
 		0D0B3830155A0D06002BF845 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = qrencoder;
@@ -1104,6 +1091,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilbert Cheung (R3MUU845UN)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1138,7 +1126,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilbert Cheung (R3MUU845UN)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: PushCoin, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: PushCoin, Inc.";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1155,7 +1144,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AA5B10D4-9607-45E1-8E1E-7C03E15F0525";
+				PROVISIONING_PROFILE = "5A826D53-2AE6-45AF-9643-B3F5B0BE5463";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5A826D53-2AE6-45AF-9643-B3F5B0BE5463";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1167,9 +1157,14 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
 				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../v1/openssl-xcode/openssl\"",
+				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
 				"VALID_ARCHS[sdk=*]" = "armv6 armv7";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1181,12 +1176,66 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
 				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../v1/openssl-xcode/openssl\"",
+				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
+		};
+		0D4E9876158512F20009622B /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: PushCoin, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: PushCoin, Inc.";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/gilbert/v1/zxing-2.0/iphone/ZXingWidget/Classes",
+					/Users/gilbert/v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub,
+					"/Users/gilbert/v1/zxing-2.0/cpp/core/src/",
+					/Users/gilbert/v1/GMGridView/GMGridView,
+					"/Users/gilbert/v1/openssl-xcode/openssl/include",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "5A826D53-2AE6-45AF-9643-B3F5B0BE5463";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5A826D53-2AE6-45AF-9643-B3F5B0BE5463";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribution;
+		};
+		0D4E9877158512F20009622B /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
+				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../v1/openssl-xcode/openssl\"",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Distribution;
 		};
 /* End XCBuildConfiguration section */
 
@@ -1196,6 +1245,7 @@
 			buildConfigurations = (
 				0D19E2EF1541CCAE00C8671B /* Debug */,
 				0D19E2F01541CCAE00C8671B /* Release */,
+				0D4E9876158512F20009622B /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1205,6 +1255,7 @@
 			buildConfigurations = (
 				0D19E2F21541CCAE00C8671B /* Debug */,
 				0D19E2F31541CCAE00C8671B /* Release */,
+				0D4E9877158512F20009622B /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
