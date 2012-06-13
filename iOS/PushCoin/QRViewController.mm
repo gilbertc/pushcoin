@@ -312,7 +312,7 @@
         case 2:
         {
             //set receiver
-            [self showSelectReceiver];
+            [self showSelectReceiverAndEmail:NO];
             break;
         }
         case 3:
@@ -335,8 +335,7 @@
 {
     if (!self.receiver || !self.receiver.email || !self.receiver.email.length)
     {
-        sendEmailAfterReceiverSet = YES;
-        [self showSelectReceiver];
+        [self showSelectReceiverAndEmail:YES];
     }
     else 
     {
@@ -352,9 +351,6 @@
                           withTitle:@"Security Alert"];
         return;
     }
-    
-    // reset flag
-    sendEmailAfterReceiverSet = NO;
     
     NSDate * now = [NSDate date];
     SInt64 ctime = (SInt64)[now timeIntervalSince1970];
@@ -405,13 +401,14 @@
     [self presentViewController:controller animated:YES completion:nil];
 }
 
--(void) showSelectReceiver
+-(void) showSelectReceiverAndEmail:(BOOL)isEmail
 {   
     SelectReceiverController * controller = [self.appDelegate viewControllerWithIdentifier:@"SelectReceiverController"];
     
     if (controller)
     {
-        controller.allowAnyOne = YES;
+        sendEmailAfterReceiverSet = isEmail;
+        controller.allowAnyOne = NO;
         controller.delegate = self;
         controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
         [self presentViewController:controller animated:YES completion:nil];
@@ -421,6 +418,7 @@
 -(void) selectReceiverControllerDidCancel:(SelectReceiverController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+    sendEmailAfterReceiverSet = NO;
 }
 
 
@@ -431,14 +429,16 @@
     
     if (sendEmailAfterReceiverSet)
     {
-        [self dismissViewControllerAnimated:YES completion:^{
-            [self doEmailCoupon];
-        }];
+        [self dismissViewControllerAnimated:YES completion:^
+         {
+             [self doEmailCoupon];
+         }];
     }
     else
     {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
+    sendEmailAfterReceiverSet = NO;
 }
 
 - (void) showPaymentDetails

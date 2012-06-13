@@ -83,7 +83,7 @@
             cell = [[ReceiverCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AnyReceiverCell"];
         }
         
-        cell.textLabel.text = @"Any One";
+        cell.textLabel.text = @"Any Receiver";
         ret = cell;
     }
     else

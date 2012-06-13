@@ -9,6 +9,7 @@
 #import "TransactionDetailController.h"
 #import "TransactionDetailSenderCell.h"
 #import "TransactionDetailCell.h"
+#import "AppDelegate.h"
 
 #import "NSString+URLEncoding.h"
 
@@ -27,6 +28,11 @@
       
     }
     return self;
+}
+
+- (AppDelegate *)appDelegate
+{
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 - (void)viewDidLoad
@@ -102,7 +108,7 @@
     if (self.transaction.transactionContext == 'T')
         return 4;
     else
-        return 4;
+        return 5;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -116,21 +122,15 @@
             return 3;
         case 2:
             return self.transaction.transactionContext == 'T' ? 4 : 5; //skipping invoice 
+        case 3:
+            return 1;
     }
     
-    if (self.transaction.transactionContext == 'T')
+    if (self.transaction.transactionContext == 'P')
     {
         switch (section)
         {
-            case 3:
-                return 1;
-        }
-    }
-    else
-    {
-        switch (section)
-        {
-            case 3:
+            case 4:
                 return 3;
         }
     }
@@ -148,21 +148,15 @@
             return @"Payment";
         case 2:
             return @"Transaction";
+        case 3:
+            return @"Location";
     }
     
-    if (self.transaction.transactionContext == 'T')
+    if (self.transaction.transactionContext == 'P')
     {
         switch (section)
         {
-            case 3:
-                return @"Location";
-        }
-    }
-    else
-    {
-        switch (section)
-        {
-            case 3:
+            case 4:
                 return @"Merchant Info";
         }
     }
@@ -301,40 +295,35 @@
             }
             return cell;
         }
+        case 3:
+        {
+            TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailLatLongCell"];
+            if (!cell)
+            {
+                cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailLatLongCell"];
+            }
+           
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.textLabel.text = @"lat/long";
+           
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%f, %f",
+                                         self.transaction.latitude,
+                                         self.transaction.longitude];
+           
+            cell.detailTextLabel.numberOfLines = 1;
+            cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+           
+            return cell;
+        }
+
     }        
     
-    if (self.transaction.transactionContext == 'T')
+    if (self.transaction.transactionContext == 'P')
     {
         switch (indexPath.section)
         {
-            case 3:
-            {
-                TransactionDetailCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"TransactionDetailLatLongCell"];
-                if (!cell)
-                {
-                    cell = [[TransactionDetailCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"TransactionDetailLatLongCell"];
-                }
-                
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                cell.textLabel.text = @"lat/long";
-                
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%f\n%f",
-                                             self.transaction.latitude,
-                                             self.transaction.longitude];
-                
-                cell.detailTextLabel.numberOfLines = 2;
-                cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
-                
-                return cell;
-            }
-        }
-    }
-    else
-    {
-        switch (indexPath.section)
-        {
-            case 3:
+            case 4:
             {
                 if (indexPath.row == 0)
                 {
@@ -403,6 +392,22 @@
     return nil;
 }
 
+- (void) dialPhone:(NSString *) phone
+{
+    if (phone && phone.length)
+    {
+        UIDevice *device = [UIDevice currentDevice];
+        if ([[device model] isEqualToString:@"iPhone"] ) 
+        {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", phone]]];
+        } 
+        else 
+        {
+            [self.appDelegate showAlert:@"Your device doesn't support this feature." withTitle:@"Not Supported"];
+        }
+    }
+}
+
 - (void) openEmail:(NSString*) recipient
 {
     if (recipient && recipient.length)
@@ -438,21 +443,15 @@
             return 40;
         case 2:
             return 40;
+        case 3: // location
+            return 40; //44 + 1 * 19;
     }
     
-    if (self.transaction.transactionContext == 'T')
+    if (self.transaction.transactionContext == 'P')
     {
         switch (indexPath.section)
         {
-            case 3:
-                return 44 + 1 * 19;
-        }
-    }
-    else
-    {
-        switch (indexPath.section)
-        {
-            case 3:
+            case 4:
             {
                 switch (indexPath.row)
                 {
@@ -483,27 +482,20 @@
         case 0: [self openEmail:self.entity.email]; return;
         case 1: return;
         case 2: return;
-    }
-    
-    if (self.transaction.transactionContext == 'T')
-    {
-        switch (indexPath.section)
+        case 3:
         {
-            //long/latitude
-            case 3:
-            {
-                UIApplication * app = [UIApplication sharedApplication];
-                [app openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/maps?ll=%f,%f",
-                                                   self.transaction.latitude, self.transaction.longitude]]];
-                return;
-            }
+            UIApplication * app = [UIApplication sharedApplication];
+            [app openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/maps?q=%f,%f",
+                                               self.transaction.latitude, self.transaction.longitude]]];
+            return;
         }
     }
-    else
+    
+    if (self.transaction.transactionContext == 'P')
     {
         switch (indexPath.section)
         {
-            case 3:
+            case 4:
             {
                 switch (indexPath.row)
                 {
@@ -530,7 +522,7 @@
                     case 1: [self openEmail:self.transaction.contactEmail]; return;
                     
                     //contact phone
-                    case 2: return;
+                    case 2: [self dialPhone:self.transaction.contactPhone]; return;
                 }
             }
         }

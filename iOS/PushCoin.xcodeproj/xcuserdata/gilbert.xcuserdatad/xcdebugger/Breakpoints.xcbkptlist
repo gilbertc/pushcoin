@@ -164,11 +164,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/QRViewController.mm"
-         timestampString = "361012920.941012"
+         timestampString = "361254838.359876"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "368"
-         endingLineNumber = "368"
+         startingLineNumber = "364"
+         endingLineNumber = "364"
          landmarkName = "-doEmailCoupon"
          landmarkType = "5">
       </FileBreakpoint>
@@ -255,11 +255,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/TransactionDetailController.m"
-         timestampString = "361015712.7672"
+         timestampString = "361256233.724355"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "521"
-         endingLineNumber = "521"
+         startingLineNumber = "513"
+         endingLineNumber = "513"
          landmarkName = "-tableView:actOnItemAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
