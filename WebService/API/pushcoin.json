@@ -1,0 +1,94 @@
+-- JSON API for PushCoin --
+
+Notes
+=====
+
+The API consits of a series of Message and Request definitions in the 
+following format:
+
+[
+	<definition-here>
+ --END] 
+
+A Request consists of an Input Message and an Output Message. A Message data
+is encoded according to JSON.
+
+The Request Message has an associated URL where the request should be sent to. 
+The vertical bars "|" in the Request's Output indicate that the result can be 
+any of the enumerated message types, depending on the outcome of processing.
+
+
+[
+	Message: Error
+
+	Note:
+		Generic error message carrying the error code and the error string 
+		suitable for user display.
+
+	{
+		"message": "error" 
+		"error_code": number
+		"reason": string
+		"ref_data": string, optional
+		"transaction_id": string, optional
+	}
+
+--END]
+
+
+[
+	Message: Success
+
+	{
+		"message": "success" 
+		"ref_data": string, optional
+		"transaction_id": string, optional
+	}
+
+--END]
+
+
+[
+	Message: Login
+
+	{
+		"username": string
+		"password": string
+		"ref_data": string, optional
+		"challenge_response":
+			{
+				"challenge": string	
+				"response": string
+			}, optional
+	}
+
+--END]
+
+
+[
+	Message: Challenge
+
+	Note:
+		Indicates that the server requires human-presence verification by the client.
+		Please follow the instructions at 
+		https://developers.google.com/recaptcha/docs/display
+		for information on how to integrate the reCAPTCHA functionality in your page.
+
+	{
+		"captcha-key": string
+	}
+	
+--END]
+
+
+[Request: Login
+
+Note: 
+	Upon successful login the server returns authentication token, stored in 
+	session cookie.  On multiple failed attempts to login, server will require a
+	CAPTCHA challenge.
+
+Input: Login
+Output: Success | Error | Challenge
+
+--END]
