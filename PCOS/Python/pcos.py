@@ -73,7 +73,7 @@ class Doc:
 		if data:
 			payload_length = len( data )
 			if payload_length < MIN_MESSAGE_LENGTH:
-				raise PcosError( ERR_MALFORMED_MESSAGE )
+				raise PcosError( ERR_MALFORMED_MESSAGE, 'payload too small for a valid message' )
 
 			# parse the message header
 			self.magic, self.length, self.message_id, reserved, self.block_count = Doc._HEADER_PARSER.unpack_from( data )
@@ -87,7 +87,7 @@ class Doc:
 			block_offset = MIN_MESSAGE_LENGTH + self.block_count * BLOCK_META_LENGTH
 
 			if payload_length < block_offset:
-				raise PcosError( ERR_MALFORMED_MESSAGE )
+				raise PcosError( ERR_MALFORMED_MESSAGE, 'payload too small for meta data' )
 
 			# data appears to be "one of ours", store it
 			self.data = data
@@ -112,7 +112,7 @@ class Doc:
 			# all the block meta information collected -- check if payload's large enough
 			# to hold all the "claimed" block-data
 			if total_claimed_length < payload_length:
-				raise PcosError( ERR_MALFORMED_MESSAGE )
+				raise PcosError( ERR_MALFORMED_MESSAGE, "actual block sizes don't match provided meta data" )
 
 
 	def block( self, name ):
@@ -222,7 +222,7 @@ class Block:
 	def read_data( self, c, sz ):
 		assert self.mode == 'I'
 		if self.remaining() < sz:
-			raise PcosError( ERR_MALFORMED_MESSAGE )
+			raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of input bytes to read from - accessing data out of bounds' )
 
 		(val,) = struct.unpack_from("<"+c, self.doc.data, self.meta.start + self.offset)
 		self.offset += sz
@@ -232,7 +232,7 @@ class Block:
 	def write_data( self, c, sz, val ):
 		assert self.mode == 'O'
 		if self.remaining() < sz:
-			raise PcosError( ERR_MALFORMED_MESSAGE )
+			raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of space for payload data' )
 		struct.pack_into("<"+c, self.data, self.meta.length, val)
 		self.meta.length += sz
 
