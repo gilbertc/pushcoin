@@ -187,7 +187,8 @@ class AppController(QThread):
 
 				# create payment-request block
 				r1 = pcos.Block( 'R1', 1024, 'O' )
-				r1.write_fixed_string( binascii.unhexlify( const.MERCHANT_MAT ), size=20 ) # mat
+				r1.write_fixed_string( binascii.unhexlify( str(self.settings.value( const.CONFKEY_MAT, '' ))), size=20) # mat
+
 				r1.write_short_string( '', max=127 ) # ref_data
 				r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
 
@@ -222,8 +223,9 @@ class AppController(QThread):
 
 				res = AppController.send( 
 					req, 
-					self.settings.value( const.CONFKEY_SERVER_URL, const.CONFDEFAULT_SERVER_URL),
-					self.settings.value( const.CONFKEY_CONNECTION_TIMEOUT_SECS, const.CONFDEFAULT_CONNECTION_TIMEOUT_SECS))
+					str(self.settings.value( const.CONFKEY_SERVER_URL, const.CONFDEFAULT_SERVER_URL)),
+					int(self.settings.value( const.CONFKEY_CONNECTION_TIMEOUT_SECS, const.CONFDEFAULT_CONNECTION_TIMEOUT_SECS)))
+					
 				ok = AppController.expect_success( res, self.__queue.form.charge, self.__queue.form.order_id, self.__queue.form.note )
 
 			except Exception, e:

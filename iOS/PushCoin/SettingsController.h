@@ -13,24 +13,18 @@
 #import "OpenSSLWrapper.h"
 #import "RegistrationController.h"
 #import "PasscodeViewController.h"
+#import "InAppSettingsKit/Controllers/IASKAppSettingsViewController.h"
 
-@interface SettingsController : UIViewController< PushCoinWebServiceDelegate, PushCoinMessageReceiver,
-    UIAlertViewDelegate, RegistrationControllerDelegate, KKPasscodeViewControllerDelegate>
+
+@interface SettingsController : IASKAppSettingsViewController< PushCoinWebServiceDelegate, PushCoinMessageReceiver,
+    UIAlertViewDelegate, RegistrationControllerDelegate, KKPasscodeViewControllerDelegate, IASKSettingsDelegate>
 {
     PushCoinMessageParser * parser;
     PushCoinWebService * webService;
     NSMutableData * buffer;
     KKPasscodeViewController * setPasscodeController;
     KKPasscodeViewController * preAuthTestPasscodeController;
-    
 }
 
-@property (weak, nonatomic) IBOutlet UIButton *unregisterButton;
-@property (weak, nonatomic) IBOutlet UIButton *preAuthorizationTestButton;
-@property (weak, nonatomic) IBOutlet UIButton *passcodeButton;
-
-- (IBAction)unregister:(id)sender;
-- (IBAction)preAuthorizationTest:(id)sender;
-- (IBAction)enablePasscode:(id)sender;
 
 @end

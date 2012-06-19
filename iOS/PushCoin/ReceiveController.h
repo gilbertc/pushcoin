@@ -12,7 +12,7 @@
 #import "PushCoinWebService.h"
 #import "PushCoinMessages.h"
 
-@interface ReceiveController : UIViewController<PushCoinWebServiceDelegate, PushCoinMessageReceiver, UITextFieldDelegate>
+@interface ReceiveController : UIViewController<PushCoinWebServiceDelegate, PushCoinMessageReceiver, UITextFieldDelegate, CLLocationManagerDelegate>
 {
     NSNumberFormatter * numberFormatter;
     PushCoinMessageParser * parser;
@@ -20,11 +20,11 @@
     NSMutableData * buffer;
     NSMutableString * storedValue;
 }
+
 @property (weak, nonatomic) IBOutlet UITextField *paymentTextField;
 @property (strong, nonatomic) NSData * ptaData;
 
 - (IBAction)backgroundTouched:(id)sender;
 - (IBAction)submitButtonTapped:(id)sender;
-
 
 @end

@@ -1,12 +1,12 @@
 //
-//  HistoryController.m
+//  AccountController.m
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/24/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "HistoryController.h"
+#import "AccountController.h"
 #import "PushCoinMessages.h"
 #import "AppDelegate.h"
 #import "NSString+HexStringToBytes.h"
@@ -17,7 +17,7 @@
 #import "TransactionCell.h"
 #import "BalanceCell.h"
 
-@implementation HistoryController
+@implementation AccountController
 @synthesize tableView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -122,12 +122,13 @@
 
 - (IBAction)settingsButtonTapped:(id)sender 
 {
-    SettingsController * controller = [self.appDelegate viewControllerWithIdentifier:@"SettingsController"];
+    SettingsController * controller = [[SettingsController alloc] init];
     
     if (controller)
     {
         [self.navigationController pushViewController:controller animated:YES];
     }
+
 }
 
 #pragma mark PushCoinWebserviceDelegate
@@ -179,6 +180,7 @@ andDescription:(NSString *)description
                                                                     tipValue:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).value.val
                                                                     tipScale:trx.tip.itemCount == 0 ? 0 : ((Amount *)[trx.tip.val objectAtIndex:0]).scale.val
                                                                 merchantName:trx.merchant_name.string
+                                                                   recipient:trx.recipient.string
                                                                      invoice:trx.invoice.string
                                                                    timestamp:trx.utc_transaction_time.val];
         
@@ -197,6 +199,13 @@ andDescription:(NSString *)description
             Contact * contact = [trx.contact.val objectAtIndex:0];
             pTrx.contactEmail = contact.email.string;
             pTrx.contactPhone = contact.phone.string;
+        }
+        
+        if (trx.geolocation.itemCount)
+        {
+            GeoLocation * loc = [trx.geolocation.val objectAtIndex:0];
+            pTrx.longitude = loc.longitude.val;
+            pTrx.latitude = loc.latitude.val;
         }
         
         [transactions addObject:pTrx];
