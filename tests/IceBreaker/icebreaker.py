@@ -445,7 +445,7 @@ class RmoteCall:
 		tm = res.block( 'Bo' )
 
 		# read block field(s)
-		tm_epoch = tm.read_int64();
+		tm_epoch = tm.read_ulong();
 		server_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
 		log.info('RETN %s', server_time )
 

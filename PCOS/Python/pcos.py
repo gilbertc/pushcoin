@@ -32,6 +32,9 @@ MAX_BLOCK_META_LENGTH = 7
 MESSAGE_ID_LENGTH = 2
 BLOCK_ID_LENGTH = 2
 
+# Minimum size of block enumartion segment
+MIN_BLOCK_ENUMARTION_SIZE = 1
+
 # Largest unsigned long
 MAX_UINT=4294967295
 MAX_ULONG=18446744073709551615
@@ -191,7 +194,7 @@ class Doc:
 		"""Returns encoded byte-stream."""
 
 		# allocate big enough C-buffer for storing wire data
-		max_total_length = MESSAGE_HEADER_LENGTH + MAX_BLOCK_META_LENGTH * len(self.blocks) + self._data_segment_size()
+		max_total_length = MESSAGE_HEADER_LENGTH + MIN_BLOCK_ENUMARTION_SIZE + MAX_BLOCK_META_LENGTH * len(self.blocks) + self._data_segment_size()
 		payload = ctypes.create_string_buffer( max_total_length )
 
 		# reset write position
