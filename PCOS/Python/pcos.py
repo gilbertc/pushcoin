@@ -367,7 +367,7 @@ class Block:
 
 
 	def read_double( self ):
-		return struct.unpack("!d", self.read_bytes( 8 ))
+		return struct.unpack("!d", self.read_bytes( 8 ))[0]
 
 
 	def read_varstr( self ):
@@ -410,7 +410,7 @@ class Block:
 	def write_int( self, val ):
 		# signed numbers are converted to unsigned according to ZigZag
 		zz = (val << 1) ^ (val >> 31)
-		write_uint( self, zz )
+		self.write_uint( zz )
 
 
 	def write_ulong( self, val ):
@@ -422,7 +422,7 @@ class Block:
 	def write_long( self, val ):
 		# signed numbers are converted to unsigned according to ZigZag
 		zz = (val << 1) ^ (val >> 63)
-		write_ulong( self, zz )
+		self.write_ulong( zz )
 
 
 	def write_double( self, val ):
@@ -473,6 +473,67 @@ def _reading_test_pong():
 	assert tm_epoch == 1335795040
 
 	
+def _datatype_test():
+	"""Test serialization and de-serialization of all primitive types"""
+
+	bo_in = create_output_block( 'Bo' )
+	bo_in.write_byte( 44 )
+	bo_in.write_bytes( 'Bytes' )
+	bo_in.write_char( 'c' )
+	bo_in.write_bool( False )
+	bo_in.write_bool( True )
+
+	bo_in.write_uint( 127 ) # single octet
+	bo_in.write_uint( 128 ) # two octets
+	bo_in.write_int( 63 ) # single octet
+	bo_in.write_int( 64 ) # two octets
+
+	bo_in.write_ulong( 127 ) # single octet
+	bo_in.write_ulong( 128 ) # two octets
+	bo_in.write_long( 63 ) # single octet
+	bo_in.write_long( 64 ) # two octets
+	bo_in.write_double(3.14)
+
+	bo_in.write_varstr('variable string')
+	bo_in.write_fixstr('fixed string', 12)
+
+	outgoing = Doc( name="Te" )
+	outgoing.add( bo_in )
+	
+	# Get encoded PCOS data 	
+	generated_data = outgoing.encoded()
+
+	reqf = open('data.pcos', 'w')
+	reqf.write( generated_data )
+	reqf.close()
+
+	# Read back and test values
+	incoming = Doc( generated_data )
+
+	# jump to the block of interest
+	bo_out = incoming.block( 'Bo' )
+
+	assert bo_out.read_byte() == 44
+	assert bo_out.read_bytes(5) == 'Bytes' 
+	assert bo_out.read_char() == 'c'
+	assert bo_out.read_bool() == False
+	assert bo_out.read_bool() == True
+
+	assert bo_out.read_uint() == 127
+	assert bo_out.read_uint() == 128
+	assert bo_out.read_int() == 63
+	assert bo_out.read_int() == 64
+
+	assert bo_out.read_ulong() == 127
+	assert bo_out.read_ulong() == 128
+	assert bo_out.read_long() == 63
+	assert bo_out.read_long() == 64
+	assert (abs(bo_out.read_double() - 3.14) < 0.001)
+
+	assert bo_out.read_varstr() == 'variable string'
+	assert bo_out.read_fixstr(12) == 'fixed string'
+
+
 def _writing_test_pong():
 	"""Test for PCOS Pong message"""
 
@@ -505,10 +566,6 @@ def _writing_test_error():
 	# Get encoded PCOS data 	
 	generated_data = msg.encoded()
 
-	reqf = open('data.pcos', 'w')
-	reqf.write( generated_data )
-	reqf.close()
-
 	# Comparison data
 	sample_data = binascii.unhexlify( '5043457201426f0d640b6f6e6c7920612074657374' )
 	assert str(generated_data) == str(sample_data)
@@ -516,6 +573,9 @@ def _writing_test_error():
 
 if __name__ == "__main__":
 	"""Tests basic parser functionality."""
+
+	# datatype serialization test
+	_datatype_test()
 
 	# Reading test...
 	_reading_test_pong()
