@@ -33,11 +33,12 @@ MESSAGE_ID_LENGTH = 2
 BLOCK_ID_LENGTH = 2
 
 # Largest unsigned long
+MAX_UINT=4294967295
 MAX_ULONG=18446744073709551615
 
 # PUSHCOiN protocol identifier (aka "magic")
 PROTOCOL_MAGIC = b'PC'
-PROTOCOL_MAGIC_LEN = len(PROTOCOL_MAGIC)
+PROTOCOL_MAGIC_LEN = 2
 
 # PCOS parser error codes
 ERR_INTERNAL_ERROR = 100
@@ -65,20 +66,26 @@ def _copy_bytes_to_ctype_buffer(src, dst, count, dst_offset=0):
 # Convert integer to a varint, return a bytearray
 def _to_varint( val ):
 	dat = bytearray()
-	while True:
+	while val > 0x7f:
 		octet = val & 0x7f
 		
-		# requires more bytes?
-		if val > 0x7f:
+		# first one doesn't need continuation bit --
+		# after reversing it will be last
+		if dat:
 			octet |= 0x80
-			dat.append(octet)
-			val >>= 7
-		else:
-			dat.append(octet)
-			break
-	sz = len(dat)
-	# reverse for network-order
-	dat.reverse()
+
+		dat.append(octet)
+		val >>= 7
+
+	# deal with last (or only) octet
+	if dat:
+		val |= 0x80
+		dat.append( val )
+		# obey network order
+		dat.reverse()
+	else:
+		dat.append( val )
+
 	return dat
 
 
@@ -105,7 +112,7 @@ class Doc:
 	def __init__( self, data = None, name = None ): 
 		"""Constructs PCOS from binary data."""
 
-		if name and len( name ) != 2:
+		if name and len( name ) != MESSAGE_ID_LENGTH:
 				raise PcosError( ERR_MALFORMED_MESSAGE, 'malformed message-ID' )
 			
 		self.message_id = name 
@@ -114,58 +121,64 @@ class Doc:
 		self.blocks = { }
 
 		if data:
-			payload_length = len( data )
-			if payload_length < MIN_MESSAGE_LENGTH:
+			payload = parse_block(data, name, 'Hd')
+			if payload.size() < MESSAGE_HEADER_LENGTH + 1:
 				raise PcosError( ERR_MALFORMED_MESSAGE, 'payload too small for a valid message' )
 
 			# parse the message header
-			self.magic, self.length, self.message_id, reserved, self.block_count = Doc._HEADER_PARSER.unpack_from( data )
+			self.magic = payload.read_fixstr( PROTOCOL_MAGIC_LEN )
 
 			# check if magic matches our encoding tag
 			if self.magic != PROTOCOL_MAGIC:
 				raise PcosError( ERR_INCOMPATIBLE_REQUEST )
 
-			# check if payload is big enough to even hold block_count meta records
-			# -- we could be lied!
-			block_offset = MIN_MESSAGE_LENGTH + self.block_count * BLOCK_META_LENGTH
+			# message ID
+			self.message_id = payload.read_fixstr( MESSAGE_ID_LENGTH )
 
-			if payload_length < block_offset:
-				raise PcosError( ERR_MALFORMED_MESSAGE, 'payload too small for meta data' )
+			# block count
+			self.block_count = payload.read_uint()
 
 			# data appears to be "one of ours", store it
 			self.data = data
 		
-			# parse block-meta segment
-			meta_offset = MIN_MESSAGE_LENGTH
-			total_claimed_length = MIN_MESSAGE_LENGTH
+			# Enumerating blocks is a two-pass process -- first, we get their names and lengths,
+			# then we can arrive at the beginning of the data segment.
+			stage_blocks = []
 
-			for i in range(0, self.block_count):
+			# Pass One: enumerate blocks
+			for i in xrange(0, self.block_count):
 				blk = BlockMeta()
-				blk.name, blk.length = Doc._BLOCK_META.unpack_from( data, meta_offset )
+				blk.name = payload.read_fixstr( BLOCK_ID_LENGTH )
+				blk.length = payload.read_uint()
+				stage_blocks.append(blk)
+
+			# at this point remember where data-segment starts,
+			# which is the location of the first block
+			block_offset = payload.reading_position()
+
+			# Pass Two: populate block positions within payload
+			for blk in stage_blocks:
+				# mark beginning of this block
 				blk.start = block_offset
 
-				# store block meta-record
+				# store the block meta-record in the directory
 				self.blocks[blk.name] = blk
 
-				# update running totals
+				# update position for the next block
 				block_offset += blk.length
-				meta_offset += BLOCK_META_LENGTH
-				total_claimed_length += blk.length + BLOCK_META_LENGTH
-
-			# all the block meta information collected -- check if payload's large enough
-			# to hold all the "claimed" block-data
-			if total_claimed_length < payload_length:
-				raise PcosError( ERR_MALFORMED_MESSAGE, "actual block sizes don't match provided meta data" )
+				
+			if block_offset > payload.size():
+				raise PcosError( ERR_MALFORMED_MESSAGE, "incomplete message or wrong block-meta info -- blocks couldn't fit in the received payload" )
 
 
 	def block( self, name ):
 		"""Returns the block iterator for a given block name."""
 
 		meta = self.blocks.get( name, None )
-		if not meta:
+		if meta:
+			return create_input_block(self, meta)
+		else:
 			return None # Oops, block not found!
-
-		return Block(self, meta, 'I')
 
 
 	def add( self, block ):
@@ -207,7 +220,10 @@ class Doc:
 		for (name, b) in self.blocks.iteritems():
 			write_offset += _copy_bytearray_to_ctype_buffer(b.data, payload, b.size(), write_offset)
 
-		return payload.raw
+		buf_ptr_holder = ctypes.c_byte * write_offset
+		buf_ptr = buf_ptr_holder.from_buffer(payload)
+
+		return memoryview(buf_ptr).tobytes()
 
 
 	def _data_segment_size( self ):
@@ -258,13 +274,17 @@ class Block:
 
 	def size( self ):
 		if self.mode == "I":
-			return self.meta.length
+			return self._length
 		else:
 			return len(self.data)
 
 
 	def name( self ):
 		return self._name
+
+
+	def reading_position( self ):
+		return self._offset
 
 
 	def read_byte( self ):
@@ -308,7 +328,7 @@ class Block:
 			octet = self.read_byte()
 			val |= octet & 0x7f 
 			# check if there is more...
-			seen_end = bool(octet & 0x80)
+			seen_end = bool( octet & 0x80 == 0 )
 			if seen_end:
 				break
 			else:
@@ -317,10 +337,12 @@ class Block:
 
 		if not seen_end:
 			raise PcosError( ERR_MALFORMED_MESSAGE, 'varint out of range' )
+
+		return val
 		
 
 	def read_uint( self ):
-		return self.read_varint( 5 ) # 5 => largest int (base32) can take up to 5 bytes on the wire
+		return self.read_varint( 5 ) # 5 => largest int can take on the wire
 
 
 	def read_int( self ):
@@ -331,7 +353,7 @@ class Block:
 
 
 	def read_ulong( self ):
-		return self.read_varint( 11 ) # 11 => largest long (base64) can take up to 11 bytes on the wire
+		return self.read_varint( 10 ) # 10 => largest long can take up on the wire
 
 
 	def read_long( self ):
@@ -377,7 +399,7 @@ class Block:
 
 
 	def write_uint( self, val ):
-		if val > sys.maxint:
+		if val > MAX_UINT:
 			raise PcosError( ERR_INTERNAL_ERROR, '%s does not fit in (unsigned) varint base-32' % val )
 		self.write_bytes( _to_varint( val ) )
 
@@ -437,22 +459,19 @@ def _reading_test_pong():
 	"""Tests if parser handles Pong message correctly"""
 
 	# `Pong' message, normally arriving on the wire
-	data = binascii.unhexlify( '50434f53506f16000100546d0800609d9e4f00000000' )
-
-	# read message preamble, create a lightweight PCOS document 
-	msg = Doc( data )
+	msg = Doc( _writing_test_pong() )
 
 	# jump to the block of interest
 	tm = msg.block( 'Tm' )
 
 	# read block field(s)
-	tm_epoch = tm.read_int64();
+	tm_epoch = tm.read_ulong();
 
 	assert tm_epoch == 1335795040
 
 	
 def _writing_test_pong():
-	"""Tests if parser produces correct PCOS Pong message"""
+	"""Test for PCOS Pong message"""
 
 	tm = create_output_block( 'Tm' )
 	tm.write_ulong( 1335795040 )
@@ -463,21 +482,19 @@ def _writing_test_pong():
 	# Get encoded PCOS data 	
 	generated_data = msg.encoded()
 
-	reqf = open('data.pcos', 'w')
-	reqf.write( generated_data )
-	reqf.close()
-
 	# Comparison data
-	sample_data = binascii.unhexlify( '50434f53506f16000100546d0800609d9e4f00000000' )
+	sample_data = binascii.unhexlify( '5043506f01546d0584fcfaba60' )
+	
 	assert str(generated_data) == str(sample_data)
+	return generated_data
 
 
 def _writing_test_error():
-	"""Tests if parser produces correct PCOS Error message"""
+	"""Test for PCOS Error message"""
 
 	bo = create_output_block( 'Bo' )
-	bo.write_int32( 100 )
-	bo.write_fixed_string( 'miss' )
+	bo.write_uint( 100 )
+	bo.write_varstr( 'only a test' )
 
 	msg = Doc( name="Er" )
 	msg.add( bo )
@@ -490,7 +507,7 @@ def _writing_test_error():
 	reqf.close()
 
 	# Comparison data
-	sample_data = binascii.unhexlify( '50434f53457216000100426f0800640000006d697373' )
+	sample_data = binascii.unhexlify( '5043457201426f0d640b6f6e6c7920612074657374' )
 	assert str(generated_data) == str(sample_data)
 
 
@@ -498,7 +515,7 @@ if __name__ == "__main__":
 	"""Tests basic parser functionality."""
 
 	# Reading test...
-#_reading_test_pong()
+	_reading_test_pong()
 	
 	# Writing test...
 	_writing_test_pong()
