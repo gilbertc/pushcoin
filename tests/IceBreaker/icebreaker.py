@@ -8,6 +8,8 @@ from optparse import OptionParser,OptionError
 from pyparsing import *
 from M2Crypto import DSA, BIO, RSA
 
+PC_DEFAULT_API_URL="https://api.pc-dev.com/pcos/"
+
 def load_qrcode():
 	try:
 		import qrcode
@@ -514,7 +516,7 @@ class RmoteCall:
 			reqf.write( encoded )
 			reqf.close()
 
-		log.info('CALL %s %s', self.cmd, str(self.args) )
+		log.info('CALL (%s) %s %s', self.options.url, self.cmd, str(self.args) )
 		remote_call = urllib2.urlopen(self.options.url, encoded )
 		response = remote_call.read()
 
@@ -560,7 +562,7 @@ if __name__ == "__main__":
 	usage = "usage: %prog [options] <command> [args]"
 	version = "PushCoin IceBreaker v1.0"
 	parser = OptionParser(usage, version = version)
-	parser.add_option("-C", "--url", dest="url", action="store", default="https://api.pushcoin.com:20001/pcos/", help="server URL")
+	parser.add_option("-C", "--url", dest="url", action="store", default=PC_DEFAULT_API_URL, help="server URL")
 	parser.add_option("-S", "--save-io", dest="is_writing_io", action="store_true", default=False, help="save request and response to files")
 	
 	if len(sys.argv) == 0:

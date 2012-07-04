@@ -23,19 +23,64 @@ import binascii, struct, ctypes
 #   min_size = sizeof_header(16) + sizeof_empty_unbounded_array(2)
 #
 # Note: the empty unbounded array implies no block enumerations.
-MIN_MESSAGE_LENGTH = 18
+MESSAGE_HEADER_LENGTH = 4
 
-# Block-meta record has a fixed size of 4 bytes
-BLOCK_META_LENGTH = 4
+# Block-meta record has a max size: size_of_block_id(2) + max_int_varint(5)
+MAX_BLOCK_META_LENGTH = 7
 
-# A four-byte identifier for PCOS protocol.
-PROTOCOL_MAGIC = 'PCOS'
-RESERVED_HDR_FIELD = b'\0\0\0\0\0\0'
+# Size of message and block identifier
+MESSAGE_ID_LENGTH = 2
+BLOCK_ID_LENGTH = 2
+
+# Largest unsigned long
+MAX_ULONG=18446744073709551615
+
+# PUSHCOiN protocol identifier (aka "magic")
+PROTOCOL_MAGIC = b'PC'
+PROTOCOL_MAGIC_LEN = len(PROTOCOL_MAGIC)
 
 # PCOS parser error codes
 ERR_INTERNAL_ERROR = 100
 ERR_MALFORMED_MESSAGE = 101
 ERR_INCOMPATIBLE_REQUEST = 102
+
+
+# Helper to copy from bytearray to ctypes buffer
+def _copy_bytearray_to_ctype_buffer(src, dst, count, dst_offset=0):
+	# create storage to hold the data-pointer
+	src_ptr_holder = ctypes.c_byte * len(src)
+	src_ptr = src_ptr_holder.from_buffer(src)
+	# copy the data
+	ctypes.memmove(ctypes.byref( dst, dst_offset ), src_ptr, count)
+	return count
+
+
+# Helper to copy from bytes to ctypes buffer
+def _copy_bytes_to_ctype_buffer(src, dst, count, dst_offset=0):
+	# copy the data
+	ctypes.memmove(ctypes.byref( dst, dst_offset ), src, count)
+	return count
+
+
+# Convert integer to a varint, return a bytearray
+def _to_varint( val ):
+	dat = bytearray()
+	while True:
+		octet = val & 0x7f
+		
+		# requires more bytes?
+		if val > 0x7f:
+			octet |= 0x80
+			dat.append(octet)
+			val >>= 7
+		else:
+			dat.append(octet)
+			break
+	sz = len(dat)
+	# reverse for network-order
+	dat.reverse()
+	return dat
+
 
 class PcosError( Exception ):
 	""" Basis for all exceptions thrown from the PCOS codec."""
@@ -48,16 +93,14 @@ class PcosError( Exception ):
 	def __str__(self):
 		return repr("code=%s;what=%s" % (self.code, self. what) )
 
+
 class BlockMeta:
 	"""Stores meta information about a block found in the data-segment"""
 	pass
 
+
 class Doc:
 	"""Parses binary data, presumably PCOS-encoded, and constructs a lightweight document."""
-
-	# private PCOS header and block-meta parsers
-	_HEADER_PARSER = struct.Struct('<4si2s6sh')
-	_BLOCK_META = struct.Struct('<2sh')
 
 	def __init__( self, data = None, name = None ): 
 		"""Constructs PCOS from binary data."""
@@ -116,7 +159,7 @@ class Doc:
 
 
 	def block( self, name ):
-		"""Returns the block iterator for a given name."""
+		"""Returns the block iterator for a given block name."""
 
 		meta = self.blocks.get( name, None )
 		if not meta:
@@ -134,21 +177,35 @@ class Doc:
 	def encoded( self ):
 		"""Returns encoded byte-stream."""
 
+		# allocate big enough C-buffer for storing wire data
+		max_total_length = MESSAGE_HEADER_LENGTH + MAX_BLOCK_META_LENGTH * len(self.blocks) + self._data_segment_size()
+		payload = ctypes.create_string_buffer( max_total_length )
+
+		# reset write position
 		write_offset = 0
-		total_length = MIN_MESSAGE_LENGTH + BLOCK_META_LENGTH * len(self.blocks) + self._data_segment_size()
-		payload = ctypes.create_string_buffer( total_length )
-		Doc._HEADER_PARSER.pack_into( payload, write_offset, PROTOCOL_MAGIC, total_length, self.message_id, RESERVED_HDR_FIELD, len(self.blocks) );
-		write_offset += MIN_MESSAGE_LENGTH
 
-		# write block enumeration
-		for (name, b) in self.blocks.iteritems():
-			Doc._BLOCK_META.pack_into( payload, write_offset, name, b.size() );
-			write_offset += BLOCK_META_LENGTH
+		# protocol magic
+		write_offset += _copy_bytes_to_ctype_buffer(PROTOCOL_MAGIC, payload, PROTOCOL_MAGIC_LEN, write_offset)
 
-		# write block data
+		# message identifier
+		write_offset += _copy_bytes_to_ctype_buffer(self.message_id, payload, MESSAGE_ID_LENGTH, write_offset)
+
+		# number of blocks
+		block_count_varint = _to_varint( len(self.blocks) )
+		write_offset += _copy_bytearray_to_ctype_buffer(block_count_varint, payload, len(block_count_varint), write_offset)
+
+		# block-metas
 		for (name, b) in self.blocks.iteritems():
-			ctypes.memmove( ctypes.byref( payload, write_offset ), b.data, b.size() )
-			write_offset += b.size()
+			# block name
+			write_offset += _copy_bytes_to_ctype_buffer(name, payload, BLOCK_ID_LENGTH, write_offset)
+
+			# block size
+			block_size_varint = _to_varint( b.size() )
+			write_offset += _copy_bytearray_to_ctype_buffer(block_size_varint, payload, len(block_size_varint), write_offset)
+
+		# block data
+		for (name, b) in self.blocks.iteritems():
+			write_offset += _copy_bytearray_to_ctype_buffer(b.data, payload, b.size(), write_offset)
 
 		return payload.raw
 
@@ -161,162 +218,203 @@ class Doc:
 		return size
 
 
+def create_output_block( name ):
+	"""Creates and initializes a block in 'output' mode."""
+
+	blk = Block()
+	blk.mode = "O"
+	blk.data = bytearray()
+	blk._name = name
+	return blk
+	
+
+def create_input_block( doc, meta ):
+	"""Creates and initializes a block in 'input' mode."""
+
+	blk = Block()
+	blk.mode = "I"
+	blk.doc = doc
+	blk._name = meta.name
+	blk._length = meta.length
+	blk._start = meta.start
+	blk._offset = 0 # current reading cursor position
+	return blk
+
+
 class Block:
 	"""Provides facilities for creating a new block or iterating over and parsing block data."""
 
-	def __init__( self, v1, v2, mode ):
-		if mode == 'I':
-			self.init_as_input_block( v1, v2 ) 
-		elif mode == 'O':
-			self.init_as_output_block( v1, v2 ) 
-		else:
-			raise PcosError( ERR_INTERNAL_ERROR, "pcos: unknown block mode" )
+	def __init__( self ):
+		pass
 
 
-	def init_as_output_block( self, name, size ):
-		"""Initializes block in 'output' mode."""
-		self.mode = "O"
-		self.data = ctypes.create_string_buffer( size )
-		self.meta = BlockMeta()
-		self.meta.name = name
-		self.meta.length = 0 # current writing cursor position
-		self.meta.start = 0
-		self.capacity = size # how much can we fit
-
-
-	def init_as_input_block( self, doc, meta ):
-		"""Initializes block in 'input' mode."""
-		self.mode = "I"
-		self.doc = doc
-		self.meta = meta
-
-		# current cursor position
-		self.offset = 0 # current reading cursor position
-
-
-	def __str__( self ):
+	def as_bytearray( self ):
 		'''Returns a Python string from the character array.'''
 		if self.mode == 'I':
 			return self.doc.data[self.meta.start : self.meta.start + self.meta.length]
 		else:
-			return ctypes.string_at( self.data, self.meta.length)
+			return self.data
+
 
 	def size( self ):
-		return self.meta.length
+		if self.mode == "I":
+			return self.meta.length
+		else:
+			return len(self.data)
 
 
 	def name( self ):
-		return self.meta.name
-
-
-	def remaining( self ):
-		"""In input mode, returns how much data can be read. In output mode, returns remaining buffer capacity."""
-
-		if self.mode == 'I':
-			return self.meta.length - self.offset
-		else:
-			# output mode, tells how much room is left
-			return self.capacity - self.meta.length
-
-
-	def read_data( self, c, sz ):
-		assert self.mode == 'I'
-		if self.remaining() < sz:
-			raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of input bytes to read from - accessing data out of bounds' )
-
-		(val,) = struct.unpack_from("<"+c, self.doc.data, self.meta.start + self.offset)
-		self.offset += sz
-		return val
-
-
-	def write_data( self, c, sz, val ):
-		assert self.mode == 'O'
-		if self.remaining() < sz:
-			raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of space for payload data' )
-		struct.pack_into("<"+c, self.data, self.meta.length, val)
-		self.meta.length += sz
+		return self._name
 
 
 	def read_byte( self ):
-		return self.read_data('B', 1)
+		assert self.mode == 'I'
+		if self._length - self._offset > 0:
+			octet = ord(self.doc.data[self._start + self._offset])
+			self._offset += 1
+			return octet
 
-	def write_byte( self, val ):
-		self.write_data('B', 1, val)
+		raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of input bytes to read from - accessing data out of bounds' )
+
+
+	def read_bytes( self, size ):
+		assert self.mode == 'I'
+		if self._length - self._offset >= size:
+			begin = self._start + self._offset
+			dat = self.doc.data[ begin : begin + size]
+			self._offset += size
+			return dat
+
+		raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of input bytes to read from - accessing data out of bounds' )
+
 
 	def read_char( self ):
-		return self.read_data('c', 1)
+		assert self.mode == 'I'
+		if self._length - self._offset > 0:
+			octet = self.doc.data[self._start + self._offset]
+			self._offset += 1
+			return octet
 
-	def write_char( self, val ):
-		self.write_data('c', 1, val)
 
 	def read_bool( self ):
-		return self.read_data('?', 1)
+		assert self.mode == 'I'
+		return bool(self.read_byte())
+
+
+	def read_varint( self, max_octets ):
+		val = 0
+		seen_end = False
+		while max_octets > 0:
+			octet = self.read_byte()
+			val |= octet & 0x7f 
+			# check if there is more...
+			seen_end = bool(octet & 0x80)
+			if seen_end:
+				break
+			else:
+				val <<= 7
+				max_octets -= 1
+
+		if not seen_end:
+			raise PcosError( ERR_MALFORMED_MESSAGE, 'varint out of range' )
+		
+
+	def read_uint( self ):
+		return self.read_varint( 5 ) # 5 => largest int (base32) can take up to 5 bytes on the wire
+
+
+	def read_int( self ):
+		# signed int is encoded as unsigned int
+		val = self.read_uint()
+		# ..but requires un-ZigZag
+		return (val >> 1) ^ (-(val & 1))
+
+
+	def read_ulong( self ):
+		return self.read_varint( 11 ) # 11 => largest long (base64) can take up to 11 bytes on the wire
+
+
+	def read_long( self ):
+		# signed long is encoded as unsigned long
+		val = self.read_ulong()
+		# ..but requires un-ZigZag
+		return (val >> 1) ^ (-(val & 1))
+
+
+	def read_double( self ):
+		return struct.unpack("!d", self.read_bytes( 8 ))
+
+
+	def read_varstr( self ):
+		length = self.read_uint()
+		return self.read_bytes( length )
+
+
+	def read_fixstr( self, length ):
+		return self.read_bytes( length )
+
+
+	def write_byte( self, val ):
+		assert self.mode == 'O'
+		self.data.extend( struct.pack("!B", val) )
+
+
+	def write_bytes( self, val ):
+		assert self.mode == 'O'
+		self.data.extend( val )
+
+
+	def write_char( self, val ):
+		assert self.mode == 'O'
+		self.data.extend( struct.pack("!c", val) )
+
 
 	def write_bool( self, val ):
-		self.write_data('?', 1, val)
+		if val:
+			self.write_byte(1)
+		else:
+			self.write_byte(0)
 
-	def read_int16( self ):
-		return self.read_data('h', 2)
 
-	def write_int16( self, val ):
-		self.write_data('h', 2, val)
+	def write_uint( self, val ):
+		if val > sys.maxint:
+			raise PcosError( ERR_INTERNAL_ERROR, '%s does not fit in (unsigned) varint base-32' % val )
+		self.write_bytes( _to_varint( val ) )
 
-	def read_int32( self ):
-		return self.read_data('i', 4)
 
-	def write_int32( self, val ):
-		self.write_data('i', 4, val)
+	def write_int( self, val ):
+		# signed numbers are converted to unsigned according to ZigZag
+		zz = (val << 1) ^ (val >> 31)
+		write_uint( self, zz )
 
-	def read_int64( self ):
-		return self.read_data('q', 8)
 
-	def write_int64( self, val ):
-		self.write_data('q', 8, val)
-		
-	def read_double( self ):
-		return self.read_data('d', 8)
+	def write_ulong( self, val ):
+		if val > MAX_ULONG:
+			raise PcosError( ERR_INTERNAL_ERROR, '%s does not fit in (unsigned) varint base-64' % val )
+		self.write_bytes( _to_varint( val ) )
+
+
+	def write_long( self, val ):
+		# signed numbers are converted to unsigned according to ZigZag
+		zz = (val << 1) ^ (val >> 63)
+		write_ulong( self, zz )
+
 
 	def write_double( self, val ):
-		self.write_data('d', 8, val)
+		self.data.extend( struct.pack("!d", val) )
 
-	def read_short_string( self ):
-		length = self.read_byte()
-		return self.read_data(str(length)+'s', length)
 
-	def write_short_string( self, val, max):
-		if val:
-			length = len( val )
-		else: 
-			length = 0
-		assert max < 256
-		if length > max:
-			raise PcosError( ERR_MALFORMED_MESSAGE, 'short array-field exeeds specified maximum length: %s > max(%s)' % (length, max) )
-		self.write_byte( length )
-		if length:
-			self.write_data(str(length)+'s', length, val )
-
-	def read_long_string( self ):
-		length = self.read_int16()
-		return self.read_data(str(length)+'s', length)
-
-	def write_long_string( self, val ):
-		if val:
-			length = len( val )
-		else: 
-			length = 0
+	def write_varstr( self, val ):
 		length = len( val )
-		self.write_int16( length )
+		self.write_uint( length )
 		if length:
-			self.write_data(str(length)+'s', length, val )
+			self.write_bytes(val)
 
-	def read_fixed_string( self, length ):
-		return self.read_data(str(length)+'s', length)
 
-	def write_fixed_string( self, val, size ):
-		length = len( val )
-		if length != size:
-			raise PcosError( ERR_MALFORMED_MESSAGE, 'fixed array-field size not met: %s != size(%s)' % (length, size) )
-		self.write_data(str(length)+'s', length, val )
+	def write_fixstr( self, val, size ):
+		if len( val ) != size:
+			raise PcosError( ERR_MALFORMED_MESSAGE, 'fixed array-field size not met: len(str) != %s' % size )
+		self.write_bytes(val)
 
 
 def parse_block(data, message_id, block_name):
@@ -356,14 +454,18 @@ def _reading_test_pong():
 def _writing_test_pong():
 	"""Tests if parser produces correct PCOS Pong message"""
 
-	tm = Block( 'Tm', 20, 'O' )
-	tm.write_int64( 1335795040 )
+	tm = create_output_block( 'Tm' )
+	tm.write_ulong( 1335795040 )
 
 	msg = Doc( name="Po" )
 	msg.add( tm )
 	
 	# Get encoded PCOS data 	
 	generated_data = msg.encoded()
+
+	reqf = open('data.pcos', 'w')
+	reqf.write( generated_data )
+	reqf.close()
 
 	# Comparison data
 	sample_data = binascii.unhexlify( '50434f53506f16000100546d0800609d9e4f00000000' )
@@ -373,7 +475,7 @@ def _writing_test_pong():
 def _writing_test_error():
 	"""Tests if parser produces correct PCOS Error message"""
 
-	bo = Block( 'Bo', 50, 'O' )
+	bo = create_output_block( 'Bo' )
 	bo.write_int32( 100 )
 	bo.write_fixed_string( 'miss' )
 
@@ -396,7 +498,7 @@ if __name__ == "__main__":
 	"""Tests basic parser functionality."""
 
 	# Reading test...
-	_reading_test_pong()
+#_reading_test_pong()
 	
 	# Writing test...
 	_writing_test_pong()
