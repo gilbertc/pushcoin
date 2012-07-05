@@ -20,7 +20,7 @@ def load_qrcode():
 # The transaction key and the key-ID where obtained from:
 #   https://pushcoin.com/Pub/SDK/TransactionKeys
 #
-API_TRANSACTION_KEY_ID = '652fce08'
+API_TRANSACTION_KEY_ID = binascii.unhexlify( 'ce08' )
 
 #
 # Please note:
@@ -304,107 +304,109 @@ class RmoteCall:
 	def payment(self):
 		'''This command generates the Payment Transaction Authorization, or PTA. It does not communicate with the server, only produces a file.'''
 
-		#------------------
-		# PTA public-block
-		#------------------
-		p1 = pcos.Block( 'P1', 512, 'O' )
-		now = long( time.time() + 0.5 )
-		p1.write_int64( now ) # certificate create-time
-		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
-		# p1.write_int64( now + 60*2 ) # certificate expiry
-
-		# payment-limit
-		(payment_int, payment_scale) = decimal_to_parts(Decimal(self.args['limit']))
-		p1.write_int64( payment_int ) # value
-		p1.write_int16( payment_scale ) # scale
-
-		# gratuity
-		tip = tip_type = None
-		tipv = self.args.get('tip_pct', None)
-		if tipv:
-			tip_type = 'P'
-		else:
-			tipv = self.args.get('tip_abs', None)
-			if tipv:
-				tip_type = 'A'
-
-		if tipv:
-			(tip_int, tip_scale) = decimal_to_parts(Decimal(tipv))
-			p1.write_byte(1) # optional indicator
-			p1.write_fixed_string(tip_type, size=1) # tip type (P or A)
-			p1.write_int64( tip_int ) # value
-			p1.write_int16( tip_scale ) # scale
-		else:
-			p1.write_byte(0) # optional indicator -- no tip
-
-		p1.write_fixed_string( "USD", size=3 ) # currency
-		p1.write_fixed_string( binascii.unhexlify( API_TRANSACTION_KEY_ID ), size=4 ) # key-ID
-
-		p1.write_short_string( '', max=127 ) # receiver
-		p1.write_short_string( '', max=127 ) # note
-
-		#-------------------
-		# PTA private-block
-		#-------------------
-		priv = pcos.Block( 'S1', 512, 'O' )
+		#------------------------------------
+		#        PTA Payment Block
+		#------------------------------------
+		p1 = pcos.create_output_block( 'P1' )
 
 		# member authentication token
 		mat = self.args['mat'] 
 		if len( mat ) != 40:
 			raise RuntimeError("MAT must be 40-characters long" % self.cmd)
-		priv.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
-		priv.write_short_string( '', max=20 ) # ref-data
+		p1.write_varstr( binascii.unhexlify( self.args['mat'] ) )
+
+		# cert. create time and expiry
+		now = long( time.time() + 0.5 )
+		p1.write_ulong( now ) # certificate create-time
+		p1.write_ulong( now + 24 * 3600 ) # certificate expires in 24 hrs
+
+		# payment-limit
+		(payment_int, payment_scale) = decimal_to_parts(Decimal(self.args['limit']))
+		p1.write_long( payment_int ) # value
+		p1.write_int( payment_scale ) # scale
+
+		# currency
+		p1.write_fixstr( "USD", size=3 )
+
+		# recipient
+		p1.write_varstr("")
+
+		# ref-data
+		p1.write_varstr( "" )
+
+		#------------------------------------
+		#        PTA Signature Block
+		#------------------------------------
+		s1 = pcos.create_output_block( 'S1' )
+
+		# checksum Payment Block
+		digest = hashlib.sha1(p1.as_bytearray()).digest()
 		
-		# sign the public-block
-		#   * first, produce the checksum
-		digest = hashlib.sha1(str(p1)).digest()
-		
-		#   * then sign the checksum
+		# sign the checksum
 		dsa_priv_key = BIO.MemoryBuffer( TEST_DSA_KEY_PRV_PEM )
 		signer = DSA.load_key_bio( dsa_priv_key )
 		signature = signer.sign_asn1( digest )
-		priv.write_short_string( signature, max=48 ) # signature of the pub block
-		priv.write_short_string( '', max=20 ) # empty user data
 
-		# encrypt the private-block
+		# store the signature of the Payment Block
+		s1.write_varstr( signature )
+
+		#------------------------------------
+		# PTA Message
+		#  * Payment Block
+		#  * Signature Block
+		#------------------------------------
+		pta = pcos.Doc( name="Pa" )
+		pta.add( p1 )
+		pta.add( s1 )
+
+		#------------------------------------
+		#    A-PTA Private (PTA) Block
+		#------------------------------------
+		a1 = pcos.create_output_block( 'A1' )
+		
+		# encrypt the PTA message
 		txn_pub_key = BIO.MemoryBuffer( API_TRANSACTION_KEY_PEM )
 		encrypter = RSA.load_pub_key_bio( txn_pub_key )
 		# RSA Encryption Scheme w/ Optimal Asymmetric Encryption Padding
-		encrypted = encrypter.public_encrypt( str(priv), RSA.pkcs1_oaep_padding )
+		input_data = pta.as_bytearray()
+		print ("input size %s" % len(input_data))
+		encrypted = encrypter.public_encrypt( pta.as_bytearray(), RSA.pkcs1_padding )
+		a1.write_fixstr( encrypted, size=len(encrypted) )
 
-		# At this point we no longer need the private object. We only attach the
-		# encrypted instance.
-		s1 = pcos.Block( 'S1', 512, 'O' )
-		s1.write_fixed_string( encrypted, size=128 )
+		#------------------------------------
+		#    A-PTA Public Block
+		#------------------------------------
+		k1 = pcos.create_output_block( 'K1' )
+		# encryption key identifier
+		k1.write_fixstr( API_TRANSACTION_KEY_ID, size=len(API_TRANSACTION_KEY_ID) )
 
-		#-------------------
-		# PTA envelope
-		#-------------------
-		env = pcos.Doc( name="Pa" )
-		# order in which we add blocks doesn't matter
-		env.add( p1 )
-		env.add( s1 )
+		#------------------------------------
+		#    A-PTA Message
+		#------------------------------------
+		apta = pcos.Doc( name="Ap" )
+		apta.add( a1 )
+		apta.add( k1 )
+		apta_bytes = apta.as_bytearray()
 
 		# write serialized data as binary and qr-code
-		encoded = env.encoded()
-		reqf = open('pta.pcos', 'w')
-		reqf.write( encoded )
-		reqf.close()
-		print ("Saved PTA object to 'pta.pcos'")
+		payload_file = open('apta.pcos', 'w')
+		payload_file.write( apta_bytes )
+		payload_file.close()
+		print ("Saved APTA object to 'apta.pcos'")
 
 		# optionally generate qr-code
 		try:
 			import qrcode
 			qr = qrcode.QRCode(version=None, box_size=3, error_correction=qrcode.constants.ERROR_CORRECT_L)
-			qr.add_data( encoded )
+			qr.add_data( apta_bytes )
 			qr.make(fit=True)
 			img = qr.make_image()
-			img.save('pta.png')
-			print ("PTA-QR: pta.png, version %s" % (qr.version))
+			img.save('apta.png')
+			print ("APTA-QR: apta.png, version %s" % (qr.version))
 		except ImportError:
 			log.warn("QR-Code not written -- qrcode module not found")
 
-		return encoded
+		return apta_bytes
 
 	
 	# CMD: `register'

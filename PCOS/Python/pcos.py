@@ -190,7 +190,7 @@ class Doc:
 		self.blocks[ block.name() ] = block
 		
 
-	def encoded( self ):
+	def as_bytearray( self ):
 		"""Returns encoded byte-stream."""
 
 		# allocate big enough C-buffer for storing wire data
@@ -221,7 +221,7 @@ class Doc:
 
 		# block data
 		for (name, b) in self.blocks.iteritems():
-			write_offset += _copy_bytearray_to_ctype_buffer(b.data, payload, b.size(), write_offset)
+			write_offset += _copy_bytearray_to_ctype_buffer(b.as_bytearray(), payload, b.size(), write_offset)
 
 		buf_ptr_holder = ctypes.c_byte * write_offset
 		buf_ptr = buf_ptr_holder.from_buffer(payload)
