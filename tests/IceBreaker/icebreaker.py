@@ -510,7 +510,7 @@ class RmoteCall:
 	def send(self, req):
 
 		# Get encoded PCOS data 	
-		encoded = req.encoded()
+		encoded = req.as_bytearray()
 
 		# For debugging, we write request and response
 		if self.options.is_writing_io:
