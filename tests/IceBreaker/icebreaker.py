@@ -409,33 +409,50 @@ class RmoteCall:
 		return apta_bytes
 
 	
-	# CMD: `register'
 	def register(self):
-		req = pcos.Doc( name="Re" )
-		bo = pcos.Block( 'Bo', 512, 'O' )
-		bo.write_short_string( self.args['registration_id'], max=64 ) # registration ID
-		bo.write_long_string( base64.b64decode(TEST_DSA_KEY_PUB_PEM) )
+		'''Register command'''
+
+		#------------------------------------
+		#           Body Block
+		#------------------------------------
+		bo = pcos.create_output_block( 'Bo' )
+
+		# registration ID
+		bo.write_varstr( self.args['registration_id'] )
+
+		# DER encoded public key -- signature verification key
+		bo.write_varstr( base64.b64decode(TEST_DSA_KEY_PUB_PEM) )
+
 		# user-agent attributes
 		user_agent = [
 			('appname', 'IceBreaker'), 
-			('appver', '1.0'), 
+			('appver', '2.0'), 
 			('appurl', 'https://pushcoin.com/Pub/SDK/WelcomeDevelopers'), 
 			('author', 'PushCoin <ask@pushcoin.com>'), 
 			('os', '%s %s' % (sys.platform, sys.version)), 
 		]
-		bo.write_byte( len(user_agent) )
+		bo.write_uint( len(user_agent) )
 		for kv in user_agent:
-			bo.write_short_string( kv[0], max=32 )
-			bo.write_short_string( kv[1], max=127 )
+			bo.write_varstr( kv[0] )
+			bo.write_varstr( kv[1] )
 
+		#------------------------------------
+		#       Register Message
+		#------------------------------------
+		req = pcos.Doc( name="Re" )
 		req.add( bo )
+
+		# send the message and process the result.
 		res = self.send( req )
 
 		assert res.message_id == 'Ac'
 		# jump to the block of interest
-		tm = res.block( 'Bo' )
-		mat = tm.read_fixed_string(20);
-		log.info('Success (mat: %s)', binascii.hexlify( mat ))
+		out_bo = res.block( 'Bo' )
+
+		# read MAT returned by the server
+		mat = out_bo.read_varstr()
+
+		log.info('Success (MAT: %s)', binascii.hexlify( mat ))
 
 
 	# CMD: `ping'
