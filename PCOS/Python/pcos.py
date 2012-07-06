@@ -430,6 +430,10 @@ class Block:
 
 
 	def write_varstr( self, val ):
+		if val == None:
+			self.write_uint( 0 )
+			return
+			
 		length = len( val )
 		self.write_uint( length )
 		if length:
