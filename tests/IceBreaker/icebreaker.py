@@ -477,12 +477,15 @@ class RmoteCall:
 		# jump to the block of interest
 		body = res.block( 'Bo' )
 
-		# read block field(s)
-		keyid = body.read_fixed_string(4)
-		key_info = body.read_short_string()
-		key_expiry = body.read_int64()
-		key_data = body.read_long_string()
-		log.info('RETN gotten key %s, len %s bytes, expires on %s', key_info, len(key_data), time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(key_expiry)))
+		# number of keys
+		key_count = body.read_uint()
+
+		for ix in xrange(0,key_count):
+			keyid = body.read_fixstr(2)
+			key_info = body.read_varstr()
+			key_expiry = body.read_ulong()
+			key_data = body.read_varstr()
+			log.info('key %s, len %s bytes, expires on %s', key_info, len(key_data), time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(key_expiry)))
 
 	def __init__(self, options, cmd, args):
 		# store the cmd and args for the command-handler
@@ -507,8 +510,8 @@ class RmoteCall:
 		'''Shows details of Success PCOS message'''
 		if res.message_id == "Ok":
 			bo = res.block( 'Bo' )
-			ref_data = bo.read_short_string() # ref_data
-			transaction_id = bo.read_short_string() # tx-id
+			ref_data = bo.read_varstr() # ref_data
+			transaction_id = bo.read_varstr() # tx-id
 			log.info('Success (tx_id: %s, ref_data: %s)', binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ))
 		else:
 			raise RuntimeError("'%s' not a Success message" % res.message_id)
@@ -550,10 +553,10 @@ class RmoteCall:
 			# jump to the block of interest
 			er = res.block( 'Bo' )
 			if er:
-				ref_data = er.read_short_string();
-				transaction_id = er.read_short_string();
-				code = er.read_int32();
-				what = er.read_short_string();
+				ref_data = er.read_varstr()
+				transaction_id = er.read_varstr()
+				code = er.read_uint()
+				what = er.read_varstr()
 				raise RuntimeError('tx-id=%s;ref_data=%s;what=%s;code=%s' % (binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ), what, code )) 
 			else:
 				raise RuntimeError('ERROR -- cause unknown') 
