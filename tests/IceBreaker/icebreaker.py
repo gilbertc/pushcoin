@@ -78,24 +78,29 @@ class RmoteCall:
 	def balance(self):
 		'''Returns account balance'''
 
-		bo = pcos.Block( 'Bo', 64, 'O' )
-		bo.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
-		bo.write_short_string( '', max=127 ) # ref_data
+		#------------------------------------
+		#      Request Body Block
+		#------------------------------------
+		out_bo = pcos.create_output_block( 'Bo' )
+		out_bo.write_varstr( binascii.unhexlify( self.args['mat'] ) ) # mat
+		out_bo.write_varstr( '' ) # ref_data
 
 		req = pcos.Doc( name="Bq" )
-		req.add( bo )
+		req.add( out_bo )
 
 		res = self.send( req )
 
 		assert res.message_id == 'Br'
 
-		# jump to body
+		#------------------------------------
+		#      Response Body Block
+		#------------------------------------
 		body = res.block( 'Bo' )
-		ref_data = body.read_short_string( ) # ref_data
+		ref_data = body.read_varstr( ) # ref_data
 
-		value = body.read_int64() # value
-		scale = body.read_int16() # scale
-		balance_asofepoch = body.read_int64();
+		value = body.read_long() # value
+		scale = body.read_int() # scale
+		balance_asofepoch = body.read_ulong();
 
 		balance = value * math.pow(10, scale)
 		balance_asofdate = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(balance_asofepoch))
@@ -105,81 +110,117 @@ class RmoteCall:
 	def history(self):
 		'''Returns transaction history'''
 
+		#------------------------------------
+		#      Request Body Block
+		#------------------------------------
+		out_bo = pcos.create_output_block( 'Bo' )
+		# MAT
+		out_bo.write_varstr( binascii.unhexlify( self.args['mat'] ) )
+		# ref-data
+		out_bo.write_varstr( '' )
+		# search keywords
+		out_bo.write_varstr( '' )
+
+		# page number and page-size
+		out_bo.write_uint( int(self.args['page']) )
+		out_bo.write_uint( int(self.args['size']) )
+
+		#------------------------------------
+		#    History Query Message
+		#------------------------------------
 		req = pcos.Doc( name="Hq" )
-		bo = pcos.Block( 'Bo', 512, 'O' )
-		bo.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
-		bo.write_short_string( '', max=20 ) # ref-data
-		bo.write_short_string( '', max=127 ) # keywords
-		bo.write_int16( int(self.args['page']) )
-		bo.write_int16( int(self.args['size']) )
-		req.add( bo )
+		req.add( out_bo )
 
 		res = self.send( req )
 
 		assert res.message_id == 'Hr'
 
-		# jump to body
+		#------------------------------------
+		#      Response Body Block
+		#------------------------------------
 		body = res.block( 'Bo' )
-
-		ref_data = body.read_short_string() # ref-data
+		# ref-data
+		ref_data = body.read_varstr()
 
 		# read number of transactions
-		count = body.read_int16()
+		count = body.read_uint()
 		for i in xrange(1, count+1):
-			tx_id = binascii.hexlify( body.read_short_string() ) # transaction ID
-			counterparty = binascii.hexlify( body.read_short_string() ) # counterparty ID
-			epoch_tx_time = body.read_int64() # transaction time of day
+			# transaction ID
+			tx_id = binascii.hexlify( body.read_varstr() )
+
+			# counterparty ID
+			counterparty = binascii.hexlify( body.read_varstr() )
+
+			# transaction time of day
+			epoch_tx_time = body.read_ulong()
 			tx_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(epoch_tx_time))
-			tx_type = body.read_fixed_string(1) # transaction type
-			tx_context = body.read_fixed_string(1) # transaction context: (P)ayment or (T)ransfer
+
+			# transaction type
+			tx_type = body.read_fixstr(1)
+
+			# transaction context: (P)ayment or (T)ransfer
+			tx_context = body.read_fixstr(1)
 
 			#amount
-			value = body.read_int64() # value
-			scale = body.read_int16() # scale
+			value = body.read_long() # value
+			scale = body.read_int() # scale
 			amount = value * math.pow(10, scale)
+
 			# tax
-			if bool(body.read_byte()):
-				value = body.read_int64() # value
-				scale = body.read_int16() # scale
+			if body.read_bool():
+				value = body.read_long() # value
+				scale = body.read_int() # scale
 				tax = value * math.pow(10, scale)
 			else:
 				tax = 'not provided'
+
 			#tip
-			if bool(body.read_byte()):
-				value = body.read_int64() # value
-				scale = body.read_int16() # scale
+			if body.read_bool():
+				value = body.read_long() # value
+				scale = body.read_int() # scale
 				tip = value * math.pow(10, scale)
 			else:
 				tip = 'not provided'
-			
-			currency = body.read_fixed_string(3) # currency
-			merchant_name = body.read_short_string() # merchant name
-			recipient = body.read_short_string() # PTA recipient
-			ref_data = binascii.hexlify( body.read_short_string() ) # ref_data
-			invoice = body.read_short_string() # invoice
-			note = body.read_short_string() # note
+
+			# currency
+			currency = body.read_fixstr(3)
+
+			# merchant name
+			merchant_name = body.read_varstr()
+
+			# PTA recipient
+			recipient = body.read_varstr()
+
+			# ref_data
+			ref_data = binascii.hexlify( body.read_varstr() )
+
+			# invoice
+			invoice = body.read_varstr()
+
+			# note
+			note = body.read_varstr()
 
 			# address of the POS station
-			if bool(body.read_byte()):
-				street = body.read_short_string()
-				city = body.read_short_string()
-				state = body.read_short_string()
-				zipc = body.read_short_string()
-				country = body.read_fixed_string(2)
+			if body.read_bool():
+				street = body.read_varstr()
+				city = body.read_varstr()
+				state = body.read_varstr()
+				zipc = body.read_varstr()
+				country = body.read_fixstr(2)
 				address = '%s, %s, %s %s, %s' % (street, city, state, zipc, country)
 			else:
 				address = 'not provided'
 
 			# contact info at the place of transaction origination
-			if bool(body.read_byte()):
-				phone = body.read_short_string()
-				email = body.read_short_string()
+			if body.read_bool():
+				phone = body.read_varstr()
+				email = body.read_varstr()
 				contact = 'phone: %s, email: %s' % (phone, email)
 			else:
 				contact = 'not provided'
 
 			# geo-location of the place of transaction origination
-			if bool(body.read_byte()):
+			if body.read_bool():
 				latitude = body.read_double()
 				longitude = body.read_double()
 				geolocation = '%s, %s' % (latitude, longitude)
@@ -202,7 +243,7 @@ class RmoteCall:
 		# create preauth block
 		preauth = pcos.Block( 'Pr', 512, 'O' )
 		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 ) # mat
-		preauth.write_short_string( '', max=20 ) # user data
+		preauth.write_varstr( '', max=20 ) # user data
 		# preauth amount
 		(charge_int, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
 		preauth.write_int64( charge_int ) # value
@@ -229,7 +270,7 @@ class RmoteCall:
 		# create transfer-request block
 		r1 = pcos.Block( 'R1', 1024, 'O' )
 		r1.write_fixed_string( binascii.unhexlify( self.args['receiver_mat'] ), size=20 ) # mat
-		r1.write_short_string( 'transfer-ref', max=127 ) # ref_data
+		r1.write_varstr( 'transfer-ref', max=127 ) # ref_data
 		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
 
 		# transfer amount
@@ -239,7 +280,7 @@ class RmoteCall:
 		r1.write_int16( charge_scale ) # scale
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
-		r1.write_short_string( 'John paid his dept', max=127 ) # note
+		r1.write_varstr( 'John paid his dept', max=127 ) # note
 
 		# no geo-location available
 		r1.write_byte(0)
@@ -264,7 +305,7 @@ class RmoteCall:
 		# create payment-request block
 		r1 = pcos.Block( 'R1', 1024, 'O' )
 		r1.write_fixed_string( binascii.unhexlify( self.args['merchant_mat'] ), size=20 ) # mat
-		r1.write_short_string( 'charge-ref', max=127 ) # ref_data
+		r1.write_varstr( 'charge-ref', max=127 ) # ref_data
 		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
 
 		# charge amount
@@ -285,8 +326,8 @@ class RmoteCall:
 		r1.write_int16( tip_scale ) # scale
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
-		r1.write_short_string( 'inv-123', max=24 ) # invoice ID
-		r1.write_short_string( 'happy meal', max=127 ) # note
+		r1.write_varstr( 'inv-123', max=24 ) # invoice ID
+		r1.write_varstr( 'happy meal', max=127 ) # note
 		r1.write_int16(0) # list of purchased goods
 
 		# no geo-location available
