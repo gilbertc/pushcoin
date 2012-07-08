@@ -297,7 +297,7 @@ class Block:
 			self._offset += 1
 			return octet
 
-		raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of input bytes to read from - accessing data out of bounds' )
+		raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of input bytes to read from - incomplete or corrupted message' )
 
 
 	def read_bytes( self, size ):
@@ -308,7 +308,7 @@ class Block:
 			self._offset += size
 			return dat
 
-		raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of input bytes to read from - accessing data out of bounds' )
+		raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of input bytes to read from - incomplete or corrupted message' )
 
 
 	def read_char( self ):

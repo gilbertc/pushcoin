@@ -234,26 +234,40 @@ class RmoteCall:
 
 	def preauth(self):
 		'''Generates the PTA and submits to server for validation.'''
-		pta_encoded = self.payment()
+		apta_bytes = self.payment()
 
-		# package PTA into a block
-		pta = pcos.Block( 'Pa', 512, 'O' )
-		pta.write_fixed_string(pta_encoded, size=len(pta_encoded))
+		#------------------------------------
+		#      Armored-PTA Block
+		#------------------------------------
+		apta_block = pcos.create_output_block( 'Pa' )
 
-		# create preauth block
-		preauth = pcos.Block( 'Pr', 512, 'O' )
-		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 ) # mat
-		preauth.write_varstr( '', max=20 ) # user data
+		# we use "fixstr" becase we don't want size-prefix
+		apta_block.write_fixstr(apta_bytes, len(apta_bytes))
+
+		#------------------------------------
+		#      Preauthorizaton Block
+		#------------------------------------
+		preauth_block = pcos.create_output_block( 'Pr' ) 
+		# mat
+		preauth_block.write_varstr( binascii.unhexlify( self.args['preauth_mat'] ) )
+
+		# ref data
+		preauth_block.write_varstr( '' )
+
 		# preauth amount
 		(charge_int, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
-		preauth.write_int64( charge_int ) # value
-		preauth.write_int16( charge_scale ) # scale
-		preauth.write_fixed_string( "USD", size=3 ) # currency
+		preauth_block.write_long( charge_int ) # value
+		preauth_block.write_int( charge_scale ) # scale
 
-		# package everything and ship out
+		# currency
+		preauth_block.write_fixstr( "USD", size=3 )
+
+		#------------------------------------
+		#      Preauth Message
+		#------------------------------------
 		req = pcos.Doc( name="Pr" )
-		req.add( pta )
-		req.add( preauth )
+		req.add( preauth_block )
+		req.add( apta_block )
 
 		res = self.send( req )
 		self.expect_success( res )
@@ -370,10 +384,15 @@ class RmoteCall:
 		p1.write_fixstr( "USD", size=3 )
 
 		# recipient
-		p1.write_varstr("")
+		p1.write_varstr( "" )
 
 		# ref-data
 		p1.write_varstr( "" )
+
+		# note
+		p1.write_varstr( "" )
+
+		print (" %s bytes => Payment Block" % p1.size())
 
 		#------------------------------------
 		#        PTA Signature Block
@@ -390,6 +409,7 @@ class RmoteCall:
 
 		# store the signature of the Payment Block
 		s1.write_varstr( signature )
+		print (" %s bytes => Signature Block" % s1.size())
 
 		#------------------------------------
 		# PTA Message
@@ -410,7 +430,8 @@ class RmoteCall:
 		encrypter = RSA.load_pub_key_bio( txn_pub_key )
 		# RSA Encryption Scheme w/ Optimal Asymmetric Encryption Padding
 		input_data = pta.as_bytearray()
-		print ("input size %s" % len(input_data))
+		print (" %s bytes => header+meta" % (len(input_data) - s1.size() - p1.size()))
+		print ("-------------\n %s bytes => Total PTA\n---------" % len(input_data))
 		encrypted = encrypter.public_encrypt( pta.as_bytearray(), RSA.pkcs1_padding )
 		a1.write_fixstr( encrypted, size=len(encrypted) )
 
