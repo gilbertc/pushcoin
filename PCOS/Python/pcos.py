@@ -270,7 +270,7 @@ class Block:
 	def as_bytearray( self ):
 		'''Returns a Python string from the character array.'''
 		if self.mode == 'I':
-			return self.doc.data[self.meta.start : self.meta.start + self.meta.length]
+			return self.doc.data[self._start : self._start + self._length]
 		else:
 			return self.data
 
