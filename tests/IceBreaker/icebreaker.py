@@ -8,7 +8,8 @@ from optparse import OptionParser,OptionError
 from pyparsing import *
 from M2Crypto import DSA, BIO, RSA
 
-PC_DEFAULT_API_URL="https://api.pc-dev.com/pcos/"
+# PC_DEFAULT_API_URL="https://api.pc-dev.com/pcos/"
+PC_DEFAULT_API_URL="https://199.192.203.73/pcos/"
 
 def load_qrcode():
 	try:
@@ -275,34 +276,50 @@ class RmoteCall:
 
 	def transfer(self):
 		'''Sends a Transfer Request'''
-		pta_encoded = self.payment()
 
-		# package PTA into a block
-		pta = pcos.Block( 'Pa', 512, 'O' )
-		pta.write_fixed_string(pta_encoded, size=len(pta_encoded))
+		apta_bytes = self.payment()
 
-		# create transfer-request block
-		r1 = pcos.Block( 'R1', 1024, 'O' )
-		r1.write_fixed_string( binascii.unhexlify( self.args['receiver_mat'] ), size=20 ) # mat
-		r1.write_varstr( 'transfer-ref', max=127 ) # ref_data
-		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
+		#------------------------------------
+		#      Armored-PTA Block
+		#------------------------------------
+		apta_block = pcos.create_output_block( 'Pa' )
 
-		# transfer amount
-		(charge_value, charge_scale) = decimal_to_parts(Decimal(self.args['transfer']))
+		# we use "fixstr" becase we don't want size-prefix
+		apta_block.write_fixstr(apta_bytes, len(apta_bytes))
 
-		r1.write_int64( charge_value ) # value
-		r1.write_int16( charge_scale ) # scale
+		#------------------------------------
+		#      Transfer Request Block
+		#------------------------------------
+		trnfs_req_block = pcos.create_output_block( 'R1' ) 
 
-		r1.write_fixed_string( "USD", size=3 ) # currency
-		r1.write_varstr( 'John paid his dept', max=127 ) # note
+		# mat
+		trnfs_req_block.write_varstr( binascii.unhexlify( self.args['receiver_mat'] ) )
+
+		# ref data
+		trnfs_req_block.write_varstr( '' )
+
+		# create-time
+		trnfs_req_block.write_ulong( long( time.time() + 0.5 ) )
+
+		(charge_int, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
+		trnfs_req_block.write_long( charge_int ) # value
+		trnfs_req_block.write_int( charge_scale ) # scale
+
+		# currency
+		trnfs_req_block.write_fixstr( "USD", size=3 )
+ 
+		# note
+		trnfs_req_block.write_varstr( 'John paid his dept' )
 
 		# no geo-location available
-		r1.write_byte(0)
+		trnfs_req_block.write_bool(False)
 
-		# package everything and ship out
+		#------------------------------------
+		#      Transfer Message
+		#------------------------------------
 		req = pcos.Doc( name="Tt" )
-		req.add( pta )
-		req.add( r1 )
+		req.add( trnfs_req_block )
+		req.add( apta_block )
 
 		res = self.send( req )
 		self.expect_success( res )
