@@ -327,47 +327,67 @@ class RmoteCall:
 
 	def charge(self):
 		'''Sends a Payment Request'''
-		pta_encoded = self.payment()
+		apta_bytes = self.payment()
 
-		# package PTA into a block
-		pta = pcos.Block( 'Pa', 512, 'O' )
-		pta.write_fixed_string(pta_encoded, size=len(pta_encoded))
+		#------------------------------------
+		#      Armored-PTA Block
+		#------------------------------------
+		apta_block = pcos.create_output_block( 'Pa' )
 
-		# create payment-request block
-		r1 = pcos.Block( 'R1', 1024, 'O' )
-		r1.write_fixed_string( binascii.unhexlify( self.args['merchant_mat'] ), size=20 ) # mat
-		r1.write_varstr( 'charge-ref', max=127 ) # ref_data
-		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
+		# we use "fixstr" becase we don't want size-prefix
+		apta_block.write_fixstr(apta_bytes, len(apta_bytes))
 
-		# charge amount
-		(charge_value, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
-		r1.write_int64( charge_value ) # value
-		r1.write_int16( charge_scale ) # scale
+		#------------------------------------
+		#      Payment Request Block
+		#------------------------------------
+		paymnt_req_block = pcos.create_output_block( 'R1' ) 
+
+		# mat
+		paymnt_req_block.write_varstr( binascii.unhexlify( self.args['receiver_mat'] ) )
+
+		# ref data
+		paymnt_req_block.write_varstr( '' )
+
+		# create-time
+		paymnt_req_block.write_ulong( long( time.time() + 0.5 ) )
+
+		(charge_int, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
+		paymnt_req_block.write_long( charge_int ) # value
+		paymnt_req_block.write_int( charge_scale ) # scale
 
 		# tax
-		r1.write_byte(1) # optional indicator
+		paymnt_req_block.write_bool(True) # optional indicator
 		(tax_value, tax_scale) = decimal_to_parts(Decimal(self.args['tax']))
-		r1.write_int64( tax_value ) # value
-		r1.write_int16( tax_scale ) # scale
+		paymnt_req_block.write_long( tax_value ) # value
+		paymnt_req_block.write_int( tax_scale ) # scale
 
 		# tip
-		r1.write_byte(1) # optional indicator
+		paymnt_req_block.write_bool(True) # optional indicator
 		(tip_value, tip_scale) = decimal_to_parts(Decimal(self.args['tip']))
-		r1.write_int64( tip_value ) # value
-		r1.write_int16( tip_scale ) # scale
+		paymnt_req_block.write_long( tip_value ) # value
+		paymnt_req_block.write_int( tip_scale ) # scale
 
-		r1.write_fixed_string( "USD", size=3 ) # currency
-		r1.write_varstr( 'inv-123', max=24 ) # invoice ID
-		r1.write_varstr( 'happy meal', max=127 ) # note
-		r1.write_int16(0) # list of purchased goods
+		# currency
+		paymnt_req_block.write_fixstr( "USD", size=3 )
+
+		# invoice ID
+		paymnt_req_block.write_varstr( 'inv-123' )
+
+		# note
+		paymnt_req_block.write_varstr( 'happy meal' )
 
 		# no geo-location available
-		r1.write_byte(0)
+		paymnt_req_block.write_bool(False)
 
-		# package everything and ship out
+		# list of purchased goods
+		paymnt_req_block.write_int(0)
+
+		#------------------------------------
+		#      Payment Request Message
+		#------------------------------------
 		req = pcos.Doc( name="Pt" )
-		req.add( pta )
-		req.add( r1 )
+		req.add( paymnt_req_block )
+		req.add( apta_block )
 
 		res = self.send( req )
 		self.expect_success( res )
