@@ -26,8 +26,8 @@ any of the enumerated message types, depending on the outcome of processing.
 		suitable for user display.
 
 	{
-		"message": "error" 
-		"error_code": number
+		"msg": "error" 
+		"errc": number
 		"reason": string
 		"ref_data": string, optional
 		"transaction_id": string, optional
@@ -40,7 +40,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Message: Success
 
 	{
-		"message": "success" 
+		"msg": "success" 
 		"ref_data": string, optional
 		"transaction_id": string, optional
 	}
@@ -52,9 +52,8 @@ any of the enumerated message types, depending on the outcome of processing.
 	Message: Login
 
 	{
-		"username": string
-		"password": string
-		"ref_data": string, optional
+		"user": string
+		"pass": string
 		"challenge_response":
 			{
 				"challenge": string	
