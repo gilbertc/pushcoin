@@ -3,12 +3,7 @@
 Notes
 =====
 
-The API consits of a series of Message and Request definitions in the 
-following format:
-
-[
-	<definition-here>
- --END] 
+The API consits of a series of Message and Request definitions.
 
 A Request consists of an Input Message and an Output Message. A Message data
 is encoded according to JSON.
@@ -17,77 +12,120 @@ The Request Message has an associated URL where the request should be sent to.
 The vertical bars "|" in the Request's Output indicate that the result can be 
 any of the enumerated message types, depending on the outcome of processing.
 
+#---------------------------------------------------------------------------#
+	Message: error
 
-[
-	Message: Error
-
-	Note:
+	Description:
 		Generic error message carrying the error code and the error string 
 		suitable for user display.
 
 	{
-		"msg": "error" 
-		"errc": number
-		"reason": string
-		"ref_data": string, optional
-		"transaction_id": string, optional
+		msg: "error"
+		errc: number
+		reason: string
+		ref: string, optional
+		transaction_id: string, optional
 	}
 
---END]
 
+#---------------------------------------------------------------------------#
+	Message: success
 
-[
-	Message: Success
+	Description:
+		Generic success message, indicating last call finished OK.
 
 	{
-		"msg": "success" 
-		"ref_data": string, optional
-		"transaction_id": string, optional
+		msg: "success" 
+		ref: string, optional
+		transaction_id: string, optional
 	}
 
---END]
+#---------------------------------------------------------------------------#
+	Message: login
 
-
-[
-	Message: Login
+	Description:
+		Login credentials
 
 	{
-		"user": string
-		"pass": string
-		"challenge_response":
+		user: string
+		password: string
+		challenge_response:
 			{
-				"challenge": string	
-				"response": string
+				challenge: string	
+				response: string
 			}, optional
 	}
 
---END]
+#---------------------------------------------------------------------------#
+	Message: challenge
 
-
-[
-	Message: Challenge
-
-	Note:
-		Indicates that the server requires human-presence verification by the client.
-		Please follow the instructions at 
+	Description:
+		Indicates that the server requires human-presence verification by the 
+		client.
+		Please follow instructions at 
 		https://developers.google.com/recaptcha/docs/display
-		for information on how to integrate the reCAPTCHA functionality in your page.
+		for information on how to integrate the reCAPTCHA functionality in your 
+		page.
 
 	{
-		"captcha-key": string
+		captcha_key: string
 	}
 	
---END]
+#---------------------------------------------------------------------------#
+	Request: json/user/account/login/
 
+	Description:
+		Upon successful login the server returns auth token, stored in session 
+		cookie.  On multiple failed attempts to login, server will require a
+		CAPTCHA challenge.
 
-[Request: Login
+	Input: login
+	Output: success | error | challenge
 
-Note: 
-	Upon successful login the server returns authentication token, stored in 
-	session cookie.  On multiple failed attempts to login, server will require a
-	CAPTCHA challenge.
+#---------------------------------------------------------------------------#
+	Request: json/user/account/signup/
 
-Input: Login
-Output: Success | Error | Challenge
+	Description:
+		Registers a new user account and logs user in on success 
+		(sets auth token).
 
---END]
+	Input:
+		{
+			email: string
+			password: string, optional
+			first_name: string
+			last_name: string
+			mobile_phone: string, optional
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/user/device/list/
+
+	Description:
+		Registers a new user account and logs user in on success 
+		(sets auth token).
+
+	Input:
+		{
+			email: string
+			password: string, optional
+			first_name: string
+			last_name: string
+			mobile_phone: string, optional
+		}
+
+	Output: error | 
+		{
+			msg: "device_list"
+			devices: array-of
+				{
+					id: number
+					desc: string
+					reg_date: date
+					active: bool
+					last_used: date, optional
+					reg_id: string, optional
+				}
+		}
