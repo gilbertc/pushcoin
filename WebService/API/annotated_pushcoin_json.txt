@@ -129,3 +129,43 @@ any of the enumerated message types, depending on the outcome of processing.
 					reg_id: string, optional
 				}
 		}
+
+#---------------------------------------------------------------------------#
+	Request: json/user/device/claim/
+
+	Description:
+		User cliams ownership of a (passive) device, such as a wristband.
+		
+	Input:
+		{
+			registration_id: string
+			description: string
+
+			# PIN is made of digits, can start with one or more zeros and
+			# must be minimum of three digits
+			passcode: digits
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/user/device/provision/
+
+	Description:
+		Provisions a new user deivce, such as an NFC Tag, preparing it for use
+		in PushCoin. 
+		
+		Note: The 'provision' request requires "provisioning" privilege thus 
+		is not available to regular users nor merchants. 
+
+	Input:
+		{
+			serial_number: string
+		}
+
+	Output: error | 
+		{
+			msg: "device_membership_certificate"
+			membership_id: string
+			registration_id: string
+		}
