@@ -41,22 +41,6 @@ any of the enumerated message types, depending on the outcome of processing.
 	}
 
 #---------------------------------------------------------------------------#
-	Message: login
-
-	Description:
-		Login credentials
-
-	{
-		user: string
-		password: string
-		challenge_response:
-			{
-				challenge: string	
-				response: string
-			}, optional
-	}
-
-#---------------------------------------------------------------------------#
 	Message: challenge
 
 	Description:
@@ -72,15 +56,34 @@ any of the enumerated message types, depending on the outcome of processing.
 	}
 	
 #---------------------------------------------------------------------------#
-	Request: json/user/account/login/
+	Request: json/account/login/
 
 	Description:
 		Upon successful login the server returns auth token, stored in session 
 		cookie.  On multiple failed attempts to login, server will require a
 		CAPTCHA challenge.
 
-	Input: login
+	Input:
+		{
+			user: string
+			password: string
+			challenge_response:
+				{
+					challenge: string	
+					response: string
+				}, optional
+		}
+
 	Output: success | error | challenge
+
+#---------------------------------------------------------------------------#
+	Request: json/account/logoff/
+
+	Description:
+		Logs off current user. Clears all session data.
+
+	Input: <empty>
+	Output: success
 
 #---------------------------------------------------------------------------#
 	Request: json/user/account/signup/
@@ -147,6 +150,39 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/user/device/reset-pin/
+
+	Description:
+		Sets new or changes existing device PIN. Typically used with
+		passive devices, such as wristbands.
+		
+	Input:
+		{
+			membership_id: string
+
+			# PIN is made of digits, can start with one or more zeros and
+			# must be minimum of three digits
+			passcode: digits
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/user/device/reset-description/
+
+	Description:
+		Sets new or changes existing device description.
+		
+	Input:
+		{
+			membership_id: string
+			description: string
+		}
+
+	Output: error | success
+
 
 #---------------------------------------------------------------------------#
 	Request: json/user/device/provision/
