@@ -140,7 +140,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Input:
 		{
 			email: string
-			password: string, optional
+			password: string
 			first_name: string
 			last_name: string
 			mobile_phone: string, optional
