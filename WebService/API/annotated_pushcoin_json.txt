@@ -86,6 +86,51 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success
 
 #---------------------------------------------------------------------------#
+	Request: json/account/change-password/
+
+	Description:
+		Updates password associated with a given account. The front-end must
+		validate the user has typed the new password correctly, for example 
+		by asking to type it twice.
+
+		The old_password has to match password currently on record.
+
+	Input:
+		{
+			old_password: string
+			new_password: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/change-person-name/
+
+	Description:
+		Updates first or last name associated with a given account.
+
+	Input:
+		{
+			first_name: string
+			last_name: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/balance/
+
+	Description:
+		Returns current account balance.
+
+	Input: <empty>
+	Output: error |
+		{
+			msg: "balance"
+			balance: number
+		}
+
+#---------------------------------------------------------------------------#
 	Request: json/user/account/signup/
 
 	Description:
