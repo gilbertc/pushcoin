@@ -131,6 +131,25 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
+	Request: json/account/summary/
+
+	Description:
+		Returns summary account information.
+
+	Input: <empty>
+
+	Output: error | 
+		{
+			msg: "summary",
+			account_id: number, 
+			email: string,
+			first_name: string, 
+			last_name: string, 
+			"balance": decimal, 
+			type: "user" | "merchant"
+		}
+
+#---------------------------------------------------------------------------#
 	Request: json/user/account/signup/
 
 	Description:
