@@ -168,6 +168,35 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
+	Request: json/merchant/account/signup/
+
+	Description:
+		Registers a new merchant account and logs merchant in on success 
+		(sets auth token).
+
+	Input:
+		{
+			email: string
+			password: string
+			first_name: string
+			last_name: string
+
+			business_name: string
+			phone: string
+			# employer indetification number or Federal TAX ID
+			gov_id: string
+			website: string, optional
+
+			# business main office address (headquarters)
+			street: string
+			city: string
+			state: string
+			zip: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
 	Request: json/device/provision/
 
 	Description:
