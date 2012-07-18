@@ -145,7 +145,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			email: string,
 			first_name: string, 
 			last_name: string, 
-			"balance": decimal, 
+			"balance": number, 
 			type: "user" | "merchant"
 		}
 
@@ -168,88 +168,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
-	Request: json/user/device/list/
-
-	Description:
-		Registers a new user account and logs user in on success 
-		(sets auth token).
-
-	Input:
-		{
-			email: string
-			password: string, optional
-			first_name: string
-			last_name: string
-			mobile_phone: string, optional
-		}
-
-	Output: error | 
-		{
-			msg: "device_list"
-			devices: array-of
-				{
-					id: number
-					desc: string
-					reg_date: date
-					active: bool
-					last_used: date, optional
-					reg_id: string, optional
-				}
-		}
-
-#---------------------------------------------------------------------------#
-	Request: json/user/device/claim/
-
-	Description:
-		User cliams ownership of a (passive) device, such as a wristband.
-		
-	Input:
-		{
-			registration_id: string
-			description: string
-
-			# PIN is made of digits, can start with one or more zeros and
-			# must be minimum of three digits
-			passcode: digits
-		}
-
-	Output: error | success
-
-#---------------------------------------------------------------------------#
-	Request: json/user/device/reset-pin/
-
-	Description:
-		Sets new or changes existing device PIN. Typically used with
-		passive devices, such as wristbands.
-		
-	Input:
-		{
-			membership_id: string
-
-			# PIN is made of digits, can start with one or more zeros and
-			# must be minimum of three digits
-			passcode: digits
-		}
-
-	Output: error | success
-
-#---------------------------------------------------------------------------#
-	Request: json/user/device/reset-description/
-
-	Description:
-		Sets new or changes existing device description.
-		
-	Input:
-		{
-			membership_id: string
-			description: string
-		}
-
-	Output: error | success
-
-
-#---------------------------------------------------------------------------#
-	Request: json/user/device/provision/
+	Request: json/device/provision/
 
 	Description:
 		Provisions a new user deivce, such as an NFC Tag, preparing it for use
@@ -269,3 +188,80 @@ any of the enumerated message types, depending on the outcome of processing.
 			membership_id: string
 			registration_id: string
 		}
+
+#---------------------------------------------------------------------------#
+	Request: json/device/claim/
+
+	Description:
+		User cliams ownership of a (passive) device, such as a wristband.
+		
+	Input:
+		{
+			registration_id: string
+			description: string
+
+			# PIN is made of digits, can start with one or more zeros and
+			# must be minimum of three digits
+			passcode: digits
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/device/list/
+
+	Description:
+		Returns list of devices belonging to a given account.
+
+	Input: <empty>
+
+	Output: error | 
+		{
+			msg: "device_list"
+			devices: array-of
+				{
+					membership_id: string
+					registered: date
+					serial_number: string, optional
+					status: string
+					email: string, optional
+					location_id: number, optional
+					description: string, optional
+					last_used: date, optional
+					registration_id: string, optional
+					claimed: date, optional
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/device/reset-pin/
+
+	Description:
+		Sets new or changes existing device PIN. Typically used with
+		passive devices, such as wristbands.
+		
+	Input:
+		{
+			membership_id: string
+
+			# PIN is made of digits, can start with one or more zeros and
+			# must be minimum of three digits
+			passcode: digits
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/device/reset-description/
+
+	Description:
+		Sets new or changes existing device description.
+		
+	Input:
+		{
+			membership_id: string
+			description: string
+		}
+
+	Output: error | success
+
