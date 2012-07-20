@@ -1,5 +1,5 @@
-This file enumerates error codes which can be returned along 
-with the error message.
+// This file enumerates error codes which can be returned along 
+// with the error message.
 
 ERR_INTERNAL_ERROR = 1000
 ERR_BAD_REQUEST = 1001
