@@ -8,8 +8,7 @@ from optparse import OptionParser,OptionError
 from pyparsing import *
 from M2Crypto import DSA, BIO, RSA
 
-# PC_DEFAULT_API_URL="https://api.pc-dev.com/pcos/"
-PC_DEFAULT_API_URL="https://199.192.203.73/pcos/"
+PC_DEFAULT_API_URL="https://api.pc-dev.com/pcos/"
 
 def load_qrcode():
 	try:
