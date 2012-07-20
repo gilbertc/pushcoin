@@ -350,11 +350,11 @@ any of the enumerated message types, depending on the outcome of processing.
 					occurred: date
 					buss_phone: phone
 					trx_type: "debit" | "credit"
-					amount: number
-					tip: number
-					tax: number
+					amount: string
+					tip: string
+					tax: string
 					note: string
-					buss_email: null
+					buss_email: string
 					buss_zip: string
 					buss_street: string
 					buss_country: string
