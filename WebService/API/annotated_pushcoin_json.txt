@@ -347,7 +347,7 @@ any of the enumerated message types, depending on the outcome of processing.
 					device_name: string
 					buss_state: string
 					invoice: string
-					occured: date
+					occurred: date
 					buss_phone: phone
 					trx_type: "debit" | "credit"
 					amount: number
