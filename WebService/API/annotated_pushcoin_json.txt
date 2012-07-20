@@ -77,13 +77,26 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error | challenge
 
 #---------------------------------------------------------------------------#
-	Request: json/account/logoff/
+	Request: json/account/logout/
 
 	Description:
 		Logs off current user. Clears all session data.
 
 	Input: <empty>
 	Output: success
+
+#---------------------------------------------------------------------------#
+	Request: json/account/check-password/
+
+	Description:
+		Verifies if provided password is sufficiently complex.
+
+	Input:
+		{
+			password: string
+		}
+
+	Output: success | error
 
 #---------------------------------------------------------------------------#
 	Request: json/account/change-password/
@@ -145,7 +158,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			email: string,
 			first_name: string, 
 			last_name: string, 
-			"balance": number, 
+			balance: number, 
 			type: "user" | "merchant"
 		}
 
@@ -195,6 +208,24 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/device/add-smart/
+
+	Description:
+		Registers a smart deivce, such as a tablet or phone, with the account.
+		
+	Input:
+		{
+			description: string
+		}
+
+	Output: error | 
+		{
+			msg: "device_membership_certificate"
+			membership_id: string
+			registration_id: string
+		}
 
 #---------------------------------------------------------------------------#
 	Request: json/device/provision/
@@ -294,3 +325,44 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | success
 
+#---------------------------------------------------------------------------#
+	Request: json/transaction/history/
+
+	Description:
+		Retrieves transaction history for the account.
+		
+	Input:
+		{
+			page_num: number (zero-based)
+			page_size: number
+		}
+
+	Output: error | 
+		{
+			msg: "history"
+			items: array-of
+				{
+					currency: string
+					membership_id: string
+					device_name: string
+					buss_state: string
+					invoice: string
+					occured: date
+					buss_phone: phone
+					trx_type: "debit" | "credit"
+					amount: number
+					tip: number
+					tax: number
+					note: string
+					buss_email: null
+					buss_zip: string
+					buss_street: string
+					buss_country: string
+					buss_name: string
+					trx_ctxt: "payment" | "transfer"
+					buss_city: string
+					recipient: string
+					trx_id: string
+					latitude: number
+					longitude: number
+			}
