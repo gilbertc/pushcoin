@@ -324,17 +324,39 @@ class RmoteCall:
 		self.expect_success( res )
 
 
-	def charge(self):
-		'''Sends a Payment Request'''
-		apta_bytes = self.payment()
+	def charge_key(self):
+		'''Sends a Payment Request with PTK'''
+		ptk_bytes = self.payment_key()
 
 		#------------------------------------
-		#      Armored-PTA Block
+		#      Payment Block
 		#------------------------------------
-		apta_block = pcos.create_output_block( 'Pa' )
+		payment_block = pcos.create_output_block( 'Pa' )
 
 		# we use "fixstr" becase we don't want size-prefix
-		apta_block.write_fixstr(apta_bytes, len(apta_bytes))
+		payment_block.write_fixstr(ptk_bytes, len(ptk_bytes))
+
+		#------------------------------------
+		#      Payment Request Block
+		#------------------------------------
+		self.charge( self.payment_key() )
+
+
+	def charge_pta(self):
+		'''Sends a Payment Request with PTA'''
+		
+
+	def charge(self, payment_bytes):
+		'''Sends a Payment Request with PTA'''
+		payment_bytes = self.payment()
+
+		#------------------------------------
+		#      Payment Block
+		#------------------------------------
+		payment_block = pcos.create_output_block( 'Pa' )
+
+		# we use "fixstr" becase we don't want size-prefix
+		payment_block.write_fixstr(payment_bytes, len(payment_bytes))
 
 		#------------------------------------
 		#      Payment Request Block
@@ -382,18 +404,104 @@ class RmoteCall:
 		paymnt_req_block.write_int(0)
 
 		#------------------------------------
+		#   Payment Request Signature Block
+		#------------------------------------
+
+		paymnt_req_signature_block = pcos.create_output_block( 'S1' )
+
+		# checksum Payment Request Block
+		digest = hashlib.sha1(paymnt_req_block.as_bytearray()).digest()
+		
+		# sign the checksum
+		dsa_priv_key = BIO.MemoryBuffer( TEST_DSA_KEY_PRV_PEM )
+		signer = DSA.load_key_bio( dsa_priv_key )
+		signature = signer.sign_asn1( digest )
+
+		# store the signature of the Payment Block
+		paymnt_req_signature_block.write_varstr( signature )
+
+		#------------------------------------
 		#      Payment Request Message
 		#------------------------------------
 		req = pcos.Doc( name="Pt" )
 		req.add( paymnt_req_block )
-		req.add( apta_block )
+		req.add( paymnt_req_signature_block )
+		req.add( payment_block )
 
 		res = self.send( req )
 		self.expect_success( res )
 
 
+	def payment_key(self):
+		'''Generates the Payment Transaction Key, or PTK. It does not communicate with the server.'''
+
+		#------------------------------------
+		#        PTK Key Block
+		#------------------------------------
+
+		k1 = pcos.create_output_block( 'K1' )
+		# membership ID
+		membership_id = self.args['membership_id'] 
+		if len( membership_id ) != 40:
+			raise RuntimeError("membership_id must be 40-characters long" % self.cmd)
+		k1.write_varstr( binascii.unhexlify( membership_id ) )
+
+		# passcode
+		k1.write_varstr( self.args['passcode'] )
+
+		# key create time and expiry
+		now = long( time.time() + 0.5 )
+
+		# utc_ctime
+		k1.write_ulong( now ) # key create-time
+
+		# transaction footprint queue
+		footprint = binascii.unhexlify(self.args['footprint'])
+		# write transaction queue
+		for i in xrange(0,10):
+			k1.write_fixstr( footprint, len(footprint) )
+
+		# counter
+		k1.write_uint( 0 ) 
+
+		# source_id (aka serial number)
+		k1.write_varstr( binascii.unhexlify(self.args['serial_number']) )
+
+		print (" %s bytes => Key Block" % k1.size())
+
+		#------------------------------------
+		#        PTK Checksum Block
+		#------------------------------------
+		c1 = pcos.create_output_block( 'C1' )
+
+		# checksum Key Block
+		digest = hashlib.sha1(k1.as_bytearray()).digest()
+
+		# store the signature of the Payment Block
+		c1.write_varstr( digest )
+		print (" %s bytes => Checksum Block" % c1.size())
+
+		#------------------------------------
+		# PTK Message
+		#  * Key Block
+		#  * Checksum Block
+		#------------------------------------
+		ptk = pcos.Doc( name="Pk" )
+		ptk.add( k1 )
+		ptk.add( c1 )
+		ptk_bytes = ptk.as_bytearray()
+
+		# write serialized data as binary and qr-code
+		payload_file = open('ptk.pcos', 'w')
+		payload_file.write( ptk_bytes )
+		payload_file.close()
+		print ("Saved PTK object to 'ptk.pcos'")
+
+		return ptk_bytes
+
+
 	def payment(self):
-		'''This command generates the Payment Transaction Authorization, or PTA. It does not communicate with the server, only produces a file.'''
+		'''Generates the Payment Transaction Authorization, or PTA. It does not communicate with the server.'''
 
 		#------------------------------------
 		#        PTA Payment Block
@@ -404,7 +512,7 @@ class RmoteCall:
 		mat = self.args['mat'] 
 		if len( mat ) != 40:
 			raise RuntimeError("MAT must be 40-characters long" % self.cmd)
-		p1.write_varstr( binascii.unhexlify( self.args['mat'] ) )
+		p1.write_varstr( binascii.unhexlify( mat ) )
 
 		# cert. create time and expiry
 		now = long( time.time() + 0.5 )
@@ -596,11 +704,13 @@ class RmoteCall:
 			"ping": self.ping,
 			"register": self.register,
 			"payment": self.payment,
+			"payment_key": self.payment_key,
 			"preauth": self.preauth,
 			"transaction_key": self.transaction_key,
 			"history": self.history,
 			"balance": self.balance,
-			"charge": self.charge,
+			"charge_pta": self.charge_pta,
+			"charge_key": self.charge_key,
 			"transfer": self.transfer,
 		}		
 

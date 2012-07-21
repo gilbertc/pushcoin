@@ -19,6 +19,9 @@ any of the enumerated message types, depending on the outcome of processing.
 		Generic error message carrying the error code and the error string 
 		suitable for user display.
 
+		List of error codes can be found in file 'error_codes.txt' distributed
+		in the same package as this file.
+
 	{
 		msg: "error"
 		errc: number
@@ -340,6 +343,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | 
 		{
 			msg: "history"
+			total_transactions: number
 			items: array-of
 				{
 					currency: string
