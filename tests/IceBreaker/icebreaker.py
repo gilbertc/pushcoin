@@ -326,30 +326,15 @@ class RmoteCall:
 
 	def charge_key(self):
 		'''Sends a Payment Request with PTK'''
-		ptk_bytes = self.payment_key()
-
-		#------------------------------------
-		#      Payment Block
-		#------------------------------------
-		payment_block = pcos.create_output_block( 'Pa' )
-
-		# we use "fixstr" becase we don't want size-prefix
-		payment_block.write_fixstr(ptk_bytes, len(ptk_bytes))
-
-		#------------------------------------
-		#      Payment Request Block
-		#------------------------------------
 		self.charge( self.payment_key() )
 
 
 	def charge_pta(self):
 		'''Sends a Payment Request with PTA'''
+		self.charge( self.payment_pta() )
 		
 
 	def charge(self, payment_bytes):
-		'''Sends a Payment Request with PTA'''
-		payment_bytes = self.payment()
-
 		#------------------------------------
 		#      Payment Block
 		#------------------------------------
@@ -500,7 +485,7 @@ class RmoteCall:
 		return ptk_bytes
 
 
-	def payment(self):
+	def payment_pta(self):
 		'''Generates the Payment Transaction Authorization, or PTA. It does not communicate with the server.'''
 
 		#------------------------------------
@@ -703,7 +688,7 @@ class RmoteCall:
 		self.lookup = {
 			"ping": self.ping,
 			"register": self.register,
-			"payment": self.payment,
+			"payment_pta": self.payment_pta,
 			"payment_key": self.payment_key,
 			"preauth": self.preauth,
 			"transaction_key": self.transaction_key,

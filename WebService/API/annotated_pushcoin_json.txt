@@ -134,6 +134,29 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
+	Request: json/merchant/account/change-info/
+
+	Description:
+		Updates business contact information.
+
+	Input:
+		{
+			business_name: string
+			phone: string
+			# employer identification number or Federal TAX ID
+			gov_id: string
+			website: string, optional
+
+			# business main office address (headquarters)
+			street: string
+			city: string
+			state: string
+			zip: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
 	Request: json/account/balance/
 
 	Description:
@@ -199,7 +222,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 			business_name: string
 			phone: string
-			# employer indetification number or Federal TAX ID
+			# employer identification number or Federal TAX ID
 			gov_id: string
 			website: string, optional
 
@@ -268,7 +291,11 @@ any of the enumerated message types, depending on the outcome of processing.
 			passcode: digits
 		}
 
-	Output: error | success
+	Output: error |
+		{
+			msg: "device_claimed"
+			membership_id: string
+		}
 
 #---------------------------------------------------------------------------#
 	Request: json/device/list/
@@ -287,6 +314,7 @@ any of the enumerated message types, depending on the outcome of processing.
 					registered: date
 					serial_number: string, optional
 					status: string
+					kind: "passive" | "smart"
 					email: string, optional
 					location_id: number, optional
 					description: string, optional
