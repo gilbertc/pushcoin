@@ -134,6 +134,30 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
+	Request: json/merchant/account/show-info/
+
+	Description:
+		Returns business contact information.
+
+	Input: <empty>
+
+	Output: error |
+		{
+			msg: "business_info"
+			business_name: string
+			phone: string
+			# employer identification number or Federal TAX ID
+			gov_id: string
+			website: string, optional
+
+			# business main office address (headquarters)
+			street: string
+			city: string
+			state: string
+			zip: string
+		}
+
+#---------------------------------------------------------------------------#
 	Request: json/merchant/account/change-info/
 
 	Description:
@@ -249,7 +273,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | 
 		{
 			msg: "device_membership_certificate"
-			membership_id: string
+			device_id: string
 			registration_id: string
 		}
 
@@ -271,7 +295,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | 
 		{
 			msg: "device_membership_certificate"
-			membership_id: string
+			device_id: string
 			registration_id: string
 		}
 
@@ -294,7 +318,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error |
 		{
 			msg: "device_claimed"
-			membership_id: string
+			device_id: string
 		}
 
 #---------------------------------------------------------------------------#
@@ -310,7 +334,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			msg: "device_list"
 			devices: array-of
 				{
-					membership_id: string
+					device_id: string
 					registered: date
 					serial_number: string, optional
 					status: string
@@ -333,7 +357,7 @@ any of the enumerated message types, depending on the outcome of processing.
 		
 	Input:
 		{
-			membership_id: string
+			device_id: string
 
 			# PIN is made of digits, can start with one or more zeros and
 			# must be minimum of three digits
@@ -350,7 +374,7 @@ any of the enumerated message types, depending on the outcome of processing.
 		
 	Input:
 		{
-			membership_id: string
+			device_id: string
 			description: string
 		}
 
@@ -375,7 +399,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			items: array-of
 				{
 					currency: string
-					membership_id: string
+					device_id: string
 					device_name: string
 					buss_state: string
 					invoice: string
