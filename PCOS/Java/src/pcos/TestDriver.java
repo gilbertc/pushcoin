@@ -90,12 +90,6 @@ public final class TestDriver
 	 */
 	public static void main( String[] args ) 
 	{
-		// expect filename
-		if (args.length < 1) {
-			System.err.println( "missing input file" );
-			System.exit(1);
-		}
-		
 		try 
 		{
 			byte[] input = testWriteDatatypes();

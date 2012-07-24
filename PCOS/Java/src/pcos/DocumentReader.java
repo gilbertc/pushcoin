@@ -45,16 +45,23 @@ public class DocumentReader implements InputDocument
 	}
 
 	@Override
+	public String getDocumentName()
+	{
+		return documentName_;
+	}
+
+	@Override
+	public long getBlockCount()
+	{
+		return blockCount_;
+	}
+
+	@Override
 	public Map<String, InputBlock> getBlocks() 
 	{
 		return Collections.unmodifiableMap(blocks_);
 	}
 
-	public String getDocumentName()
-	{
-		return documentName_;
-	}
-	
 	public DocumentReader(byte[] input) throws PcosError
 	{
 		InputBlock inblock = new BlockReader( input, 0, input.length, "Hd" );

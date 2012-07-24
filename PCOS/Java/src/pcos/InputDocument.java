@@ -23,6 +23,8 @@ import java.util.Map;
 public interface InputDocument 
 {
 	String getMagic();
+	String getDocumentName();
+	long getBlockCount();
 	Map<String, InputBlock> getBlocks();
 	InputBlock getBlock(String name);
 }
