@@ -32,6 +32,9 @@ MAX_BLOCK_META_LENGTH = 7
 MESSAGE_ID_LENGTH = 2
 BLOCK_ID_LENGTH = 2
 
+# PCOS object mime type
+PCOS_MIME_TYPE = 'application/pcos'
+
 # Minimum size of block enumartion segment
 MIN_BLOCK_ENUMARTION_SIZE = 1
 
@@ -46,8 +49,7 @@ PROTOCOL_MAGIC_LEN = 2
 # PCOS parser error codes
 ERR_INTERNAL_ERROR = 100
 ERR_MALFORMED_MESSAGE = 101
-ERR_INCOMPATIBLE_REQUEST = 102
-
+ERR_BAD_MAGIC = 102
 
 # Helper to copy from bytearray to ctypes buffer
 def _copy_bytearray_to_ctype_buffer(src, dst, count, dst_offset=0):
@@ -95,10 +97,9 @@ def _to_varint( val ):
 class PcosError( Exception ):
 	""" Basis for all exceptions thrown from the PCOS codec."""
 
-	def __init__(self, code, what = '', ref_data = ''):
+	def __init__(self, code, what = ''):
 		self.code = code
 		self.what = what
-		self.ref_data = ref_data
 
 	def __str__(self):
 		return repr("code=%s;what=%s" % (self.code, self. what) )
@@ -133,7 +134,7 @@ class Doc:
 
 			# check if magic matches our encoding tag
 			if self.magic != PROTOCOL_MAGIC:
-				raise PcosError( ERR_INCOMPATIBLE_REQUEST )
+				raise PcosError( ERR_BAD_MAGIC )
 
 			# message ID
 			self.message_id = payload.read_fixstr( MESSAGE_ID_LENGTH )
