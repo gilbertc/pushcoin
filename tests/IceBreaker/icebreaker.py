@@ -326,19 +326,19 @@ class RmoteCall:
 
 	def charge_key(self):
 		'''Sends a Payment Request with PTK'''
-		self.charge( self.payment_key() )
+		self.charge( 'Pk', self.payment_key() )
 
 
 	def charge_pta(self):
 		'''Sends a Payment Request with PTA'''
-		self.charge( self.payment_pta() )
+		self.charge( 'Pa', self.payment_pta() )
 		
 
-	def charge(self, payment_bytes):
+	def charge(self, payment_type, payment_bytes):
 		#------------------------------------
 		#      Payment Block
 		#------------------------------------
-		payment_block = pcos.create_output_block( 'Pa' )
+		payment_block = pcos.create_output_block( payment_type )
 
 		# we use "fixstr" becase we don't want size-prefix
 		payment_block.write_fixstr(payment_bytes, len(payment_bytes))
@@ -426,10 +426,8 @@ class RmoteCall:
 
 		k1 = pcos.create_output_block( 'K1' )
 		# membership ID
-		membership_id = self.args['membership_id'] 
-		if len( membership_id ) != 40:
-			raise RuntimeError("membership_id must be 40-characters long" % self.cmd)
-		k1.write_varstr( binascii.unhexlify( membership_id ) )
+		device_id = self.args['device_id'] 
+		k1.write_varstr( binascii.unhexlify( device_id ) )
 
 		# passcode
 		k1.write_varstr( self.args['passcode'] )
@@ -441,10 +439,12 @@ class RmoteCall:
 		k1.write_ulong( now ) # key create-time
 
 		# transaction footprint queue
+		k1.write_bool( True )
 		footprint = binascii.unhexlify(self.args['footprint'])
 		# write transaction queue
+		k1.write_uint( 10 )
 		for i in xrange(0,10):
-			k1.write_fixstr( footprint, len(footprint) )
+			k1.write_fixstr( footprint, 4 )
 
 		# counter
 		k1.write_uint( 0 ) 
