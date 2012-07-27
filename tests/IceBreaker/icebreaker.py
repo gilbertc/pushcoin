@@ -414,8 +414,27 @@ class RmoteCall:
 		req.add( payment_block )
 
 		res = self.send( req )
-		self.expect_success( res )
+		
+		# parse results
+		self.expect_message( res, 'Ap' )
 
+		# read balance
+		balance = res.block( 'Bo' )
+		ref_data = balance.read_varstr() # ref_data
+		transaction_id = balance.read_varstr() # tx-id
+		# exact amount given?
+		if balance.read_bool():
+			exact_balance = 'is'
+		else:
+			exact_balance = 'is greater than' 
+		# amount
+		value = balance.read_long() # value
+		scale = balance.read_int() # scale
+		balance_amount = value * math.pow(10, scale)
+		# time of last update
+		tm_epoch = balance.read_ulong();
+		balance_asofdate = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
+		log.info('Success (tx_id: %s). Balance %s $%s as of %s', base64.b32encode(transaction_id), exact_balance, balance_amount, balance_asofdate)
 
 	def payment_key(self):
 		'''Generates the Payment Transaction Key, or PTK. It does not communicate with the server.'''
@@ -708,6 +727,11 @@ class RmoteCall:
 			log.info('Success (tx_id: %s, ref_data: %s)', binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ))
 		else:
 			raise RuntimeError("'%s' not a Success message" % res.message_id)
+
+	def expect_message( self, res, name):
+		'''Checks if message matches given name'''
+		if res.message_id != name:
+			raise RuntimeError("'%s' not a %s message" % res.message_id, name)
 
 	# invoked if user asks for an unknown command
 	def unknown_command(self):
