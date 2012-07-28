@@ -619,6 +619,40 @@ class RmoteCall:
 		return apta_bytes
 
 	
+	def provision(self):
+		'''Provision a device'''
+
+		#------------------------------------
+		#           Body Block
+		#------------------------------------
+		out_bo = pcos.create_output_block( 'Bo' )
+
+		# MAT
+		out_bo.write_varstr( binascii.unhexlify( self.args['mat'] ) )
+		# Serial number ID
+		out_bo.write_varstr( binascii.unhexlify(self.args['serial_number']) )
+
+		#------------------------------------
+		#       Provision Message
+		#------------------------------------
+		req = pcos.Doc( name="Ov" )
+		req.add( out_bo )
+
+		# send the message and process the result.
+		res = self.send( req )
+
+		self.expect_message(res, 'Cr')
+
+		# jump to the block of interest
+		in_bo = res.block( 'Bo' )
+
+		# read MAT returned by the server
+		device_id = in_bo.read_varstr()
+		registration_id =in_bo.read_varstr()
+
+		log.info('provision-success| device-ID: %s, registration-ID: %s', binascii.hexlify( device_id ), registration_id )
+
+
 	def register(self):
 		'''Register command'''
 
@@ -716,6 +750,7 @@ class RmoteCall:
 			"charge_pta": self.charge_pta,
 			"charge_key": self.charge_key,
 			"transfer": self.transfer,
+			"provision": self.provision,
 		}		
 
 	def expect_success( self, res ):
