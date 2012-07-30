@@ -54,17 +54,17 @@ def encode(bytestr):
 def decode(pretty):
 	sz = len(pretty)
 	if sz % 2 != 0:
-		raise PushcoinError(keyreg.ERR_PCOS16_INVALID_LENGTH, "Input cannot be PCOS-16" )
+		raise TypeError("Wrong input length to be PCOS-16" )
 
 	bytestr	= bytearray()
 	for	i in xrange(0,sz,2):
 		oktet1 = alphabet__.symbol_to_val.get(pretty[i], None)
 		if oktet1 == None:
-			raise	PushcoinError(keyreg.ERR_PCOS16_INVALID_CHAR, "Character not in PCOS-16 alphabet" )
+			raise	TypeError("Character not in PCOS-16 alphabet" )
 
 		oktet2 = alphabet__.symbol_to_val.get(pretty[i+1], None)
 		if oktet2 == None:
-			raise	PushcoinError(keyreg.ERR_PCOS16_INVALID_CHAR, "Character not in PCOS-16 alphabet" )
+			raise	TypeError("Character not in PCOS-16 alphabet" )
 
 		bytestr.append( (oktet1 << 4) | oktet2 )
 	return	bytestr
