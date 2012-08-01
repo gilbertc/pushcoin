@@ -446,7 +446,7 @@ class RmoteCall:
 		k1 = pcos.create_output_block( 'K1' )
 		# membership ID
 		device_id = self.args['device_id'] 
-		k1.write_varstr( binascii.unhexlify( device_id ) )
+		k1.write_varstr( device_id )
 
 		# passcode
 		k1.write_varstr( self.args['passcode'] )

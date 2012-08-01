@@ -213,33 +213,48 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/user/account/signup/
+	Request: json/account/initiate-signup/
 
 	Description:
-		Registers a new user account and logs user in on success 
-		(sets auth token).
+		Begins the process of registration of a new user account.
 
 	Input:
 		{
 			email: string
-			password: string
+			captcha_challenge: string
+			captcha_response: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/user/account/complete-signup/
+
+	Description:
+		Completes registration of a user account and logs the user in
+		(sets auth token).
+
+	Input:
+		{
+			account_id: string
 			first_name: string
 			last_name: string
+			password: string
 			mobile_phone: string, optional
 		}
 
 	Output: success | error
 
 #---------------------------------------------------------------------------#
-	Request: json/merchant/account/signup/
+	Request: json/merchant/account/complete-signup/
 
 	Description:
-		Registers a new merchant account and logs merchant in on success 
+		Completes registration of a merchant account and logs the user in
 		(sets auth token).
 
 	Input:
 		{
-			email: string
+			account_id: string
 			password: string
 			first_name: string
 			last_name: string
