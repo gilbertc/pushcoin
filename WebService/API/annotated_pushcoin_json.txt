@@ -398,6 +398,23 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
+	Request: json/transaction/transfer/
+
+	Description:
+		Transfers specified amount from this account to a given recipeint.
+		
+	Input:
+		{
+			recipient: string (email address)
+			amount: decimal
+			currency: string
+			invoice: string, optional
+			note: string, optional
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
 	Request: json/transaction/history/
 
 	Description:
@@ -423,7 +440,7 @@ any of the enumerated message types, depending on the outcome of processing.
 					occurred: date
 					buss_phone: phone
 					trx_type: "debit" | "credit"
-					amount: string
+					amount: decimal
 					tip: string
 					tax: string
 					note: string
