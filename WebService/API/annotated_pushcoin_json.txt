@@ -401,14 +401,13 @@ any of the enumerated message types, depending on the outcome of processing.
 	Request: json/transaction/transfer/
 
 	Description:
-		Transfers specified amount from this account to a given recipeint.
+		Transfers specified amount from this account to the provided recipient.
 		
 	Input:
 		{
 			recipient: string (email address)
 			amount: decimal
 			currency: string
-			invoice: string, optional
 			note: string, optional
 		}
 
