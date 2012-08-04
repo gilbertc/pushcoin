@@ -70,7 +70,7 @@ any of the enumerated message types, depending on the outcome of processing.
 		{
 			user: string
 			password: string
-			challenge_response:
+			captcha:
 				{
 					challenge: string	
 					response: string
@@ -217,12 +217,18 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Description:
 		Begins the process of registration of a new user account.
+		Note: If error message contains 'captcha_required' field, then the UI
+		is expected to provide both captcha fields in subsequent attempts at
+		signup.
 
 	Input:
 		{
 			email: string
-			captcha_challenge: string
-			captcha_response: string
+			captcha:
+				{
+					challenge: string	
+					response: string
+				}, optional
 		}
 
 	Output: success | error
