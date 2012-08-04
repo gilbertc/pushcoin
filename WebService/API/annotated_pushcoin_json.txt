@@ -427,8 +427,10 @@ any of the enumerated message types, depending on the outcome of processing.
 		
 	Input:
 		{
-			page_num: number (zero-based)
-			page_size: number
+			from_date: string (Y-m-d H:M:S), optional
+			to_date: string (Y-m-d H:M:S), optional
+			page_num: number (zero-based), optional
+			page_size: number, optional
 		}
 
 	Output: error | 
