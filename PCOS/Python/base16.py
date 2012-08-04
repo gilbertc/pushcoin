@@ -18,29 +18,29 @@ __author__	 = '''Slawomir Lisznianski <sl@minta.com>'''
 
 #	Alphabet Table
 #	==============
-#  0 => C
-#  1 => E
-#  2 => F
-#  3 => H
-#  4 => K
-#  5 => L
-#  6 => N
-#  7 => P
-#  8 => R		
-#  9 => S
-# 10	=> T
-# 11	=> X
-# 12	=> Y
-# 13	=> 3
-# 14	=> 4
-# 15	=> 5
-# 16	=> 7
+#  0 => A
+#  1 => C
+#  2 => E
+#  3 => F
+#  4 => H
+#  5 => K
+#  6 => L
+#  7 => N
+#  8 => P		
+#  9 => R
+# 10 => T
+# 11 => X
+# 12 => Y
+# 13 => 3
+# 14 => 4
+# 15 => 5
+# 16 => 7
 
 class	Pcos16Aalphabet():
 	 '''Stores the PCOS-16 Alphabet'''
 	 def __init__(self):
-		self.val_to_symbol	= [ 'C', 'E', 'F', 'H', 'K', 'L', 'N', 'P', 'R', 'S', 'T', 'X', 'Y', '4', '5', '7' ]
-		self.symbol_to_val	= { 'C': 0, 'E': 1, 'F': 2, 'H': 3, 'K': 4, 'L': 5, 'N': 6, 'P': 7, 'R': 8, 'S': 9, 'T': 10, 'X': 11, 'Y': 12, '4': 13, '5': 14, '7': 15 }
+		self.val_to_symbol	= [ 'A', 'C', 'E', 'F', 'H', 'K', 'L', 'N', 'P', 'R', 'T', 'X', 'Y', '4', '5', '7' ]
+		self.symbol_to_val	= { 'A': 0, 'C': 1, 'E': 2, 'F': 3, 'H': 4, 'K': 5, 'L': 6, 'N': 7, 'P': 8, 'R': 9, 'T': 10, 'X': 11, 'Y': 12, '4': 13, '5': 14, '7': 15 }
 
 alphabet__ = Pcos16Aalphabet()
 
