@@ -41,6 +41,14 @@ echo -e "\n***************"
 
 $CMD/json/transaction/history/ -d '{ "page_num":0, "page_size":10}'
 
+echo -e "\n***************"
+echo -e "\n*** Recipient ***"
+echo -e "\n***************"
+
+$CMD/json/recipient/list/ -d ''
+$CMD/json/recipient/add/ -d '{"email": "sl@minta.com", "description": "my first bookmark"}'
+$CMD/json/recipient/delete/ -d '{"email": "sl@minta.com"}'
+
 echo -e "\n\n*** Logout ***"
 $CMD/json/account/logout/ -d ''
 

@@ -203,14 +203,92 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
-			msg: "summary",
-			account_id: number, 
-			email: string,
-			first_name: string, 
-			last_name: string, 
-			balance: number, 
+			msg: "summary"
+			account_id: number
+			email: string
+			first_name: string
+			last_name: string
+			balance: number
 			type: "user" | "merchant"
 		}
+
+#---------------------------------------------------------------------------#
+	Request: json/recipient/add/
+
+	Description:
+		Adds a recipient bookmark.
+
+	Input:
+		{
+			email: string
+			description: string, optional
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/recipient/delete/
+
+	Description:
+		Removes a recipient bookmark.
+
+	Input:
+		{
+			email: string
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/recipient/list/
+
+	Description:
+		Lists recipient bookmarks.
+
+	Input: <empty>
+
+	Output: error |
+		{
+			items: array-of
+				{
+					email: string
+					description: string, optional
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/ach-def/add/
+
+	Description:
+		Creates an ACH definition, typically used in withdrawals.
+
+	Input:
+		{
+			bank_name: string	
+			routing_number: string
+			account_number: string
+		}
+
+	Output: error | 
+		{
+			ach_definition_id: string
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/ach-def/hide/
+
+	Description:
+		Makes a given ACH definition inaccessible.
+
+		Note: One cannot delete nor update an existing ACH definition. They
+		are immutable records.
+
+	Input:
+		{
+			ach_definition_id: string
+		}
+
+	Output: error | success
 
 #---------------------------------------------------------------------------#
 	Request: json/account/initiate-signup/
@@ -463,3 +541,28 @@ any of the enumerated message types, depending on the outcome of processing.
 					latitude: number
 					longitude: number
 			}
+
+#---------------------------------------------------------------------------#
+	Request: json/transaction/withdrawal/
+
+	Description:
+		Requests withdrawal of funds.
+		
+	Input:
+		{
+			amount: decimal
+			currency: string # "USD"
+
+			# one of: 
+			#  "C" - Check
+			#  "A" - ACH
+			delivery_method: string 
+
+			# if delivery is Check, then:
+			address_id: string, optional
+
+			# if delivery is ACH, then:
+			ach_definition_id: string, optional
+		}
+
+	Output: error | success
