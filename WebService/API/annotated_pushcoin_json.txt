@@ -307,7 +307,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Request: json/bookmark/recipient/add/
 
 	Description:
-		Adds a transfer-recipient bookmark.
+		Adds or updates a recipient bookmark.
 
 	Input:
 		{
@@ -352,20 +352,21 @@ any of the enumerated message types, depending on the outcome of processing.
 	Request: json/bookmark/ach/add/
 
 	Description:
-		Creates an ACH bookmark, typically used in withdrawals.
+		Adds or updates an ACH bookmark.
 
 	Input:
 		{
-			bank_name: string	
 			routing_number: string
-			account_number: string
+			bank_account_number: string
+
+			# customer or business name registered under the bank account
+			bank_account_name: string
+
+			description: string
 		}
 
-	Output: error | 
-		{
-			msg: "add-ach-reply"
-			ach_definition_id: string
-		}
+	Output: error | success
+
 
 #---------------------------------------------------------------------------#
 	Request: json/bookmark/ach/hide/
@@ -373,12 +374,12 @@ any of the enumerated message types, depending on the outcome of processing.
 	Description:
 		Makes a given ACH bookmark inaccessible.
 
-		Note: One cannot delete nor update an existing ACH bookmark. They
-		are immutable records.
+		Note: One cannot delete an existing ACH bookmark.
 
 	Input:
 		{
-			ach_definition_id: string
+			routing_number: string
+			bank_account_number: string
 		}
 
 	Output: error | success
@@ -396,10 +397,16 @@ any of the enumerated message types, depending on the outcome of processing.
 			msg: "list-ash-reply"
 			items: array-of:
 				{
-					ach_definition_id: string
-					bank_name: string	
+					bank_bank_name: string
+					bank_address: string
+					bank_city: string
+					bank_state: string
+					bank_zipcode: string
+					bank_phone: string
 					routing_number: string
-					account_number: string
+					bank_account_number: string
+					bank_account_name: string	
+					description: string
 				}
 		}
 
@@ -588,26 +595,40 @@ any of the enumerated message types, depending on the outcome of processing.
 			}
 
 #---------------------------------------------------------------------------#
-	Request: json/transaction/withdrawal/
+	Request: json/transaction/withdrawal-check/
 
 	Description:
-		Requests withdrawal of funds.
+		Requests withdrawal of funds via check method.
 		
 	Input:
 		{
 			amount: decimal
 			currency: string # "USD"
 
-			# one of: 
-			#  "C" - Check
-			#  "A" - ACH
-			delivery_method: string 
-
-			# if delivery is Check, then:
-			address_id: string, optional
+			# address where check needs to be mailed
+			address_id: string
 
 			# if delivery is ACH, then:
 			ach_definition_id: string, optional
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/transaction/withdrawal-ach/
+
+	Description:
+		Requests withdrawal of funds via ach method.
+		
+	Input:
+		{
+			amount: decimal
+			currency: string # "USD"
+
+			# ACH info
+			routing_number: string
+			bank_account_number: string
+			bank_account_name: string
 		}
 
 	Output: error | success
