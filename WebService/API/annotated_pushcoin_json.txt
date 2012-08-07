@@ -257,7 +257,7 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/ach-def/add/
+	Request: json/ach/add-definition/
 
 	Description:
 		Creates an ACH definition, typically used in withdrawals.
@@ -275,7 +275,7 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/ach-def/hide/
+	Request: json/ach/hide-definition/
 
 	Description:
 		Makes a given ACH definition inaccessible.
@@ -289,6 +289,28 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/ach/validate-routing/
+
+	Description:
+		Looks up a bank or credit union matching given routing number.
+
+	Input:
+		{
+			routing_number: string
+		}
+
+	Output: error | 
+		{
+			bank_name: string
+			routing_number: string
+			address: string
+			city: string
+			state: string
+			zipcode: string
+			phone: string
+		}
 
 #---------------------------------------------------------------------------#
 	Request: json/account/initiate-signup/

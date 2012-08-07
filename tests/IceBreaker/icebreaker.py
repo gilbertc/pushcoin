@@ -107,6 +107,25 @@ class RmoteCall:
 		log.info('Balance is $%s as of %s', balance, balance_asofdate)
 
 
+	def error_report(self):
+		'''Submits an error report'''
+
+		#------------------------------------
+		#      Request Body Block
+		#------------------------------------
+		out_bo = pcos.create_output_block( 'Bo' )
+		# MAT
+		out_bo.write_varstr( binascii.unhexlify( self.args['mat'] ) )
+		# report content
+		out_bo.write_varstr( self.args['report']  )
+
+		req = pcos.Doc( name="Er" )
+		req.add( out_bo )
+
+		res = self.send( req )
+		self.expect_success( res )
+
+
 	def history(self):
 		'''Returns transaction history'''
 
@@ -746,6 +765,7 @@ class RmoteCall:
 			"preauth": self.preauth,
 			"transaction_key": self.transaction_key,
 			"history": self.history,
+			"error_report": self.error_report,
 			"balance": self.balance,
 			"charge_pta": self.charge_pta,
 			"charge_key": self.charge_key,
