@@ -59,6 +59,74 @@ any of the enumerated message types, depending on the outcome of processing.
 	}
 	
 #---------------------------------------------------------------------------#
+	Request: json/account/initiate-signup/
+
+	Description:
+		Begins the process of registration of a new user account.
+		Note: If error message contains 'captcha_required' field, then the UI
+		is expected to provide both captcha fields in subsequent attempts at
+		signup.
+
+	Input:
+		{
+			email: string
+			captcha:
+				{
+					challenge: string	
+					response: string
+				}, optional
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/user/account/complete-signup/
+
+	Description:
+		Completes registration of a user account and logs the user in
+		(sets auth token).
+
+	Input:
+		{
+			account_id: string
+			first_name: string
+			last_name: string
+			password: string
+			mobile_phone: string, optional
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/merchant/account/complete-signup/
+
+	Description:
+		Completes registration of a merchant account and logs the user in
+		(sets auth token).
+
+	Input:
+		{
+			account_id: string
+			password: string
+			first_name: string
+			last_name: string
+
+			business_name: string
+			phone: string
+			# employer identification number or Federal TAX ID
+			gov_id: string
+			website: string, optional
+
+			# business main office address (headquarters)
+			street: string
+			city: string
+			state: string
+			zip: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
 	Request: json/account/login/
 
 	Description:
@@ -213,7 +281,30 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/recipient/add/
+	Request: json/account/validate-bank-routing-number/
+
+	Description:
+		Looks up a bank or credit union matching given routing number.
+
+	Input:
+		{
+			routing_number: string
+		}
+
+	Output: error | 
+		{
+			msg: "ach-validate-routing-reply"
+			bank_name: string
+			routing_number: string
+			address: string
+			city: string
+			state: string
+			zipcode: string
+			phone: string
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/bookmark/add-recipient/
 
 	Description:
 		Adds a recipient bookmark.
@@ -227,7 +318,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
-	Request: json/recipient/delete/
+	Request: json/bookmark/delete-recipient/
 
 	Description:
 		Removes a recipient bookmark.
@@ -240,7 +331,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
-	Request: json/recipient/list/
+	Request: json/bookmark/list-recipients/
 
 	Description:
 		Lists recipient bookmarks.
@@ -311,97 +402,6 @@ any of the enumerated message types, depending on the outcome of processing.
 					account_number: string
 				}
 		}
-
-#---------------------------------------------------------------------------#
-	Request: json/ach/validate-routing/
-
-	Description:
-		Looks up a bank or credit union matching given routing number.
-
-	Input:
-		{
-			routing_number: string
-		}
-
-	Output: error | 
-		{
-			msg: "ach-validate-routing-reply"
-			bank_name: string
-			routing_number: string
-			address: string
-			city: string
-			state: string
-			zipcode: string
-			phone: string
-		}
-
-#---------------------------------------------------------------------------#
-	Request: json/account/initiate-signup/
-
-	Description:
-		Begins the process of registration of a new user account.
-		Note: If error message contains 'captcha_required' field, then the UI
-		is expected to provide both captcha fields in subsequent attempts at
-		signup.
-
-	Input:
-		{
-			email: string
-			captcha:
-				{
-					challenge: string	
-					response: string
-				}, optional
-		}
-
-	Output: success | error
-
-#---------------------------------------------------------------------------#
-	Request: json/user/account/complete-signup/
-
-	Description:
-		Completes registration of a user account and logs the user in
-		(sets auth token).
-
-	Input:
-		{
-			account_id: string
-			first_name: string
-			last_name: string
-			password: string
-			mobile_phone: string, optional
-		}
-
-	Output: success | error
-
-#---------------------------------------------------------------------------#
-	Request: json/merchant/account/complete-signup/
-
-	Description:
-		Completes registration of a merchant account and logs the user in
-		(sets auth token).
-
-	Input:
-		{
-			account_id: string
-			password: string
-			first_name: string
-			last_name: string
-
-			business_name: string
-			phone: string
-			# employer identification number or Federal TAX ID
-			gov_id: string
-			website: string, optional
-
-			# business main office address (headquarters)
-			street: string
-			city: string
-			state: string
-			zip: string
-		}
-
-	Output: success | error
 
 #---------------------------------------------------------------------------#
 	Request: json/device/add-smart/
