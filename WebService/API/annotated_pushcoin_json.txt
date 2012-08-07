@@ -293,7 +293,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
-			msg: "ach-validate-routing-reply"
+			msg: "validate-bank-routing-number-reply"
 			bank_name: string
 			routing_number: string
 			address: string
@@ -304,10 +304,10 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/bookmark/add-recipient/
+	Request: json/bookmark/recipient/add/
 
 	Description:
-		Adds a recipient bookmark.
+		Adds a transfer-recipient bookmark.
 
 	Input:
 		{
@@ -318,10 +318,10 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
-	Request: json/bookmark/delete-recipient/
+	Request: json/bookmark/recipient/delete/
 
 	Description:
-		Removes a recipient bookmark.
+		Removes a transfer-recipient bookmark.
 
 	Input:
 		{
@@ -331,7 +331,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
-	Request: json/bookmark/list-recipients/
+	Request: json/bookmark/recipient/list/
 
 	Description:
 		Lists recipient bookmarks.
@@ -340,7 +340,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error |
 		{
-			msg: "recipient-list-reply"
+			msg: "list-recipient-reply"
 			items: array-of
 				{
 					email: string
@@ -349,10 +349,10 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/ach/add-definition/
+	Request: json/bookmark/ach/add/
 
 	Description:
-		Creates an ACH definition, typically used in withdrawals.
+		Creates an ACH bookmark, typically used in withdrawals.
 
 	Input:
 		{
@@ -363,17 +363,17 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
-			msg: "ach_definition_reply"
+			msg: "add-ach-reply"
 			ach_definition_id: string
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/ach/hide-definition/
+	Request: json/bookmark/ach/hide/
 
 	Description:
-		Makes a given ACH definition inaccessible.
+		Makes a given ACH bookmark inaccessible.
 
-		Note: One cannot delete nor update an existing ACH definition. They
+		Note: One cannot delete nor update an existing ACH bookmark. They
 		are immutable records.
 
 	Input:
@@ -384,16 +384,16 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
-	Request: json/ach/list-definitions/
+	Request: json/bookmark/ach/list/
 
 	Description:
-		Lists all definitions created under account.
+		Lists all ACH bookmarks created under the account.
 
 	Input: <empty>
 
 	Output: error | 
 		{
-			msg: "list_definitions_reply"
+			msg: "list-ash-reply"
 			items: array-of:
 				{
 					ach_definition_id: string
