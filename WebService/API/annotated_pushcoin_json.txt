@@ -143,7 +143,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error |
 		{
-			msg: "business_info"
+			msg: "merchant-account-show-info-reply"
 			business_name: string
 			phone: string
 			# employer identification number or Federal TAX ID
@@ -189,7 +189,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Input: <empty>
 	Output: error |
 		{
-			msg: "balance"
+			msg: "account-balance-reply"
 			balance: number
 		}
 
@@ -203,7 +203,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
-			msg: "summary"
+			msg: "account-summary-reply"
 			account_id: number
 			email: string
 			first_name: string
@@ -249,6 +249,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error |
 		{
+			msg: "recipient-list-reply"
 			items: array-of
 				{
 					email: string
@@ -271,6 +272,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
+			msg: "ach_definition_reply"
 			ach_definition_id: string
 		}
 
@@ -291,6 +293,26 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
+	Request: json/ach/list-definitions/
+
+	Description:
+		Lists all definitions created under account.
+
+	Input: <empty>
+
+	Output: error | 
+		{
+			msg: "list_definitions_reply"
+			items: array-of:
+				{
+					ach_definition_id: string
+					bank_name: string	
+					routing_number: string
+					account_number: string
+				}
+		}
+
+#---------------------------------------------------------------------------#
 	Request: json/ach/validate-routing/
 
 	Description:
@@ -303,6 +325,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
+			msg: "ach-validate-routing-reply"
 			bank_name: string
 			routing_number: string
 			address: string
@@ -393,7 +416,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
-			msg: "device_membership_certificate"
+			msg: "device-add-smart-reply"
 			device_id: string
 			registration_id: string
 		}
@@ -417,7 +440,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
-			msg: "device_membership_certificate"
+			msg: "device-provision-reply"
 			device_id: string
 			registration_id: string
 		}
@@ -440,7 +463,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error |
 		{
-			msg: "device_claimed"
+			msg: "device-claim-reply"
 			device_id: string
 		}
 
@@ -454,7 +477,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
-			msg: "device_list"
+			msg: "device-list-reply"
 			devices: array-of
 				{
 					device_id: string
@@ -535,7 +558,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
-			msg: "history"
+			msg: "transaction-history-reply"
 			total_transactions: number
 			items: array-of
 				{
