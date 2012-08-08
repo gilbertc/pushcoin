@@ -340,7 +340,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error |
 		{
-			msg: "list-recipient-reply"
+			msg: "bookmark-list-recipient-reply"
 			items: array-of
 				{
 					email: string
@@ -394,7 +394,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error | 
 		{
-			msg: "list-ash-reply"
+			msg: "bookmark-list-ash-reply"
 			items: array-of:
 				{
 					bank_bank_name: string
@@ -407,6 +407,62 @@ any of the enumerated message types, depending on the outcome of processing.
 					bank_account_number: string
 					bank_account_name: string	
 					description: string
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/bookmark/address/add/
+
+	Description:
+		Adds a mailing address to an account.
+
+	Input:
+		{
+			street: string
+			city: string
+			state: string
+			zipcode: string
+			phone: string, optional
+			description: string, optional
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/bookmark/address/hide/
+
+	Description:
+		Makes a given address inaccesible.
+
+		Note: One cannot delete an existing address.
+
+	Input:
+		{
+			address_id: string
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/bookmark/address/list/
+
+	Description:
+		Lists all addresses created under the account.
+
+	Input: <empty>
+
+	Output: error | 
+		{
+			msg: "bookmark-list-address-reply"
+			items: array-of:
+				{
+					address_id: string
+					street: string
+					city: string
+					state: string
+					zipcode: string
+					phone: string, optional
+					description: string, optional
 				}
 		}
 
