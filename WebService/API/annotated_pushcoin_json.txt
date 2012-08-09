@@ -378,6 +378,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Input:
 		{
+			# ACH bookmark identifier
 			ach_def_id: string
 		}
 
@@ -396,7 +397,9 @@ any of the enumerated message types, depending on the outcome of processing.
 			msg: "bookmark-list-ash-reply"
 			items: array-of:
 				{
+					# ACH bookmark identifier
 					ach_def_id: string
+
 					bank_bank_name: string
 					bank_address: string
 					bank_city: string
@@ -664,8 +667,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			# address where check needs to be mailed
 			address_id: string
 
-			# if delivery is ACH, then:
-			ach_definition_id: string, optional
+			note: string, optional
 		}
 
 	Output: error | success
@@ -681,10 +683,10 @@ any of the enumerated message types, depending on the outcome of processing.
 			amount: decimal
 			currency: string # "USD"
 
-			# ACH info
-			routing_number: string
-			bank_account_number: string
-			bank_account_name: string
+			# ACH bookmark identifier
+			ach_def_id: string
+
+			note: string, optional
 		}
 
 	Output: error | success
