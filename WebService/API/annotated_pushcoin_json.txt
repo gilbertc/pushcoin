@@ -378,8 +378,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Input:
 		{
-			routing_number: string
-			bank_account_number: string
+			ach_def_id: string
 		}
 
 	Output: error | success
@@ -397,6 +396,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			msg: "bookmark-list-ash-reply"
 			items: array-of:
 				{
+					ach_def_id: string
 					bank_bank_name: string
 					bank_address: string
 					bank_city: string
