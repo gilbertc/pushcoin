@@ -620,6 +620,16 @@ any of the enumerated message types, depending on the outcome of processing.
 			to_date: string (Y-m-d H:M:S), optional
 			page_num: number (zero-based), optional
 			page_size: number, optional
+
+			# Returns only those transactions that meet given
+			# specifier. If this parameter is entirely ommited, 
+			# all transactions are returned, regardless of context.
+			# Recognized transaction context specifiers:
+			#   W - withdrawal
+			#   D - deposit
+			#   P - payment
+			#   T - transfer
+			context: [ "W", "D", "P", "T" ], optional
 		}
 
 	Output: error | 
