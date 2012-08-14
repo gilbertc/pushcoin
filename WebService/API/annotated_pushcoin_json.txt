@@ -593,6 +593,19 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
+	Request: json/device/delete/
+
+	Description:
+		Changes device status to 'deleted'.
+		
+	Input:
+		{
+			device_id: string
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
 	Request: json/transaction/transfer/
 
 	Description:
@@ -654,7 +667,8 @@ any of the enumerated message types, depending on the outcome of processing.
 					buss_zip: string
 					buss_street: string
 					buss_country: string
-					buss_name: string
+					counterparty_name: string
+					counterparty_id: string
 					trx_ctxt: "payment" | "transfer"
 					buss_city: string
 					recipient: string
