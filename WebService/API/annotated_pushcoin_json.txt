@@ -633,6 +633,21 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
+	Request: json/transaction/refund/
+
+	Description:
+		Refunds specified amount back to the originator.
+		
+	Input:
+		{
+			transaction_id: string
+			amount: decimal
+			note: string, optional
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
 	Request: json/transaction/history/
 
 	Description:
@@ -653,7 +668,8 @@ any of the enumerated message types, depending on the outcome of processing.
 			#   D - deposit
 			#   P - payment
 			#   T - transfer
-			context: [ "W", "D", "P", "T" ], optional
+			#   R - refund
+			context: [ "W", "D", "P", "T", "R" ], optional
 		}
 
 	Output: error | 
