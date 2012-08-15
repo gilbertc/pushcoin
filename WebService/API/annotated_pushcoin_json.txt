@@ -157,6 +157,17 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success
 
 #---------------------------------------------------------------------------#
+	Request: json/auto/imalive/
+
+	Description:
+		Checks if user session has expired. This call does not prevent
+		the user session from expiring. Recommended interval is 2 minutes.
+
+	Input: <empty>
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
 	Request: json/account/check-password/
 
 	Description:
