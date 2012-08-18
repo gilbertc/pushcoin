@@ -415,7 +415,7 @@ any of the enumerated message types, depending on the outcome of processing.
 					bank_address: string
 					bank_city: string
 					bank_state: string
-					bank_zipcode: string
+					bank_zip: string
 					bank_phone: string
 					routing_number: string
 					bank_account_number: string
@@ -435,7 +435,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			street: string
 			city: string
 			state: string
-			zipcode: string
+			zip: string
 			phone: string, optional
 			description: string, optional
 		}
@@ -474,7 +474,7 @@ any of the enumerated message types, depending on the outcome of processing.
 					street: string
 					city: string
 					state: string
-					zipcode: string
+					zip: string
 					phone: string, optional
 					description: string, optional
 				}
