@@ -310,7 +310,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			address: string
 			city: string
 			state: string
-			zipcode: string
+			zip: string
 			phone: string
 		}
 
