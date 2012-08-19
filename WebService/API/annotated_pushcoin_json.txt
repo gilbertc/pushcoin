@@ -706,6 +706,22 @@ any of the enumerated message types, depending on the outcome of processing.
 			}
 
 #---------------------------------------------------------------------------#
+	Request: json/transaction/deposit/
+
+	Description:
+		Initiates a deposit of funds.
+
+	Input:
+		{
+			amount: decimal
+			currency: string # "USD"
+			account_id: string
+			note: string, optional
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
 	Request: json/transaction/withdrawal-check/
 
 	Description:
