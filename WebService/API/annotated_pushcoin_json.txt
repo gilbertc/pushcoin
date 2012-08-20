@@ -707,6 +707,21 @@ any of the enumerated message types, depending on the outcome of processing.
 			}
 
 #---------------------------------------------------------------------------#
+	Request: json/transaction/update-status-note/
+
+	Description:
+		Updates status and note for a given transaction.
+
+	Input:
+		{
+			transaction_id: string
+			status: string
+			note: string, optional
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
 	Request: json/transaction/deposit/
 
 	Description:
