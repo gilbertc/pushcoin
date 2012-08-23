@@ -283,7 +283,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | 
 		{
 			msg: "account-summary-reply"
-			account_id: number
+			account_id: string
 			email: string
 			first_name: string
 			last_name: string
@@ -662,7 +662,8 @@ any of the enumerated message types, depending on the outcome of processing.
 
 			# Returns only those transactions that meet given
 			# specifier. If this parameter is entirely omitted, 
-			# all transactions are returned. Recognized 
+			# all transactions are returned.
+			#
 			# transaction context specifiers:
 			#   W - withdrawal
 			#   D - deposit
@@ -670,6 +671,14 @@ any of the enumerated message types, depending on the outcome of processing.
 			#   T - transfer
 			#   R - refund
 			context: [ "W", "D", "P", "T", "R" ], optional
+
+			# transaction status specifiers:
+			#   Q - Queued
+			#   P - Pending
+			#   C - Completed
+			#   F - Failed
+			#   X - (User) Canceled
+			status: [ "Q", "P", "C", "F", "X" ], optional
 		}
 
 	Output: error | 
@@ -773,4 +782,52 @@ any of the enumerated message types, depending on the outcome of processing.
 			note: string, optional
 		}
 
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/notification/list/
+
+	Description:
+		Retrieves pending notifications.
+		
+	Input:
+		{
+			page_num: number (zero-based), optional
+			page_size: number, optional
+		}
+
+	Output: error |
+		{
+			msg: "notification-list-reply"
+			items: array-of:
+				{
+					notification_id: number
+					created: date
+
+					# type of user acknowledgment to accompany 
+					# this message:
+					#   A - "I Read & Agree" button
+					#   D - "Dismiss" button
+					#   N - None required, just show the message
+					ack_type: "A" | "D" | "N"
+
+					# notification text
+					body: string
+
+					# mime-type, ie 'plain/text' or 'plain/html'
+					mime: string
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/notification/acknowledge/
+
+	Description:
+		If notification requires an acknowledgement, this 
+		message delivers it.
+		
+	Input:
+		{
+			notification_id: number
+		}
 	Output: error | success
