@@ -794,6 +794,8 @@ any of the enumerated message types, depending on the outcome of processing.
 		{
 			page_num: number (zero-based), optional
 			page_size: number, optional
+			# show notifications newer than this one
+			last_id: number, optional
 		}
 
 	Output: error |
