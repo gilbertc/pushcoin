@@ -823,7 +823,6 @@ any of the enumerated message types, depending on the outcome of processing.
 					#  - Critical
 					#  - High
 					#  - Normal
-					#  - Low
 					severity: string
 				}
 		}
