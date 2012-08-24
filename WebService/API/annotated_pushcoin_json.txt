@@ -818,6 +818,13 @@ any of the enumerated message types, depending on the outcome of processing.
 
 					# mime-type, ie 'plain/text' or 'plain/html'
 					mime: string
+
+					# degree of message seriousness
+					#  - Critical
+					#  - High
+					#  - Normal
+					#  - Low
+					severity: string
 				}
 		}
 
