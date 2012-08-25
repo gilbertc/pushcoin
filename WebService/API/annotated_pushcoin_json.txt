@@ -813,6 +813,9 @@ any of the enumerated message types, depending on the outcome of processing.
 					#   N - None required, just show the message
 					ack_type: "A" | "D" | "N"
 
+					# notification subject
+					subject: string
+
 					# notification text
 					body: string
 
