@@ -48,6 +48,7 @@ echo -e "\n***************"
 $CMD/json/bookmark/recipient/list/ -d ''
 $CMD/json/bookmark/recipient/add/ -d '{"email": "sl@minta.com", "description": "my first bookmark"}'
 $CMD/json/bookmark/recipient/delete/ -d '{"email": "sl@minta.com"}'
+ $CMD/json/bookmark/ach/add/ -d '{ "routing_number": "307087713", "bank_account_number": "1211231", "bank_account_name": "Samsung Electr.",  "description": "secondary account"}'
 $CMD/json/bookmark/ach/list/ -d ''
 $CMD/json/bookmark/address/list/ -d ''
 
