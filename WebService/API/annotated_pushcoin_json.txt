@@ -499,6 +499,23 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
+	Request: json/device/reset-smart/
+
+	Description:
+		Clears MAT associated with a smart device.
+		
+	Input:
+		{
+			device_id: string
+		}
+
+	Output: error | 
+		{
+			msg: "device-reset-smart-reply"
+			registration_id: string
+		}
+
+#---------------------------------------------------------------------------#
 	Request: json/device/provision/
 
 	Description:
