@@ -376,7 +376,13 @@ any of the enumerated message types, depending on the outcome of processing.
 			description: string
 		}
 
-	Output: error | success
+	Output: error |
+		{
+			msg: "bookmark-ach-add-reply"
+
+			# ACH bookmark identifier
+			ach_def_id: string
+		}
 
 
 #---------------------------------------------------------------------------#
@@ -440,7 +446,13 @@ any of the enumerated message types, depending on the outcome of processing.
 			description: string, optional
 		}
 
-	Output: error | success
+	Output: error |
+		{
+			msg: "bookmark-address-add-reply"
+
+			# Address bookmark identifier
+			address_id: string
+		}
 
 #---------------------------------------------------------------------------#
 	Request: json/bookmark/address/hide/
@@ -452,6 +464,7 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Input:
 		{
+			# Address bookmark identifier
 			address_id: string
 		}
 
