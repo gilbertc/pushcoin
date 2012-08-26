@@ -261,6 +261,15 @@ def create_input_block( doc, meta ):
 	return blk
 
 
+def safe_str(obj):
+    """ return the byte string representation of obj """
+    try:
+        return str(obj)
+    except UnicodeEncodeError:
+        # obj is unicode
+        return unicode(obj).encode('unicode_escape')
+
+
 class Block:
 	"""Provides facilities for creating a new block or iterating over and parsing block data."""
 
@@ -438,13 +447,13 @@ class Block:
 		length = len( val )
 		self.write_uint( length )
 		if length:
-			self.write_bytes(val)
+			self.write_bytes(safe_str(val))
 
 
 	def write_fixstr( self, val, size ):
 		if len( val ) != size:
 			raise PcosError( ERR_MALFORMED_MESSAGE, 'fixed array-field size not met: len(str) != %s' % size )
-		self.write_bytes(val)
+		self.write_bytes(safe_str(val))
 
 
 def parse_block(data, message_id, block_name):
