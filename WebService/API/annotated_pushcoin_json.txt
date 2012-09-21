@@ -88,11 +88,20 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Input:
 		{
+			# account owner
 			account_id: string
 			first_name: string
 			last_name: string
 			password: string
+
+			# default shipping address
+			street: string
+			city: string
+			state: string
+			zip: string
+
 			mobile_phone: string, optional
+			note: string, optional
 		}
 
 	Output: success | error
