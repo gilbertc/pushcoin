@@ -881,3 +881,20 @@ any of the enumerated message types, depending on the outcome of processing.
 			notification_id: number
 		}
 	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/social/send-invite/
+
+	Description:
+		Sends invitation to join PushCoin. Subject is dictated
+		by the system, but email-body is left up to the caller.
+		
+	Input:
+		{
+			# email address of the recipient
+			email: string
+
+			# invitation text (plain, not HTML)
+			body: string
+		}
+	Output: error | success
