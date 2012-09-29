@@ -898,6 +898,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			recipient: string
 
 			# short personalized message from the sender
+			# (max. 128 characters)
 			sender_tip: string, optional
 		}
 	Output: error | success
