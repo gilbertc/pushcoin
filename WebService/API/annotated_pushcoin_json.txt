@@ -894,7 +894,10 @@ any of the enumerated message types, depending on the outcome of processing.
 			# email address of the recipient
 			email: string
 
-			# invitation text (plain, not HTML)
-			body: string
+			# name of the recipient
+			recipient: string
+
+			# short personalized message from the sender
+			sender_tip: string, optional
 		}
 	Output: error | success
