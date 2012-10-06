@@ -44,21 +44,6 @@ any of the enumerated message types, depending on the outcome of processing.
 	}
 
 #---------------------------------------------------------------------------#
-	Message: challenge
-
-	Description:
-		Indicates that the server requires human-presence verification by the 
-		client.
-		Please follow instructions at 
-		https://developers.google.com/recaptcha/docs/display
-		for information on how to integrate the reCAPTCHA functionality in your 
-		page.
-
-	{
-		captcha_key: string
-	}
-	
-#---------------------------------------------------------------------------#
 	Request: json/account/initiate-signup/
 
 	Description:
@@ -154,7 +139,7 @@ any of the enumerated message types, depending on the outcome of processing.
 				}, optional
 		}
 
-	Output: success | error | challenge
+	Output: success | error
 
 #---------------------------------------------------------------------------#
 	Request: json/account/logout/
@@ -185,6 +170,134 @@ any of the enumerated message types, depending on the outcome of processing.
 	Input:
 		{
 			password: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/list-possible-password-reset-question/
+
+	Description:
+		Provides a list of questions for password reset.
+
+	Input: <empty>
+
+	Output: error |
+		{
+			msg: "list-possible-password-reset-question-reply"
+			items: array-of
+				{
+					question_id: number
+					text: string
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/account/add-password-reset-challenge/
+
+	Description:
+		Combination of question and answer used to authenticate a user.
+
+	Input:
+		{
+				question_id: number
+				answer: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/delete-password-reset-challenge/
+
+	Description:
+		Deletes security question and the corresponding answer.
+
+	Input:
+		{
+				question_id: number
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/list-password-reset-challenge/
+
+	Description:
+		Returns all password-reset challenges user has defined for her account.
+
+	Input: <empty>
+
+	Output: error |
+		{
+			msg: "list-password-reset-challenge-reply"
+			items: array-of
+				{
+					question_id: number
+					answer: string
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/account/request-password-reset/
+
+	Description:
+		Requests password reset for the account identified by login.
+		If successful, email is sent to the user with the reset link.
+
+	Input:
+		{
+			user: string
+			captcha:
+				{
+					challenge: string	
+					response: string
+				}
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/get-password-reset-challenge/
+
+	Description:
+		User followed the link in the email and requests the challenge question.
+
+	Input:
+		{
+			tracking_id: string
+		}
+
+	Output: error |
+		{
+				question: string
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/account/answer-password-reset-challenge/
+
+	Description:
+		User submits the answer to the challenge.
+
+	Input:
+		{
+			tracking_id: string
+			answer: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/complete-password-reset/
+
+	Description:
+		Updates password associated with a given account. The front-end must
+		validate the user has typed the new password correctly, for example 
+		by asking to type it twice.
+
+	Input:
+		{
+			tracking_id: string
+			new_password: string
 		}
 
 	Output: success | error
