@@ -412,6 +412,10 @@ any of the enumerated message types, depending on the outcome of processing.
 			last_name: string
 			balance: number
 			type: "user" | "merchant"
+
+			# number of questions user has setup to challenge
+			# herself if password is forgotten and needs resetting
+			num_recovery_questions: number
 		}
 
 #---------------------------------------------------------------------------#
