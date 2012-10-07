@@ -175,7 +175,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
-	Request: json/account/list-possible-password-reset-question/
+	Request: json/recovery/list-possible-password-reset-question/
 
 	Description:
 		Provides a list of questions for password reset.
@@ -193,10 +193,10 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/account/add-password-reset-challenge/
+	Request: json/recovery/add-password-reset-challenge/
 
 	Description:
-		Combination of question and answer used to authenticate a user.
+		Adds or updates user's password-recovery challenge.
 
 	Input:
 		{
@@ -207,10 +207,10 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
-	Request: json/account/delete-password-reset-challenge/
+	Request: json/recovery/delete-password-reset-challenge/
 
 	Description:
-		Deletes security question and the corresponding answer.
+		Deletes user's password-recovery challenge.
 
 	Input:
 		{
@@ -220,10 +220,10 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
-	Request: json/account/list-password-reset-challenge/
+	Request: json/recovery/list-password-reset-challenge/
 
 	Description:
-		Returns all password-reset challenges user has defined for her account.
+		Returns all user's password-recovery challenges.
 
 	Input: <empty>
 
@@ -238,7 +238,7 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/account/request-password-reset/
+	Request: json/recovery/request-password-reset/
 
 	Description:
 		Requests password reset for the account identified by login.
@@ -257,10 +257,10 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
-	Request: json/account/get-password-reset-challenge/
+	Request: json/recovery/get-password-reset-challenge/
 
 	Description:
-		User followed the link in the email and requests the challenge question.
+		User followed the link in the email and requests the challenge.
 
 	Input:
 		{
@@ -269,11 +269,12 @@ any of the enumerated message types, depending on the outcome of processing.
 
 	Output: error |
 		{
-				question: string
+			msg: "get-password-reset-challenge-reply"
+			question: string
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/account/answer-password-reset-challenge/
+	Request: json/recovery/answer-password-reset-challenge/
 
 	Description:
 		User submits the answer to the challenge.
@@ -287,7 +288,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
-	Request: json/account/complete-password-reset/
+	Request: json/recovery/complete-password-reset/
 
 	Description:
 		Updates password associated with a given account. The front-end must
@@ -297,7 +298,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Input:
 		{
 			tracking_id: string
-			new_password: string
+			password: string
 		}
 
 	Output: success | error
