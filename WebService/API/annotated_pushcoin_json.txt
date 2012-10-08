@@ -233,6 +233,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			items: array-of
 				{
 					question_id: number
+					question: string
 					answer: string
 				}
 		}
