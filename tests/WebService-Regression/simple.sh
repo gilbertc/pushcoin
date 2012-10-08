@@ -30,6 +30,7 @@ echo -e "\n***************"
 $CMD/json/recovery/list-possible-password-reset-question/ -d '{ }'
 $CMD/json/recovery/add-password-reset-challenge/ -d '{ "question_id": 3, "answer": "never" }'
 $CMD/json/recovery/delete-password-reset-challenge/ -d '{ "question_id": 3 }'
+$CMD/json/recovery/get-password-reset-challenge/ -d '{ "tracking_id": "fdas" }'
 $CMD/json/recovery/list-password-reset-challenge/ -d '{ }'
 
 echo -e "\n***************"
