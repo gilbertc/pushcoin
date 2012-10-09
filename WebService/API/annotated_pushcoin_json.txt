@@ -234,7 +234,6 @@ any of the enumerated message types, depending on the outcome of processing.
 				{
 					question_id: number
 					question: string
-					answer: string
 				}
 		}
 
