@@ -434,13 +434,20 @@ class RmoteCall:
 
 		res = self.send( req )
 		
-		# parse results
-		self.expect_message( res, 'Ap' )
-
+		# there can be two types of results: Ap or Np, depending
+		# success or failure due to insufficient funds
+		if res.message_id != 'Ap' and res.message_id != 'Np':
+			raise RuntimeError("Unexpected payment result '%s'" % res.message_id)
+		
 		# read balance
 		balance = res.block( 'Bo' )
 		ref_data = balance.read_varstr() # ref_data
 		transaction_id = balance.read_varstr() # tx-id
+
+		if res.message_id == 'Np':
+			code = er.read_uint()
+			what = er.read_varstr()
+			
 		# exact amount given?
 		if balance.read_bool():
 			exact_balance = 'is'
@@ -453,7 +460,11 @@ class RmoteCall:
 		# time of last update
 		tm_epoch = balance.read_ulong();
 		balance_asofdate = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
-		log.info('Success (tx_id: %s). Balance %s $%s as of %s', base64.b32encode(transaction_id), exact_balance, balance_amount, balance_asofdate)
+
+		if res.message_id == 'Np':
+			log.warn('%s (tx_id: %s). Balance %s $%s as of %s', what, base64.b32encode(transaction_id), exact_balance, balance_amount, balance_asofdate)
+		else:
+			log.info('Success (tx_id: %s). Balance %s $%s as of %s', base64.b32encode(transaction_id), exact_balance, balance_amount, balance_asofdate)
 
 	def payment_key(self):
 		'''Generates the Payment Transaction Key, or PTK. It does not communicate with the server.'''
