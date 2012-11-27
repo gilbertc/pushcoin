@@ -14,58 +14,36 @@
 # this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 # Place, Suite 330, Boston, MA  02111-1307  USA
 #
-__author__  = '''Slawomir Lisznianski <sl@minta.com>'''
+__author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
 import binascii, struct, ctypes
 
-# This is an absolute minimum length (in bytes) for a PCOS serialized object:
+# This is a minimum length (in bytes) for a PCOS serialized object:
 #
-#   min_size = sizeof_header(16) + sizeof_empty_unbounded_array(2)
-#
-# Note: the empty unbounded array implies no block enumerations.
-MESSAGE_HEADER_LENGTH = 4
+MIN_MESSAGE_HEADER_LENGTH = 7
 
-# Block-meta record has a max size: size_of_block_id(2) + max_int_varint(5)
-MAX_BLOCK_META_LENGTH = 7
-
-# Size of message and block identifier
-MESSAGE_ID_LENGTH = 2
-BLOCK_ID_LENGTH = 2
+# safety limits
+MAX_MESSAGE_ID_LENGTH = 2
+MAX_BLOCK_ID_LENGTH = 2
+MAX_BLOCK_COUNT = 5
+MAX_BLOCK_LENGTH = 1024
 
 # PCOS object mime type
 PCOS_MIME_TYPE = 'application/pcos'
-
-# Minimum size of block enumartion segment
-MIN_BLOCK_ENUMARTION_SIZE = 1
 
 # Largest unsigned long
 MAX_UINT=4294967295
 MAX_ULONG=18446744073709551615
 
-# PUSHCOiN protocol identifier (aka "magic")
-PROTOCOL_MAGIC = b'PC'
-PROTOCOL_MAGIC_LEN = 2
+# PushCoin protocol identifier (aka "magic")
+PROTOCOL_MAGIC = b'PCOS'
+PROTOCOL_MAGIC_LEN = len(PROTOCOL_MAGIC)
 
 # PCOS parser error codes
 ERR_INTERNAL_ERROR = 100
 ERR_MALFORMED_MESSAGE = 101
 ERR_BAD_MAGIC = 102
-
-# Helper to copy from bytearray to ctypes buffer
-def _copy_bytearray_to_ctype_buffer(src, dst, count, dst_offset=0):
-	# create storage to hold the data-pointer
-	src_ptr_holder = ctypes.c_byte * len(src)
-	src_ptr = src_ptr_holder.from_buffer(src)
-	# copy the data
-	ctypes.memmove(ctypes.byref( dst, dst_offset ), src_ptr, count)
-	return count
-
-
-# Helper to copy from bytes to ctypes buffer
-def _copy_bytes_to_ctype_buffer(src, dst, count, dst_offset=0):
-	# copy the data
-	ctypes.memmove(ctypes.byref( dst, dst_offset ), src, count)
-	return count
+ERR_ARG_OUT_OF_RANGE = 103
 
 
 # Convert integer to a varint, return a bytearray
@@ -91,7 +69,7 @@ def _to_varint( val ):
 	else:
 		dat.append( val )
 
-	return dat
+	return bytes(dat)
 
 
 class PcosError( Exception ):
@@ -116,9 +94,6 @@ class Doc:
 	def __init__( self, data = None, name = None ): 
 		"""Constructs PCOS from binary data."""
 
-		if name and len( name ) != MESSAGE_ID_LENGTH:
-				raise PcosError( ERR_MALFORMED_MESSAGE, 'malformed message-ID' )
-			
 		self.message_id = name 
 
 		# map of blocks, such that for a given block-name, we can quickly access its data
@@ -126,21 +101,23 @@ class Doc:
 
 		if data:
 			payload = parse_block(data, name, 'Hd')
-			if payload.size() < MESSAGE_HEADER_LENGTH + 1:
-				raise PcosError( ERR_MALFORMED_MESSAGE, 'payload too small for a valid message' )
+			if payload.size() < MIN_MESSAGE_HEADER_LENGTH:
+				raise PcosError( ERR_MALFORMED_MESSAGE, 'Payload too small for PCOS message' )
 
 			# parse the message header
-			self.magic = payload.read_fixstr( PROTOCOL_MAGIC_LEN )
+			self.magic = payload.read_bytes( PROTOCOL_MAGIC_LEN )
 
-			# check if magic matches our encoding tag
+			# check if magic matches
 			if self.magic != PROTOCOL_MAGIC:
-				raise PcosError( ERR_BAD_MAGIC )
+				raise PcosError( ERR_BAD_MAGIC, "Not a PCOS message; bad magic" )
 
 			# message ID
-			self.message_id = payload.read_fixstr( MESSAGE_ID_LENGTH )
+			self.message_id = payload.read_string( MAX_MESSAGE_ID_LENGTH )
 
 			# block count
 			self.block_count = payload.read_uint()
+			if self.block_count > MAX_BLOCK_COUNT:
+				raise PcosError( ERR_ARG_OUT_OF_RANGE, 'Block count exceeds max of %s (%s)' % (MAX_BLOCK_COUNT, self.block_count) )
 
 			# data appears to be "one of ours", store it
 			self.data = data
@@ -152,8 +129,13 @@ class Doc:
 			# Pass One: enumerate blocks
 			for i in xrange(0, self.block_count):
 				blk = BlockMeta()
-				blk.name = payload.read_fixstr( BLOCK_ID_LENGTH )
+				# block name
+				blk.name = payload.read_string( MAX_BLOCK_ID_LENGTH )
+				# block length
 				blk.length = payload.read_uint()
+				if blk.length > MAX_BLOCK_LENGTH:
+					raise PcosError( ERR_ARG_OUT_OF_RANGE, 'Block size exceeds max of %s (%s)' % (MAX_BLOCK_LENGTH, blk.length) )
+				# store the block-meta
 				stage_blocks.append(blk)
 
 			# at this point remember where data-segment starts,
@@ -172,7 +154,7 @@ class Doc:
 				block_offset += blk.length
 				
 			if block_offset > payload.size():
-				raise PcosError( ERR_MALFORMED_MESSAGE, "incomplete message or wrong block-meta info -- blocks couldn't fit in the received payload" )
+				raise PcosError( ERR_MALFORMED_MESSAGE, "Incomplete message or wrong block-meta info; blocks cannot fit in payload" )
 
 
 	def block( self, name ):
@@ -194,40 +176,33 @@ class Doc:
 	def as_bytearray( self ):
 		"""Returns encoded byte-stream."""
 
-		# allocate big enough C-buffer for storing wire data
-		max_total_length = MESSAGE_HEADER_LENGTH + MIN_BLOCK_ENUMARTION_SIZE + MAX_BLOCK_META_LENGTH * len(self.blocks) + self._data_segment_size()
-		payload = ctypes.create_string_buffer( max_total_length )
-
-		# reset write position
-		write_offset = 0
+		# buffer to store serialized data
+		payload = bytearray()
 
 		# protocol magic
-		write_offset += _copy_bytes_to_ctype_buffer(PROTOCOL_MAGIC, payload, PROTOCOL_MAGIC_LEN, write_offset)
+		payload.extend(PROTOCOL_MAGIC)
 
 		# message identifier
-		write_offset += _copy_bytes_to_ctype_buffer(self.message_id, payload, MESSAGE_ID_LENGTH, write_offset)
+		payload.extend(_to_varint(len(self.message_id)))
+		payload.extend(self.message_id)
 
 		# number of blocks
-		block_count_varint = _to_varint( len(self.blocks) )
-		write_offset += _copy_bytearray_to_ctype_buffer(block_count_varint, payload, len(block_count_varint), write_offset)
+		payload.extend(_to_varint( len(self.blocks) ))
 
 		# block-metas
 		for (name, b) in self.blocks.iteritems():
 			# block name
-			write_offset += _copy_bytes_to_ctype_buffer(name, payload, BLOCK_ID_LENGTH, write_offset)
+			payload.extend(_to_varint(len(name)))
+			payload.extend(name)
 
 			# block size
-			block_size_varint = _to_varint( b.size() )
-			write_offset += _copy_bytearray_to_ctype_buffer(block_size_varint, payload, len(block_size_varint), write_offset)
+			payload.extend(_to_varint( b.size() ))
 
 		# block data
 		for (name, b) in self.blocks.iteritems():
-			write_offset += _copy_bytearray_to_ctype_buffer(b.as_bytearray(), payload, b.size(), write_offset)
+			payload.extend(b.as_bytearray())
 
-		buf_ptr_holder = ctypes.c_byte * write_offset
-		buf_ptr = buf_ptr_holder.from_buffer(payload)
-
-		return memoryview(buf_ptr).tobytes()
+		return bytes(payload)
 
 
 	def _data_segment_size( self ):
@@ -282,7 +257,7 @@ class Block:
 		if self.mode == 'I':
 			return self.doc.data[self._start : self._start + self._length]
 		else:
-			return self.data
+			return bytes(self.data)
 
 
 	def size( self ):
@@ -303,7 +278,7 @@ class Block:
 	def read_byte( self ):
 		assert self.mode == 'I'
 		if self._length - self._offset > 0:
-			octet = ord(self.doc.data[self._start + self._offset])
+			octet = ord( self.doc.data[self._start + self._offset] )
 			self._offset += 1
 			return octet
 
@@ -311,22 +286,23 @@ class Block:
 
 
 	def read_bytes( self, size ):
+		'''Reads exactly size-length bytes'''
 		assert self.mode == 'I'
 		if self._length - self._offset >= size:
 			begin = self._start + self._offset
 			dat = self.doc.data[ begin : begin + size]
 			self._offset += size
-			return dat
+			return bytes(dat)
 
 		raise PcosError( ERR_MALFORMED_MESSAGE, 'run out of input bytes to read from - incomplete or corrupted message' )
 
 
-	def read_char( self ):
-		assert self.mode == 'I'
-		if self._length - self._offset > 0:
-			octet = self.doc.data[self._start + self._offset]
-			self._offset += 1
-			return octet
+	def read_bytestr( self, maxlen = None ):
+		'''Reads up to maxlen bytes prefixed with size on the wire'''
+		length = self.read_uint()
+		if maxlen and length > maxlen:
+			raise PcosError( ERR_ARG_OUT_OF_RANGE, 'byte-sequence exceeds max-length of %s (%s)' % (maxlen, length) )
+		return self.read_bytes( length )
 
 
 	def read_bool( self ):
@@ -380,28 +356,11 @@ class Block:
 		return struct.unpack("!d", self.read_bytes( 8 ))[0]
 
 
-	def read_varstr( self ):
+	def read_string( self, maxlen = None ):
 		length = self.read_uint()
-		return self.read_bytes( length )
-
-
-	def read_fixstr( self, length ):
-		return self.read_bytes( length )
-
-
-	def write_byte( self, val ):
-		assert self.mode == 'O'
-		self.data.extend( struct.pack("!B", val) )
-
-
-	def write_bytes( self, val ):
-		assert self.mode == 'O'
-		self.data.extend( val )
-
-
-	def write_char( self, val ):
-		assert self.mode == 'O'
-		self.data.extend( struct.pack("!c", val) )
+		if maxlen and length > maxlen:
+			raise PcosError( ERR_ARG_OUT_OF_RANGE, 'string exceeds max-length of %s (%s)' % (maxlen, length) )
+		return self.read_bytes( length ).decode("utf-8")
 
 
 	def write_bool( self, val ):
@@ -439,21 +398,31 @@ class Block:
 		self.data.extend( struct.pack("!d", val) )
 
 
-	def write_varstr( self, val ):
+	def write_byte( self, val ):
+		'''Writes a single byte (0-255) to the output buffer'''
+		assert self.mode == 'O'
+		self.data.append( val )
+
+
+	def write_bytes( self, val ):
+		'''Appends (encoded) bytes onto output buffer'''
+		assert self.mode == 'O'
+		self.data.extend( val )
+
+
+	def write_bytestr( self, val ):
+		'''Appends size-prefix then (encoded) bytes onto output buffer'''
 		if val == None:
 			self.write_uint( 0 )
 			return
-			
-		length = len( val )
-		self.write_uint( length )
-		if length:
-			self.write_bytes(safe_str(val))
+
+		self.write_uint( len(val) )
+		self.write_bytes( val )
 
 
-	def write_fixstr( self, val, size ):
-		if len( val ) != size:
-			raise PcosError( ERR_MALFORMED_MESSAGE, 'fixed array-field size not met: len(str) != %s' % size )
-		self.write_bytes(safe_str(val))
+	def write_string( self, val ):
+		'''Encodes string as UTF-8, then writes bytes'''
+		self.write_bytestr( val.encode("utf-8") ) 
 
 
 def parse_block(data, message_id, block_name):
@@ -492,8 +461,7 @@ def _datatype_test():
 
 	bo_in = create_output_block( 'Bo' )
 	bo_in.write_byte( 44 )
-	bo_in.write_bytes( 'Bytes' )
-	bo_in.write_char( 'c' )
+	bo_in.write_bytes( b'Bytes' )
 	bo_in.write_bool( False )
 	bo_in.write_bool( True )
 
@@ -508,14 +476,13 @@ def _datatype_test():
 	bo_in.write_long( 64 ) # two octets
 	bo_in.write_double(3.14)
 
-	bo_in.write_varstr('variable string')
-	bo_in.write_fixstr('fixed string', 12)
+	bo_in.write_string('variable string')
 
 	outgoing = Doc( name="Te" )
 	outgoing.add( bo_in )
 	
 	# Get encoded PCOS data 	
-	generated_data = outgoing.encoded()
+	generated_data = outgoing.as_bytearray()
 
 	reqf = open('data.pcos', 'w')
 	reqf.write( generated_data )
@@ -528,8 +495,7 @@ def _datatype_test():
 	bo_out = incoming.block( 'Bo' )
 
 	assert bo_out.read_byte() == 44
-	assert bo_out.read_bytes(5) == 'Bytes' 
-	assert bo_out.read_char() == 'c'
+	assert bo_out.read_bytes(5) == b'Bytes' 
 	assert bo_out.read_bool() == False
 	assert bo_out.read_bool() == True
 
@@ -544,8 +510,7 @@ def _datatype_test():
 	assert bo_out.read_long() == 64
 	assert (abs(bo_out.read_double() - 3.14) < 0.001)
 
-	assert bo_out.read_varstr() == 'variable string'
-	assert bo_out.read_fixstr(12) == 'fixed string'
+	assert bo_out.read_string() == 'variable string'
 
 
 def _writing_test_pong():
@@ -558,10 +523,10 @@ def _writing_test_pong():
 	msg.add( tm )
 	
 	# Get encoded PCOS data 	
-	generated_data = msg.encoded()
+	generated_data = msg.as_bytearray()
 
 	# Comparison data
-	sample_data = binascii.unhexlify( '5043506f01546d0584fcfaba60' )
+	sample_data = binascii.unhexlify( '50434f5302506f0102546d0584fcfaba60' )
 	
 	assert str(generated_data) == str(sample_data)
 	return generated_data
@@ -572,16 +537,16 @@ def _writing_test_error():
 
 	bo = create_output_block( 'Bo' )
 	bo.write_uint( 100 )
-	bo.write_varstr( 'only a test' )
+	bo.write_string( 'only a test' )
 
 	msg = Doc( name="Er" )
 	msg.add( bo )
 	
 	# Get encoded PCOS data 	
-	generated_data = msg.encoded()
+	generated_data = msg.as_bytearray()
 
 	# Comparison data
-	sample_data = binascii.unhexlify( '5043457201426f0d640b6f6e6c7920612074657374' )
+	sample_data = binascii.unhexlify( '50434f530245720102426f0d640b6f6e6c7920612074657374' )
 	assert str(generated_data) == str(sample_data)
 
 
