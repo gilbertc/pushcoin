@@ -20,7 +20,7 @@ import binascii, struct, ctypes
 
 # This is a minimum length (in bytes) for a PCOS serialized object:
 #
-MIN_MESSAGE_HEADER_LENGTH = 7
+MIN_MESSAGE_HEADER_LENGTH = 8
 
 # safety limits
 MAX_MESSAGE_ID_LENGTH = 2
@@ -30,6 +30,7 @@ MAX_BLOCK_LENGTH = 1024
 
 # PCOS object mime type
 PCOS_MIME_TYPE = 'application/pcos'
+PCOS_FLAGS=0
 
 # Largest unsigned long
 MAX_UINT=4294967295
@@ -112,6 +113,9 @@ class Doc:
 			if self.magic != PROTOCOL_MAGIC:
 				raise PcosError( ERR_BAD_MAGIC, "Not a PCOS message; bad magic" )
 
+			# PCOS flags
+			self.pcos_flags = payload.read_byte()
+
 			# message ID
 			self.message_id = payload.read_string( MAX_MESSAGE_ID_LENGTH )
 
@@ -185,6 +189,9 @@ class Doc:
 
 		# protocol magic
 		payload.extend(PROTOCOL_MAGIC)
+
+		# PCOS flags
+		payload.append(PCOS_FLAGS)
 
 		# message identifier
 		payload.extend(_to_varint(len(self.message_id)))
@@ -444,6 +451,7 @@ def parse_block(data, message_id, block_name):
 	doc.data = data
 	doc.blocks[block_name] = blk
 	doc.magic = PROTOCOL_MAGIC
+	doc.pcos_flags = PCOS_FLAGS
 	doc.length = blk.length
 	doc.block_count = 1
 	return doc.block(block_name)
@@ -534,7 +542,7 @@ def _writing_test_pong():
 	generated_data = msg.as_bytearray()
 
 	# Comparison data
-	sample_data = binascii.unhexlify( '50434f5302506f0102546d0584fcfaba60' )
+	sample_data = binascii.unhexlify( '50434f530002506f0102546d0584fcfaba60' )
 	
 	assert str(generated_data) == str(sample_data)
 	return generated_data
@@ -554,7 +562,7 @@ def _writing_test_error():
 	generated_data = msg.as_bytearray()
 
 	# Comparison data
-	sample_data = binascii.unhexlify( '50434f530245720102426f0d640b6f6e6c7920612074657374' )
+	sample_data = binascii.unhexlify( '50434f53000245720102426f0d640b6f6e6c7920612074657374' )
 	assert str(generated_data) == str(sample_data)
 
 
