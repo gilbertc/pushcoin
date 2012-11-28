@@ -44,6 +44,7 @@ ERR_INTERNAL_ERROR = 100
 ERR_MALFORMED_MESSAGE = 101
 ERR_BAD_MAGIC = 102
 ERR_ARG_OUT_OF_RANGE = 103
+ERR_BLOCK_NOT_FOUND = 104
 
 
 # Convert integer to a varint, return a bytearray
@@ -157,14 +158,17 @@ class Doc:
 				raise PcosError( ERR_MALFORMED_MESSAGE, "Incomplete message or wrong block-meta info; blocks cannot fit in payload" )
 
 
-	def block( self, name ):
+	def block( self, name, optional=False ):
 		"""Returns the block iterator for a given block name."""
 
 		meta = self.blocks.get( name, None )
 		if meta:
 			return create_input_block(self, meta)
 		else:
-			return None # Oops, block not found!
+			if optional:
+				return None # Oops, block not found!
+			else:
+				raise PcosError( ERR_BLOCK_NOT_FOUND, "Required block '%s' not found in message" % name )
 
 
 	def add( self, block ):

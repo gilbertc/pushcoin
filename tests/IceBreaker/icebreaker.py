@@ -115,9 +115,11 @@ class RmoteCall:
 		#------------------------------------
 		out_bo = pcos.create_output_block( 'Bo' )
 		# MAT
-		out_bo.write_varstr( binascii.unhexlify( self.args['mat'] ) )
+		out_bo.write_bytestr( binascii.unhexlify( self.args['mat'] ) )
+		# mime
+		out_bo.write_string( 'text/plain'  )
 		# report content
-		out_bo.write_varstr( self.args['report']  )
+		out_bo.write_bytestr( self.args['report']  )
 
 		req = pcos.Doc( name="Er" )
 		req.add( out_bo )
@@ -788,8 +790,8 @@ class RmoteCall:
 		'''Shows details of Success PCOS message'''
 		if res.message_id == "Ok":
 			bo = res.block( 'Bo' )
-			ref_data = bo.read_varstr() # ref_data
-			transaction_id = bo.read_varstr() # tx-id
+			ref_data = bo.read_bytestr() # ref_data
+			transaction_id = bo.read_bytestr() # tx-id
 			log.info('Success (tx_id: %s, ref_data: %s)', binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ))
 		else:
 			raise RuntimeError("'%s' not a Success message" % res.message_id)
