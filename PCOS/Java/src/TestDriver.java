@@ -16,8 +16,7 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package pcos;
-
+import pcos.*;
 import java.util.Map.Entry;
 
 public final class TestDriver 
@@ -27,7 +26,6 @@ public final class TestDriver
 		OutputBlock bo = new BlockWriter( "Bo" );
 		bo.writeByte( 44 );
 		bo.writeFixString( "Bytes", 5 );
-		bo.writeChar( 'c' );
 		bo.writeBool( false );
 		bo.writeBool( true );
 
@@ -43,7 +41,6 @@ public final class TestDriver
 		bo.writeDouble(3.14);
 
 		bo.writeVarString("variable string");
-		bo.writeFixString("fixed string", 12);
 		
 		OutputDocument doc = new DocumentWriter("Te");
 		doc.addBlock(bo);
@@ -66,7 +63,6 @@ public final class TestDriver
 		
 		assert bo.readByte() == 44;
 		assert new String( bo.readBytes(5) ).equals( "Bytes" ); 
-		assert bo.readChar() == 'c';
 		assert bo.readBool() == false;
 		assert bo.readBool() == true;
 
@@ -82,7 +78,6 @@ public final class TestDriver
 		assert (Math.abs(bo.readDouble() - 3.14) < 0.001);
 
 		assert bo.readVarString().equals( "variable string" );
-		assert bo.readFixString(12).equals( "fixed string" );
 	}
 	
 	/**

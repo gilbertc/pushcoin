@@ -92,6 +92,9 @@ public class DocumentWriter implements OutputDocument
 		// protocol magic
 		writer.writeBytes( ProtocolTag.PROTOCOL_MAGIC );
 		
+		// protocol flags
+		writer.writeByte( ProtocolTag.PROTOCOL_FLAGS );
+
 		// message identifier
 		writer.writeFixString( name_, ProtocolTag.MESSAGE_ID_LEN );
 

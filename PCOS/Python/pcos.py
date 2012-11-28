@@ -30,7 +30,6 @@ MAX_BLOCK_LENGTH = 1024
 
 # PCOS object mime type
 PCOS_MIME_TYPE = 'application/pcos'
-PCOS_FLAGS=0
 
 # Largest unsigned long
 MAX_UINT=4294967295
@@ -39,6 +38,7 @@ MAX_ULONG=18446744073709551615
 # PushCoin protocol identifier (aka "magic")
 PROTOCOL_MAGIC = b'PCOS'
 PROTOCOL_MAGIC_LEN = len(PROTOCOL_MAGIC)
+PROTOCOL_FLAGS=0x0
 
 # PCOS parser error codes
 ERR_INTERNAL_ERROR = 100
@@ -191,7 +191,7 @@ class Doc:
 		payload.extend(PROTOCOL_MAGIC)
 
 		# PCOS flags
-		payload.append(PCOS_FLAGS)
+		payload.append(PROTOCOL_FLAGS)
 
 		# message identifier
 		payload.extend(_to_varint(len(self.message_id)))
@@ -415,13 +415,9 @@ class Block:
 		self.data.append( val )
 
 
-	def write_bytes( self, val, maxlen = None ):
+	def write_bytes( self, val ):
 		'''Appends (encoded) bytes onto output buffer'''
 		assert self.mode == 'O'
-		if maxlen:
-			length = len(val)
-			if length > maxlen:
-				raise PcosError( ERR_ARG_OUT_OF_RANGE, 'bytes exceeds max-length of %s (%s)' % (maxlen, length) )
 		self.data.extend( val )
 
 
@@ -451,7 +447,7 @@ def parse_block(data, message_id, block_name):
 	doc.data = data
 	doc.blocks[block_name] = blk
 	doc.magic = PROTOCOL_MAGIC
-	doc.pcos_flags = PCOS_FLAGS
+	doc.pcos_flags = PROTOCOL_FLAGS
 	doc.length = blk.length
 	doc.block_count = 1
 	return doc.block(block_name)
@@ -492,6 +488,7 @@ def _datatype_test():
 	bo_in.write_long( 64 ) # two octets
 	bo_in.write_double(3.14)
 
+	bo_in.write_bytestr(b'abcdef')
 	bo_in.write_string('variable string')
 
 	outgoing = Doc( name="Te" )
@@ -526,6 +523,7 @@ def _datatype_test():
 	assert bo_out.read_long() == 64
 	assert (abs(bo_out.read_double() - 3.14) < 0.001)
 
+	assert bo_out.read_bytestr() == b'abcdef'
 	assert bo_out.read_string() == 'variable string'
 
 

@@ -26,5 +26,6 @@ public class ProtocolTag
 	public static final int MIN_BLOCK_ENUMARTION_SIZE = 1;
 	public static final int MESSAGE_HEADER_LENGTH = 4;
 	public static final int MAX_BLOCK_META_LENGTH = 7;
-	public static final byte[] PROTOCOL_MAGIC = new byte[]{'P', 'C'};
+	public static final byte[] PROTOCOL_MAGIC = new byte[]{'P','C','O','S'};
+	public static final byte PROTOCOL_FLAGS = 0x0;
 }
