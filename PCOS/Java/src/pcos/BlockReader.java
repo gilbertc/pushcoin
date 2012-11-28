@@ -20,6 +20,7 @@ package pcos;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.io.UnsupportedEncodingException;
 
 public class BlockReader implements InputBlock 
 {
@@ -71,33 +72,18 @@ public class BlockReader implements InputBlock
 	}
 
 	@Override
-	public char readChar() throws PcosError 
+	public byte[] readByteStr(long maxlen) throws PcosError
 	{
-		if (end_ - offset_ > 0)
-		{
-			return (char)input_[offset_++];
-		}
-
-		throw malformed_;
+		long length = readUint();
+		if (maxlen != 0 && length > maxlen)
+			throw new PcosError( PcosErrorCode.ERR_ARG_OUT_OF_RANGE, "input byte-sequence exceeds max length" );
+		return readBytes(length);
 	}
 
 	@Override
 	public double readDouble() throws PcosError
 	{
 		return ByteBuffer.wrap(readBytes(TYPE_WIRE_SIZE_DOUBLE)).getDouble();
-	}
-
-	@Override
-	public String readFixString(long size) throws PcosError
-	{
-		if (end_ - offset_ >= size)
-		{
-			String val = new String(input_, (int)offset_, (int)size);
-			offset_ += size;
-			return val;
-		}
-
-		throw malformed_;
 	}
 
 	private long readVarInt( int max_octets ) throws PcosError
@@ -158,10 +144,14 @@ public class BlockReader implements InputBlock
 	}
 
 	@Override
-	public String readVarString() throws PcosError
+	public String readString(long maxlen) throws PcosError
 	{
-		long length = readUint();
-		return new String(readBytes( length ));
+		try {
+		byte[] encoded_str = readByteStr( maxlen );
+		return new String(encoded_str, ProtocolTag.PROTOCOL_CHARSET);
+		} catch (UnsupportedEncodingException e)	{
+			throw new PcosError( PcosErrorCode.ERR_BAD_CHAR_ENCODING, "input string decoding error" );
+		}
 	}
 
 	@Override
@@ -181,18 +171,4 @@ public class BlockReader implements InputBlock
 	{
 		return end_ - beg_;
 	}
-
-	@Override
-	public byte[] readFixBytes(long size) throws PcosError
-	{
-		return readBytes( size );
-	}
-
-	@Override
-	public byte[] readVarBytes() throws PcosError
-	{
-		long length = readUint();
-		return readBytes( length );
-	}
-
 }

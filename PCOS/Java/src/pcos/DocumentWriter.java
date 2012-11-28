@@ -78,7 +78,7 @@ public class DocumentWriter implements OutputDocument
 	@Override
 	public byte[] toBytes() throws PcosError
 	{
-		// allocate big enough C-buffer for storing wire data
+		// allocate big enough buffer for storing wire data
 		int max_total_length = 
 			ProtocolTag.MESSAGE_HEADER_LENGTH + 
 			ProtocolTag.MIN_BLOCK_ENUMARTION_SIZE + 
@@ -96,19 +96,19 @@ public class DocumentWriter implements OutputDocument
 		writer.writeByte( ProtocolTag.PROTOCOL_FLAGS );
 
 		// message identifier
-		writer.writeFixString( name_, ProtocolTag.MESSAGE_ID_LEN );
+		writer.writeString( name_ );
 
 		// number of blocks
-		writer.writeUlong( blocks_.size() );
+		writer.writeUint( blocks_.size() );
 
 		// block-metas
 		for (OutputBlock blk : blocks_)
 		{
 			// block name
-			writer.writeFixString( blk.name(), ProtocolTag.BLOCK_ID_LENGTH );
+			writer.writeString( blk.name() );
 			
 			// block size
-			writer.writeUlong( blk.size() );
+			writer.writeUint( blk.size() );
 		}
 
 		// block data
@@ -116,8 +116,12 @@ public class DocumentWriter implements OutputDocument
 			writer.writeBytes( blk.toBytes() );
 		}
 		
-		// byte array with PCOS message
-		return payload.array();
+		// return the byte array with PCOS message
+		// (what an akward way to extract these bytes)
+		byte[] res = new byte[payload.position()];
+		payload.rewind();
+		payload.get(res);
+		return res;
 	}
 
 }

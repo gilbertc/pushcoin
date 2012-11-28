@@ -21,6 +21,7 @@ package pcos;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
@@ -83,18 +84,7 @@ public class BlockWriter implements OutputBlock
 	{
 		try
 		{
-			output_.write(v, 0, v.length);
-		} catch (IOException e)	{
-			throw malformed_;
-		}
-	}
-
-	@Override
-	public void writeChar(char c) throws PcosError 
-	{
-		try
-		{
-			output_.write((int)c);
+			output_.write(v);
 		} catch (IOException e)	{
 			throw malformed_;
 		}
@@ -112,44 +102,22 @@ public class BlockWriter implements OutputBlock
 	}
 
 	@Override
-	public void writeFixString(String s, int size) throws PcosError 
-	{
-		if (s.length() != size) {
-			throw new PcosError( PcosErrorCode.ERR_MALFORMED_MESSAGE, "mismatch in fixed-size string lengths" );
-		}
-		try
-		{
-			output_.writeBytes(s);
-		} catch (IOException e)	{
-			throw malformed_;
-		}
-	}
-
-	@Override
-	public void writeVarString(String s) throws PcosError 
-	{
-		try	{
-			writeUint(s.length());
-			output_.writeBytes(s);
-		} catch (IOException e)	{
-			throw malformed_;
-		}
-	}
-
-	@Override
-	public void writeFixBytes(byte[] s, int size) throws PcosError 
-	{
-		if (s.length != size) {
-			throw new PcosError( PcosErrorCode.ERR_MALFORMED_MESSAGE, "mismatch in fixed-size bytes lengths" );
-		}
-		writeBytes(s);
-	}
-
-	@Override
-	public void writeVarBytes(byte[] s) throws PcosError 
+	public void writeByteStr(byte[] s) throws PcosError 
 	{
 		writeUint(s.length);
 		writeBytes(s);
+	}
+
+	@Override
+	public void writeString(String s) throws PcosError 
+	{
+		try	{
+			/* PCOS uses UTF-8 encoding on the wire */
+			final byte[] encoded_str = s.getBytes(ProtocolTag.PROTOCOL_CHARSET);
+			writeByteStr(encoded_str);
+		} catch (UnsupportedEncodingException e)	{
+			throw new PcosError( PcosErrorCode.ERR_BAD_CHAR_ENCODING, "output string encoding error" );
+		}
 	}
 
 	@Override

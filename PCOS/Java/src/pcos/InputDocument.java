@@ -26,5 +26,5 @@ public interface InputDocument
 	String getDocumentName();
 	long getBlockCount();
 	Map<String, InputBlock> getBlocks();
-	InputBlock getBlock(String name);
+	InputBlock getBlock(String name) throws PcosError;
 }

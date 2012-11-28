@@ -28,6 +28,7 @@ import java.util.TreeMap;
 public class DocumentReader implements InputDocument 
 {
 	private String magic_;
+	private byte pcosFlags_;
 	private String documentName_;
 	private long blockCount_;
 	private Map<String, InputBlock> blocks_ = new TreeMap<String, InputBlock>();
@@ -68,13 +69,17 @@ public class DocumentReader implements InputDocument
 		// read PCOS magic
 		byte[] magic = inblock.readBytes( ProtocolTag.PROTOCOL_MAGIC_LEN );
 		if (! Arrays.equals(ProtocolTag.PROTOCOL_MAGIC, magic))
-			throw new PcosError( PcosErrorCode.ERR_INCOMPATIBLE_REQUEST, "not a PCOS message" );
+			throw new PcosError( PcosErrorCode.ERR_BAD_MAGIC, "Not a PCOS message; bad magic" );
 		magic_ = new String(magic);
+
+		// protocol flags
+		pcosFlags_ = inblock.readByte();
+
 		// message (doc) name
-		documentName_ = inblock.readFixString( ProtocolTag.MESSAGE_ID_LEN );
+		documentName_ = inblock.readString( ProtocolTag.MESSAGE_ID_LEN );
 		
 		// block count
-		blockCount_ = inblock.readUlong();
+		blockCount_ = inblock.readUint();
 
 		// Enumerating blocks is a two-pass process -- first, we get their names and lengths,
 		// then we can arrive at the beginning of the data segment.
@@ -84,8 +89,8 @@ public class DocumentReader implements InputDocument
 		for (int i = 0; i < blockCount_; ++i)
 		{
 			BlockMeta blk = new BlockMeta();
-			blk.name = inblock.readFixString( ProtocolTag.BLOCK_ID_LENGTH );
-			blk.length = inblock.readUlong();
+			blk.name = inblock.readString( ProtocolTag.BLOCK_ID_LENGTH );
+			blk.length = inblock.readUint();
 			stageBlocks.add(blk);
 		}
 
@@ -104,13 +109,16 @@ public class DocumentReader implements InputDocument
 		}
 			
 		if ( block_offset > input.length ) {
-			throw new PcosError( PcosErrorCode.ERR_MALFORMED_MESSAGE, "incomplete message or wrong block-meta info -- blocks couldn't fit in the received payload" );
+			throw new PcosError( PcosErrorCode.ERR_MALFORMED_MESSAGE, "Incomplete message or wrong block-meta info -- blocks couldn't fit in the received payload" );
 		}
 	}
 
 	@Override
-	public InputBlock getBlock(String name) 
+	public InputBlock getBlock(String name) throws PcosError 
 	{
-		return blocks_.get(name);
+		InputBlock blk = blocks_.get(name);
+		if (blk == null)
+			throw new PcosError( PcosErrorCode.ERR_BLOCK_NOT_FOUND, "Block not found in PCOS message: " + name);
+		return blk;
 	}
 }

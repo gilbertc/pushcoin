@@ -18,14 +18,18 @@
 
 import pcos.*;
 import java.util.Map.Entry;
+import java.util.Arrays;
 
 public final class TestDriver 
 {
+	static final byte[] rawbytes = {0xa, 0x2, (byte) 0xff};
+	static final String varstr = "variable string";
+
 	private static byte[] testWriteDatatypes() throws PcosError
 	{
 		OutputBlock bo = new BlockWriter( "Bo" );
 		bo.writeByte( 44 );
-		bo.writeFixString( "Bytes", 5 );
+		bo.writeBytes( rawbytes );
 		bo.writeBool( false );
 		bo.writeBool( true );
 
@@ -40,7 +44,8 @@ public final class TestDriver
 		bo.writeLong( 64 );
 		bo.writeDouble(3.14);
 
-		bo.writeVarString("variable string");
+		bo.writeByteStr(rawbytes);
+		bo.writeString(varstr);
 		
 		OutputDocument doc = new DocumentWriter("Te");
 		doc.addBlock(bo);
@@ -62,7 +67,7 @@ public final class TestDriver
 		InputBlock bo = doc.getBlock("Bo");
 		
 		assert bo.readByte() == 44;
-		assert new String( bo.readBytes(5) ).equals( "Bytes" ); 
+		assert Arrays.equals(bo.readBytes(rawbytes.length), rawbytes );
 		assert bo.readBool() == false;
 		assert bo.readBool() == true;
 
@@ -77,7 +82,8 @@ public final class TestDriver
 		assert bo.readLong() == 64;
 		assert (Math.abs(bo.readDouble() - 3.14) < 0.001);
 
-		assert bo.readVarString().equals( "variable string" );
+		assert Arrays.equals(bo.readByteStr(rawbytes.length), rawbytes );
+		assert bo.readString(varstr.length()).equals( varstr );
 	}
 	
 	/**
@@ -87,7 +93,13 @@ public final class TestDriver
 	{
 		try 
 		{
-			byte[] input = testWriteDatatypes();
+			final byte[] input = testWriteDatatypes();
+			StringBuilder sb = new StringBuilder();
+			for (byte b : input) 
+			{
+				sb.append(String.format("%02X ", b));
+			}
+			System.out.println("size=" + input.length + ", val=" + sb.toString());
 			testReadDatatypes( input );
 
 			System.out.println( "All checks out!" );

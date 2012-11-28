@@ -21,19 +21,16 @@ package pcos;
 public interface OutputBlock 
 {
 	// Parsers for primitives
+	void writeBool( boolean b ) throws PcosError;
 	void writeByte( int v ) throws PcosError;
 	void writeBytes( byte[] v ) throws PcosError;
-	void writeChar( char c ) throws PcosError;
-	void writeBool( boolean b ) throws PcosError;
+	void writeByteStr( byte[] v ) throws PcosError;
 	void writeInt(int val) throws PcosError; 
 	void writeUint(long val) throws PcosError;
 	void writeLong( long v) throws PcosError;
 	void writeUlong( long v ) throws PcosError;
 	void writeDouble( double v ) throws PcosError;
-	void writeVarBytes( byte[] s ) throws PcosError;
-	void writeFixBytes( byte[] s, int size) throws PcosError;
-	void writeVarString( String s ) throws PcosError;
-	void writeFixString( String s, int size) throws PcosError;
+	void writeString( String s ) throws PcosError;
 
 	String name();
 	int size();

@@ -46,6 +46,7 @@ ERR_MALFORMED_MESSAGE = 101
 ERR_BAD_MAGIC = 102
 ERR_ARG_OUT_OF_RANGE = 103
 ERR_BLOCK_NOT_FOUND = 104
+ERR_BAD_CHAR_ENCODING = 105
 
 
 # Convert integer to a varint, return a bytearray
@@ -312,7 +313,7 @@ class Block:
 		'''Reads up to maxlen bytes prefixed with size on the wire'''
 		length = self.read_uint()
 		if maxlen and length > maxlen:
-			raise PcosError( ERR_ARG_OUT_OF_RANGE, 'byte-sequence exceeds max-length of %s (%s)' % (maxlen, length) )
+			raise PcosError( ERR_ARG_OUT_OF_RANGE, 'input byte-sequence exceeds max length of %s (%s)' % (maxlen, length) )
 		return self.read_bytes( length )
 
 
@@ -471,9 +472,12 @@ def _reading_test_pong():
 def _datatype_test():
 	"""Test serialization and de-serialization of all primitive types"""
 
+	rawbytes = binascii.unhexlify( '0a02ff' )
+	varstr = 'variable string'
+	
 	bo_in = create_output_block( 'Bo' )
 	bo_in.write_byte( 44 )
-	bo_in.write_bytes( b'Bytes' )
+	bo_in.write_bytes( rawbytes )
 	bo_in.write_bool( False )
 	bo_in.write_bool( True )
 
@@ -488,8 +492,8 @@ def _datatype_test():
 	bo_in.write_long( 64 ) # two octets
 	bo_in.write_double(3.14)
 
-	bo_in.write_bytestr(b'abcdef')
-	bo_in.write_string('variable string')
+	bo_in.write_bytestr( rawbytes )
+	bo_in.write_string( varstr )
 
 	outgoing = Doc( name="Te" )
 	outgoing.add( bo_in )
@@ -508,7 +512,7 @@ def _datatype_test():
 	bo_out = incoming.block( 'Bo' )
 
 	assert bo_out.read_byte() == 44
-	assert bo_out.read_bytes(5) == b'Bytes' 
+	assert bo_out.read_bytes(len(rawbytes)) == rawbytes
 	assert bo_out.read_bool() == False
 	assert bo_out.read_bool() == True
 
@@ -523,8 +527,8 @@ def _datatype_test():
 	assert bo_out.read_long() == 64
 	assert (abs(bo_out.read_double() - 3.14) < 0.001)
 
-	assert bo_out.read_bytestr() == b'abcdef'
-	assert bo_out.read_string() == 'variable string'
+	assert bo_out.read_bytestr(len(rawbytes)) == rawbytes
+	assert bo_out.read_string() == varstr
 
 
 def _writing_test_pong():

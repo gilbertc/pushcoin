@@ -21,19 +21,16 @@ package pcos;
 public interface InputBlock 
 {
 	// Parsers for primitives
+	boolean readBool() throws PcosError;
 	byte readByte() throws PcosError;
 	byte[] readBytes(long size) throws PcosError;
-	char readChar() throws PcosError;
-	boolean readBool() throws PcosError;
+	byte[] readByteStr(long maxlen) throws PcosError;
 	int readInt() throws PcosError;
 	long readUint() throws PcosError;
 	long readLong() throws PcosError;
 	long readUlong() throws PcosError;
 	double readDouble() throws PcosError;
-	String readVarString() throws PcosError;
-	String readFixString(long size) throws PcosError;
-	byte[] readVarBytes() throws PcosError;
-	byte[] readFixBytes(long size) throws PcosError;
+	String readString(long maxlen) throws PcosError;
 
 	int readingPosition();
 	String name();
