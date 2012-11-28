@@ -404,9 +404,13 @@ class Block:
 		self.data.append( val )
 
 
-	def write_bytes( self, val ):
+	def write_bytes( self, val, maxlen = None ):
 		'''Appends (encoded) bytes onto output buffer'''
 		assert self.mode == 'O'
+		if maxlen:
+			length = len(val)
+			if length > maxlen:
+				raise PcosError( ERR_ARG_OUT_OF_RANGE, 'bytes exceeds max-length of %s (%s)' % (maxlen, length) )
 		self.data.extend( val )
 
 

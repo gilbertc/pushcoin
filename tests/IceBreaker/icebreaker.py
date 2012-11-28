@@ -692,23 +692,23 @@ class RmoteCall:
 		bo = pcos.create_output_block( 'Bo' )
 
 		# registration ID
-		bo.write_varstr( self.args['registration_id'] )
+		bo.write_string( self.args['registration_id'] )
 
 		# DER encoded public key -- signature verification key
-		bo.write_varstr( base64.b64decode(TEST_DSA_KEY_PUB_PEM) )
+		bo.write_bytestr( base64.b64decode(TEST_DSA_KEY_PUB_PEM) )
 
-		# user-agent attributes
-		user_agent = [
-			('appname', 'IceBreaker'), 
-			('appver', '2.0'), 
-			('appurl', 'https://pushcoin.com/Pub/SDK/WelcomeDevelopers'), 
-			('author', 'PushCoin <ask@pushcoin.com>'), 
-			('os', '%s %s' % (sys.platform, sys.version)), 
-		]
-		bo.write_uint( len(user_agent) )
-		for kv in user_agent:
-			bo.write_varstr( kv[0] )
-			bo.write_varstr( kv[1] )
+		# # user-agent attributes
+		# user_agent = [
+		# 	('appname', 'IceBreaker'), 
+		# 	('appver', '2.0'), 
+		# 	('appurl', 'https://pushcoin.com/Pub/SDK/WelcomeDevelopers'), 
+		# 	('author', 'PushCoin <ask@pushcoin.com>'), 
+		# 	('os', '%s %s' % (sys.platform, sys.version)), 
+		# ]
+		# bo.write_uint( len(user_agent) )
+		# for kv in user_agent:
+		# 	bo.write_varstr( kv[0] )
+		# 	bo.write_varstr( kv[1] )
 
 		#------------------------------------
 		#       Register Message
@@ -724,7 +724,7 @@ class RmoteCall:
 		out_bo = res.block( 'Bo' )
 
 		# read MAT returned by the server
-		mat = out_bo.read_varstr()
+		mat = out_bo.read_bytestr()
 
 		log.info('Success (MAT: %s)', binascii.hexlify( mat ))
 
@@ -836,10 +836,10 @@ class RmoteCall:
 			# jump to the block of interest
 			er = res.block( 'Bo' )
 			if er:
-				ref_data = er.read_varstr()
-				transaction_id = er.read_varstr()
+				ref_data = er.read_bytestr()
+				transaction_id = er.read_bytestr()
 				code = er.read_uint()
-				what = er.read_varstr()
+				what = er.read_string()
 				raise RuntimeError('tx-id=%s;ref_data=%s;what=%s;code=%s' % (binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ), what, code )) 
 			else:
 				raise RuntimeError('ERROR -- cause unknown') 
