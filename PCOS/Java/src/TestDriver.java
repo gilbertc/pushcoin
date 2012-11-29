@@ -16,7 +16,7 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-import pcos.*;
+import com.pushcoin.pcos.*;
 import java.util.Map.Entry;
 import java.util.Arrays;
 

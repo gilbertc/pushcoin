@@ -16,7 +16,7 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package pcos;
+package com.pushcoin.pcos;
 
 public enum PcosErrorCode {
 	/**

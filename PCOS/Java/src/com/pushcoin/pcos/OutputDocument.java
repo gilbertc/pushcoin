@@ -16,15 +16,10 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package pcos;
+package com.pushcoin.pcos;
 
-import java.util.Map;
-
-public interface InputDocument 
+public interface OutputDocument 
 {
-	String getMagic();
-	String getDocumentName();
-	long getBlockCount();
-	Map<String, InputBlock> getBlocks();
-	InputBlock getBlock(String name) throws PcosError;
+	void addBlock(OutputBlock b) throws PcosError;
+	byte[] toBytes() throws PcosError;
 }

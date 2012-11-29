@@ -16,10 +16,23 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package pcos;
+package com.pushcoin.pcos;
 
-public interface OutputDocument 
+public interface OutputBlock 
 {
-	void addBlock(OutputBlock b) throws PcosError;
+	// Parsers for primitives
+	void writeBool( boolean b ) throws PcosError;
+	void writeByte( int v ) throws PcosError;
+	void writeBytes( byte[] v ) throws PcosError;
+	void writeByteStr( byte[] v ) throws PcosError;
+	void writeInt(int val) throws PcosError; 
+	void writeUint(long val) throws PcosError;
+	void writeLong( long v) throws PcosError;
+	void writeUlong( long v ) throws PcosError;
+	void writeDouble( double v ) throws PcosError;
+	void writeString( String s ) throws PcosError;
+
+	String name();
+	int size();
 	byte[] toBytes() throws PcosError;
 }
