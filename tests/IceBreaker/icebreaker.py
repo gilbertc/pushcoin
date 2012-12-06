@@ -763,6 +763,29 @@ class RmoteCall:
 			key_data = body.read_varstr()
 			log.info('key %s, len %s bytes, expires on %s', key_info, len(key_data), time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(key_expiry)))
 
+
+	def transaction_challenge(self):
+
+		req = pcos.Doc( name="Tc" )
+		out_bo = pcos.create_output_block( 'Bo' )
+		out_bo.write_bytestr( binascii.unhexlify( self.args['mat'] ) )
+		req.add( out_bo )
+		res = self.send( req )
+
+		# jump to the block of interest
+		body = res.block( 'Bo' )
+
+		# number of keys
+		challenge_count = body.read_uint()
+
+		for ix in xrange(0,challenge_count):
+			response_length = body.read_uint()
+			challenge = body.read_bytestr()
+			challenge_id = body.read_bytestr()
+			key_expiry = body.read_ulong()
+			log.info('challenge %s, ID %s, expires on %s, exp-response-length: %s', binascii.hexlify( challenge), binascii.hexlify( challenge_id ), time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(key_expiry)), response_length)
+
+
 	def __init__(self, options, cmd, args):
 		# store the cmd and args for the command-handler
 		self.options = options
@@ -773,15 +796,16 @@ class RmoteCall:
 		self.lookup = {
 			"ping": self.ping,
 			"register": self.register,
-			"payment_pta": self.payment_pta,
-			"payment_key": self.payment_key,
+			"payment-pta": self.payment_pta,
+			"payment-key": self.payment_key,
 			"preauth": self.preauth,
-			"transaction_key": self.transaction_key,
+			"transaction-key": self.transaction_key,
+			"transaction-challenge": self.transaction_challenge,
 			"history": self.history,
-			"error_report": self.error_report,
+			"error-report": self.error_report,
 			"balance": self.balance,
-			"charge_pta": self.charge_pta,
-			"charge_key": self.charge_key,
+			"charge-pta": self.charge_pta,
+			"charge-key": self.charge_key,
 			"transfer": self.transfer,
 			"provision": self.provision,
 		}		
