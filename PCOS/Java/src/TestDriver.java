@@ -47,7 +47,7 @@ public final class TestDriver
 		bo.writeByteStr(rawbytes);
 		bo.writeString(varstr);
 		
-		OutputDocument doc = new DocumentWriter("Te");
+		OutputDocument doc = new DocumentWriter("Test");
 		doc.addBlock(bo);
 		return doc.toBytes();
 	}
@@ -56,6 +56,7 @@ public final class TestDriver
 	{
 		InputDocument doc = new DocumentReader( input );
 		System.out.println( "magic: " + doc.getMagic() );
+		System.out.println( "name: " + doc.getDocumentName() );
 		System.out.println( "blocks: ");
 		
 		for (Entry<String, InputBlock> entry : doc.getBlocks().entrySet())

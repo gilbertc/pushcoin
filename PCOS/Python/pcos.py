@@ -23,9 +23,9 @@ import binascii, struct, ctypes
 MIN_MESSAGE_HEADER_LENGTH = 8
 
 # safety limits
-MAX_MESSAGE_ID_LENGTH = 2
-MAX_BLOCK_ID_LENGTH = 2
-MAX_BLOCK_COUNT = 5
+MAX_MESSAGE_ID_LENGTH = 128
+MAX_BLOCK_ID_LENGTH = 64
+MAX_BLOCK_COUNT = 8
 MAX_BLOCK_LENGTH = 10240
 
 # PCOS object mime type
@@ -495,7 +495,7 @@ def _datatype_test():
 	bo_in.write_bytestr( rawbytes )
 	bo_in.write_string( varstr )
 
-	outgoing = Doc( name="Te" )
+	outgoing = Doc( name="Test" )
 	outgoing.add( bo_in )
 	
 	# Get encoded PCOS data 	
