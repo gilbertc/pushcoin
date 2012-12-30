@@ -31,7 +31,7 @@ public class DocumentWriter implements OutputDocument
 	
 	public DocumentWriter( String name ) throws PcosError
 	{
-		if ( name.length() != ProtocolTag.MESSAGE_ID_LEN ) {
+		if ( name.length() > ProtocolTag.MAX_MESSAGE_ID_LEN ) {
 			throw new PcosError( PcosErrorCode.ERR_MALFORMED_MESSAGE, "invalid message-ID" );
 		}
 		name_ = name;

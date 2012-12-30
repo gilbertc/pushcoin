@@ -76,7 +76,7 @@ public class DocumentReader implements InputDocument
 		pcosFlags_ = inblock.readByte();
 
 		// message (doc) name
-		documentName_ = inblock.readString( ProtocolTag.MESSAGE_ID_LEN );
+		documentName_ = inblock.readString( ProtocolTag.MAX_MESSAGE_ID_LEN );
 		
 		// block count
 		blockCount_ = inblock.readUint();

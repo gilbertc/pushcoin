@@ -21,7 +21,7 @@ package com.pushcoin.pcos;
 public class ProtocolTag 
 {
 	public static final int MESSAGE_HEADER_LENGTH = 8;
-	public static final int MESSAGE_ID_LEN = 2;
+	public static final int MAX_MESSAGE_ID_LEN = 128;
 	public static final int BLOCK_ID_LENGTH = 2;
 	public static final int MIN_BLOCK_ENUMARTION_SIZE = 1;
 	public static final int MAX_BLOCK_META_LENGTH = 7;
