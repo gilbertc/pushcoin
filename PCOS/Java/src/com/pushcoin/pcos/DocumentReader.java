@@ -89,7 +89,7 @@ public class DocumentReader implements InputDocument
 		for (int i = 0; i < blockCount_; ++i)
 		{
 			BlockMeta blk = new BlockMeta();
-			blk.name = inblock.readString( ProtocolTag.BLOCK_ID_LENGTH );
+			blk.name = inblock.readString( ProtocolTag.MAX_BLOCK_ID_LENGTH );
 			blk.length = inblock.readUint();
 			stageBlocks.add(blk);
 		}

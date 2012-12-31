@@ -20,7 +20,7 @@ package com.pushcoin.pcos;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
+import java.io.ByteArrayOutputStream;
 import java.util.AbstractList;
 import java.util.ArrayList;
 
@@ -56,37 +56,13 @@ public class DocumentWriter implements OutputDocument
 	}
 
 	/**
-	 *  Returns an output stream for a ByteBuffer.
-	 */
-	private static OutputStream asOutputStream(final ByteBuffer buf) 
-	{
-	    return new OutputStream() 
-	    {
-	        public void write(int b) throws IOException {
-	            buf.put((byte)b);
-	        }
-
-	        public void write(byte[] bytes, int off, int len) throws IOException {
-	            buf.put(bytes, off, len);
-	        }
-	    };
-	}
-	
-	/**
 	 * 	Returns PCOS byte-array.
 	 */
 	@Override
 	public byte[] toBytes() throws PcosError
 	{
-		// allocate big enough buffer for storing wire data
-		int max_total_length = 
-			ProtocolTag.MESSAGE_HEADER_LENGTH + 
-			ProtocolTag.MIN_BLOCK_ENUMARTION_SIZE + 
-			ProtocolTag.MAX_BLOCK_META_LENGTH * blocks_.size() + 
-			calcDataSegmentSize();
-		
-		ByteBuffer payload = ByteBuffer.allocate( max_total_length );
-		OutputStream ostream = asOutputStream( payload );
+		// allocate buffer for storing wire data
+		ByteArrayOutputStream ostream = new ByteArrayOutputStream( 128 );
 		BlockWriter writer = new BlockWriter("??", ostream);
 
 		// protocol magic
@@ -116,12 +92,8 @@ public class DocumentWriter implements OutputDocument
 			writer.writeBytes( blk.toBytes() );
 		}
 		
-		// return the byte array with PCOS message
-		// (what an akward way to extract these bytes)
-		byte[] res = new byte[payload.position()];
-		payload.rewind();
-		payload.get(res);
-		return res;
+		// return the byte array with PCOS message inside
+		return ostream.toByteArray();
 	}
 
 }

@@ -734,8 +734,11 @@ class RmoteCall:
 	# CMD: `ping'
 	def ping(self):
 
-		req = pcos.Doc( name="Pi" )
+		req = pcos.Doc( name="Ping" )
 		res = self.send( req )
+
+		self.expect_message(res, 'Pong')
+
 		# jump to the block of interest
 		tm = res.block( 'Bo' )
 
