@@ -1,12 +1,11 @@
--- JSON API for PushCoin --
+Welcome
+=======
 
-Notes
-=====
+This is PushCoin WebService API. Developers are free to use this file to
+learn how to communicate with the PushCoin backend.
 
-The API consits of a series of Message and Request definitions.
-
-A Request consists of an Input Message and an Output Message. A Message data
-is encoded according to JSON.
+Messages are encoded using JSON serialization. A Request consists of an 
+Input Message and an Output Message.
 
 The Request Message has an associated URL where the request should be sent to. 
 The vertical bars "|" in the Request's Output indicate that the result can be 
@@ -173,6 +172,61 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/set-absolute-pin-threshold/
+
+	Description:
+		Overrides the default per-transaction threshold above which PIN 
+		authentication is required.
+
+		If amount is not present (via optional field), system-default is
+		restored. If amount is zero (0.00), PIN is always required.
+
+	Input:
+		{
+			amount: decimal, optional
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/set-cumulative-pin-threshold/
+
+	Description:
+		Overrides the daily cumulative threshold above which PIN 
+		authentication is required.
+
+		If amount is not present (via optional field), system-default is
+		restored. If amount is zero (0.00), PIN is always required.
+
+	Input:
+		{
+			amount: decimal, optional
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
+	Request: json/account/get-pin-threshold/
+
+	Description:
+		Returns thresholds above which PIN authentication is required.
+
+		'absolute' : per transaction threshold
+		'cumulative' : sum of all transaction amounts in a given day
+
+	Input:
+		{
+			amount: decimal, optional
+		}
+
+	Output: error |
+		{
+			msg: "account-get-pin-threshold-reply"
+			absolute: decimal
+			cumulative: decimal
+		}
 
 #---------------------------------------------------------------------------#
 	Request: json/recovery/list-possible-password-reset-question/
