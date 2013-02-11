@@ -25,7 +25,7 @@ echo -e "\n\n*** Balance ***"
 $CMD/json/account/balance/ -d ''
 echo -e "\n\n*** PIN threshold ***"
 $CMD/json/account/get-pin-threshold/ -d ''
-$CMD/json/account/set-absolute-pin-threshold/ -d '{ "amount": 30.00 }'
+$CMD/json/account/set-pin-threshold/ -d '{ "absolute": 10.00, "cumulative": 15.00}'
 
 echo -e "\n***************"
 echo -e "\n*** Recovery ***"

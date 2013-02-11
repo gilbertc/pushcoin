@@ -174,35 +174,19 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
-	Request: json/account/set-absolute-pin-threshold/
+	Request: json/account/set-pin-threshold/
 
 	Description:
-		Overrides the default per-transaction threshold above which PIN 
-		authentication is required.
+		Overrides per-transaction and cumulative thresholds. Transaction
+		amounts above these thresholds will require PIN authentication.
 
-		If amount is not present (via optional field), system-default is
-		restored. If amount is zero (0.00), PIN is always required.
+		If either value is not present (optional field), system-default
+		is restored. If amount is zero (0.00), PIN is always required.
 
 	Input:
 		{
-			amount: decimal, optional
-		}
-
-	Output: success | error
-
-#---------------------------------------------------------------------------#
-	Request: json/account/set-cumulative-pin-threshold/
-
-	Description:
-		Overrides the daily cumulative threshold above which PIN 
-		authentication is required.
-
-		If amount is not present (via optional field), system-default is
-		restored. If amount is zero (0.00), PIN is always required.
-
-	Input:
-		{
-			amount: decimal, optional
+			cumulative: decimal, optional
+			absolute: decimal, optional
 		}
 
 	Output: success | error
