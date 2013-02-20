@@ -2,6 +2,7 @@ CMD="curl -c cookie.txt -b cookie.txt -k -X POST https://pc-dev.com"
 
 # echo -e "\n\n*** Sign-up ***"
 $CMD/json/account/initiate-signup/ -d '{ "email": "sl+test1@pushcoin.com" }'
+$CMD/json/account/validate-registration-code/ -d '{ "account_id": "RYRKAYC7AP" }'
 $CMD/json/user/account/complete-signup/ -d '{ "account_id": "LFY7KYFATP", "password": "Argon-55", "first_name": "Slaw", "last_name": "L.", "street": "712 Fergusson Rd", "city": "Menchester", "state": "WA", "zip": "70123" }'
 
 echo -e "\n\n*** Login ***"

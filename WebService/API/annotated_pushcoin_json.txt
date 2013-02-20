@@ -457,6 +457,19 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
+	Request: json/account/validate-registration-code/
+
+	Description:
+		Checks if provided registration code is valid.
+
+	Input:
+		{
+			account_id: string
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
 	Request: json/account/validate-bank-routing-number/
 
 	Description:
