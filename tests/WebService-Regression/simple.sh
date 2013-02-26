@@ -72,6 +72,11 @@ $CMD/json/bookmark/address/list/ -d ''
 echo -e "\n\n*** Logout ***"
 $CMD/json/account/logout/ -d ''
 
+echo -e "\n\n*** Whitelist ***"
+$CMD/json/whitelist/list_membership/ -d ''
+$CMD/json/whitelist/list_candidate/ -d ''
+$CMD/json/whitelist/add/ -d '{"transaction_id":"4CCNHXHCKXFFRRXRYLNT"}'
+$CMD/json/whitelist/delete/ -d '{"whitelist_id":"2"}'
 
 echo -e "\n***************"
 echo -e "\n*** Merchant ***"

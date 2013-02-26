@@ -491,6 +491,70 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
+	Request: json/whitelist/add/
+
+	Description:
+		Adds a merchant to the user's whitelist.
+
+	Input:
+		{
+			# look up the counterparty from a previous transaction
+			transaction_id: string
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/whitelist/delete/
+
+	Description:
+		Removes a merchant from the user's whitelist.
+
+	Input:
+		{
+			whitelist_id: string
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/whitelist/list_membership/
+
+	Description:
+		Lists merchants in the user's whitelist.
+
+	Input: <empty>
+
+	Output: error |
+		{
+			msg: "whitelist-list-membership-reply"
+			items: array-of
+				{
+					whitelist_id: string
+					counterparty_name: string
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/whitelist/list_candidate/
+
+	Description:
+		Lists merchants the user has transacted with but 
+		not present in the user's whitelist.
+
+	Input: <empty>
+
+	Output: error |
+		{
+			msg: "whitelist-list-candidate-reply"
+			items: array-of
+				{
+					transaction_id: string
+					counterparty_name: string
+				}
+		}
+
+#---------------------------------------------------------------------------#
 	Request: json/bookmark/recipient/add/
 
 	Description:
