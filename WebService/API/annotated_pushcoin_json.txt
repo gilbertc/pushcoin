@@ -508,7 +508,22 @@ any of the enumerated message types, depending on the outcome of processing.
 	Request: json/whitelist/delete/
 
 	Description:
-		Removes a merchant from the user's whitelist.
+		Removes the merchant from the user's whitelist using the 
+		transaction ID as key.
+
+	Input:
+		{
+			transaction_id: string
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/whitelist/delete/
+
+	Description:
+		Removes the merchant from the user's whitelist using the 
+		whitelist ID as key.
 
 	Input:
 		{
