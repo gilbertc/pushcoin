@@ -533,7 +533,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
-	Request: json/whitelist/list_membership/
+	Request: json/whitelist/list-membership/
 
 	Description:
 		Lists merchants in the user's whitelist.
@@ -551,7 +551,7 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 #---------------------------------------------------------------------------#
-	Request: json/whitelist/list_candidate/
+	Request: json/whitelist/list-candidate/
 
 	Description:
 		Lists merchants the user has transacted with but 
