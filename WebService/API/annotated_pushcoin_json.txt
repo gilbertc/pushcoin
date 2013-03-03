@@ -889,6 +889,20 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | success
 
 #---------------------------------------------------------------------------#
+	Request: json/device/change-status/
+
+	Description:
+		Changes device status to disabled or enabled.
+		
+	Input:
+		{
+			device_id: string
+			is_alive: boolean
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
 	Request: json/device/delete/
 
 	Description:
