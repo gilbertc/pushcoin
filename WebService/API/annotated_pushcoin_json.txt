@@ -475,7 +475,6 @@ any of the enumerated message types, depending on the outcome of processing.
 				{
 					card_expiry: string
 					card_id: string
-					card_is_default: boolean
 					card_issuer_account_num: string
 					card_owner: string
 					card_type: string
@@ -1095,9 +1094,7 @@ any of the enumerated message types, depending on the outcome of processing.
 			name_on_card: string
 			card_expiry_year: number 
 			card_expiry_month: number
-			zipcode: string
 			amount: decimal
-			description: string, optional
 		}
 
 	Output: error | success
@@ -1114,7 +1111,6 @@ any of the enumerated message types, depending on the outcome of processing.
 			card_id: string 
 			card_cvv: string 
 			amount: decimal
-			description: string, optional
 		}
 
 	Output: error | success
