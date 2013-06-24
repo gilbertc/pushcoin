@@ -448,11 +448,77 @@ any of the enumerated message types, depending on the outcome of processing.
 			last_name: string
 			balance: number
 			type: "user" | "merchant"
+			automatic_refill: 
+				{
+					card_id: string 
+					low_balance_trigger_amount: decimal
+					reload_amount: decimal
+				} optional
 
 			# number of questions user has setup to challenge
 			# herself if password is forgotten and needs resetting
 			num_recovery_questions: number
 		}
+
+#---------------------------------------------------------------------------#
+	Request: json/account/card-list/
+
+	Description:
+		Returns cards added to this account.
+
+	Input: <empty>
+
+	Output: error | 
+		{
+			msg: "account-card-list-reply"
+			items: array-of
+				{
+					card_expiry: string
+					card_id: string
+					card_is_default: boolean
+					card_issuer_account_num: string
+					card_owner: string
+					card_type: string
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/account/card-deactivate/
+
+	Description:
+		Deactivates card from the account.
+
+	Input:
+		{
+			card_id: string 
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/account/enable-automatic-refill/
+
+	Description:
+		Configures automatic refill on low account balance.
+
+	Input:
+		{
+			card_id: string 
+			low_balance_trigger_amount: decimal
+			reload_amount: decimal
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/account/disable-automatic-refill/
+
+	Description:
+		Disables automatic refills on low account balance.
+
+	Input: <empty>
+
+	Output: error | success
 
 #---------------------------------------------------------------------------#
 	Request: json/account/validate-registration-code/
@@ -667,7 +733,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | 
 		{
 			msg: "bookmark-list-ash-reply"
-			items: array-of:
+			items: array-of
 				{
 					# ACH bookmark identifier
 					ach_def_id: string
@@ -736,7 +802,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error | 
 		{
 			msg: "bookmark-list-address-reply"
-			items: array-of:
+			items: array-of
 				{
 					address_id: string
 					street: string
@@ -1015,32 +1081,40 @@ any of the enumerated message types, depending on the outcome of processing.
 			}
 
 #---------------------------------------------------------------------------#
-	Request: json/transaction/update-status-note/
+	Request: json/transaction/deposit-with-new-card/
 
 	Description:
-		Updates status and note for a given transaction.
+		Initiates a deposit of funds with a credit card. The card may be
+		added to the list of cards to spare user from having to re-enter
+		card info next time.
 
 	Input:
 		{
-			transaction_id: string
-			status: string
-			note: string, optional
+			card_number: string 
+			card_cvv: string 
+			name_on_card: string
+			card_expiry_year: number 
+			card_expiry_month: number
+			zipcode: string
+			amount: decimal
+			description: string, optional
 		}
 
 	Output: error | success
 
 #---------------------------------------------------------------------------#
-	Request: json/transaction/deposit/
+	Request: json/transaction/deposit-with-existing-card/
 
 	Description:
-		Initiates a deposit of funds.
+		Initiates a deposit of funds by referring to the previously 
+		added card.
 
 	Input:
 		{
+			card_id: string 
+			card_cvv: string 
 			amount: decimal
-			currency: string # "USD"
-			account_id: string
-			note: string, optional
+			description: string, optional
 		}
 
 	Output: error | success
@@ -1100,7 +1174,7 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: error |
 		{
 			msg: "notification-list-reply"
-			items: array-of:
+			items: array-of
 				{
 					notification_id: number
 					created: date
