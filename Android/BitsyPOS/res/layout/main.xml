@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<TextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="Hello World, BitsyPosActivity"
-    />
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" >
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal"
+		android:layout_weight="1"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" >
+		<TextView
+			android:id="@+id/shopping_category_listview"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:text="Categories"
+			android:background="#1e51a7"
+			/>
+		<TextView
+			android:id="@+id/shopping_item_gridview"
+			android:layout_weight="1"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:text="Details"
+			android:background="#e101a7"
+			/>
+		<TextView
+			android:id="@+id/shopping_cart"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:text="Cart"
+			android:background="#ee0077"
+			/>
+	</LinearLayout>
+	<TextView
+		android:id="@+id/shopping_panel"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Panel"
+		android:background="#1e5177"
+		/>
 </LinearLayout>
-

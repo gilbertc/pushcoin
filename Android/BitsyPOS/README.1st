@@ -1,0 +1,7 @@
+# Project created with:
+
+android create project \
+	--target 2 \
+	--name BitsyPOS --path . \
+	--activity BitsyPosActivity \
+	--package com.pushcoin.bitsypos
