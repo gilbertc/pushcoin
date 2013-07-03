@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<TextView
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:text="Hello World"
-		android:background="#ee0077"
-    />
-</LinearLayout>
-
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/shopping_cart"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:text="Cart Body"
+	android:background="#ee0077"
+	/>
