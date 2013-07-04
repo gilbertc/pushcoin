@@ -20,6 +20,7 @@
 		android:layout_height="wrap_content"
 		android:textSize="20dp"
 		android:textColor="#000000"
+		android:paddingRight="5dp"
 		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf"
 		/>
 </LinearLayout>
