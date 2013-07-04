@@ -11,7 +11,7 @@ import android.app.AlertDialog;
 public class ShoppingCategoryMenu extends ListView
 {
 	private ArrayAdapter<String> test;
-	String[] testItems = {"Breakfast", "Lunch", "Dinner", "Beverages"};
+	String[] testItems = {"Breakfast", "Lunch", "Dinner", "Deserts", "Beverages", "Breads", "Cereals", "Fruits", "Vegetables", "Fish", "Soda", "Snacks"};
 	 
 	// If built programmatically
 	public ShoppingCategoryMenu(Context context)
