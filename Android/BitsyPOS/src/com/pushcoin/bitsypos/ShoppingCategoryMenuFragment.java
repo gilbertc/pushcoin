@@ -11,6 +11,6 @@ public class ShoppingCategoryMenuFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		return new ShoppingCategoryMenu( getActivity() );	
+		return inflater.inflate(R.layout.shopping_category_menu, container, false);
 	}
 }

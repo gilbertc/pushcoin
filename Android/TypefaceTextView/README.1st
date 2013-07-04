@@ -1,0 +1,7 @@
+# Project created with:
+
+android create lib-project \
+	--name TypefaceTextView \
+	--target 2 \
+	--path . \
+	--package com.mobsandgeeks.ui
