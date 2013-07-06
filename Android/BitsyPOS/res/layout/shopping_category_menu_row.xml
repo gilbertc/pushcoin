@@ -6,13 +6,13 @@
 	android:orientation="horizontal" 
 	android:background="@drawable/shopping_category_menu_row_selector">
 	<ImageView
-	android:id="@+id/shopping_category_menu_icon"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:scaleType="center"
-	android:layout_marginLeft="4dp"
-	android:layout_marginRight="10dp"
-	android:src="@drawable/cake_20"
+		android:id="@+id/shopping_category_menu_icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:scaleType="center"
+		android:layout_marginLeft="4dp"
+		android:layout_marginRight="10dp"
+		android:src="@drawable/cake"
 	/>
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_category_menu_label"

@@ -7,11 +7,11 @@ import android.widget.ArrayAdapter;
 import android.view.View;
 import android.util.AttributeSet;
 import android.app.AlertDialog;
+import java.util.ArrayList;
 
 public class ShoppingCategoryMenu extends ListView
 {
-	private ArrayAdapter<String> test;
-	String[] testItems = {"Breakfast", "Lunch", "Dinner", "Deserts", "Beverages", "Breads", "Cereals", "Fruits", "Vegetables", "Fish", "Soda", "Snacks"};
+	private IconLabelArrayAdapter menu_;
 	 
 	// If built programmatically
 	public ShoppingCategoryMenu(Context context)
@@ -36,8 +36,24 @@ public class ShoppingCategoryMenu extends ListView
 	 
 	public void init()
 	{
-		test = new ArrayAdapter<String>(getContext(), R.layout.shopping_category_menu_row, R.id.shopping_category_menu_label, testItems);
-		setAdapter(test);
+		ArrayList<IconLabelArrayAdapter.Entry> menuItems = 
+			new ArrayList<IconLabelArrayAdapter.Entry>();
+
+		// populate menu item(s)
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.coffee_cup, "Breakfast") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.fries, "Lunch") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.pizza, "Hot Dinner") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.sushi_maki, "Salads") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.cheese_cake, "Deserts") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.wine_glass, "Beverages") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.toast, "Breads") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.apple, "Fruits") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.babelfish, "Fish") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.soft_drink, "Soda") );
+		menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.cup_cake, "Snacks") );
+
+		menu_ = new IconLabelArrayAdapter(getContext(), R.layout.shopping_category_menu_row, R.id.shopping_category_menu_icon, R.id.shopping_category_menu_label, menuItems);
+		setAdapter(menu_);
 		setOnItemClickListener(new ListSelection());
 	}
 	 
