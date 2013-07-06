@@ -8,7 +8,7 @@ from optparse import OptionParser,OptionError
 from pyparsing import *
 from M2Crypto import DSA, BIO, RSA
 
-PC_DEFAULT_API_URL="https://api.pc-dev.com/pcos/"
+PC_DEFAULT_API_URL="https://api.minta.com/pcos/"
 
 def load_qrcode():
 	try:
@@ -347,22 +347,20 @@ class RmoteCall:
 
 	def charge_key(self):
 		'''Sends a Payment Request with PTK'''
-		self.charge( 'Pk', self.payment_key() )
+		self.charge( self.payment_key() )
 
 
 	def charge_pta(self):
 		'''Sends a Payment Request with PTA'''
-		self.charge( 'Pa', self.payment_pta() )
+		self.charge( self.payment_pta() )
 		
 
-	def charge(self, payment_type, payment_bytes):
+	def charge(self, payment_bytes):
 		#------------------------------------
-		#      Payment Block
+		#      Payment Authorization Block
 		#------------------------------------
-		payment_block = pcos.create_output_block( payment_type )
-
-		# we use "fixstr" becase we don't want size-prefix
-		payment_block.write_fixstr(payment_bytes, len(payment_bytes))
+		payment_auth_block = pcos.create_output_block( 'Py' )
+		payment_auth_block.write_bytes(payment_bytes)
 
 		#------------------------------------
 		#      Payment Request Block
@@ -370,10 +368,10 @@ class RmoteCall:
 		paymnt_req_block = pcos.create_output_block( 'R1' ) 
 
 		# mat
-		paymnt_req_block.write_varstr( binascii.unhexlify( self.args['receiver_mat'] ) )
+		paymnt_req_block.write_bytestr( binascii.unhexlify( self.args['receiver_mat'] ) )
 
 		# ref data
-		paymnt_req_block.write_varstr( '' )
+		paymnt_req_block.write_bytestr( '' )
 
 		# create-time
 		paymnt_req_block.write_ulong( long( time.time() + 0.5 ) )
@@ -394,14 +392,17 @@ class RmoteCall:
 		paymnt_req_block.write_long( tip_value ) # value
 		paymnt_req_block.write_int( tip_scale ) # scale
 
+		# passcode
+		paymnt_req_block.write_string( '1111' )
+
 		# currency
-		paymnt_req_block.write_fixstr( "USD", size=3 )
+		paymnt_req_block.write_bytes( b"USD" )
 
 		# invoice ID
-		paymnt_req_block.write_varstr( 'inv-123' )
+		paymnt_req_block.write_string( 'inv-123' )
 
 		# note
-		paymnt_req_block.write_varstr( 'happy meal' )
+		paymnt_req_block.write_string( 'happy meal' )
 
 		# no geo-location available
 		paymnt_req_block.write_bool(False)
@@ -410,121 +411,83 @@ class RmoteCall:
 		paymnt_req_block.write_int(0)
 
 		#------------------------------------
-		#   Payment Request Signature Block
-		#------------------------------------
-
-		paymnt_req_signature_block = pcos.create_output_block( 'S1' )
-
-		# checksum Payment Request Block
-		digest = hashlib.sha1(paymnt_req_block.as_bytearray()).digest()
-		
-		# sign the checksum
-		dsa_priv_key = BIO.MemoryBuffer( TEST_DSA_KEY_PRV_PEM )
-		signer = DSA.load_key_bio( dsa_priv_key )
-		signature = signer.sign_asn1( digest )
-
-		# store the signature of the Payment Block
-		paymnt_req_signature_block.write_varstr( signature )
-
-		#------------------------------------
 		#      Payment Request Message
 		#------------------------------------
-		req = pcos.Doc( name="Pt" )
+		req = pcos.Doc( name="PaymentReq" )
+		req.add( payment_auth_block )
 		req.add( paymnt_req_block )
-		req.add( paymnt_req_signature_block )
-		req.add( payment_block )
 
 		res = self.send( req )
+		self.expect_message(res, 'PaymentAck')
 		
-		# there can be two types of results: Ap or Np, depending
-		# success or failure due to insufficient funds
-		if res.message_id != 'Ap' and res.message_id != 'Np':
-			raise RuntimeError("Unexpected payment result '%s'" % res.message_id)
-		
-		# read balance
-		balance = res.block( 'Bo' )
-		ref_data = balance.read_varstr() # ref_data
-		transaction_id = balance.read_varstr() # tx-id
+		# # read balance
+		# balance = res.block( 'Bo' )
+		# ref_data = balance.read_varstr() # ref_data
+		# transaction_id = balance.read_varstr() # tx-id
 
-		if res.message_id == 'Np':
-			code = er.read_uint()
-			what = er.read_varstr()
-			
-		# exact amount given?
-		if balance.read_bool():
-			exact_balance = 'is'
-		else:
-			exact_balance = 'is greater than' 
-		# amount
-		value = balance.read_long() # value
-		scale = balance.read_int() # scale
-		balance_amount = value * math.pow(10, scale)
-		# time of last update
-		tm_epoch = balance.read_ulong();
-		balance_asofdate = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
+		# if res.message_id == 'Np':
+		# 	code = er.read_uint()
+		# 	what = er.read_varstr()
+		# 	
+		# # exact amount given?
+		# if balance.read_bool():
+		# 	exact_balance = 'is'
+		# else:
+		# 	exact_balance = 'is greater than' 
+		# # amount
+		# value = balance.read_long() # value
+		# scale = balance.read_int() # scale
+		# balance_amount = value * math.pow(10, scale)
+		# # time of last update
+		# tm_epoch = balance.read_ulong();
+		# balance_asofdate = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
 
-		if res.message_id == 'Np':
-			log.warn('%s (tx_id: %s). Balance %s $%s as of %s', what, base64.b32encode(transaction_id), exact_balance, balance_amount, balance_asofdate)
-		else:
-			log.info('Success (tx_id: %s). Balance %s $%s as of %s', base64.b32encode(transaction_id), exact_balance, balance_amount, balance_asofdate)
+		# if res.message_id == 'Np':
+		# 	log.warn('%s (tx_id: %s). Balance %s $%s as of %s', what, base64.b32encode(transaction_id), exact_balance, balance_amount, balance_asofdate)
+		# else:
+		# 	log.info('Success (tx_id: %s). Balance %s $%s as of %s', base64.b32encode(transaction_id), exact_balance, balance_amount, balance_asofdate)
 
 	def payment_key(self):
 		'''Generates the Payment Transaction Key, or PTK. It does not communicate with the server.'''
 
 		#------------------------------------
-		#        PTK Key Block
+		#        PTK Payload v1 Block
 		#------------------------------------
 
-		k1 = pcos.create_output_block( 'K1' )
+		p1 = pcos.create_output_block( 'P1' )
 		# membership ID
 		device_id = self.args['device_id'] 
-		k1.write_varstr( device_id )
-
-		# passcode
-		k1.write_varstr( self.args['passcode'] )
-
-		# key create time and expiry
-		now = long( time.time() + 0.5 )
-
-		# utc_ctime
-		k1.write_ulong( now ) # key create-time
-
-		# transaction footprint queue
-		k1.write_bool( True )
-		footprint = binascii.unhexlify(self.args['footprint'])
-		# write transaction queue
-		k1.write_uint( 10 )
-		for i in xrange(0,10):
-			k1.write_fixstr( footprint, 4 )
-
-		# counter
-		k1.write_uint( 0 ) 
-
-		# source_id (aka serial number)
-		k1.write_varstr( binascii.unhexlify(self.args['serial_number']) )
-
-		print (" %s bytes => Key Block" % k1.size())
+		p1.write_string( device_id )
 
 		#------------------------------------
-		#        PTK Checksum Block
+		#        PTK M1HW Block
 		#------------------------------------
-		c1 = pcos.create_output_block( 'C1' )
 
-		# checksum Key Block
-		digest = hashlib.sha1(k1.as_bytearray()).digest()
+		m1hw = pcos.create_output_block( 'M1' )
 
-		# store the signature of the Payment Block
-		c1.write_varstr( digest )
-		print (" %s bytes => Checksum Block" % c1.size())
+		# tag serial number
+		m1hw.write_bytestr( binascii.unhexlify(self.args['serial_number']) )
+
+		# app challenge seed
+		m1hw.write_bytestr( binascii.unhexlify(self.args['seed']) )
+
+		# transaction key ID
+		m1hw.write_bytes( binascii.unhexlify(self.args['keyid']) )
+
+		# PUF response
+		m1hw.write_bytestr( binascii.unhexlify(self.args['puf_response']) )
+
+		# fake challenge-response time (ms)
+		m1hw.write_uint( 92 )
 
 		#------------------------------------
 		# PTK Message
-		#  * Key Block
-		#  * Checksum Block
+		#  * Payload Block
+		#  * M1HW Block
 		#------------------------------------
-		ptk = pcos.Doc( name="Pk" )
-		ptk.add( k1 )
-		ptk.add( c1 )
+		ptk = pcos.Doc( name="PaymentKey" )
+		ptk.add( p1 )
+		ptk.add( m1hw )
 		ptk_bytes = ptk.as_bytearray()
 
 		# write serialized data as binary and qr-code
@@ -751,7 +714,7 @@ class RmoteCall:
 	# CMD: `transaction key'
 	def transaction_key(self):
 
-		req = pcos.Doc( name="Tk" )
+		req = pcos.Doc( name="TxnKeyQuery" )
 		res = self.send( req )
 		# jump to the block of interest
 		body = res.block( 'Bo' )
@@ -760,33 +723,11 @@ class RmoteCall:
 		key_count = body.read_uint()
 
 		for ix in xrange(0,key_count):
-			keyid = body.read_fixstr(2)
-			key_info = body.read_varstr()
+			keyid = body.read_bytes(2)
+			key_info = body.read_string()
 			key_expiry = body.read_ulong()
-			key_data = body.read_varstr()
-			log.info('key %s, len %s bytes, expires on %s', key_info, len(key_data), time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(key_expiry)))
-
-
-	def transaction_challenge(self):
-
-		req = pcos.Doc( name="Tc" )
-		out_bo = pcos.create_output_block( 'Bo' )
-		out_bo.write_bytestr( binascii.unhexlify( self.args['mat'] ) )
-		req.add( out_bo )
-		res = self.send( req )
-
-		# jump to the block of interest
-		body = res.block( 'Bo' )
-
-		# number of keys
-		challenge_count = body.read_uint()
-
-		for ix in xrange(0,challenge_count):
-			response_length = body.read_uint()
-			challenge = body.read_bytestr()
-			challenge_id = body.read_bytestr()
-			key_expiry = body.read_ulong()
-			log.info('challenge %s, ID %s, expires on %s, exp-response-length: %s', binascii.hexlify( challenge), binascii.hexlify( challenge_id ), time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(key_expiry)), response_length)
+			key_data = body.read_bytestr()
+			log.info('Key ID %s, type %s, len %s bytes, expires on %s', binascii.hexlify(keyid), key_info, len(key_data), time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(key_expiry)))
 
 
 	def __init__(self, options, cmd, args):
@@ -803,7 +744,6 @@ class RmoteCall:
 			"payment-key": self.payment_key,
 			"preauth": self.preauth,
 			"transaction-key": self.transaction_key,
-			"transaction-challenge": self.transaction_challenge,
 			"history": self.history,
 			"error-report": self.error_report,
 			"balance": self.balance,
@@ -826,7 +766,7 @@ class RmoteCall:
 	def expect_message( self, res, name):
 		'''Checks if message matches given name'''
 		if res.message_id != name:
-			raise RuntimeError("'%s' not a %s message" % res.message_id, name)
+			raise RuntimeError("'%s' not a %s message" % (res.message_id, name))
 
 	# invoked if user asks for an unknown command
 	def unknown_command(self):
