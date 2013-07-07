@@ -12,7 +12,6 @@
 		android:scaleType="center"
 		android:layout_marginLeft="4dp"
 		android:layout_marginRight="10dp"
-		android:src="@drawable/cake"
 	/>
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_category_menu_label"
