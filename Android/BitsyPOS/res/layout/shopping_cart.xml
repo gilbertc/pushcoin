@@ -3,6 +3,6 @@
 	android:id="@+id/shopping_cart"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:text="Cart Body"
+	android:text="Shopping-Cart-With-Items"
 	android:background="#ee0077"
 	/>

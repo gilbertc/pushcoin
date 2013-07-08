@@ -43,7 +43,7 @@ Organized by: Willie Tsang
     <color name="DarkMagenta">#8B008B</color>
     <color name="DarkRed">#8B0000</color>
     <color name="DarkOliveGreen">#556B2F</color>
-    <color name="DarkSlateGray">#2F4F4F</color>
+    <color name="DarkSlateGrey">#2F4F4F</color>
     <color name="DarkSlateBlue">#483D8B</color>
     <color name="DarkSeaGreen">#8FBC8F</color>
     <color name="DarkGrey">#A9A9A9</color>
@@ -59,7 +59,7 @@ Organized by: Willie Tsang
     <color name="LightCoral">#F08080</color>
     <color name="LightSkyBlue">#87CEFA</color>
     <color name="LightSeaGreen">#20B2AA</color>
-    <color name="LightSlateGray">#778899</color>
+    <color name="LightSlateGrey">#778899</color>
     <color name="LightGreen">#90EE90</color>
     <color name="LightYellow">#FFFFE0</color>
     <color name="LightGoldenrodYellow">#FAFAD2</color>
@@ -98,7 +98,7 @@ Organized by: Willie Tsang
     <!-- d -->
     <color name="DeepPink">#FF1493</color>
     <color name="DeepSkyBlue">#00BFFF</color>
-    <color name="DimGray">#696969</color>
+    <color name="DimGrey">#696969</color>
     <color name="DodgerBlue">#1E90FF</color>
     <!-- e -->
     <!-- f -->
@@ -110,7 +110,7 @@ Organized by: Willie Tsang
     <!-- g -->
     <color name="Gold">#FFD700</color>
     <color name="GreenYellow">#ADFF2F</color>
-    <color name="gray">#808080</color>
+    <color name="Grey">#808080</color>
     <color name="Goldenrod">#DAA520</color>
     <color name="Gainsboro">#DCDCDC</color>
     <color name="GhostWhite">#F8F8FF</color>
@@ -174,7 +174,7 @@ Organized by: Willie Tsang
     <color name="SkyBlue">#87CEEB</color>
     <color name="SeaGreen">#2E8B57</color>
     <color name="SteelBlue">#4682B4</color>
-    <color name="SlateGray">#708090</color>
+    <color name="SlateGrey">#708090</color>
     <color name="SlateBlue">#6A5ACD</color>
     <color name="SaddleBrown">#8B4513</color>
     <color name="Salmon">#FA8072</color>
