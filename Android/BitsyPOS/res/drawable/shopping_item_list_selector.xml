@@ -7,6 +7,4 @@
 		</shape>
 	</item>
 	<item android:state_pressed="true" android:drawable="@color/LightPink" />
-	<item android:state_selected="true" android:drawable="@color/LightGrey" />
-	<item android:state_activated="true" android:drawable="@color/DarkGrey" />
 </selector>

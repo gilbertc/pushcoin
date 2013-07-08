@@ -8,7 +8,11 @@
 	android:verticalSpacing="10dp"
 	android:horizontalSpacing="10dp"
 	android:stretchMode="columnWidth"
-	android:gravity="center"
+	android:gravity="left"
 	android:background="@color/white"
 	android:cacheColorHint="@color/white"
+	android:drawSelectorOnTop="false"
+	android:listSelector="@android:color/transparent"
+	android:paddingTop="10dp"
+	android:paddingRight="10dp"
 />
