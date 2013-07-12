@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/LightSteelBlue"
+	android:padding="5dp" >
+
+	<Button android:text="Check Out" 
+		android:id="@+id/shopping_cart_checkout_button" 
+		android:background="@drawable/btn_green"
+		style="@style/ShoppingCartCheckout" 
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true" 
+		android:layout_marginTop="5dp" />
+
+	<Button android:text="Start Over" 
+		android:id="@+id/shopping_cart_startover_button" 
+		android:background="@drawable/btn_red"
+		style="@style/ShoppingCartAction" 
+		android:layout_above="@id/shopping_cart_checkout_button"
+		android:layout_alignParentLeft="true" />
+
+	<Button android:text="Print Cart" 
+		android:id="@+id/shopping_cart_print_button" 
+		android:background="@drawable/btn_purple"
+		style="@style/ShoppingCartAction"
+		android:layout_above="@id/shopping_cart_checkout_button"
+		android:layout_centerHorizontal="true"/>
+
+	<Button android:text="Queue Order" 
+		android:id="@+id/shopping_cart_queueup_button" 
+		android:background="@drawable/btn_yellow" 
+		style="@style/ShoppingCartAction"
+		android:layout_above="@id/shopping_cart_checkout_button"
+		android:layout_alignParentRight="true" />
+
+</RelativeLayout>

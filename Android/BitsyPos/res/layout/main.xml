@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent" >
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
 	<fragment android:name="com.pushcoin.bitsypos.ShoppingPanelFragment"
 		android:id="@+id/shopping_panel_frag"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		/>
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="horizontal"
 		android:layout_weight="1"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" >
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" >
+
     <fragment android:name="com.pushcoin.bitsypos.ShoppingCategoryMenuFragment"
 			android:id="@+id/shopping_category_menu_frag"
 			android:layout_width="wrap_content"
-			android:layout_height="fill_parent"
-			android:text="Categories"
-			/>
+			android:layout_height="match_parent"
+			android:text="Categories" />
+
     <fragment android:name="com.pushcoin.bitsypos.ShoppingItemListFragment"
 			android:id="@+id/shopping_item_list_frag"
 			android:layout_weight="1"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			/>
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+
     <fragment android:name="com.pushcoin.bitsypos.ShoppingCartFragment"
 			android:id="@+id/shopping_cart_frag"
-			android:layout_width="wrap_content"
-			android:layout_height="fill_parent"
-			/>
+			android:layout_width="300dp"
+			android:layout_height="match_parent" />
+
 	</LinearLayout>
+
 </LinearLayout>
