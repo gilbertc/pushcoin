@@ -14,5 +14,4 @@
 	android:drawSelectorOnTop="false"
 	android:listSelector="@android:color/transparent"
 	android:paddingTop="10dp"
-	android:paddingRight="10dp"
-/>
+	android:paddingRight="10dp" />
