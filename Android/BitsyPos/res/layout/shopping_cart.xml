@@ -4,7 +4,9 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:background="@color/white"
-	android:padding="5dp" >
+	android:paddingLeft="5dp"
+	android:paddingBottom="5dp"
+	android:paddingTop="5dp" >
 
 	<View
 		android:id="@+id/shopping_cart_left_edge" 
@@ -18,6 +20,7 @@
 		android:id="@+id/shopping_cart_checkout_button" 
 		android:background="@drawable/btn_green"
 		style="@style/ShoppingCartCheckout" 
+		android:layout_marginRight="5dp"
 		android:layout_marginTop="5dp"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentLeft="true" />
@@ -40,6 +43,7 @@
 		android:id="@+id/shopping_cart_queueup_button" 
 		android:background="@drawable/btn_yellow" 
 		style="@style/ShoppingCartAction"
+		android:layout_marginRight="5dp"
 		android:layout_above="@id/shopping_cart_checkout_button"
 		android:layout_alignParentRight="true" />
 
@@ -47,6 +51,7 @@
 		android:id="@+id/shopping_cart_total"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_marginRight="5dp"
 		android:textSize="36dp"
 		android:textColor="@color/DarkSeaGreen"
 		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf"

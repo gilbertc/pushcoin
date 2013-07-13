@@ -14,4 +14,4 @@
 	android:cacheColorHint="@color/white"
 	android:drawSelectorOnTop="false"
 	android:listSelector="@android:color/transparent"
-	android:paddingTop="10dp" />
+	android:paddingTop="5dp" />
