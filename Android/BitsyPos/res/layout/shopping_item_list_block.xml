@@ -12,8 +12,7 @@
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentTop="true"
 		android:scaleType="center"
-		android:padding="5dp"
-		/>
+		android:padding="5dp" />
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_item_list_title"
@@ -22,9 +21,8 @@
 		android:layout_toRightOf="@id/shopping_item_list_product"
 		android:layout_alignTop="@id/shopping_item_list_product"
 		android:textSize="20dp"
-		android:textColor="#000000"
-		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf"
-		/>
+		android:textColor="@color/white"
+		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_item_list_desc"
@@ -34,8 +32,7 @@
 		android:layout_below="@id/shopping_item_list_title"
 		android:textSize="18dp"
 		android:textColor="#707070"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf"
-		/>
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_item_list_price"
@@ -46,8 +43,7 @@
 		android:textSize="20dp"
 		android:textColor="@color/DarkBlue"
 		android:textStyle="bold"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf"
-		/>
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 	<ImageView
 		android:id="@+id/shopping_item_list_indicator"
@@ -56,7 +52,6 @@
 		android:layout_alignParentRight="true"
 		android:layout_below="@+id/shopping_item_list_desc"
 		android:scaleType="center"
-		android:paddingRight="10dp"
-		/>
+		android:paddingRight="10dp" />
 
 </RelativeLayout>

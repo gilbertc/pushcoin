@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.pushcoin.bitsypos.ShoppingCategoryMenu xmlns:android="http://schemas.android.com/apk/res/android"
+<com.pushcoin.bitsypos.ShoppingCategoryMenu 
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/shopping_category_menu"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
 	android:divider="@color/white"
 	android:dividerHeight="12dp"
 	android:paddingTop="12dp"

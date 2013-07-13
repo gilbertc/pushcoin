@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@color/white">
+
+	<View
+		android:id="@+id/shopping_cart_row_left_edge" 
+		android:layout_width="1dp"
+		android:layout_height="match_parent"
+		android:layout_alignParentLeft="true"
+		android:background="@color/DarkGrey" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:geekui="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/shopping_cart_item"
+		android:background="@drawable/shopping_cart_row_selector"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="5dp"
+		android:textSize="26dp"
+		android:textColor="@color/DarkSlateGrey"
+		android:layout_toRightOf="@id/shopping_cart_row_left_edge"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+	<View
+		android:id="@+id/shopping_cart_row_bottom_edge" 
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_toRightOf="@id/shopping_cart_row_left_edge"
+		android:layout_below="@id/shopping_cart_item"
+		android:background="@color/DarkGrey" />
+
+</RelativeLayout>

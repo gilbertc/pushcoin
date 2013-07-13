@@ -50,6 +50,7 @@ Organized by: Willie Tsang
     <color name="DarkGoldenrod">#B8860B</color>
     <color name="DarkKhaki">#BDB76B</color>
     <!-- Generic Light -->
+    <color name="LightGreyHtc">#EEEEEE</color>
     <color name="LightGrey">#D3D3D3</color>
     <color name="LightSteelBlue">#B0C4DE</color>
     <color name="LightBlue">#ADD8E6</color>

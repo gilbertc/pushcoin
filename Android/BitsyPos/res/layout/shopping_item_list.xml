@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView xmlns:android="http://schemas.android.com/apk/res/android" 
+<GridView 
+	xmlns:android="http://schemas.android.com/apk/res/android" 
 	android:id="@+id/shopping_item_list"
 	android:layout_width="match_parent" 
 	android:layout_height="match_parent"
@@ -13,5 +14,4 @@
 	android:cacheColorHint="@color/white"
 	android:drawSelectorOnTop="false"
 	android:listSelector="@android:color/transparent"
-	android:paddingTop="10dp"
-	android:paddingRight="10dp" />
+	android:paddingTop="10dp" />

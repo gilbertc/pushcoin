@@ -5,7 +5,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
-import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.ArrayAdapter;
 
 public class ShoppingCartFragment extends Fragment 
@@ -23,9 +23,9 @@ public class ShoppingCartFragment extends Fragment
 	{
 		// Inflate the layout for this fragment
 		View cartLayout = inflater.inflate(R.layout.shopping_cart, container, false);
-		GridView cartItemList = (GridView) cartLayout.findViewById(R.id.shopping_cart_list);
+		ListView cartItemList = (ListView) cartLayout.findViewById(R.id.shopping_cart_list);
 
-		ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, numbers);
+		ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.shopping_cart_row, R.id.shopping_cart_item, numbers);
 		cartItemList.setAdapter(adapter);
 
 		return cartLayout;

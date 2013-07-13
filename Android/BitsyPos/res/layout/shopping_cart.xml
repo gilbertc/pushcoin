@@ -2,18 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@color/black"
-	android:paddingLeft="5dp" 
-	android:paddingRight="5dp" >
+	android:layout_height="wrap_content"
+	android:background="@color/white"
+	android:padding="5dp" >
+
+	<View
+		android:id="@+id/shopping_cart_left_edge" 
+		android:layout_width="1dp"
+		android:layout_height="match_parent"
+		android:layout_alignParentLeft="true" 
+		android:layout_above="@+id/shopping_cart_total"
+		android:background="@color/LightGrey" />
 
 	<Button android:text="Check Out" 
 		android:id="@+id/shopping_cart_checkout_button" 
 		android:background="@drawable/btn_green"
 		style="@style/ShoppingCartCheckout" 
+		android:layout_marginTop="5dp"
 		android:layout_alignParentBottom="true"
-		android:layout_alignParentLeft="true" 
-		android:layout_marginTop="5dp" />
+		android:layout_alignParentLeft="true" />
 
 	<Button android:text="Start Over" 
 		android:id="@+id/shopping_cart_startover_button" 
@@ -40,9 +47,9 @@
 		android:id="@+id/shopping_cart_total"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="42dp"
+		android:textSize="36dp"
 		android:textColor="@color/DarkSeaGreen"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf"
+		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf"
 		android:layout_above="@id/shopping_cart_queueup_button"
 		android:layout_alignParentRight="true" />
 
@@ -50,22 +57,22 @@
 		android:id="@+id/shopping_cart_total_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="42dp"
-		android:textColor="@color/DarkTurquoise"
+		android:textSize="22dp"
+		android:textColor="@color/DarkGrey"
+		android:paddingBottom="5dp"
 		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf"
-		android:layout_above="@id/shopping_cart_startover_button"
+		android:layout_above="@id/shopping_cart_queueup_button"
 		android:layout_toLeftOf="@id/shopping_cart_total" />
 
-	<GridView xmlns:android="http://schemas.android.com/apk/res/android" 
+	<ListView xmlns:android="http://schemas.android.com/apk/res/android" 
 		android:id="@+id/shopping_cart_list"
+		android:cacheColorHint="@color/white"
+		android:fadingEdge="none"
+		android:divider="@color/white"
+		android:dividerHeight="1dp"
 		android:layout_width="match_parent" 
-		android:layout_height="match_parent"
-		android:numColumns="4"
-		android:verticalSpacing="3dp"
-		android:horizontalSpacing="3dp"
-		android:stretchMode="columnWidth"
-		android:gravity="left"
-		android:drawSelectorOnTop="false"
-		android:listSelector="@android:color/transparent" />
+		android:layout_height="wrap_content"
+		android:layout_above="@id/shopping_cart_total"
+		android:layout_toRightOf="@id/shopping_cart_left_edge" />
 
 </RelativeLayout>
