@@ -13,59 +13,55 @@ import java.util.ArrayList;
 
 public class ShoppingCartFragment extends Fragment 
 {
-	ArrayList<String> numbers_ = new ArrayList<String>();
-	ArrayAdapter<String> adapter_;
+	ArrayList<CartEntryArrayAdapter.Entry> items_ = 
+		new ArrayList<CartEntryArrayAdapter.Entry>();
+
+	CartEntryArrayAdapter adapter_;
 	SwipeDismissList swipeList_;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		// cart data
-		numbers_.add("one");
-		numbers_.add("two");
-		numbers_.add("three");
-		numbers_.add("four");
-		numbers_.add("five");
-		numbers_.add("six");
-		numbers_.add("seven");
-		numbers_.add("eight");
-		numbers_.add("nine");
-		numbers_.add("ten");
-		numbers_.add("eleven");
-		numbers_.add("twelve");
-		numbers_.add("thirteen");
-		numbers_.add("fourteen");
-		numbers_.add("fifteen");
-		numbers_.add("sixteen");
-		numbers_.add("seventeen");
-		numbers_.add("eighteen");
-		numbers_.add("nineteen");
-		numbers_.add("twenty");
-		numbers_.add("twenty one");
-		numbers_.add("twenty two");
-		
+		// populate item(s)
+		for (int i = 0; i < 10; ++i)
+		{
+			items_.add( new CartEntryArrayAdapter.Entry("Coffee, Maine Roasted", i+5, "$2.75", icons_[i%icons_.length]) );
+		}
+
+		adapter_ = new CartEntryArrayAdapter(getActivity(), R.layout.shopping_cart_row, 
+			R.id.shopping_cart_entry_title,
+			R.id.shopping_cart_entry_qty,
+			R.id.shopping_cart_entry_price,
+			R.id.shopping_cart_entry_status,
+			items_);
+
 		// Inflate the layout for this fragment
 		View cartLayout = inflater.inflate(R.layout.shopping_cart, container, false);
 		ListView cartItemList = (ListView) cartLayout.findViewById(R.id.shopping_cart_list);
+		cartItemList.setAdapter(adapter_);
 
 		SwipeDismissList.OnDismissCallback callback = 
 			new SwipeDismissList.OnDismissCallback() {
 				public SwipeDismissList.Undoable onDismiss(AbsListView listView, int position) 
 				{		
-					// if removing too fast, we may refer to wrong position
-					if ( position < numbers_.size() )
-					{
-						final String itemToDelete = adapter_.getItem(position);
-						adapter_.remove(itemToDelete);
-					}
+					adapter_.remove( position );
+					// final String itemToDelete = adapter_.getItem(position);
+					// adapter_.remove(itemToDelete);
 					return null;
 				}
 			};
 
 		swipeList_ = new SwipeDismissList(cartItemList, callback, SwipeDismissList.UndoMode.SINGLE_UNDO);
-		adapter_ = new ArrayAdapter<String>(getActivity(), R.layout.shopping_cart_row, R.id.shopping_cart_item, numbers_);
-		cartItemList.setAdapter(adapter_);
 
 		return cartLayout;
 	}
+
+	final int icons_[] = {
+		R.drawable.mono_checkbox,
+		R.drawable.mono_cooking,
+		R.drawable.mono_fork_knife,
+		R.drawable.mono_loop,
+		R.drawable.mono_notepad,
+		R.drawable.mono_warning,
+	};
 }
