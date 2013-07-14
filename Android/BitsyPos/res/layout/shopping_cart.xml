@@ -8,14 +8,6 @@
 	android:paddingBottom="5dp"
 	android:paddingTop="5dp" >
 
-	<View
-		android:id="@+id/shopping_cart_left_edge" 
-		android:layout_width="1dp"
-		android:layout_height="match_parent"
-		android:layout_alignParentLeft="true" 
-		android:layout_above="@+id/shopping_cart_total"
-		android:background="@color/LightGrey" />
-
 	<Button android:text="Check Out" 
 		android:id="@+id/shopping_cart_checkout_button" 
 		android:background="@drawable/btn_green"
@@ -77,7 +69,8 @@
 		android:dividerHeight="1dp"
 		android:layout_width="match_parent" 
 		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
 		android:layout_above="@id/shopping_cart_total"
-		android:layout_toRightOf="@id/shopping_cart_left_edge" />
+		android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

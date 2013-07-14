@@ -21,8 +21,8 @@
 		android:layout_toRightOf="@id/shopping_item_list_product"
 		android:layout_alignTop="@id/shopping_item_list_product"
 		android:textSize="20dp"
-		android:textColor="@color/white"
-		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
+		android:textColor="@color/black"
+		geekui:customTypeface="fonts/DejaVuSans.ttf" />
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_item_list_desc"
