@@ -1,6 +1,8 @@
 package com.pushcoin.bitsypos;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +18,9 @@ public class ShoppingCategoryMenuFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
+		// Store activity's dispacher
+		dispatchable_ = ((IDispatcher)getActivity()).getDispachable();
+
 		ListView view = (ListView)inflater.inflate(R.layout.shopping_category_menu, container, false);
 
 		ArrayList<IconLabelArrayAdapter.Entry> menuItems = 
@@ -48,12 +53,11 @@ public class ShoppingCategoryMenuFragment extends Fragment
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 		{
-			AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
-			builder.setMessage("You pressed item #" + (position+1));
-			builder.setPositiveButton("OK", null);
-			builder.show();
+			Message m = dispatchable_.obtainMessage(1, position, 0);
+			m.sendToTarget();
 		}
 	}
 
 	private IconLabelArrayAdapter model_;
+	private Handler dispatchable_;
 }
