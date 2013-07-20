@@ -53,7 +53,7 @@ public class ShoppingCategoryMenuFragment extends Fragment
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 		{
-			Message m = dispatchable_.obtainMessage(1, position, 0);
+			Message m = dispatchable_.obtainMessage(MessageId.SHOPPING_CATEGORY_CLICKED, position, 0);
 			m.sendToTarget();
 		}
 	}

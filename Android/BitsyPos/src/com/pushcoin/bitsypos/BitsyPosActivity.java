@@ -3,6 +3,8 @@ package com.pushcoin.bitsypos;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler;
@@ -23,8 +25,21 @@ public class BitsyPosActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.main);
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		
+		ShoppingCategoryMenuFragment categoryMenu = new ShoppingCategoryMenuFragment();
+		categoryMenu.setArguments(getIntent().getExtras());
+		
+		ShoppingItemListFragment itemList = new ShoppingItemListFragment();
+		itemList.setArguments(getIntent().getExtras());
+		
+		getFragmentManager().beginTransaction()
+
+			.add( R.id.hz_left_pane, categoryMenu, FragmentTag.SHOPPING_CATEGORY_MENU )
+			.add( R.id.hz_center_pane, itemList, FragmentTag.SHOPPING_ITEM_LIST )
+
+			.commit();
 	}
 
 	/** Used by fragments to access our dispatcher. */
@@ -43,7 +58,11 @@ public class BitsyPosActivity
 			switch( msg.what )
 			{
 				case MessageId.SHOPPING_CATEGORY_CLICKED:
-				onShoppingCategoryClicked(msg.arg1);
+					onShoppingCategoryClicked(msg.arg1);
+				break;
+
+				case MessageId.SHOPPING_ITEM_CLICKED:
+					onShoppingItemClicked(msg.arg1);
 				break;
 			}
 		}
@@ -70,8 +89,7 @@ public class BitsyPosActivity
 		ViewGroup panel_w1 = (ViewGroup)findViewById(R.id.panel_w1);
 		// printViewHierarchy(panel_w1, "panel_w1");
 
-		// Fragment _is_ the grid view
-		GridView view = (GridView)fragmentManager.findFragmentById(R.id.shopping_item_list_frag).getView();
+		GridView view = (GridView)fragmentManager.findFragmentByTag(FragmentTag.SHOPPING_ITEM_LIST).getView();
 
 		ArrayList<ItemSummaryArrayAdapter.Entry> items = 
 			new ArrayList<ItemSummaryArrayAdapter.Entry>();
@@ -86,6 +104,37 @@ public class BitsyPosActivity
 			new ItemSummaryArrayAdapter(this, R.layout.shopping_item_list_block, R.id.shopping_item_list_product, R.id.shopping_item_list_title, R.id.shopping_item_list_desc, R.id.shopping_item_list_price, R.id.shopping_item_list_indicator, items);
 
 		view.setAdapter( adapter );
+	}
+
+	/** User clicks on item. */
+	private void onShoppingItemClicked(int pos)
+	{
+		// query db
+		AppDb db = AppDb.getInstance( this );
+		Cursor c = db.getHelloWorld();
+		do
+		{
+			Log.v(TAG, "one="+c.getString(0) + ";two="+c.getShort(1) );
+		}
+		while (c.moveToNext());
+
+		ShoppingPanelFragment newFragment = new ShoppingPanelFragment();
+		Bundle args = new Bundle();
+		newFragment.setArguments(args);
+
+		FragmentManager fragmentManager = getFragmentManager();
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+		// Remove categories
+		Fragment categoryMenu = fragmentManager.findFragmentByTag(FragmentTag.SHOPPING_CATEGORY_MENU);
+		transaction.remove(categoryMenu);
+
+		// Replace items with the combo editor
+		transaction.replace(R.id.hz_center_pane, newFragment);
+
+		// and add the transaction to the back stack so the user can navigate back
+		transaction.addToBackStack(null);
+		transaction.commit();
 	}
 
 	final int icons_[] = {

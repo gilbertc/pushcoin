@@ -5,3 +5,15 @@ android create project \
 	--name BitsyPOS --path . \
 	--activity BitsyPosActivity \
 	--package com.pushcoin.bitsypos
+
+
+Third-party dependencies:
+
+	* TypefaceTextView
+		https://github.com/ragunathjawahar/android-typeface-textview
+
+	* Android SQLiteAssetHelper:
+		https://github.com/jgilfelt/android-sqlite-asset-helper
+
+	* SwipeToDismissUndoList 
+		https://github.com/timroes/SwipeToDismissUndoList
