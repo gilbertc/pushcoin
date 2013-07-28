@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:id="@+id/slot_items_view"
+	android:cacheColorHint="@color/white"
+	android:fadingEdge="none"
+	android:divider="@color/white"
+	android:dividerHeight="1dp"
+	android:layout_width="500dp" 
+	android:layout_height="match_parent" />

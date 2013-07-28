@@ -1,0 +1,228 @@
+--[[
+        ____  _ _             ____           
+       | __ )(_) |_ ___ _   _|  _ \ ___  ___ 
+       |  _ \| | __/ __| | | | |_) / _ \/ __|
+       | |_) | | |_\__ \ |_| |  __/ (_) \__ \
+       |____/|_|\__|___/\__, |_|   \___/|___/v1
+                        |___/                
+      
+  Legend
+  ------
+   The 'product_index' defines all sellable goods. Products can 
+   be sold individually, or be included in a 'combo'.
+ 
+]]--
+json = require('json')
+
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+--                     DRINK
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+
+ORANGE_JUICE_335= { 
+	name='Orange Juice (335 ml)',
+	price= { unit= 1.95, breakfast_combo= 1.00, },
+	tag= { 'beverage', 'juice' },
+	image= 'ttps://blah.blah',
+}
+
+SODA_CAN_335= { 
+	name='Soda Can (335 ml)',
+	price= { unit= 1.00, breakfast_combo= 0.00, },
+	tag= { 'beverage', 'soda' },
+	image= 'ttps://blah.blah',
+}
+
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+--                     BASIC DISH
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+
+PNCKE_PLAIN= {
+	name='Plain Pancake',
+	price= { unit= 2.49, combo_priced_in= 0.00, },
+	tag= { 'breakfast_addon' },
+	image= 'https://blah.blah',
+}
+
+PNCKE_STRBRY= {
+	name='Strawberry Pancake',
+	price= { unit= 2.49, combo_priced_in= 0.00, },
+	tag= { 'breakfast' },
+	image= 'https://blah.blah',
+}
+
+PNCKE_BLUBRY= {
+	name='Blueberry Pancake',
+	price= { unit= 2.49, combo_priced_in= 0.00, },
+	tag= { 'breakfast' },
+	image= 'https://blah.blah',
+}
+
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+--                     CUSTOMIZATION
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+
+TOAST= { 
+	name='French Toast',
+	price= { unit= 2.49, combo_priced_in= 0.00, },
+	tag= { 'breakfast_addon' },
+	image= 'https://blah.blah',
+}
+
+TOAST_JELLY= { 
+	name='Toast & Jelly',
+	price= { unit= 2.49, combo_priced_in= 0.00, },
+	tag= { 'breakfast_addon', 'breakfast_special_item' },
+	image= 'https://blah.blah',
+}
+
+HASH_BROWN= {
+	name='Hash Brown',
+	price= { unit= 1.00, breakfast_combo= 0.80, },
+	tag= { 'breakfast_addon' },
+	image= 'https://blah.blah',
+}
+
+FRUIT= {
+	name='Fruit',
+	price= { unit= 1.00, breakfast_combo= 0.80, },
+	tag= { 'breakfast_addon' },
+	image= 'https://blah.blah',
+}
+
+WHIPCREAM_HV= {
+	name='Whip Cream (Heavy)',
+	price= { unit= 0.80, breakfast_combo= 0.40, },
+	tag= { 'breakfast_addon' },
+}
+
+CHOCKLETE_CHIP= {
+	name='Chocklete Chips',
+	price= { unit= 0.80, breakfast_combo= 0.40, },
+	tag= { 'breakfast_addon' },
+}
+
+TURKY_SAUSGE= {
+	name='Turkey Sausage',
+	price= { unit= 1.00, combo_priced_in= 0.00 },
+	tag= { 'breakfast_addon' },
+}
+
+BREAKFAST_SPECIAL_ITEM_TWO_SAUSAGES = {
+	name='2-Sausage Links',
+	id='BREAKFAST_SPECIAL_ITEM_TWO_SAUSAGES',
+	combo= {
+		{
+			default= TURKY_SAUSGE,
+			qty= 2,
+		},
+	},
+	tag= { 'breakfast_special_item' },
+}
+
+BREAKFAST_SPECIAL_ITEM_TWO_PANCAKES = {
+	name='2-Pancakes',
+	id='BREAKFAST_SPECIAL_ITEM_TWO_PANCAKES',
+	combo= {
+		{
+			default= PNCKE_PLAIN,
+			qty= 2,
+		},
+	},
+	tag= { 'breakfast_special_item' },
+}
+
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+--                     MEAL
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+
+PNCKE_STRBRY_ML2 = {
+	name='Two Strawberry Pancakes, Snack & Drink',
+	id='PNCKE_STRBRY_ML2',
+	combo= {
+		{
+			name= 'Dish',
+			default= PNCKE_STRBRY,
+			price_tag='breakfast_combo',
+			qty= 2,
+		},
+		{
+			price_tag='breakfast_combo_beverage',
+			name= 'Drink',
+			default= ORANGE_JUICE_335,
+			choice_tag= { 'beverage' },
+			qty= 1,
+		},
+		{
+			name= 'Snack',
+			default= FRENCH_TOAST,
+			choice_tag= { 'breakfast_addon' },
+			price_tag= { 'breakfast_combo' },
+			qty= 1
+		},
+	},
+	tag= { 'breakfast' },
+	related_item= { 'breakfast_addon' },
+}
+
+THREE_ITEM_BREAKFAST_MEAL = {
+	name='Breakfast Special',
+	id='THREE_ITEM_BREAKFAST_MEAL',
+	price= { unit= 5.00 },
+	combo= {
+		{
+			name= 'Choice-1',
+			choice_tag= { 'breakfast_special_item' },
+			price_tag='combo_priced_in',
+		},
+		{
+			name= 'Choice-2',
+			choice_tag= { 'breakfast_special_item' },
+			price_tag='combo_priced_in',
+		},
+		{
+			name= 'Choice-3',
+			choice_tag= { 'breakfast_special_item' },
+			price_tag='combo_priced_in',
+		},
+	},
+	tag= { 'breakfast' },
+	related_item= { 'breakfast_addon' },
+}
+
+index= {
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+--                     PRODUCTS
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+	product= { 
+		FRENCH_TOAST,
+		HASH_BROWN,
+		FRUIT,
+		WHIPCREAM_HV,
+		CHOCKLETE_CHIP,
+		TURKY_SAUSGE,
+		ORANGE_JUICE_335,
+		SODA_CAN_335,
+		PNCKE_STRBRY,
+		PNCKE_BLUBRY,
+		PNCKE_STRBRY_ML2,
+	},
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+--                  CATEGORIES
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+	category= {
+		{
+			name= 'Breakfast',
+			tag= { 'breakfast' }
+		},
+		{
+			name= 'Soft Drinks',
+			tag= { 'soft drink' }
+		},
+		{
+			name= 'Alcoholic Drinks',
+			tag= { 'alcohol' }
+		},
+	}
+}
+
+print (json.encode (index)) 

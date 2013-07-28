@@ -8,38 +8,51 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
+import android.content.Context;
 import android.util.Log;
 import java.util.ArrayList;
 
 public class BitsyPosActivity 
 	extends Activity implements IDispatcher
 {
-	private static final String TAG = "BitsyPos";
-	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-		
-		ShoppingCategoryMenuFragment categoryMenu = new ShoppingCategoryMenuFragment();
-		categoryMenu.setArguments(getIntent().getExtras());
-		
-		ShoppingItemListFragment itemList = new ShoppingItemListFragment();
-		itemList.setArguments(getIntent().getExtras());
-		
-		getFragmentManager().beginTransaction()
+		setContentView(R.layout.shopping_main);
 
-			.add( R.id.hz_left_pane, categoryMenu, FragmentTag.SHOPPING_CATEGORY_MENU )
-			.add( R.id.hz_center_pane, itemList, FragmentTag.SHOPPING_ITEM_LIST )
+		AppDb db = AppDb.getInstance(this);
+		ArrayList<Item> items = db.findItems( "breakfast" );
+		if ( items.isEmpty() ) {
+			Log.v(Conf.TAG, "no-items-found|tag=breakfast");
+		}
+		else 
+		{
+			ConfigureItemFragment itemList = new ConfigureItemFragment("uuid", items.get(0));
+			itemList.setArguments(getIntent().getExtras());
 
-			.commit();
+			getFragmentManager().beginTransaction()
+				.add( R.id.hz_center_pane, itemList, FragmentTag.CONFIGURE_ITEM )
+				.commit();
+		}
+		
+//	ShoppingItemListFragment itemList = new ShoppingItemListFragment();
+//	itemList.setArguments(getIntent().getExtras());
+//	
+//	getFragmentManager().beginTransaction()
+//		.add( R.id.hz_center_pane, itemList, FragmentTag.SHOPPING_ITEM_LIST )
+//		.commit();
+
+		// Don't let device go to sleep.
+		// TODO: Let user change this behavior in Settings
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	/** Used by fragments to access our dispatcher. */
@@ -49,12 +62,12 @@ public class BitsyPosActivity
 		return handler_;
 	}
 	
-	/** Dispatch events coming from fragments. */
+	/** Dispatch events from fragments. */
 	private Handler handler_ = new Handler() {
 		@Override
 		public void handleMessage(Message msg) 
 		{
-			Log.v(TAG, "event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
+			Log.v(Conf.TAG, "event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
 			switch( msg.what )
 			{
 				case MessageId.SHOPPING_CATEGORY_CLICKED:
@@ -73,7 +86,7 @@ public class BitsyPosActivity
 			for (int i = 0; i < $vg.getChildCount(); i++) {
 					View v = $vg.getChildAt(i);
 					String desc = String.format("%s|[%d/%d] %s ID:0x%x", $prefix, i, $vg.getChildCount()-1, v.getClass().getSimpleName(), v.getId());
-					Log.v(TAG, desc);
+					Log.v(Conf.TAG, desc);
 
 					if (v instanceof ViewGroup) {
 							printViewHierarchy((ViewGroup)v, desc);
@@ -84,6 +97,7 @@ public class BitsyPosActivity
 	/** User clicks on category item. */
 	private void onShoppingCategoryClicked(int pos)
 	{
+		/*
 		FragmentManager fragmentManager = getFragmentManager();
 	
 		ViewGroup panel_w1 = (ViewGroup)findViewById(R.id.panel_w1);
@@ -104,20 +118,12 @@ public class BitsyPosActivity
 			new ItemSummaryArrayAdapter(this, R.layout.shopping_item_list_block, R.id.shopping_item_list_product, R.id.shopping_item_list_title, R.id.shopping_item_list_desc, R.id.shopping_item_list_price, R.id.shopping_item_list_indicator, items);
 
 		view.setAdapter( adapter );
+		*/
 	}
 
 	/** User clicks on item. */
 	private void onShoppingItemClicked(int pos)
 	{
-		// query db
-		AppDb db = AppDb.getInstance( this );
-		Cursor c = db.getHelloWorld();
-		do
-		{
-			Log.v(TAG, "one="+c.getString(0) + ";two="+c.getShort(1) );
-		}
-		while (c.moveToNext());
-
 		ShoppingPanelFragment newFragment = new ShoppingPanelFragment();
 		Bundle args = new Bundle();
 		newFragment.setArguments(args);

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<fragment android:name="com.pushcoin.bitsypos.ShoppingCategoryMenuFragment"
+		android:id="@+id/shopping_category_frag"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent" />
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_weight="1"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" >
+
+		<fragment android:name="com.pushcoin.bitsypos.ShoppingPanelFragment"
+			android:id="@+id/shopping_panel_frag"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
+
+		<FrameLayout
+			android:id="@+id/hz_center_pane"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+
+	</LinearLayout>
+
+	<fragment android:name="com.pushcoin.bitsypos.ShoppingCartFragment"
+		android:id="@+id/shopping_cart_frag"
+		android:layout_width="300dp"
+		android:layout_height="match_parent" />
+
+</LinearLayout>

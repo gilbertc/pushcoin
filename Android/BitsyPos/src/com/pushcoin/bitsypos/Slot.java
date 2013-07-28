@@ -1,0 +1,87 @@
+package com.pushcoin.bitsypos;
+
+import android.util.Log;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import java.util.ArrayList;
+
+public class Slot extends Item
+{
+	public Slot ( AppDb db, String parentItemId, String slotId, String name, String defaultItemId, String choiceItemTag, int quantity, String priceTag ) 
+	{
+		super( db, parentItemId+":"+slotId, name );
+		parentItemId_ = parentItemId; 
+		slotId_ = slotId; 
+		defaultItemId_ = defaultItemId;
+		choiceItemTag_ = choiceItemTag;
+		quantity_ = quantity;
+		priceTag_ = priceTag;
+	}
+
+	/**
+		Returns item-choices that can go into this slot.
+	*/
+	ArrayList<Item> getAlternatives() 
+	{
+		if ( alternativesCache_ == null && choiceItemTag_ != null ) {
+			alternativesCache_ = db_.findItems( choiceItemTag_ );
+		}
+		return alternativesCache_;
+	};
+
+	/**
+		Returns default item configured for this slot, NULL otherwise.
+	*/
+	Item getDefaultItem() 
+	{
+		if ( defaultItemCache_ == null && defaultItemId_ != null ) {
+			defaultItemCache_ = getItemById( defaultItemId_ );
+		}
+		return defaultItemCache_;
+	}
+
+	/**
+		Returns a single defined-item.
+	*/
+	Item getChosenItem() {
+		return chosenItem_;
+	}
+
+	/**
+		Sets chosen item.
+	*/
+	void setChosenItem( Item item )
+	{
+		if ( item.isDefined( priceTag_ ) )
+		{
+			if ( Item.equivalent( item, getDefaultItem() ) || Item.exists( item, getAlternatives() ) ) {
+				chosenItem_ = item;
+			}
+		}
+		if ( chosenItem_ == null ) {
+			throw new Conf.BitsyError( "Cannot accept undefined, non-default or non-alternative item" );
+		}
+	}
+
+	String getPriceTag() {
+		return priceTag_;
+	}
+
+	int getQuantity() {
+		return quantity_;
+	}
+
+	private final String parentItemId_;
+	private final String slotId_;
+	private final String defaultItemId_;
+	private final String choiceItemTag_;
+	private final int quantity_;
+	private final String priceTag_;
+
+	private Item chosenItem_ = null;
+
+	// -- cached DB objects
+	private Item defaultItemCache_ = null;
+	private ArrayList<Item> alternativesCache_ = null;
+}
