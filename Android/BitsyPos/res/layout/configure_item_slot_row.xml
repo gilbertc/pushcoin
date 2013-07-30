@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="horizontal" 
-	android:background="@drawable/shopping_category_menu_row_selector">
+	android:paddingTop="7dp"
+	android:paddingLeft="14dp"
+	android:paddingRight="14dp"
+	android:background="@drawable/configure_item_slot_row_selector">
 
 	<ImageView
 		android:id="@+id/shopping_category_menu_icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:scaleType="center"
-		android:paddingTop="10dp"
-		android:paddingBottom="10dp"
-		android:layout_marginLeft="4dp" />
+		android:layout_marginLeft="4dp"
+		android:layout_marginRight="10dp"
+	/>
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_category_menu_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="36dp"
+		android:textSize="30dp"
 		android:textColor="#000000"
-		android:padding="10dp"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+		android:paddingRight="5dp"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf"
+		/>
 
 </LinearLayout>

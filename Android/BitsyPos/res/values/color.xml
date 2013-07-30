@@ -18,6 +18,11 @@ Organized by: Willie Tsang
 	<!-- Android style -->
 	<color name="android_green">#A4C639</color>
 
+	<!-- Light UI -->
+	<color name="lightui_background">#eeeeee</color>
+	<color name="lightui_lightgray">#dddddd</color>
+	<color name="lightui_darkgray">#999999</color>
+
 	<!-- Windows 8 style -->
 	<color name="win8_magenta">#FF0097</color>
 	<color name="win8_purple">#A200FF</color>

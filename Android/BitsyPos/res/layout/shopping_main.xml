@@ -9,23 +9,16 @@
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent" />
 
-	<LinearLayout
-		android:orientation="vertical"
+	<View
+		android:layout_width="14px"
+		android:layout_height="match_parent"
+		android:background="@drawable/right_edge_drop_shadow" />
+
+	<FrameLayout
+		android:id="@+id/hz_center_pane"
 		android:layout_weight="1"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent" >
-
-		<fragment android:name="com.pushcoin.bitsypos.ShoppingPanelFragment"
-			android:id="@+id/shopping_panel_frag"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content" />
-
-		<FrameLayout
-			android:id="@+id/hz_center_pane"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent" />
-
-	</LinearLayout>
+		android:layout_width="0dp"
+		android:layout_height="match_parent" />
 
 	<fragment android:name="com.pushcoin.bitsypos.ShoppingCartFragment"
 		android:id="@+id/shopping_cart_frag"

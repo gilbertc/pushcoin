@@ -1,9 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android" 
-	android:id="@+id/slot_items_view"
-	android:cacheColorHint="@color/white"
-	android:fadingEdge="none"
-	android:divider="@color/white"
-	android:dividerHeight="1dp"
-	android:layout_width="500dp" 
-	android:layout_height="match_parent" />
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:background="@drawable/slot_shape"
+	android:layout_marginTop="14dp"
+	android:layout_marginLeft="14dp"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/slot_items_header"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textSize="20dp"
+		android:paddingLeft="10dp"
+		android:textColor="@color/DarkOliveGreen"
+		android:background="@drawable/slot_header_shape"
+		geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
+
+	<!-- header highlight -->
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="@color/lightui_darkgray" />
+
+	<com.pushcoin.bitsypos.ShoppingCategoryMenu 
+		android:id="@+id/slot_items_listview"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:cacheColorHint="@android:color/transparent"
+		android:divider="@android:color/transparent"
+		android:dividerHeight="10dp"
+		android:paddingTop="12dp"
+		android:paddingBottom="12dp" />
+
+</LinearLayout>

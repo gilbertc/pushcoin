@@ -4,10 +4,11 @@
 	android:id="@+id/shopping_category_menu"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:divider="@color/white"
-	android:dividerHeight="12dp"
+	android:divider="@color/lightui_darkgray"
+	android:dividerHeight="1dp"
 	android:paddingTop="12dp"
 	android:paddingBottom="12dp"
-	android:background="@color/white"
-	android:cacheColorHint="@color/white"
-	/>
+	android:background="@color/lightui_lightgray"
+	android:cacheColorHint="@color/lightui_lightgray"
+	android:fadeScrollbars="false"
+	android:scrollbarFadeDuration="0" />

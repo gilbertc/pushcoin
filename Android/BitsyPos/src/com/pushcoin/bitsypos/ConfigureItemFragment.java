@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -32,40 +34,20 @@ public class ConfigureItemFragment extends Fragment
 		dispatchable_ = ((IDispatcher)ctx).getDispachable();
 
 		// Inflate the layout for this fragment
-		View scrollLayout = inflater.inflate(R.layout.configure_item_view, container, false);
-		LinearLayout layout = (LinearLayout) scrollLayout.findViewById( R.id.item_configuration_arena );
+		View fragmentRootLayout = inflater.inflate(R.layout.configure_item_view, container, false);
 
-		// Populate related list
-		ArrayList<Item> relatedItems = item_.getRelatedItems();
-		if ( !relatedItems.isEmpty() ) 
-		{
-			ListView view = (ListView)inflater.inflate(R.layout.related_items_view, layout, false);
-
-			ArrayList<IconLabelArrayAdapter.Entry> menuItems = 
-				new ArrayList<IconLabelArrayAdapter.Entry>();
-
-			for ( Item item : relatedItems )
-			{
-				Log.v(Conf.TAG, "related-item|name="+item.getName() );
-				menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.coffee_cup, item.getName()) );
-			}
-
-			view.setAdapter(
-				new IconLabelArrayAdapter(
-					ctx, 
-					R.layout.shopping_category_menu_row, 
-					R.id.shopping_category_menu_icon, 
-					R.id.shopping_category_menu_label, 
-					menuItems) );
-
-			// add the listview to the layout
-			layout.addView( view );
-		}
-
-		// Similarly, we create a list-view for each slot being configured
+		// Create a list-view for each slot being configured
+		LinearLayout layoutSlots = (LinearLayout) fragmentRootLayout.findViewById( R.id.item_configuration_arena );
 		for ( Slot slot : item_.getSlots() )
 		{
-			ListView view = (ListView)inflater.inflate(R.layout.slot_items_view, layout, false);
+			View slotLayout = inflater.inflate(R.layout.slot_items_view, layoutSlots, false);
+
+			// set header to slot name
+			TextView title = (TextView) slotLayout.findViewById( R.id.slot_items_header );
+			title.setText( slot.getName() );
+
+			// populate list view with items
+			ListView listview = (ListView) slotLayout.findViewById( R.id.slot_items_listview );
 
 			ArrayList<IconLabelArrayAdapter.Entry> menuItems = 
 				new ArrayList<IconLabelArrayAdapter.Entry>();
@@ -76,22 +58,46 @@ public class ConfigureItemFragment extends Fragment
 				menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.coffee_cup, item.getName()) );
 			}
 
-			view.setAdapter(
+			listview.setAdapter(
+				new IconLabelArrayAdapter(
+					ctx, 
+					R.layout.configure_item_slot_row, 
+					R.id.shopping_category_menu_icon, 
+					R.id.shopping_category_menu_label, 
+					menuItems) );
+
+			// add this slot to the layout
+			layoutSlots.addView( slotLayout );
+		}
+
+		// Populate related list
+		ArrayList<Item> relatedItems = item_.getRelatedItems();
+		if ( !relatedItems.isEmpty() ) 
+		{
+			GridView relatedItemsView = (GridView) fragmentRootLayout.findViewById( R.id.configure_related_items );
+
+			ArrayList<IconLabelArrayAdapter.Entry> menuItems = 
+				new ArrayList<IconLabelArrayAdapter.Entry>();
+
+			for ( Item item : relatedItems )
+			{
+				Log.v(Conf.TAG, "related-item|name="+item.getName() );
+				menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.coffee_cup, item.getName()) );
+			}
+
+			relatedItemsView.setAdapter(
 				new IconLabelArrayAdapter(
 					ctx, 
 					R.layout.shopping_category_menu_row, 
 					R.id.shopping_category_menu_icon, 
 					R.id.shopping_category_menu_label, 
 					menuItems) );
-
-			// add the listview to the layout
-			layout.addView( view );
 		}
 
 		// install click-event listener
 		// view.setOnItemClickListener(new ListSelection());
 
-		return scrollLayout;
+		return fragmentRootLayout;
 	}
 
 	/*
