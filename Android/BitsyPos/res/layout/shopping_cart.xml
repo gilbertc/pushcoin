@@ -1,76 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:background="@color/lightui_background"
+	android:orientation="vertical"
+	android:paddingLeft="4dp"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:background="@color/white"
-	android:paddingLeft="5dp"
-	android:paddingBottom="5dp"
-	android:paddingTop="5dp" >
+	android:layout_height="match_parent" >
+
+	<LinearLayout
+		android:id="@+id/item_configuration_arena"
+		android:orientation="horizontal"
+		android:background="@drawable/slot_header_shape"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+
+		<com.mobsandgeeks.ui.TypefaceTextView android:text="Cart Total:"
+			android:id="@+id/shopping_cart_total_label"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:textSize="22dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColor="@color/lightui_darkgray"
+			geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView android:text="$4.95"
+			android:id="@+id/shopping_cart_total"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="22dp"
+			android:paddingRight="10dp"
+			android:textColor="@color/MidnightBlue"
+			geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
+
+	</LinearLayout>
+
+	<ListView xmlns:android="http://schemas.android.com/apk/res/android" 
+		android:id="@+id/shopping_cart_list"
+		android:layout_marginTop="4dp"
+		android:cacheColorHint="@color/lightui_background"
+		android:divider="@color/lightui_darkgray"
+		android:dividerHeight="1dp"
+		android:layout_weight="1"
+		android:layout_width="match_parent" 
+		android:layout_height="0dp" />
+
+	<LinearLayout
+		android:id="@+id/item_configuration_arena"
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+
+		<Button android:text="Start Over" 
+			android:id="@+id/shopping_cart_startover_button" 
+			android:background="@drawable/btn_red"
+			android:layout_marginRight="7dp"
+			style="@style/ShoppingCartAction" />
+
+		<Button android:text="Print Cart" 
+			android:id="@+id/shopping_cart_print_button" 
+			android:background="@drawable/btn_purple"
+			android:layout_marginRight="7dp"
+			style="@style/ShoppingCartAction" />
+
+		<Button android:text="Queue Order" 
+			android:id="@+id/shopping_cart_queueup_button" 
+			android:background="@drawable/btn_yellow" 
+			android:layout_marginRight="7dp"
+			style="@style/ShoppingCartAction" />
+
+	</LinearLayout>
 
 	<Button android:text="Check Out" 
 		android:id="@+id/shopping_cart_checkout_button" 
 		android:background="@drawable/btn_green"
 		style="@style/ShoppingCartCheckout" 
-		android:layout_marginRight="5dp"
-		android:layout_marginTop="5dp"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentLeft="true" />
+		android:layout_marginRight="7dp"
+		android:layout_marginBottom="7dp"
+		android:layout_marginTop="7dp" />
 
-	<Button android:text="Start Over" 
-		android:id="@+id/shopping_cart_startover_button" 
-		android:background="@drawable/btn_red"
-		style="@style/ShoppingCartAction" 
-		android:layout_above="@id/shopping_cart_checkout_button"
-		android:layout_alignParentLeft="true" />
-
-	<Button android:text="Print Cart" 
-		android:id="@+id/shopping_cart_print_button" 
-		android:background="@drawable/btn_purple"
-		style="@style/ShoppingCartAction"
-		android:layout_above="@id/shopping_cart_checkout_button"
-		android:layout_centerHorizontal="true"/>
-
-	<Button android:text="Queue Order" 
-		android:id="@+id/shopping_cart_queueup_button" 
-		android:background="@drawable/btn_yellow" 
-		style="@style/ShoppingCartAction"
-		android:layout_marginRight="5dp"
-		android:layout_above="@id/shopping_cart_checkout_button"
-		android:layout_alignParentRight="true" />
-
-	<com.mobsandgeeks.ui.TypefaceTextView android:text="$4.95"
-		android:id="@+id/shopping_cart_total"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginRight="5dp"
-		android:textSize="36dp"
-		android:textColor="@color/DarkSeaGreen"
-		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf"
-		android:layout_above="@id/shopping_cart_queueup_button"
-		android:layout_alignParentRight="true" />
-
-	<com.mobsandgeeks.ui.TypefaceTextView android:text="Total:"
-		android:id="@+id/shopping_cart_total_label"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textSize="22dp"
-		android:textColor="@color/DarkGrey"
-		android:paddingBottom="5dp"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf"
-		android:layout_above="@id/shopping_cart_queueup_button"
-		android:layout_toLeftOf="@id/shopping_cart_total" />
-
-	<ListView xmlns:android="http://schemas.android.com/apk/res/android" 
-		android:id="@+id/shopping_cart_list"
-		android:cacheColorHint="@color/white"
-		android:fadingEdge="none"
-		android:divider="@color/white"
-		android:dividerHeight="1dp"
-		android:layout_width="match_parent" 
-		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:layout_above="@id/shopping_cart_total"
-		android:layout_alignParentLeft="true" />
-
-</RelativeLayout>
+</LinearLayout>

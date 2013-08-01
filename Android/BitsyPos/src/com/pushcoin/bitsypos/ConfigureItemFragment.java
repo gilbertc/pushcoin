@@ -9,6 +9,8 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
+import android.graphics.Typeface;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.GridView;
@@ -35,6 +37,10 @@ public class ConfigureItemFragment extends Fragment
 
 		// Inflate the layout for this fragment
 		View fragmentRootLayout = inflater.inflate(R.layout.configure_item_view, container, false);
+
+		// Set combo name
+		TextView comboName = (TextView) fragmentRootLayout.findViewById( R.id.slot_items_combo_name );
+		comboName.setText( item_.getName() );
 
 		// Create a list-view for each slot being configured
 		LinearLayout layoutSlots = (LinearLayout) fragmentRootLayout.findViewById( R.id.item_configuration_arena );
@@ -93,6 +99,9 @@ public class ConfigureItemFragment extends Fragment
 					R.id.shopping_category_menu_label, 
 					menuItems) );
 		}
+
+		TextView addToCart = (TextView) fragmentRootLayout.findViewById(R.id.slot_items_add_to_cart);
+		addToCart.setTypeface( Typeface.createFromAsset(ctx.getAssets(), "fonts/modernpics.otf") );
 
 		// install click-event listener
 		// view.setOnItemClickListener(new ListSelection());

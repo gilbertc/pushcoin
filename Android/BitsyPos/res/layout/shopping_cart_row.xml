@@ -13,7 +13,7 @@
 		android:layout_height="wrap_content"
 		android:textSize="20dp"
 		android:paddingLeft="4dp"
-		android:textColor="@color/DarkSlateGrey"
+		android:textColor="@color/black"
 		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -51,7 +51,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="18dp"
-			android:textColor="@color/DarkSeaGreen"
+			android:textColor="@color/DarkSlateGrey"
 			geekui:customTypeface="fonts/DejaVuSans.ttf" />
 
 	</LinearLayout>
