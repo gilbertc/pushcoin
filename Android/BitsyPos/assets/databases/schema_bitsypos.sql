@@ -58,6 +58,16 @@ CREATE TABLE related_item
   PRIMARY KEY(item_id, item_tag)
 );
 
+DROP TABLE IF EXISTS category
+CREATE TABLE category
+(
+	-- category id
+  category_id TEXT NOT NULL,
+	-- tag which marks items belonging to this category
+  tag_id TEXT NOT NULL,
+  PRIMARY KEY (category_id)
+);
+
 /*
 	Sample of items to play with, inspired by Gabby's Kitchen menu.
 */

@@ -22,6 +22,7 @@ Organized by: Willie Tsang
 	<color name="lightui_background">#eeeeee</color>
 	<color name="lightui_lightgray">#dddddd</color>
 	<color name="lightui_darkgray">#999999</color>
+	<color name="lightui_moneygreen">#53833f</color>
 
 	<!-- Windows 8 style -->
 	<color name="win8_magenta">#FF0097</color>

@@ -15,7 +15,7 @@
 		android:textSize="22dp"
 		android:paddingLeft="10dp"
 		android:textColor="@color/lightui_darkgray"
-		geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
+		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
 	<LinearLayout
 		android:orientation="horizontal"
@@ -55,7 +55,7 @@
 		android:textSize="22dp"
 		android:paddingLeft="10dp"
 		android:textColor="@color/lightui_darkgray"
-		geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
+		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
 	<GridView 
 		xmlns:android="http://schemas.android.com/apk/res/android" 

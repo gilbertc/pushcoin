@@ -23,7 +23,7 @@
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
 			android:textColor="@color/lightui_darkgray"
-			geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
+			geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
 		<com.mobsandgeeks.ui.TypefaceTextView android:text="$4.95"
 			android:id="@+id/shopping_cart_total"
@@ -31,8 +31,8 @@
 			android:layout_height="wrap_content"
 			android:textSize="22dp"
 			android:paddingRight="10dp"
-			android:textColor="@color/MidnightBlue"
-			geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
+			android:textColor="@color/lightui_moneygreen"
+			geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
 	</LinearLayout>
 
