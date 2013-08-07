@@ -7,6 +7,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
+	<!-- Product name -->
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:background="@drawable/slot_header_shape"
 		android:id="@+id/slot_items_combo_name"
@@ -17,10 +18,12 @@
 		android:textColor="@color/lightui_darkgray"
 		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
+	<!-- Slots container -->
 	<LinearLayout
 		android:orientation="horizontal"
+		android:layout_weight="1"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content" >
+		android:layout_height="0dp" >
 
 		<HorizontalScrollView
 			android:layout_weight="1"
@@ -46,6 +49,7 @@
 
 	</LinearLayout>
 
+	<!-- Popular Together -->
 	<com.mobsandgeeks.ui.TypefaceTextView 
 		android:text="Popular Together"
 		android:layout_marginTop="7dp"
@@ -57,11 +61,13 @@
 		android:textColor="@color/lightui_darkgray"
 		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
+	<!-- Together Items -->
 	<GridView 
 		xmlns:android="http://schemas.android.com/apk/res/android" 
 		android:id="@+id/configure_related_items"
+		android:layout_weight="1"
 		android:layout_width="match_parent" 
-		android:layout_height="wrap_content"
+		android:layout_height="0dp"
 		android:numColumns="auto_fit"
 		android:verticalSpacing="10dp"
 		android:horizontalSpacing="10dp"

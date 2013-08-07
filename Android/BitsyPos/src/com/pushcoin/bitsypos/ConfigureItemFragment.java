@@ -61,7 +61,7 @@ public class ConfigureItemFragment extends Fragment
 			for ( Item item : slot.getAlternatives() )
 			{
 				Log.v(Conf.TAG, "alternative-item|name="+item.getName() );
-				menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.coffee_cup, item.getName()) );
+				menuItems.add( new IconLabelArrayAdapter.Entry(android.R.id.empty, item.getName()) );
 			}
 
 			listview.setAdapter(

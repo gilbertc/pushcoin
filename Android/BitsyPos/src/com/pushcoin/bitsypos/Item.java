@@ -92,7 +92,7 @@ public class Item
 
 		do 
 		{
-			rs.add( new Slot(db_, c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getInt(5), c.getString(6)) );
+			rs.add( new Slot(db_, c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4), c.getString(5)) );
 			Log.v(Conf.TAG, "slot|name="+c.getString(2) );
 		}
 		while (c.moveToNext());

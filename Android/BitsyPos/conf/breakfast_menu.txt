@@ -53,17 +53,17 @@ index = {
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- BREAKFAST SPECIAL ITEMS
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Two Eggs', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI1' },
-		{ name= 'Two Pancakes', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI2' },
+		{ name= 'Eggs (two)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI1' },
+		{ name= 'Pancakes (two)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI2' },
 		{ name= 'Toast & Jelly', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI3' },
-		{ name= 'Two French Toast', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI4' },
-		{ name= 'Two Potato Pancakes', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI5' },
-		{ name= 'Two Applewood Bacon Strips', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI6' },
+		{ name= 'French Toast (two)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI4' },
+		{ name= 'Potato Pancakes (two)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI5' },
+		{ name= 'Applewood Bacon Strips (two)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI6' },
 		{ name= 'Hashbrown Potatoes', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI7' },
 		{ name= 'English Muffin', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI8' },
-		{ name= 'Two Homemade Sausage Patties', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI9' },
-		{ name= 'Two Homemade Trukey Patties', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI10' },
-		{ name= 'Two Sausage Links', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI11' },
+		{ name= 'Homemade Sausage Patties (two)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI9' },
+		{ name= 'Homemade Trukey Patties (two)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI10' },
+		{ name= 'Sausage Links (two)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI11' },
 		{ name= 'Fresh Fruit', price= { combo_priced_in= 0.00, greek_yogurt_addon=0.99 }, tag= { 'breakfast_special_item' }, id= 'BSI12' },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- BREAKFAST SPECIAL COMBO (You-Pick-Three)
@@ -73,18 +73,18 @@ index = {
 			price= { unit= 5.00 },
 			combo= {
 				{
-					name= 'Choice-1',
-					choice_tag= { 'breakfast_special_item' },
+					slot= 'Choice-1',
+					choice_tag= 'breakfast_special_item',
 					price_tag='combo_priced_in',
 				},
 				{
-					name= 'Choice-2',
-					choice_tag= { 'breakfast_special_item' },
+					slot= 'Choice-2',
+					choice_tag= 'breakfast_special_item',
 					price_tag='combo_priced_in',
 				},
 				{
-					name= 'Choice-3',
-					choice_tag= { 'breakfast_special_item' },
+					slot= 'Choice-3',
+					choice_tag= 'breakfast_special_item',
 					price_tag='combo_priced_in',
 				},
 			},
@@ -104,11 +104,11 @@ index = {
 			name= 'Homemade Greek Yogurt & Side',
 			combo= {
 				{
-					name= 'Dish',
+					slot= 'Dish',
 					default= 'GLS1',
 				},
 				{
-					name= 'Side',
+					slot= 'Side',
 					default= 'BSI12',
 					price_tag='greek_yogurt_addon',
 				},

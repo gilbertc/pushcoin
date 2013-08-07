@@ -1,4 +1,5 @@
-# Project created with:
+Project created with
+====================
 
 android create project \
 	--target 2 \
@@ -7,7 +8,8 @@ android create project \
 	--package com.pushcoin.bitsypos
 
 
-Third-party dependencies:
+Third-party dependencies
+========================
 
 	* TypefaceTextView
 		https://github.com/ragunathjawahar/android-typeface-textview
@@ -17,3 +19,9 @@ Third-party dependencies:
 
 	* SwipeToDismissUndoList 
 		https://github.com/timroes/SwipeToDismissUndoList
+
+
+To Test JSON import
+===================
+
+lua < conf/breakfast_diner.bitsy | java -classpath /home/sl/src/JSON-java:bin/classes com.pushcoin.bitsypos.JsonImporter

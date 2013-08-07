@@ -8,11 +8,10 @@ import java.util.ArrayList;
 
 public class Slot extends Item
 {
-	public Slot ( AppDb db, String parentItemId, String slotId, String name, String defaultItemId, String choiceItemTag, int quantity, String priceTag ) 
+	public Slot ( AppDb db, String parentItemId, String name, String defaultItemId, String choiceItemTag, int quantity, String priceTag ) 
 	{
-		super( db, parentItemId+":"+slotId, name );
+		super( db, parentItemId, name );
 		parentItemId_ = parentItemId; 
-		slotId_ = slotId; 
 		defaultItemId_ = defaultItemId;
 		choiceItemTag_ = choiceItemTag;
 		quantity_ = quantity;
@@ -73,7 +72,6 @@ public class Slot extends Item
 	}
 
 	private final String parentItemId_;
-	private final String slotId_;
 	private final String defaultItemId_;
 	private final String choiceItemTag_;
 	private final int quantity_;

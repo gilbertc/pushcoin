@@ -2,11 +2,16 @@ package com.pushcoin.bitsypos;
 
 import android.util.Log;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.database.sqlite.SQLiteQueryBuilder;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 import java.util.ArrayList;
+import java.util.TreeMap;
+import java.io.InputStream;
+import java.io.IOException;
 
 public class AppDb extends SQLiteAssetHelper 
 {
@@ -48,6 +53,63 @@ public class AppDb extends SQLiteAssetHelper
 		return inst_;
 	}
 
+	private void initSample()
+	{
+		// Sample data found, begin import
+		SQLiteDatabase db = getReadableDatabase();
+
+		try
+		{
+			// load sample data
+			AssetManager assetManager = ctx_.getAssets();
+			InputStream input = assetManager.open(Conf.SAMPLE_DATA_FILE);
+			Log.i(Conf.TAG, "loading-sample-data|file="+Conf.SAMPLE_DATA_FILE);
+
+			String jsonData = JsonImporter.copyStreamToString( input );
+			JsonImporter imp = new JsonImporter( jsonData );
+
+			// wipe old data first
+			for (String table: Conf.PRODUCT_TABLES) {
+				db.delete( table, null, null );
+			}
+
+			db.beginTransaction();
+			// insert new records
+			for ( JsonImporter.Statement stmt: imp.generateDbStatements() )
+			{
+				// Log.v(Conf.TAG, "sample|stmt="+stmt.sql+";args="+java.util.Arrays.toString(stmt.args));
+				SQLiteStatement complStmt = getStatement( db, stmt.sql );
+				int ix = 1;
+				for (String arg: stmt.args)
+				{
+					if (arg != null) {
+						complStmt.bindString( ix, arg );
+					}
+					++ix;
+				}
+				complStmt.execute();
+			}
+			db.setTransactionSuccessful();
+		}
+		catch (IOException e) {
+			Log.w(Conf.TAG, "no-sample-data|file="+Conf.SAMPLE_DATA_FILE);
+		}
+		finally {
+			db.endTransaction();
+		}
+	}
+
+	private SQLiteStatement getStatement(SQLiteDatabase db, String stmt)
+	{
+		SQLiteStatement ret = stmtCache_.get( stmt );
+		if ( ret == null )
+		{
+			ret = db.compileStatement( stmt );
+			stmtCache_.put( stmt, ret );
+		}
+		return ret;
+	}
+
 	/**
 	 * Constructor should be private to prevent direct instantiation.
 	 * make call to static factory method "getInstance()" instead.
@@ -61,11 +123,17 @@ public class AppDb extends SQLiteAssetHelper
 		// to write to it
 		//super(context, DATABASE_NAME, context.getExternalFilesDir(null).getAbsolutePath(), null, DATABASE_VERSION);
 	
+		// Activity context
 		ctx_ = ctx;
+
+		// Compiled-statements cache
+		stmtCache_ = new TreeMap<String, SQLiteStatement>();
+
+		// Populate sample data
+		initSample();
 	}
 
 	private Context ctx_;
 	private static AppDb inst_ = null;
+	TreeMap<String, SQLiteStatement> stmtCache_;
 }
-
-
