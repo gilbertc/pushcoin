@@ -6,7 +6,11 @@ public class Conf
 	static final int DATABASE_VERSION = 1;
 
 	static final String TAG = "Bitsy"; // Log tag
-	static final String SCREEN_LOCK_TAG = "Bitsy-Does-Not-Sleep";
+
+	/**
+		Session keys.
+	*/
+	static final String SESSION_CART = "cart";
 
 	/** 
 		Database queries.  

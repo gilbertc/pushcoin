@@ -16,44 +16,12 @@
 		android:textColor="@color/black"
 		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="vertical"
-		android:gravity="right"
-		android:padding="5dp"
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/shopping_cart_entry_price"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-
-		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:orientation="horizontal"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-
-			<com.mobsandgeeks.ui.TypefaceTextView
-				android:id="@+id/shopping_cart_entry_qty"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textSize="16dp"
-				android:textColor="@color/DarkSlateGrey"
-				geekui:customTypeface="fonts/DejaVuSans.ttf" />
-
-			<ImageView
-				android:id="@+id/shopping_cart_entry_status"
-				android:paddingLeft="5dp"
-				android:layout_gravity="fill_vertical|bottom|right"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:scaleType="center" />
-
-		</LinearLayout>
-
-		<com.mobsandgeeks.ui.TypefaceTextView
-			android:id="@+id/shopping_cart_entry_price"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="18dp"
-			android:textColor="@color/DarkSlateGrey"
-			geekui:customTypeface="fonts/DejaVuSans.ttf" />
-
-	</LinearLayout>
+		android:layout_height="wrap_content"
+		android:textSize="18dp"
+		android:textColor="@color/DarkSlateGrey"
+		geekui:customTypeface="fonts/DejaVuSans.ttf" />
 
 </LinearLayout>

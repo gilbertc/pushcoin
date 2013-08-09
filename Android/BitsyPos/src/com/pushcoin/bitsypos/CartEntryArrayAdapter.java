@@ -15,52 +15,23 @@ import java.util.ArrayList;
 
 public class CartEntryArrayAdapter extends BaseAdapter 
 {
-	public static class Entry
-	{
-		Entry(String ti, int qt, String pr, int st)
-		{
-			title = ti;
-			qty = qt;
-			price = pr;
-			status = st;
-		}
-
-		final String title;
-		final int qty;
-		final String price;
-
-		// The resource id of the status indicator
-		final int status;
-	}
-
-	public CartEntryArrayAdapter(Context context, int entryLayoutResourceId, int titleViewResourceId, int qtyViewResourceId, int priceViewResourceId, int statusViewResourceId, Collection<Entry> entries)
+	public CartEntryArrayAdapter(Context context, int entryLayoutResourceId, int titleViewResourceId, int priceViewResourceId)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
-		inflater_ = LayoutInflater.from(context);
+		inflater_ = LayoutInflater.from( context );
+		// Session manager
+		access_ = SessionManager.getInstance( context );
 
 		// Resource IDs of views for a row, icon and label
 		entryLayoutResourceId_ = entryLayoutResourceId;
 		titleViewResourceId_ = titleViewResourceId;
-		qtyViewResourceId_ = qtyViewResourceId;
 		priceViewResourceId_ = priceViewResourceId;
-		statusViewResourceId_ = statusViewResourceId;
-
-		// Decode icon resource IDs to speed up drawing on scroll.
-		entries_ = new ArrayList<CachedEntry>();
-		for ( Entry e : entries )
-		{
-			CachedEntry ce = new CachedEntry();
-			ce.title = e.title;
-			ce.qty = e.qty;
-			ce.price = e.price;
-			ce.status = BitmapFactory.decodeResource( context.getResources(), e.status );
-			entries_.add( ce );
-		}
 	}
 
 	public int getCount() 
 	{
-		return entries_.size();
+		Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+		return cart.size();
 	}
 
 	/**
@@ -88,12 +59,16 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	 */
 	public void remove(int position) 
 	{
-		// ignore if out of bounds
-		if ( position < entries_.size() )
-		{
-			entries_.remove(position);
-			notifyDataSetChanged();
-		}
+		Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+		cart.remove(position);
+	}
+
+	/**
+		Tell view that underlaying content has changed.
+	*/
+	public void refreshView()
+	{
+		notifyDataSetChanged();
 	}
 
 	/**
@@ -116,9 +91,7 @@ public class CartEntryArrayAdapter extends BaseAdapter
 			// we want to bind data to.
 			holder = new ViewHolder();
 			holder.title = (TextView) convertView.findViewById(titleViewResourceId_);
-			holder.qty = (TextView) convertView.findViewById(qtyViewResourceId_);
 			holder.price = (TextView) convertView.findViewById(priceViewResourceId_);
-			holder.status = (ImageView) convertView.findViewById(statusViewResourceId_);
 
 			convertView.setTag(holder);
 		} 
@@ -129,11 +102,13 @@ public class CartEntryArrayAdapter extends BaseAdapter
 			holder = (ViewHolder) convertView.getTag();
 		}
 
+		Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+		Item item = cart.get( position );
+
 		// Bind the data efficiently with the holder.
-		holder.title.setText( entries_.get( position ).title );
-		holder.qty.setText( "x " + Integer.toString(entries_.get( position ).qty) );
-		holder.price.setText( entries_.get( position ).price );
-		holder.status.setImageBitmap( entries_.get( position ).status );
+		holder.title.setText( item.getName() );
+		// TODO: hardcoded price
+		holder.price.setText( "$4.49" );
 
 		return convertView;
 	}
@@ -141,28 +116,16 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	private static class ViewHolder 
 	{
 		TextView title;
-		TextView qty;
 		TextView price;
-		ImageView status;
-	}
-
-	private static class CachedEntry
-	{
-		String title;
-		int qty;
-		String price;
-		Bitmap status;
 	}
 
 	private LayoutInflater inflater_;
-	private List<CachedEntry> entries_;
+	private SessionManager access_;
 
 	// The resource ID for a layout file containing a layout to use when instantiating views.
 	final private int entryLayoutResourceId_;
 
 	// Icon and label resource IDs
 	final private int titleViewResourceId_;
-	final private int qtyViewResourceId_;
 	final private int priceViewResourceId_;
-	final private int statusViewResourceId_;
 }

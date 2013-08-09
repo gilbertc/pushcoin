@@ -13,27 +13,13 @@ import java.util.ArrayList;
 
 public class ShoppingCartFragment extends Fragment 
 {
-	ArrayList<CartEntryArrayAdapter.Entry> items_ = 
-		new ArrayList<CartEntryArrayAdapter.Entry>();
-
 	CartEntryArrayAdapter adapter_;
 	SwipeDismissList swipeList_;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		// populate item(s)
-		for (int i = 0; i < 10; ++i)
-		{
-			items_.add( new CartEntryArrayAdapter.Entry("Coffee, Maine Roasted", i+5, "$2.75", icons_[i%icons_.length]) );
-		}
-
-		adapter_ = new CartEntryArrayAdapter(getActivity(), R.layout.shopping_cart_row, 
-			R.id.shopping_cart_entry_title,
-			R.id.shopping_cart_entry_qty,
-			R.id.shopping_cart_entry_price,
-			R.id.shopping_cart_entry_status,
-			items_);
+		adapter_ = new CartEntryArrayAdapter(getActivity(), R.layout.shopping_cart_row, R.id.shopping_cart_entry_title, R.id.shopping_cart_entry_price);
 
 		// Inflate the layout for this fragment
 		View cartLayout = inflater.inflate(R.layout.shopping_cart, container, false);
@@ -45,8 +31,6 @@ public class ShoppingCartFragment extends Fragment
 				public SwipeDismissList.Undoable onDismiss(AbsListView listView, int position) 
 				{		
 					adapter_.remove( position );
-					// final String itemToDelete = adapter_.getItem(position);
-					// adapter_.remove(itemToDelete);
 					return null;
 				}
 			};

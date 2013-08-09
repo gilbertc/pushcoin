@@ -16,7 +16,6 @@ bin/
 gen/
 gen_ui_main.py
 gen_ui_settings.py
-Android/BitsyPos/assets/databases/bitsypos
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -27,3 +26,6 @@ local.properties
 
 # other...
 cookie.txt
+Android/BitsyPos/assets/databases/bitsypos.zip
+Android/BitsyPos/assets/databases/example.json
+Android/BitsyPos/assets/databases/bitsypos
