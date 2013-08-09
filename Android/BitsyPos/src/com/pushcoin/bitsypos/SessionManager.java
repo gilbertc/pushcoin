@@ -27,7 +27,7 @@ public class SessionManager
 		 * http://developer.android.com/resources/articles/avoiding-memory-leaks.html)
 		 */
 		if (inst_ == null) {
-			inst_ = new SessionManager(ctx.getApplicationContext());
+			inst_ = new SessionManager(ctx);
 		}
 		return inst_;
 	}

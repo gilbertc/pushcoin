@@ -16,6 +16,34 @@ import java.io.IOException;
 public class AppDb extends SQLiteAssetHelper 
 {
 	/**
+		Get labels.
+	*/
+	public ArrayList<Category> getMainCategories() 
+	{ 
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.rawQuery( Conf.SQL_GET_MAIN_CATEGORIES, null );
+
+		ArrayList<Category> rs = new ArrayList<Category>();
+
+		if ( !c.moveToFirst() ) {
+			return rs;
+		}
+
+		do 
+		{
+			Category cat = new Category();
+			cat.category_id = c.getString(0);
+			cat.tag_id = c.getString(1);
+
+			rs.add( cat );
+			Log.v(Conf.TAG, "main-category|name="+cat.category_id+";tag="+cat.tag_id);
+		}
+		while (c.moveToNext());
+
+		return rs;
+	}
+
+	/**
 		Get items matching a given tag.
 	*/
 	public ArrayList<Item> findItems( String tag ) 

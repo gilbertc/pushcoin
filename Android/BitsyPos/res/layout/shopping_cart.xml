@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
-	android:background="@color/lightui_background"
+	android:background="@color/black"
 	android:orientation="vertical"
 	android:paddingLeft="4dp"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
+	<ListView xmlns:android="http://schemas.android.com/apk/res/android" 
+		android:id="@+id/shopping_cart_list"
+		android:layout_marginTop="4dp"
+		android:divider="@color/black"
+		android:dividerHeight="1dp"
+		android:layout_weight="1"
+		android:layout_width="match_parent" 
+		android:layout_height="0dp" />
+
 	<LinearLayout
 		android:id="@+id/item_configuration_arena"
 		android:orientation="horizontal"
-		android:background="@drawable/slot_header_shape"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" >
 
-		<com.mobsandgeeks.ui.TypefaceTextView android:text="Cart Total:"
+		<com.mobsandgeeks.ui.TypefaceTextView android:text="Total:"
 			android:id="@+id/shopping_cart_total_label"
 			android:layout_weight="1"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:textSize="22dp"
+			android:gravity="right"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
 			android:textColor="@color/lightui_darkgray"
@@ -29,22 +38,12 @@
 			android:id="@+id/shopping_cart_total"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="22dp"
+			android:textSize="52dp"
 			android:paddingRight="10dp"
 			android:textColor="@color/lightui_moneygreen"
 			geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
 	</LinearLayout>
-
-	<ListView xmlns:android="http://schemas.android.com/apk/res/android" 
-		android:id="@+id/shopping_cart_list"
-		android:layout_marginTop="4dp"
-		android:cacheColorHint="@color/lightui_background"
-		android:divider="@color/lightui_darkgray"
-		android:dividerHeight="1dp"
-		android:layout_weight="1"
-		android:layout_width="match_parent" 
-		android:layout_height="0dp" />
 
 	<LinearLayout
 		android:id="@+id/item_configuration_arena"
@@ -67,7 +66,6 @@
 		<Button android:text="Queue Order" 
 			android:id="@+id/shopping_cart_queueup_button" 
 			android:background="@drawable/btn_yellow" 
-			android:layout_marginRight="7dp"
 			style="@style/ShoppingCartAction" />
 
 	</LinearLayout>
@@ -76,8 +74,6 @@
 		android:id="@+id/shopping_cart_checkout_button" 
 		android:background="@drawable/btn_green"
 		style="@style/ShoppingCartCheckout" 
-		android:layout_marginRight="7dp"
-		android:layout_marginBottom="7dp"
 		android:layout_marginTop="7dp" />
 
 </LinearLayout>

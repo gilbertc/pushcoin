@@ -23,6 +23,7 @@ public class Conf
 	static final String SQL_FIND_ITEM_BY_TAG = "select item.item_id, item.name from tagged_item tagged join item on item.item_id = tagged.item_id where tagged.tag_id = ? order by item.name";
 	static final String SQL_FIND_RELATED_ITEMS = "select distinct item.item_id, item.name from tagged_item tagged join item on tagged.item_id = item.item_id where tagged.tag_id in (select tag_id from related_item where item_id = ?) and item.item_id != ? order by item.name";
 	static final String SQL_GET_SLOTS = "select parent_item_id, slot_name, default_item_id, choice_item_tag, quantity, price_tag from combo_item where parent_item_id = ? order by slot_name";
+	static final String SQL_GET_MAIN_CATEGORIES = "select category_id, tag_id from category";
 
 	/**
 		JSON import SQL

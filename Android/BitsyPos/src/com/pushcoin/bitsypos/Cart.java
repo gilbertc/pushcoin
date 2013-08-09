@@ -11,6 +11,7 @@ public class Cart
 	{
 		ctx_ = context;
 		dispatchable_ = ((IDispatcher)ctx_).getDispachable();
+		items_ = new ArrayList<Item>();
 	}
 
 	void add( Item item )

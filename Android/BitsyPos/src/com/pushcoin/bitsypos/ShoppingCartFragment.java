@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class ShoppingCartFragment extends Fragment 
 {
 	CartEntryArrayAdapter adapter_;
-	SwipeDismissList swipeList_;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
@@ -35,17 +34,9 @@ public class ShoppingCartFragment extends Fragment
 				}
 			};
 
-		swipeList_ = new SwipeDismissList(cartItemList, callback, SwipeDismissList.UndoMode.SINGLE_UNDO);
+		// The constructor adds 'self' to the provided ListView (first arg)
+		new SwipeDismissList(cartItemList, callback, SwipeDismissList.UndoMode.SINGLE_UNDO);
 
 		return cartLayout;
 	}
-
-	final int icons_[] = {
-		R.drawable.mono_checkbox,
-		R.drawable.mono_cooking,
-		R.drawable.mono_fork_knife,
-		R.drawable.mono_loop,
-		R.drawable.mono_notepad,
-		R.drawable.mono_warning,
-	};
 }
