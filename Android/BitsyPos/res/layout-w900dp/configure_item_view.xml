@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
-	android:background="@color/lightui_background"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
 	<!-- Product name -->
-	<com.mobsandgeeks.ui.TypefaceTextView
+	<TextView
 		android:background="@drawable/slot_header_shape"
 		android:id="@+id/slot_items_combo_name"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textSize="22dp"
 		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
 		android:textColor="@color/lightui_darkgray"
 		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
@@ -21,12 +21,11 @@
 	<LinearLayout
 		android:orientation="horizontal"
 		android:layout_weight="1"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="0dp" >
 
 		<HorizontalScrollView
-			android:layout_weight="1"
-			android:layout_width="0dp"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" >
 
 			<LinearLayout
@@ -37,7 +36,7 @@
 
 		</HorizontalScrollView>
 
-		<Button android:text="o" 
+		<Button android:text="i" 
 			android:id="@+id/slot_items_add_to_cart" 
 			android:layout_width="wrap_content" 
 			android:layout_height="match_parent"
@@ -49,14 +48,15 @@
 	</LinearLayout>
 
 	<!-- Popular Together -->
-	<com.mobsandgeeks.ui.TypefaceTextView 
+	<TextView 
 		android:text="Popular Together"
 		android:layout_marginTop="7dp"
 		android:background="@drawable/slot_header_shape"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textSize="22dp"
 		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
 		android:textColor="@color/lightui_darkgray"
 		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
@@ -72,8 +72,6 @@
 		android:horizontalSpacing="10dp"
 		android:stretchMode="columnWidth"
 		android:gravity="left"
-		android:background="@color/lightui_background"
-		android:cacheColorHint="@color/lightui_background"
 		android:drawSelectorOnTop="false"
 		android:listSelector="@android:color/transparent"
 		android:paddingTop="5dp" />

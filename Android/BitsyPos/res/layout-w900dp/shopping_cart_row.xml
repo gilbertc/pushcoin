@@ -6,7 +6,7 @@
 	android:layout_height="wrap_content"
 	android:background="@drawable/shopping_cart_row_selector" >
 
-	<com.mobsandgeeks.ui.TypefaceTextView
+	<TextView
 		android:id="@+id/shopping_cart_entry_title"
 		android:layout_weight="1"
 		android:layout_width="0dp"
@@ -16,7 +16,7 @@
 		android:textColor="@color/black"
 		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
-	<com.mobsandgeeks.ui.TypefaceTextView
+	<TextView
 		android:id="@+id/shopping_cart_entry_price"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
