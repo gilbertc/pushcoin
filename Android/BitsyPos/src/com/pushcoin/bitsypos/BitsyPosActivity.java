@@ -28,6 +28,10 @@ public class BitsyPosActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shopping_main);
 
+		// Store message dispatcher for the cart fragment
+		FragmentManager fragmentManager = getFragmentManager();
+		cartFragmentHandler_ = ((IDispatcher)fragmentManager.findFragmentById(R.id.shopping_cart_frag)).getDispachable();
+
 		AppDb db = AppDb.getInstance(this);
 		ArrayList<Item> items = db.findItems( "breakfast" );
 		if ( items.isEmpty() ) {
@@ -62,12 +66,12 @@ public class BitsyPosActivity
 		return handler_;
 	}
 	
-	/** Dispatch events from fragments. */
+	/** Dispatch events. */
 	private Handler handler_ = new Handler() {
 		@Override
 		public void handleMessage(Message msg) 
 		{
-			Log.v(Conf.TAG, "event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
+			Log.v(Conf.TAG, "place=activity;event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
 			switch( msg.what )
 			{
 				case MessageId.SHOPPING_CATEGORY_CLICKED:
@@ -76,6 +80,11 @@ public class BitsyPosActivity
 
 				case MessageId.SHOPPING_ITEM_CLICKED:
 					onShoppingItemClicked(msg.arg1);
+				break;
+
+				case MessageId.CART_CONTENT_CHANGED:
+					// Forward cart-modified message.
+					cartFragmentHandler_.sendMessage( Message.obtain(msg) );
 				break;
 			}
 		}
@@ -142,6 +151,8 @@ public class BitsyPosActivity
 		transaction.addToBackStack(null);
 		transaction.commit();
 	}
+
+	Handler cartFragmentHandler_;
 
 	final int icons_[] = {
 		R.drawable.apple,

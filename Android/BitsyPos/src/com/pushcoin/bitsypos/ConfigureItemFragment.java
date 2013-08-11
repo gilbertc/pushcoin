@@ -32,6 +32,9 @@ public class ConfigureItemFragment extends Fragment
 	{
 		Context ctx = getActivity();
 
+		// Session manager
+		access_ = SessionManager.getInstance( ctx );
+
 		// Store activity's dispacher
 		dispatchable_ = ((IDispatcher)ctx).getDispachable();
 
@@ -76,16 +79,20 @@ public class ConfigureItemFragment extends Fragment
 			layoutSlots.addView( slotLayout );
 		}
 
+		// Show cart icon in add to checkout
+		TextView addToCart = (TextView) fragmentRootLayout.findViewById(R.id.slot_items_add_to_cart);
+		addToCart.setTypeface( Typeface.createFromAsset(ctx.getAssets(), "fonts/modernpics.otf") );
+
 		// Populate related list
-		ArrayList<Item> relatedItems = item_.getRelatedItems();
-		if ( !relatedItems.isEmpty() ) 
+		relatedItems_ = item_.getRelatedItems();
+		if ( !relatedItems_.isEmpty() ) 
 		{
 			GridView relatedItemsView = (GridView) fragmentRootLayout.findViewById( R.id.configure_related_items );
 
 			ArrayList<IconLabelArrayAdapter.Entry> menuItems = 
 				new ArrayList<IconLabelArrayAdapter.Entry>();
 
-			for ( Item item : relatedItems )
+			for ( Item item : relatedItems_ )
 			{
 				Log.v(Conf.TAG, "related-item|name="+item.getName() );
 				menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.coffee_cup, item.getName()) );
@@ -98,29 +105,31 @@ public class ConfigureItemFragment extends Fragment
 					R.id.shopping_category_menu_icon, 
 					R.id.shopping_category_menu_label, 
 					menuItems) );
+
+			// install click-event listener
+			relatedItemsView.setOnItemClickListener(new ListSelection());
 		}
-
-		TextView addToCart = (TextView) fragmentRootLayout.findViewById(R.id.slot_items_add_to_cart);
-		addToCart.setTypeface( Typeface.createFromAsset(ctx.getAssets(), "fonts/modernpics.otf") );
-
-		// install click-event listener
-		// view.setOnItemClickListener(new ListSelection());
 
 		return fragmentRootLayout;
 	}
 
-	/*
 	private class ListSelection implements OnItemClickListener
 	{
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 		{
-			Message m = dispatchable_.obtainMessage(MessageId.SHOPPING_ITEM_CLICKED, position, 0);
-			m.sendToTarget();
+			Item item = relatedItems_.get(position);
+			Log.v(Conf.TAG, "related-item-clicked|name="+item.getName() );
+
+			// TODO: Add to cart if item isDefined, otherwise start another
+			// configure-item screen
+			Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+			cart.add( item );
 		}
 	}
-	*/
 
-	private Handler dispatchable_ = null;
+	private SessionManager access_;
+	private Handler dispatchable_;
 	private Item item_;
+	ArrayList<Item> relatedItems_;
 }

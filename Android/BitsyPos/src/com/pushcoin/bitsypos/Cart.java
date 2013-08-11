@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import java.util.ArrayList;
+import android.util.Log;
 
 public class Cart
 {
@@ -16,7 +17,23 @@ public class Cart
 
 	void add( Item item )
 	{
+		Log.v(Conf.TAG, "place=cart;add_item="+item.getName() );
 		items_.add(item);
+
+		// broadcast cart content has changed
+		Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
+		m.sendToTarget();
+	}
+
+	void insert( Item item, int position )
+	{
+		Log.v(Conf.TAG, "place=cart;insert_item="+item.getName() );
+		if ( position > items_.size() ) {
+			items_.add(item);
+		}
+		else {
+			items_.add(position, item);
+		}
 
 		// broadcast cart content has changed
 		Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
@@ -25,14 +42,11 @@ public class Cart
 
 	void remove( int position )
 	{
-		// ignore if out of bounds
-		if ( position < items_.size() )
-		{
-			items_.remove(position);
-			// broadcast cart content has changed
-			Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
-			m.sendToTarget();
-		}
+		Item item = items_.remove(position);
+		Log.v(Conf.TAG, "place=cart;remove_item="+item.getName()+";at-pos="+position);
+		// broadcast cart content has changed
+		Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
+		m.sendToTarget();
 	}
 
 	/**

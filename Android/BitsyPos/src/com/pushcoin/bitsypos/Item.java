@@ -74,7 +74,7 @@ public class Item
 		Tells if this item is a "defined-item" (see description above).
 	*/
 	boolean isDefined( String priceTag ) {
-		return false;
+		return true;
 	}
 
 	/**

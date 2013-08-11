@@ -3,25 +3,26 @@
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:orientation="horizontal"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:background="@drawable/shopping_cart_row_selector" >
+	android:layout_height="wrap_content">
 
 	<TextView
 		android:id="@+id/shopping_cart_entry_title"
 		android:layout_weight="1"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:textSize="20dp"
 		android:paddingLeft="4dp"
-		android:textColor="@color/black"
+		android:textSize="20dp"
+		android:textColor="@color/win8_lime"
 		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 	<TextView
 		android:id="@+id/shopping_cart_entry_price"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
+		android:gravity="bottom"
+		android:paddingRight="4dp"
 		android:textSize="18dp"
-		android:textColor="@color/DarkSlateGrey"
+		android:textColor="#796c61"
 		geekui:customTypeface="fonts/DejaVuSans.ttf" />
 
 </LinearLayout>

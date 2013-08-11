@@ -15,12 +15,12 @@ import java.util.ArrayList;
 
 public class CartEntryArrayAdapter extends BaseAdapter 
 {
-	public CartEntryArrayAdapter(Context context, int entryLayoutResourceId, int titleViewResourceId, int priceViewResourceId)
+	public CartEntryArrayAdapter(Context context, int entryLayoutResourceId, int titleViewResourceId, int priceViewResourceId, Cart cart)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from( context );
-		// Session manager
-		access_ = SessionManager.getInstance( context );
+		// Cart instance we are serving the view 
+		cart_ = cart;
 
 		// Resource IDs of views for a row, icon and label
 		entryLayoutResourceId_ = entryLayoutResourceId;
@@ -30,8 +30,7 @@ public class CartEntryArrayAdapter extends BaseAdapter
 
 	public int getCount() 
 	{
-		Cart cart = (Cart) access_.session( Conf.SESSION_CART );
-		return cart.size();
+		return cart_.size();
 	}
 
 	/**
@@ -47,7 +46,7 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	}
 
 	/**
-	 * Use the array index as a unique id.
+		Items in cart are identified by position.
 	 */
 	public long getItemId(int position) 
 	{
@@ -55,16 +54,14 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	}
 
 	/**
-	 * Quick way to remove item from model
-	 */
-	public void remove(int position) 
-	{
-		Cart cart = (Cart) access_.session( Conf.SESSION_CART );
-		cart.remove(position);
+		Underlaying cart.
+	*/
+	public Cart getCart() {
+		return cart_;
 	}
 
 	/**
-		Tell view that underlaying content has changed.
+		Notify (view) listeners cart content has changed.
 	*/
 	public void refreshView()
 	{
@@ -102,8 +99,7 @@ public class CartEntryArrayAdapter extends BaseAdapter
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Cart cart = (Cart) access_.session( Conf.SESSION_CART );
-		Item item = cart.get( position );
+		Item item = cart_.get( position );
 
 		// Bind the data efficiently with the holder.
 		holder.title.setText( item.getName() );
@@ -120,7 +116,7 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	}
 
 	private LayoutInflater inflater_;
-	private SessionManager access_;
+	private Cart cart_;
 
 	// The resource ID for a layout file containing a layout to use when instantiating views.
 	final private int entryLayoutResourceId_;

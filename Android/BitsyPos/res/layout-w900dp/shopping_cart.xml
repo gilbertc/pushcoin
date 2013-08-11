@@ -20,7 +20,6 @@
 	<LinearLayout
 		android:background="@drawable/window_shape"
 		android:orientation="vertical"
-		android:paddingLeft="4dp"
 		android:layout_weight="1"
 		android:layout_width="wrap_content"
 		android:layout_height="0dp" >
@@ -28,8 +27,9 @@
 		<ListView xmlns:android="http://schemas.android.com/apk/res/android" 
 			android:id="@+id/shopping_cart_list"
 			android:divider="@color/black"
+			android:cacheColorHint="@android:color/transparent"
 			android:layout_weight="1"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="0dp" />
 
 		<LinearLayout
