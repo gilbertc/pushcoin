@@ -5,17 +5,38 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
-	<!-- Product name -->
-	<TextView
-		android:background="@drawable/slot_header_shape"
-		android:id="@+id/slot_items_combo_name"
+	<!-- Window name, button -->
+	<LinearLayout
+		android:orientation="horizontal"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textSize="22dp"
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-		android:textColor="@color/lightui_darkgray"
-		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
+		android:layout_height="wrap_content" >
+
+		<!-- Product name -->
+		<TextView
+			android:background="@drawable/slot_header_shape"
+			android:id="@+id/slot_items_combo_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="22dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColor="@color/lightui_darkgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
+
+		<Button android:text="Add Combo to Cart" 
+			android:id="@+id/slot_items_add_to_cart" 
+			android:layout_width="wrap_content" 
+			android:layout_height="match_parent"
+			android:layout_marginLeft="7dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:paddingTop="1dp"
+			android:paddingBottom="1dp"
+			android:includeFontPadding="false"
+			android:background="@drawable/btn_blue" 
+			style="@style/SlotItemsAddToCart" />
+
+	</LinearLayout>
 
 	<!-- Slots container -->
 	<LinearLayout
@@ -35,15 +56,6 @@
 				android:layout_height="match_parent" />
 
 		</HorizontalScrollView>
-
-		<Button android:text="i" 
-			android:id="@+id/slot_items_add_to_cart" 
-			android:layout_width="wrap_content" 
-			android:layout_height="match_parent"
-			android:layout_marginTop="4dp"
-			android:layout_marginBottom="20dp"
-			android:background="@drawable/btn_blue" 
-			style="@style/SlotItemsAddToCart" />
 
 	</LinearLayout>
 

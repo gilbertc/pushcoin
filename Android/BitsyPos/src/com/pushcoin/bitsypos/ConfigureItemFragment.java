@@ -9,12 +9,12 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
-import android.graphics.Typeface;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import java.util.ArrayList;
@@ -57,31 +57,16 @@ public class ConfigureItemFragment extends Fragment
 
 			// populate list view with items
 			ListView listview = (ListView) slotLayout.findViewById( R.id.slot_items_listview );
-
-			ArrayList<IconLabelArrayAdapter.Entry> menuItems = 
-				new ArrayList<IconLabelArrayAdapter.Entry>();
-
-			for ( Item item : slot.getAlternatives() )
-			{
-				Log.v(Conf.TAG, "alternative-item|name="+item.getName() );
-				menuItems.add( new IconLabelArrayAdapter.Entry(android.R.id.empty, item.getName()) );
-			}
-
 			listview.setAdapter(
-				new IconLabelArrayAdapter(
+				new ArrayAdapter<Item>(
 					ctx, 
 					R.layout.configure_item_slot_row, 
-					R.id.shopping_category_menu_icon, 
-					R.id.shopping_category_menu_label, 
-					menuItems) );
+					R.id.configure_slot_listview_item_label, 
+					slot.getAlternatives()) );
 
 			// add this slot to the layout
 			layoutSlots.addView( slotLayout );
 		}
-
-		// Show cart icon in add to checkout
-		TextView addToCart = (TextView) fragmentRootLayout.findViewById(R.id.slot_items_add_to_cart);
-		addToCart.setTypeface( Typeface.createFromAsset(ctx.getAssets(), "fonts/modernpics.otf") );
 
 		// Populate related list
 		relatedItems_ = item_.getRelatedItems();

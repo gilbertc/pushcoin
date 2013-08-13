@@ -5,24 +5,24 @@ import android.widget.ListView;
 import android.view.View;
 import android.util.AttributeSet;
 
-public class ShoppingCategoryMenu extends ListView
+public class WrapContentListView extends ListView
 {
 	private IconLabelArrayAdapter menu_;
 	 
 	// If built programmatically
-	public ShoppingCategoryMenu(Context context)
+	public WrapContentListView(Context context)
 	{
 		super(context);
 	}
 
 	// If built from XML
-	public ShoppingCategoryMenu(Context context, AttributeSet attrs)
+	public WrapContentListView(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 	}
 	 
 	// If built from XML
-	public ShoppingCategoryMenu(Context context, AttributeSet attrs, int defStyle)
+	public WrapContentListView(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
 	}

@@ -4,27 +4,18 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="horizontal" 
-	android:paddingTop="7dp"
-	android:paddingLeft="14dp"
-	android:paddingRight="14dp"
+	android:paddingTop="10dp"
+	android:paddingBottom="10dp"
+	android:paddingRight="3dp"
+	android:paddingLeft="3dp"
 	android:background="@drawable/configure_item_slot_row_selector">
 
-	<ImageView
-		android:id="@+id/shopping_category_menu_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:scaleType="center"
-		android:layout_marginLeft="4dp"
-		android:layout_marginRight="10dp"
-	/>
-
 	<TextView
-		android:id="@+id/shopping_category_menu_label"
+		android:id="@+id/configure_slot_listview_item_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="20dp"
+		android:textSize="16dp"
 		android:textColor="#000000"
-		android:paddingRight="5dp"
 		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf"
 		/>
 

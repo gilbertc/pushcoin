@@ -8,7 +8,7 @@ public class Conf
 	static final String TAG = "Bitsy"; // Log tag
 
 	// Duration of time (ms) the user can undo removal of item from the cart. 
-	static final int CART_UNDO_HIDE_DELAY=3000;
+	static final int CART_UNDO_HIDE_DELAY=800;
 	/**
 		Session keys.
 	*/

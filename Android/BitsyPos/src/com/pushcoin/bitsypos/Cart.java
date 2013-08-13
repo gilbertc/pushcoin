@@ -18,7 +18,9 @@ public class Cart
 	void add( Item item )
 	{
 		Log.v(Conf.TAG, "place=cart;add_item="+item.getName() );
-		items_.add(item);
+		synchronized (lock_) {
+			items_.add(item);
+		}
 
 		// broadcast cart content has changed
 		Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
@@ -28,11 +30,14 @@ public class Cart
 	void insert( Item item, int position )
 	{
 		Log.v(Conf.TAG, "place=cart;insert_item="+item.getName() );
-		if ( position > items_.size() ) {
-			items_.add(item);
-		}
-		else {
-			items_.add(position, item);
+		synchronized (lock_) 
+		{
+			if ( position > items_.size() ) {
+				items_.add(item);
+			}
+			else {
+				items_.add(position, item);
+			}
 		}
 
 		// broadcast cart content has changed
@@ -40,13 +45,23 @@ public class Cart
 		m.sendToTarget();
 	}
 
-	void remove( int position )
+	Item remove( int position )
 	{
-		Item item = items_.remove(position);
-		Log.v(Conf.TAG, "place=cart;remove_item="+item.getName()+";at-pos="+position);
-		// broadcast cart content has changed
-		Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
-		m.sendToTarget();
+		Item item = null;
+		synchronized (lock_) 
+		{
+			if ( position < items_.size() ) {
+				item = items_.remove(position);
+			}
+		}
+		if (item != null) 
+		{
+			Log.v(Conf.TAG, "place=cart;remove_item="+item.getName()+";at-pos="+position);
+			// broadcast cart content has changed
+			Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
+			m.sendToTarget();
+		}
+		return item;
 	}
 
 	/**
@@ -54,7 +69,9 @@ public class Cart
 	*/
 	Item get( int position )
 	{
-		return items_.get( position );
+		synchronized (lock_) {
+			return items_.get( position );
+		}
 	}
 
 	/**
@@ -62,11 +79,14 @@ public class Cart
 	*/
 	int size() 
 	{
-		return items_.size();
+		synchronized (lock_) {
+			return items_.size();
+		}
 	}
 
 	private Context ctx_;
 	private Handler dispatchable_;
+	private final Object lock_ = new Object();
 
 	ArrayList<Item> items_;
 }

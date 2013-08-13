@@ -53,6 +53,19 @@ public class CartEntryArrayAdapter extends BaseAdapter
 		return position;
 	}
 
+	public void remove(int position)
+	{
+		if ( cart_.remove(position) != null ) {
+			refreshView();
+		}
+	};
+
+	public void insert(Item item, int position)
+	{
+		cart_.insert(item, position);
+		refreshView();
+	};
+
 	/**
 		Underlaying cart.
 	*/
@@ -65,7 +78,23 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	*/
 	public void refreshView()
 	{
+		// invalidate convertViews
+		++convertViewVer_;
 		notifyDataSetChanged();
+	}
+
+	private View inflateRow()
+	{
+		View view = inflater_.inflate(entryLayoutResourceId_, null);
+		
+		// Creates a ViewHolder and store references to the children views
+		// we want to bind data to.
+		ViewHolder holder = new ViewHolder();
+		holder.title = (TextView) view.findViewById(titleViewResourceId_);
+		holder.price = (TextView) view.findViewById(priceViewResourceId_);
+		holder.convertViewVer = convertViewVer_;
+		view.setTag(holder);
+		return view;
 	}
 
 	/**
@@ -73,32 +102,21 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) 
 	{
-		// A ViewHolder keeps references to children views to avoid unneccessary calls
-		// to findViewById() on each row.
-		ViewHolder holder;
-
-		// When convertView is not null, we can reuse it directly, there is no need
-		// to reinflate it. We only inflate a new View when the convertView supplied
-		// by ListView is null.
-		if (convertView == null) 
-		{
-			convertView = inflater_.inflate(entryLayoutResourceId_, null);
-
-			// Creates a ViewHolder and store references to the children views
-			// we want to bind data to.
-			holder = new ViewHolder();
-			holder.title = (TextView) convertView.findViewById(titleViewResourceId_);
-			holder.price = (TextView) convertView.findViewById(priceViewResourceId_);
-
-			convertView.setTag(holder);
+		// First time around, just blindly inflate
+		if (convertView == null) {
+			convertView = inflateRow();
 		} 
-		else 
+		else
 		{
-			// Get the ViewHolder back to get fast access to the TextView
-			// and the ImageView.
-			holder = (ViewHolder) convertView.getTag();
+			// When convertView is not null, /may be/ we can reuse it directly,
+			if (((ViewHolder) convertView.getTag()).convertViewVer != convertViewVer_) {
+				convertView = inflateRow();
+			}
 		}
 
+		// A ViewHolder keeps references to children views to avoid unneccessary calls
+		// to findViewById() on each row.
+		ViewHolder holder = (ViewHolder) convertView.getTag();
 		Item item = cart_.get( position );
 
 		// Bind the data efficiently with the holder.
@@ -113,10 +131,12 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	{
 		TextView title;
 		TextView price;
+		int convertViewVer;
 	}
 
 	private LayoutInflater inflater_;
 	private Cart cart_;
+	private int convertViewVer_ = 0;
 
 	// The resource ID for a layout file containing a layout to use when instantiating views.
 	final private int entryLayoutResourceId_;

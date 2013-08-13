@@ -66,6 +66,10 @@ public class Item
 		return name_;
 	}
 
+	public String toString() {
+		return name_;
+	}
+
 	public String getId() {
 		return itemId_;
 	}

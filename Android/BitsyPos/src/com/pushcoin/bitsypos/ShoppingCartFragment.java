@@ -33,7 +33,7 @@ public class ShoppingCartFragment
 		View cartLayout = inflater.inflate(R.layout.shopping_cart, container, false);
 		ListView cartItemList = (ListView) cartLayout.findViewById(R.id.shopping_cart_list);
 		// Keep in focus
-		cartItemList.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+		cartItemList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		cartItemList.setAdapter(adapter_);
 
 		SwipeDismissList.OnDismissCallback callback = 
@@ -49,8 +49,7 @@ public class ShoppingCartFragment
 						final Item deletedItem = cart.get(position);
 
 						// Delete from cart
-						cart.remove(position);
-						adapter_.notifyDataSetChanged();
+						adapter_.remove(position);
 
 						// Return an Undoable implementing every method
 						return new SwipeDismissList.Undoable() {
@@ -58,18 +57,12 @@ public class ShoppingCartFragment
 								// Method is called when user undoes this deletion
 								public void undo() {
 										// Reinsert item to list
-										cart.insert(deletedItem, position);
+										adapter_.insert(deletedItem, position);
 								}
 
 								// Return an undo message for that item
 								public String getTitle() {
-										return deletedItem.getName() + " deleted";
-								}
-
-								// Called when user cannot undo the action anymore
-								public void discard() {
-										// Use this place to e.g. delete the item from database
-										// finallyDeleteFromSomeStorage(deletedItem);
+										return deletedItem.getName() + " removed";
 								}
 						};
 					}
