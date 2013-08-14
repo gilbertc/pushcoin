@@ -10,22 +10,17 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
 
-	<TextView
+	<com.mobsandgeeks.ui.TypefaceTextView
 		android:text="Jessica"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:textSize="20dp"
-		android:shadowColor="#333333"
-		android:shadowDx="-0.2"
-		android:shadowDy="-0.2"
-		android:shadowRadius="1"
-		android:paddingTop="2dp"
-		android:paddingBottom="2dp"
+		android:gravity="center_horizontal"
+		android:textSize="30dp"
 		android:paddingLeft="10dp"
 		android:paddingRight="10dp"
-		android:textColor="@color/android_holo_green_bright"
+		android:textColor="#b0000000"
 		android:background="@drawable/category_menu_header_shape"
-		geekui:customTypeface="fonts/DejaVuSans.ttf" />
+		geekui:customTypeface="fonts/DancingScript-Regular.otf" />
 
 	<!-- header drop shadow -->
 	<View
@@ -39,6 +34,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:cacheColorHint="@android:color/transparent"
+		android:headerDividersEnabled="false"
+		android:footerDividersEnabled="true"
 		android:dividerHeight="2dp"
 		android:divider="@drawable/category_menu_drop_shadow"
 		android:fadeScrollbars="false"

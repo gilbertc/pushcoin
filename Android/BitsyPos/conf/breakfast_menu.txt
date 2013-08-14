@@ -128,7 +128,7 @@ index = {
 			tag= 'breakfast'
 		},
 		{
-			name= 'Breakfast Sides And More',
+			name= 'Breakfast Sides',
 			tag= 'breakfast_side'
 		},
 		{

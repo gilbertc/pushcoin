@@ -20,20 +20,20 @@
 		android:shadowRadius="0.8"
 		android:padding="6dp" />
 
-	<TextView
+	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_category_menu_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textColor="@color/lightui_lightgray"
+		android:textColor="@color/lightui_mediumgray"
 		android:shadowColor="#333333"
 		android:shadowDx="-0.5"
 		android:shadowDy="-0.5"
 		android:shadowRadius="0.6"
 		android:textSize="16dp"
 		android:paddingTop="8dp"
-		android:paddingBottom="12dp"
+		android:paddingBottom="8dp"
 		android:paddingLeft="4dp"
-		android:paddingRight="4dp"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+		android:paddingRight="6dp"
+		geekui:customTypeface="fonts/TT0468M.ttf" />
 
 </LinearLayout>
