@@ -17,11 +17,19 @@ Organized by: Willie Tsang
 
 	<!-- Android style -->
 	<color name="android_green">#A4C639</color>
+	<color name="android_holo_blue_light">#33b5e5</color>
+	<color name="android_holo_blue_dark">#0099cc</color>
+	<color name="android_holo_blue_bright">#00ddff</color>
+
+	<color name="android_holo_green_light">#33b57d</color>
+	<color name="android_holo_green_dark">#009976</color>
+	<color name="android_holo_green_bright">#00dd7e</color>
 
 	<!-- Light UI -->
 	<color name="lightui_background">#eeeeee</color>
 	<color name="lightui_lightgray">#dddddd</color>
 	<color name="lightui_darkgray">#999999</color>
+	<color name="lightui_darkergray">#777777</color>
 	<color name="lightui_moneygreen">#53833f</color>
 
 	<!-- Windows 8 style -->

@@ -4,25 +4,36 @@
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="horizontal" 
-	android:background="@drawable/shopping_category_menu_row_selector">
+	android:background="@drawable/category_menu_glyph_shape"
+	android:orientation="horizontal">
 
-	<ImageView
+	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_category_menu_icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:scaleType="center"
-		android:paddingTop="10dp"
-		android:paddingBottom="10dp"
-		android:layout_marginLeft="4dp" />
+		android:textColor="@color/android_holo_blue_light"
+		geekui:customTypeface="fonts/modernpics.otf"
+		android:textSize="14dp"
+		android:shadowColor="#444444"
+		android:shadowDx="-1"
+		android:shadowDy="-1"
+		android:shadowRadius="0.8"
+		android:padding="6dp" />
 
 	<TextView
 		android:id="@+id/shopping_category_menu_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="36dp"
-		android:textColor="@color/black"
-		android:padding="10dp"
+		android:textColor="@color/lightui_lightgray"
+		android:shadowColor="#333333"
+		android:shadowDx="-0.5"
+		android:shadowDy="-0.5"
+		android:shadowRadius="0.6"
+		android:textSize="16dp"
+		android:paddingTop="8dp"
+		android:paddingBottom="12dp"
+		android:paddingLeft="4dp"
+		android:paddingRight="4dp"
 		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 </LinearLayout>

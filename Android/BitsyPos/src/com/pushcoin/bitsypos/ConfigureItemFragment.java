@@ -68,6 +68,8 @@ public class ConfigureItemFragment extends Fragment
 			layoutSlots.addView( slotLayout );
 		}
 
+		// Related items
+/*
 		// Populate related list
 		relatedItems_ = item_.getRelatedItems();
 		if ( !relatedItems_.isEmpty() ) 
@@ -80,7 +82,7 @@ public class ConfigureItemFragment extends Fragment
 			for ( Item item : relatedItems_ )
 			{
 				Log.v(Conf.TAG, "related-item|name="+item.getName() );
-				menuItems.add( new IconLabelArrayAdapter.Entry(R.drawable.coffee_cup, item.getName()) );
+				menuItems.add( new IconLabelArrayAdapter.Entry(">", item.getName()) );
 			}
 
 			relatedItemsView.setAdapter(
@@ -94,7 +96,7 @@ public class ConfigureItemFragment extends Fragment
 			// install click-event listener
 			relatedItemsView.setOnItemClickListener(new ListSelection());
 		}
-
+*/
 		return fragmentRootLayout;
 	}
 

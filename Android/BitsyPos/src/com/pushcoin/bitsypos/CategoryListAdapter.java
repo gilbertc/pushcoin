@@ -17,16 +17,13 @@ public class CategoryListAdapter extends BaseAdapter
 {
 	public static class Entry
 	{
-		Entry(int ic, String lb)
+		Entry(String ic, String lb)
 		{
 			icon = ic;
 			label = lb;
 		}
 
-		// The resource id of the image data
-		final int icon;
-
-		// Label text
+		final String icon;
 		final String label;
 	}
 
@@ -55,7 +52,7 @@ public class CategoryListAdapter extends BaseAdapter
 		for ( Category cat : AppDb.getInstance(ctx_).getMainCategories() )
 		{
 			CachedEntry ce = new CachedEntry();
-			ce.icon = BitmapFactory.decodeResource( ctx_.getResources(), R.drawable.cheese_cake );
+			ce.icon = "%";
 			ce.label = cat.category_id;
 			ce.tag_id = cat.tag_id;
 			entries_.add( ce );
@@ -109,7 +106,7 @@ public class CategoryListAdapter extends BaseAdapter
 			// Creates a ViewHolder and store references to the two children views
 			// we want to bind data to.
 			holder = new ViewHolder();
-			holder.icon = (ImageView) convertView.findViewById(iconViewResourceId_);
+			holder.icon = (TextView) convertView.findViewById(iconViewResourceId_);
 			holder.label = (TextView) convertView.findViewById(labelViewResourceId_);
 
 			convertView.setTag(holder);
@@ -122,7 +119,7 @@ public class CategoryListAdapter extends BaseAdapter
 		}
 
 		// Bind the data efficiently with the holder.
-		holder.icon.setImageBitmap( entries_.get( position ).icon );
+		holder.icon.setText( entries_.get( position ).icon );
 		holder.label.setText( entries_.get( position ).label );
 
 		return convertView;
@@ -130,14 +127,14 @@ public class CategoryListAdapter extends BaseAdapter
 
 	private static class ViewHolder 
 	{
-		ImageView icon;
+		TextView icon;
 		TextView label;
 	}
 
 	private static class CachedEntry
 	{
 		// Image data
-		Bitmap icon;
+		String icon;
 
 		// Label text
 		String label;

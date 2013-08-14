@@ -21,15 +21,16 @@ public class ShoppingCategoryMenuFragment extends Fragment
 		// Store activity's dispacher
 		dispatchable_ = ((IDispatcher)getActivity()).getDispachable();
 		// Listview showing categories.
-		ListView view = (ListView)inflater.inflate(R.layout.shopping_category_menu, container, false);
+		View layout = inflater.inflate(R.layout.shopping_category_menu, container, false);
+		ListView menu = (ListView)layout.findViewById( R.id.shopping_category_menu );
 
 		model_ = new CategoryListAdapter(getActivity(), R.layout.shopping_category_menu_row, R.id.shopping_category_menu_icon, R.id.shopping_category_menu_label);
-		view.setAdapter(model_);
+		menu.setAdapter(model_);
 
 		// install click-event listener
-		view.setOnItemClickListener(new ListSelection());
+		menu.setOnItemClickListener(new ListSelection());
 
-		return view;
+		return layout;
 	}
 
 	private class ListSelection implements OnItemClickListener

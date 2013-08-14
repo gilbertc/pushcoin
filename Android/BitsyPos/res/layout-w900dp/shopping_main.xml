@@ -10,11 +10,6 @@
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent" />
 
-	<View
-		android:layout_width="14px"
-		android:layout_height="match_parent"
-		android:background="@drawable/right_edge_drop_shadow" />
-
 	<FrameLayout
 		android:id="@+id/hz_center_pane"
 		android:paddingLeft="2dp"

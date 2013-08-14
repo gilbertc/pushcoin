@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.pushcoin.bitsypos.WrapContentListView
+<LinearLayout 
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/shopping_category_menu"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:background="@drawable/category_menu_shape"
+	android:layout_marginTop="4dp"
+	android:layout_marginRight="7dp"
+	android:layout_marginBottom="20dp"
 	android:layout_width="wrap_content"
-	android:layout_height="match_parent"
-	android:divider="@color/lightui_darkgray"
-	android:dividerHeight="1dp"
-	android:paddingTop="12dp"
-	android:paddingBottom="12dp"
-	android:background="@color/lightui_lightgray"
-	android:cacheColorHint="@color/lightui_lightgray"
-	android:fadeScrollbars="false"
-	android:scrollbarFadeDuration="0" />
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<TextView
+		android:text="Jessica"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textSize="20dp"
+		android:shadowColor="#333333"
+		android:shadowDx="-0.2"
+		android:shadowDy="-0.2"
+		android:shadowRadius="1"
+		android:paddingTop="2dp"
+		android:paddingBottom="2dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:textColor="@color/android_holo_green_bright"
+		android:background="@drawable/category_menu_header_shape"
+		geekui:customTypeface="fonts/DejaVuSans.ttf" />
+
+	<!-- header drop shadow -->
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="2dp"
+		android:background="@drawable/category_menu_drop_shadow" />
+
+	<com.pushcoin.bitsypos.WrapContentListView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/shopping_category_menu"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:cacheColorHint="@android:color/transparent"
+		android:dividerHeight="2dp"
+		android:divider="@drawable/category_menu_drop_shadow"
+		android:fadeScrollbars="false"
+		android:scrollbarFadeDuration="0" />
+
+</LinearLayout>
