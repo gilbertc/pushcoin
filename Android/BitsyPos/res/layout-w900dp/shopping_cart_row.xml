@@ -10,7 +10,8 @@
 		android:id="@+id/shopping_cart_entry_title"
 		android:layout_alignParentTop="true"
 		android:layout_alignParentLeft="true"
-		android:textSize="20dp"
+		android:layout_toLeftOf="@+id/shopping_cart_entry_price"
+		android:textSize="18dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textColor="@color/win8_lime"
@@ -22,7 +23,7 @@
 		android:layout_alignParentRight="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="18dp"
+		android:textSize="16dp"
 		android:textColor="#796c61"
 		geekui:customTypeface="fonts/DejaVuSans.ttf" />
 
