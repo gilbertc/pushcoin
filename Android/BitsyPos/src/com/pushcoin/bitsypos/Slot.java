@@ -2,7 +2,6 @@ package com.pushcoin.bitsypos;
 
 import android.util.Log;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 
@@ -10,7 +9,7 @@ public class Slot extends Item
 {
 	public Slot ( AppDb db, String parentItemId, String name, String defaultItemId, String choiceItemTag, int quantity, String priceTag ) 
 	{
-		super( db, parentItemId, name );
+		super( db, parentItemId, name, null, null, 0 );
 		parentItemId_ = parentItemId; 
 		defaultItemId_ = defaultItemId;
 		choiceItemTag_ = choiceItemTag;
@@ -24,7 +23,7 @@ public class Slot extends Item
 	ArrayList<Item> getAlternatives() 
 	{
 		if ( alternativesCache_ == null && choiceItemTag_ != null ) {
-			alternativesCache_ = db_.findItems( choiceItemTag_ );
+			alternativesCache_ = db_.findItems( choiceItemTag_, priceTag_ );
 		}
 		return alternativesCache_;
 	};
@@ -35,7 +34,7 @@ public class Slot extends Item
 	Item getDefaultItem() 
 	{
 		if ( defaultItemCache_ == null && defaultItemId_ != null ) {
-			defaultItemCache_ = getItemById( defaultItemId_ );
+			defaultItemCache_ = db_.getItemById( defaultItemId_, priceTag_ );
 		}
 		return defaultItemCache_;
 	}
@@ -59,7 +58,7 @@ public class Slot extends Item
 			}
 		}
 		if ( chosenItem_ == null ) {
-			throw new Conf.BitsyError( "Cannot accept undefined, non-default or non-alternative item" );
+			throw new BitsyError( "Cannot accept undefined, non-default or non-alternative item" );
 		}
 	}
 

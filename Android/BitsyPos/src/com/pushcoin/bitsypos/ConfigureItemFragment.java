@@ -42,8 +42,8 @@ public class ConfigureItemFragment extends Fragment
 		View fragmentRootLayout = inflater.inflate(R.layout.configure_item_view, container, false);
 
 		// Set combo name
-		TextView comboName = (TextView) fragmentRootLayout.findViewById( R.id.slot_items_combo_name );
-		comboName.setText( item_.getName() );
+		Button comboName = (Button) fragmentRootLayout.findViewById( R.id.add_combo_item_to_cart );
+		comboName.setText( "Add " + item_.getName() );
 
 		// Create a list-view for each slot being configured
 		LinearLayout layoutSlots = (LinearLayout) fragmentRootLayout.findViewById( R.id.item_configuration_arena );
@@ -68,39 +68,31 @@ public class ConfigureItemFragment extends Fragment
 			layoutSlots.addView( slotLayout );
 		}
 
-		// Related items
-/*
-		// Populate related list
-		relatedItems_ = item_.getRelatedItems();
+		// Populate related items
+
+		relatedItems_ = item_.getRelatedItems(Conf.FIELD_PRICE_TAG_DEFAULT);
 		if ( !relatedItems_.isEmpty() ) 
 		{
-			GridView relatedItemsView = (GridView) fragmentRootLayout.findViewById( R.id.configure_related_items );
-
-			ArrayList<IconLabelArrayAdapter.Entry> menuItems = 
-				new ArrayList<IconLabelArrayAdapter.Entry>();
-
-			for ( Item item : relatedItems_ )
-			{
-				Log.v(Conf.TAG, "related-item|name="+item.getName() );
-				menuItems.add( new IconLabelArrayAdapter.Entry(">", item.getName()) );
-			}
+			AutofitGridView relatedItemsView = (AutofitGridView) fragmentRootLayout.findViewById( R.id.configure_related_items );
 
 			relatedItemsView.setAdapter(
-				new IconLabelArrayAdapter(
+				new RelatedItemListAdapter(
 					ctx, 
-					R.layout.shopping_category_menu_row, 
-					R.id.shopping_category_menu_icon, 
-					R.id.shopping_category_menu_label, 
-					menuItems) );
+					R.layout.related_item_menu_row, 
+					R.id.related_item_label, 
+					R.id.related_item_price, 
+					relatedItems_) );
 
-			// install click-event listener
-			relatedItemsView.setOnItemClickListener(new ListSelection());
+			// on related-item clicked
+			relatedItemsView.setOnItemClickListener(new OnRelatedItemClicked());
+			// Fit as many columns as possible
+			relatedItemsView.setColumnWidth( relatedItemsView.measureMaxChildWidth() );
 		}
-*/
+
 		return fragmentRootLayout;
 	}
 
-	private class ListSelection implements OnItemClickListener
+	private class OnRelatedItemClicked implements OnItemClickListener
 	{
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)

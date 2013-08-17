@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal">
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/related_item_label"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:paddingLeft="4dp"
+		android:textSize="18dp"
+		android:textColor="@color/win8_lime"
+		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/related_item_price"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:gravity="bottom"
+		android:paddingRight="4dp"
+		android:textSize="14dp"
+		android:textColor="#796c61"
+		geekui:customTypeface="fonts/DejaVuSans.ttf" />
+
+</LinearLayout>

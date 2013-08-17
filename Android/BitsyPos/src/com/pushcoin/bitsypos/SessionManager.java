@@ -1,17 +1,7 @@
 package com.pushcoin.bitsypos;
 
-import android.util.Log;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
-import android.database.sqlite.SQLiteQueryBuilder;
-import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
-import java.util.ArrayList;
 import java.util.TreeMap;
-import java.io.InputStream;
-import java.io.IOException;
 
 public class SessionManager
 {

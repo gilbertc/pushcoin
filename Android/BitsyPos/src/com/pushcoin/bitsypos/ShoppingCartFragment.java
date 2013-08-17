@@ -1,5 +1,6 @@
 package com.pushcoin.bitsypos;
 
+import de.timroes.swipetodismiss.SwipeDismissList;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler;
@@ -9,11 +10,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
-import de.timroes.swipetodismiss.SwipeDismissList;
-import java.util.ArrayList;
+import android.widget.TextView;
 import android.util.Log;
+import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 public class ShoppingCartFragment 
 	extends Fragment implements IDispatcher
@@ -26,11 +30,24 @@ public class ShoppingCartFragment
 		Context ctx = getActivity();
 
 		// Current cart
-		Cart cart = (Cart) SessionManager.getInstance( ctx ).session( Conf.SESSION_CART );
+		final Cart cart = (Cart) SessionManager.getInstance( ctx ).session( Conf.SESSION_CART );
 		adapter_ = new CartEntryArrayAdapter(ctx, R.layout.shopping_cart_row, R.id.shopping_cart_entry_title, R.id.shopping_cart_entry_price, cart);
 
 		// Inflate the layout for this fragment
 		View cartLayout = inflater.inflate(R.layout.shopping_cart, container, false);
+
+		// Cache cart-total text view
+		cartTotal_ = (TextView) cartLayout.findViewById(R.id.shopping_cart_total);
+
+		// Handle "start over" user request
+		Button startOver = (Button) cartLayout.findViewById(R.id.shopping_cart_startover_button);
+		startOver.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v) {
+				cart.clear();
+			}
+		});
+
 		ListView cartItemList = (ListView) cartLayout.findViewById(R.id.shopping_cart_list);
 		// Keep in focus
 		cartItemList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -74,6 +91,9 @@ public class ShoppingCartFragment
 		SwipeDismissList dismissList = new SwipeDismissList(cartItemList, callback, SwipeDismissList.UndoMode.SINGLE_UNDO);
 		dismissList.setAutoHideDelay(Conf.CART_UNDO_HIDE_DELAY); 
 
+		// Reset cart contents
+		onCartContentChanged();
+
 		return cartLayout;
 	}
 
@@ -93,14 +113,20 @@ public class ShoppingCartFragment
 			switch( msg.what )
 			{
 				case MessageId.CART_CONTENT_CHANGED:
-					onCartContentChanged( msg );
+					onCartContentChanged();
 				break;
 			}
 		}
 	};
 
-	private void onCartContentChanged( Message msg )
+	private void onCartContentChanged()
 	{
+		// Update cart total
+		final Cart cart = (Cart) adapter_.getCart();
+		cartTotal_.setText( NumberFormat.getCurrencyInstance().format( cart.totalValue() ) );
+
 		adapter_.refreshView();
 	}
+
+	private TextView cartTotal_;
 }

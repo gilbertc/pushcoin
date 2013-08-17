@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import java.math.BigDecimal;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -23,48 +24,85 @@ public class AppDb extends SQLiteAssetHelper
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery( Conf.SQL_GET_MAIN_CATEGORIES, null );
 
-		ArrayList<Category> rs = new ArrayList<Category>();
-
-		if ( !c.moveToFirst() ) {
-			return rs;
-		}
-
-		do 
+		try 
 		{
-			Category cat = new Category();
-			cat.category_id = c.getString(0);
-			cat.tag_id = c.getString(1);
+			ArrayList<Category> rs = new ArrayList<Category>();
 
-			rs.add( cat );
-			Log.v(Conf.TAG, "main-category|name="+cat.category_id+";tag="+cat.tag_id);
+			if ( !c.moveToFirst() ) {
+				return rs;
+			}
+
+			do 
+			{
+				Category cat = new Category();
+				cat.category_id = c.getString(0);
+				cat.tag_id = c.getString(1);
+
+				rs.add( cat );
+				Log.v(Conf.TAG, "main-category|name="+cat.category_id+";tag="+cat.tag_id);
+			}
+			while (c.moveToNext());
+
+			return rs;
+		} finally {
+			c.close();
 		}
-		while (c.moveToNext());
+	}
 
-		return rs;
+	/**
+		Finds an item by ID
+	*/
+	public Item getItemById( String itemId, String priceTag ) 
+	{ 
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.rawQuery( Conf.SQL_FETCH_ITEM_BY_ID, new String[]{ priceTag, itemId } );
+		try 
+		{
+			if ( !c.moveToFirst() ) {
+				throw new BitsyError( "Item not found with ID: " + itemId );
+			}
+
+			// price can be null
+			String itemPriceTag = c.isNull(1) ? null : c.getString(1);
+			BigDecimal itemPrice = c.isNull(2) ? null : new BigDecimal( c.getString(2) );
+
+			return new Item(this, itemId, c.getString(0), itemPriceTag, itemPrice, c.getInt(3) );
+		} finally {
+			c.close();
+		}
 	}
 
 	/**
 		Get items matching a given tag.
 	*/
-	public ArrayList<Item> findItems( String tag ) 
+	public ArrayList<Item> findItems( String itemTag, String priceTag ) 
 	{ 
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = db.rawQuery( Conf.SQL_FIND_ITEM_BY_TAG, new String[]{tag} );
+		Cursor c = db.rawQuery( Conf.SQL_FETCH_ITEMS_BY_TAG, new String[]{priceTag, itemTag} );
 
-		ArrayList<Item> rs = new ArrayList<Item>();
-
-		if ( !c.moveToFirst() ) {
-			return rs;
-		}
-
-		do 
+		try 
 		{
-			rs.add( new Item(this, c.getString(0), c.getString(1)) );
-			Log.v(Conf.TAG, "find-items|tag="+tag+";item_id="+c.getString(0) + ";name="+c.getString(1) );
-		}
-		while (c.moveToNext());
+			ArrayList<Item> rs = new ArrayList<Item>();
 
-		return rs;
+			if ( !c.moveToFirst() ) {
+				return rs;
+			}
+
+			do 
+			{
+				// price can be null
+				String itemPriceTag = c.isNull(2) ? null : c.getString(2);
+				BigDecimal itemPrice = c.isNull(3) ? null : new BigDecimal( c.getString(3) );
+
+				rs.add( new Item(this, c.getString(0), c.getString(1), itemPriceTag, itemPrice, c.getInt(4) ) );
+				Log.v(Conf.TAG, "find-items|tag="+itemTag+";item="+c.getString(0) + ";name="+c.getString(1) );
+			}
+			while (c.moveToNext());
+
+			return rs;
+		} finally {
+			c.close();
+		}
 	}
 
 	public static AppDb getInstance(Context ctx) 

@@ -3,15 +3,16 @@ package com.pushcoin.bitsypos;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import java.util.ArrayList;
 import android.util.Log;
+import java.util.ArrayList;
+import java.math.BigDecimal;
 
-public class Cart
+public class Cart implements IDispatcher
 {
 	public Cart( Context context ) 
 	{
 		ctx_ = context;
-		dispatchable_ = ((IDispatcher)ctx_).getDispachable();
+		parentContext_ = ((IDispatcher)ctx_).getDispachable();
 		items_ = new ArrayList<Item>();
 	}
 
@@ -23,7 +24,7 @@ public class Cart
 		}
 
 		// broadcast cart content has changed
-		Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
+		Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
 		m.sendToTarget();
 	}
 
@@ -41,7 +42,7 @@ public class Cart
 		}
 
 		// broadcast cart content has changed
-		Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
+		Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
 		m.sendToTarget();
 	}
 
@@ -58,10 +59,27 @@ public class Cart
 		{
 			Log.v(Conf.TAG, "place=cart;remove_item="+item.getName()+";at-pos="+position);
 			// broadcast cart content has changed
-			Message m = dispatchable_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
+			Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
 			m.sendToTarget();
 		}
 		return item;
+	}
+
+	void clear()
+	{
+		boolean effective;
+		synchronized (lock_) 
+		{
+			effective = !items_.isEmpty();
+			items_.clear();
+		}
+
+		if (effective) 
+		{
+			// broadcast cart content has changed
+			Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
+			m.sendToTarget();
+		}
 	}
 
 	/**
@@ -84,8 +102,44 @@ public class Cart
 		}
 	}
 
+	BigDecimal totalValue()
+	{
+		synchronized (lock_) 
+		{
+			BigDecimal total = new BigDecimal(0);
+			for (Item item: items_) {
+				total = total.add( item.getPrice(Conf.FIELD_PRICE_TAG_DEFAULT) );
+			}
+			return total;
+		}
+	}
+
+	/**
+		Offloads callers by enquing actions rather than executing in-line.
+	*/
+	@Override
+	public Handler getDispachable() 
+	{
+		return handler_;
+	}
+	
+	/** Dispatch events. */
+	private Handler handler_ = new Handler() {
+		@Override
+		public void handleMessage( Message msg ) 
+		{
+			Log.v(Conf.TAG, "place=cart;event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
+			switch( msg.what )
+			{
+				case MessageId.CART_ADD_ITEM:
+					add( (Item)msg.obj );
+				break;
+			}
+		}
+	};
+
 	private Context ctx_;
-	private Handler dispatchable_;
+	private Handler parentContext_;
 	private final Object lock_ = new Object();
 
 	ArrayList<Item> items_;

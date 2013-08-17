@@ -4,6 +4,7 @@ public class Conf
 {
 	static final String DATABASE_NAME = "bitsypos";
 	static final int DATABASE_VERSION = 1;
+	static final String FIELD_PRICE_TAG_DEFAULT = "unit";
 
 	static final String TAG = "Bitsy"; // Log tag
 
@@ -21,11 +22,88 @@ public class Conf
 		http://stackoverflow.com/questions/878573/java-multiline-string
 	*/
 
-	static final String SQL_FIND_ITEM_BY_ID = "select item.name from item where item_id = ? order by item.name";
-	static final String SQL_FIND_ITEM_BY_TAG = "select item.item_id, item.name from tagged_item tagged join item on item.item_id = tagged.item_id where tagged.tag_id = ? order by item.name";
-	static final String SQL_FIND_RELATED_ITEMS = "select distinct item.item_id, item.name from tagged_item tagged join item on tagged.item_id = item.item_id where tagged.tag_id in (select tag_id from related_item where item_id = ?) and item.item_id != ? order by item.name";
+	/**
+		Fetch item by ID.
+		
+		Input:
+			priceTag
+			itemID
+		
+		select 
+			item.name,
+			price.price_tag,
+			price.value,
+			count(combo.slot_name) as slots
+		from item 
+			left join price 
+				on item.item_id = price.item_id
+				and price.price_tag = 'unit'
+			left join combo_item combo 
+				on combo.parent_item_id = item.item_id
+		where item.item_id = 'GLS6'
+		group by item.item_id
+	*/
+	static final String SQL_FETCH_ITEM_BY_ID = "select item.name, price.price_tag, price.value, count(combo.slot_name) as slots from item left join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id where item.item_id = ? group by item.item_id";
+
+	/**
+		Fetch item(s) by tag.
+		
+		Input:
+			priceTag
+			itemTag
+		
+		select 
+			item.item_id,
+			item.name,
+			price.price_tag,
+			price.value,
+			count(combo.slot_name) as slots
+		from item
+			join tagged_item tagged 
+				on item.item_id = tagged.item_id 
+			left join price 
+				on item.item_id = price.item_id
+				and price.price_tag = 'unit'
+			left join combo_item combo 
+				on combo.parent_item_id = item.item_id
+		where tagged.tag_id = 'breakfast'
+		group by item.item_id
+		order by item.name
+	*/
+	static final String SQL_FETCH_ITEMS_BY_TAG = "select item.item_id, item.name, price.price_tag, price.value, count(combo.slot_name) as slots from item join tagged_item tagged on item.item_id = tagged.item_id left join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id where tagged.tag_id = ? group by item.item_id order by item.name";
+
+	/**
+		Fetch related item(s) of an item.
+
+		Input:
+			priceTag
+			itemID (twice)
+
+		select
+			item.item_id,
+			item.name,
+			price.price_tag,
+			price.value,
+			count(combo.slot_name) as slots
+		from item
+			join tagged_item tagged 
+				on item.item_id = tagged.item_id 
+			left join price 
+				on item.item_id = price.item_id
+				and price.price_tag = 'unit'
+			left join combo_item combo 
+				on combo.parent_item_id = item.item_id
+		where tagged.tag_id in
+			(select tag_id from related_item where item_id = 'BSC1')
+			and item.item_id != 'BSC1'
+		group by item.item_id
+		order by item.name
+	*/
+	static final String SQL_FETCH_RELATED_ITEMS = "select item.item_id, item.name, price.price_tag, price.value, count(combo.slot_name) as slots from item join tagged_item tagged on item.item_id = tagged.item_id left join price on item.item_id = price.item_id and price.price_tag = ?  left join combo_item combo on combo.parent_item_id = item.item_id where tagged.tag_id in (select tag_id from related_item where item_id = ?) and item.item_id != ?  group by item.item_id order by item.name";
+
 	static final String SQL_GET_SLOTS = "select parent_item_id, slot_name, default_item_id, choice_item_tag, quantity, price_tag from combo_item where parent_item_id = ? order by slot_name";
 	static final String SQL_GET_MAIN_CATEGORIES = "select category_id, tag_id from category";
+	static final String SQL_GET_ITEM_PRICE = "select value from price where item_id = ?";
 
 	/**
 		JSON import SQL
@@ -57,12 +135,4 @@ public class Conf
 	static final String FIELD_PRICE = "price";
 	static final String FIELD_COMBO = "combo";
 	static final String FIELD_QUANTITY = "quantity";
-	static final String FIELD_PRICE_TAG_DEFAULT = "unit";
-
-	static class BitsyError extends RuntimeException 
-	{
-		public BitsyError(final String message) {
-      super(message);
-		} 
-	}
 }

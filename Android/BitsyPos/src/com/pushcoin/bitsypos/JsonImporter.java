@@ -237,7 +237,6 @@ public class JsonImporter
 
 			if (args.length < 1) 
 			{
-				System.out.println( "Reading from STDIN..." );
 				input = System.in;
 			}
 			else {
@@ -248,11 +247,11 @@ public class JsonImporter
 			JsonImporter imp = new JsonImporter( jsonData );
 
 			// show what's produced
-			for ( Statement stmt: imp.generateDbStatements() ) {
-				System.out.println( stmt.sql + ": " + java.util.Arrays.toString(stmt.args) );
+			for ( Statement stmt: imp.generateDbStatements() ) 
+			{
+				String sql = stmt.sql.replace("?", "'%s'");
+				System.out.println( String.format(sql, (Object[])stmt.args) + ";" );
 			}
-
-			System.out.println( "Done" );
 		}
 		catch (Exception e) {
 			// System.err.println(e.getMessage());

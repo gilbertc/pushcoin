@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
+import java.text.NumberFormat;
+import java.math.BigDecimal;
 
 /**
 	Defines an Item, which represents a sellable good.
@@ -24,42 +26,17 @@ import java.util.ArrayList;
 
 	3. The simplest form of an item does not have slots and must be "defined".
 
-	---
-	Typical usage:
-
-	AppDb db = getInstance(..);
-	Items list = db.findItems( "breakfast" );
-	
-	for item in list:
-		GridCell gc:
-			// items which are 'defined' go straight to the Cart if clicked.
-			// other items require further "drilling"...
-			item.isDefined('unit')
-			if defined:
-				item.getPrice()
-		addToGrid( gc );
-
-	// Say user clicks on an 'undefined-item', then we enumerate its slots:
-
-	Slot[] slots = undefined_item.getSlots()
-	for slot in slots:
-		Header name = slot.getName()
-			// items which are 'defined' go straight to the Cart if clicked.
-			// other items require further "drilling"...
-			slot.isDefined( slot.getPriceTag() )
-			if defined:
-				item.getPrice()
-			Item[] items = slot.getAlternatives();
-		addToGrid( gc );
-	
 */
 public class Item
 {
-	public Item ( AppDb db, String itemId, String name )
+	public Item ( AppDb db, String itemId, String name, String priceTag, BigDecimal price, int slotCount )
 	{
 		db_ = db;
 		itemId_ = itemId;
 		name_ = name;
+		cachedPriceTag_ = priceTag;
+		cachedPrice_ = price;
+		slotCount_ = slotCount;
 	}
 
 	public String getName() {
@@ -77,8 +54,72 @@ public class Item
 	/**
 		Tells if this item is a "defined-item" (see description above).
 	*/
-	boolean isDefined( String priceTag ) {
+	boolean isDefined( String priceTag ) 
+	{
+		// Presence of a price means item is defined.
+		try { 
+			getPrice( priceTag );
+		} 
+		catch (BitsyError e) {
+			return false;
+		}
 		return true;
+	}
+
+	/**
+		Returns price formatted according to currency precision.
+	*/
+	String getPrettyPrice( String priceTag ) 
+	{
+		try {
+			return NumberFormat.getCurrencyInstance().format( getPrice( priceTag ) );
+		}
+		catch (BitsyError e) {
+			return "";
+		}
+	}
+
+	/**
+		Returns price for item based on a given tag.
+
+		Pricing rules:
+			- If (combo) item defines a unit price, we use it as a base.
+			- Then, we add to the base by iterating over slots. 
+				We either use the slot's "price_tag", or the supplied-tag.
+	*/
+	BigDecimal getPrice( String priceTag )
+	{
+		BigDecimal price = optionalPrice( priceTag );
+
+		// Furthermore, if item has slots we need to iterate over
+		if ( slotCount_ > 0 )
+		{
+			ArrayList<Slot> slots = getSlots();
+
+			if ( price == null ) {
+				price = new BigDecimal(0); 
+			}
+
+			for ( Slot slot : slots ) 
+			{
+				String slotPriceTag = slot.getPriceTag();
+				if (slotPriceTag == null) {
+					slotPriceTag = priceTag;
+				}
+
+				if (slot.getQuantity() < 1) {
+					throw new BitsyError("Slot '" + slot.getName() + "' of item '" + getName() + "' is missing quantity");
+				}
+
+				price = price.add( ( slot.getPrice( slotPriceTag ).multiply( new BigDecimal( slot.getQuantity() ) ) ) );
+			}
+		}
+
+		if ( price == null ) {
+			throw new BitsyError( "Item " + getName() + " is missing a '"+ priceTag + "' price");
+		}
+
+		return price;
 	}
 
 	/**
@@ -86,57 +127,118 @@ public class Item
 	*/
 	ArrayList<Slot> getSlots() 
 	{
-		Cursor c = db_.getReadableDatabase().rawQuery( Conf.SQL_GET_SLOTS, new String[]{itemId_} );
-
-		ArrayList<Slot> rs = new ArrayList<Slot>();
-
-		if ( !c.moveToFirst() ) {
-			return rs;
-		}
-
-		do 
+		if (slotCount_ > 0 && slots_ == null)
 		{
-			rs.add( new Slot(db_, c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4), c.getString(5)) );
-			Log.v(Conf.TAG, "slot|name="+c.getString(2) );
-		}
-		while (c.moveToNext());
+			slots_ = new ArrayList<Slot>();
 
-		return rs;
+			Cursor c = db_.getReadableDatabase().rawQuery( Conf.SQL_GET_SLOTS, new String[]{itemId_} );
+
+			try 
+			{
+				if ( !c.moveToFirst() ) {
+					return slots_;
+				}
+
+				do 
+				{
+					// default slot item can be null
+					String defaultItemId = c.isNull(2) ? null : c.getString(2);
+					String choiceItemTag = c.isNull(3) ? null : c.getString(3);
+					if (defaultItemId == null && choiceItemTag == null) {
+						throw new BitsyError("Slot '" + c.getString(0) + "' of item '" + getName() + "' is missing a default item and has no alternative choices");
+					}
+
+					int quantity = c.getInt(4);
+					if (quantity < 1) {
+						throw new BitsyError("Slot '" + c.getString(0) + "' of item '" + getName() + "' has zero item quantity");
+					}
+
+					// Slots may override 'unit' price
+					String slotPriceTag = c.isNull(5) ? Conf.FIELD_PRICE_TAG_DEFAULT : c.getString(5);
+
+					Slot slot = new Slot(db_, c.getString(0), c.getString(1), defaultItemId, choiceItemTag, quantity, slotPriceTag);
+					slots_.add( slot );
+					Log.v(Conf.TAG, "slot|parent="+getName()+";name="+slot.getName()+";default_item_id="+defaultItemId+";choice_item_tag="+choiceItemTag+";qty="+quantity+";price_tag="+slotPriceTag );
+				}
+				while (c.moveToNext());
+
+			} finally {
+				c.close();
+			}
+		}
+
+		return slots_;
+	}
+
+	/**
+		Returns true if item is a "combo item".
+	*/
+
+	boolean isCombo()
+	{
+		return (slotCount_ > 0);
 	}
 
 	/**
 		Returns related items.
 	*/
-	ArrayList<Item> getRelatedItems() 
+	ArrayList<Item> getRelatedItems( String priceTag ) 
 	{
-		Cursor c = db_.getReadableDatabase().rawQuery( Conf.SQL_FIND_RELATED_ITEMS, new String[]{itemId_, itemId_} );
-
-		ArrayList<Item> rs = new ArrayList<Item>();
-
-		if ( !c.moveToFirst() ) 
+		if (relatedItemsCache_ == null)
 		{
-			Log.v( Conf.TAG, "empty-related-item|item_id="+itemId_ );
-			return rs;
+			relatedItemsCache_ = new ArrayList<Item>();
+
+			Cursor c = db_.getReadableDatabase().rawQuery( Conf.SQL_FETCH_RELATED_ITEMS, new String[]{ priceTag, itemId_, itemId_ } );
+			try 
+			{
+				if ( !c.moveToFirst() ) 
+				{
+					Log.v( Conf.TAG, "empty-related-item|item_id="+itemId_ );
+					return relatedItemsCache_;
+				}
+
+				do 
+				{
+					// price can be null
+					String itemPriceTag = c.isNull(2) ? null : c.getString(2);
+					BigDecimal itemPrice = c.isNull(3) ? null : new BigDecimal( c.getString(3) );
+
+					relatedItemsCache_.add( new Item(db_, c.getString(0), c.getString(1), itemPriceTag, itemPrice, c.getInt(4) ) );
+					Log.v(Conf.TAG, "related-item|item_id="+c.getString(0) + ";name="+c.getString(1) );
+				}
+				while (c.moveToNext());
+
+			} finally {
+				c.close();
+			}
 		}
 
-		do 
-		{
-			rs.add( new Item(db_, c.getString(0), c.getString(1)) );
-			Log.v(Conf.TAG, "related-item|item_id="+c.getString(0) + ";name="+c.getString(1) );
-		}
-		while (c.moveToNext());
-
-		return rs;
+		return relatedItemsCache_;
 	}
 
-	protected Item getItemById( String itemId )
+	protected BigDecimal optionalPrice( String priceTag )
 	{
-		Cursor c = db_.getReadableDatabase().rawQuery( Conf.SQL_FIND_ITEM_BY_ID, new String[]{itemId_} );
-
-		if ( !c.moveToFirst() ) {
-			throw new Conf.BitsyError( "Item not found with ID: " + itemId );
+		if (priceTag == null) {
+			priceTag = Conf.FIELD_PRICE_TAG_DEFAULT;
 		}
-		return new Item(db_, itemId, c.getString(0));
+
+		BigDecimal price = null;
+		if (cachedPriceTag_ != null && priceTag == cachedPriceTag_) {
+			price = cachedPrice_;
+		}
+		else
+		{
+			Cursor c = db_.getReadableDatabase().rawQuery( Conf.SQL_GET_ITEM_PRICE, new String[]{itemId_} );
+			try 
+			{
+				if ( c.moveToFirst() ) {
+					price = new BigDecimal( c.getString(0) );
+				}
+			} finally {
+				c.close();
+			}
+		}
+		return price;
 	}
 
 	static boolean exists( Item item, Iterable<Item> container )
@@ -164,4 +266,10 @@ public class Item
 	protected final AppDb db_;
 	private final String itemId_;
 	private final String name_;
+	private final String cachedPriceTag_;
+	private final BigDecimal cachedPrice_;
+	private final int slotCount_;
+
+	private ArrayList<Item> relatedItemsCache_ = null;
+	private ArrayList<Slot> slots_ = null;
 }

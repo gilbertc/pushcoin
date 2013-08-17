@@ -121,8 +121,7 @@ public class CartEntryArrayAdapter extends BaseAdapter
 
 		// Bind the data efficiently with the holder.
 		holder.title.setText( item.getName() );
-		// TODO: hardcoded price
-		holder.price.setText( "$4.49" );
+		holder.price.setText( item.getPrettyPrice(Conf.FIELD_PRICE_TAG_DEFAULT) );
 
 		return convertView;
 	}

@@ -35,11 +35,16 @@
 
 	<style name="SlotItemsAddToCart">
 			<item name="android:textColor">#ffffff</item>
-			<item name="android:textSize">14dp</item>
+			<item name="android:textSize">20dp</item>
+			<item name="android:textStyle">bold</item>
 			<item name="android:shadowColor">#000000</item>
 			<item name="android:shadowDx">1</item>
 			<item name="android:shadowDy">1</item>
 			<item name="android:shadowRadius">2</item>
+			<item name="android:paddingTop">8dp</item>
+			<item name="android:paddingBottom">8dp</item>
+			<item name="android:paddingLeft">20dp</item>
+			<item name="android:paddingRight">20dp</item>
 	</style>
 
 </resources>

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler;
@@ -33,7 +32,7 @@ public class BitsyPosActivity
 		cartFragmentHandler_ = ((IDispatcher)fragmentManager.findFragmentById(R.id.shopping_cart_frag)).getDispachable();
 
 		AppDb db = AppDb.getInstance(this);
-		ArrayList<Item> items = db.findItems( "breakfast" );
+		ArrayList<Item> items = db.findItems( "breakfast", Conf.FIELD_PRICE_TAG_DEFAULT );
 		if ( items.isEmpty() ) {
 			Log.v(Conf.TAG, "no-items-found|tag=breakfast");
 		}
@@ -153,23 +152,4 @@ public class BitsyPosActivity
 	}
 
 	Handler cartFragmentHandler_;
-
-	final int icons_[] = {
-		R.drawable.apple,
-		R.drawable.babelfish,
-		R.drawable.cake,
-		R.drawable.cake2,
-		R.drawable.cheese_cake,
-		R.drawable.coffee_cup,
-		R.drawable.corbeille_box,
-		R.drawable.cup_cake,
-		R.drawable.fries,
-		R.drawable.fruit_cake,
-		R.drawable.ic_launcher,
-		R.drawable.pizza,
-		R.drawable.soft_drink,
-		R.drawable.sushi_maki,
-		R.drawable.toast,
-		R.drawable.wine_glass, 
-	};
 }

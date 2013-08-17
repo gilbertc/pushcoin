@@ -31,7 +31,9 @@ Organized by: Willie Tsang
 	<color name="lightui_mediumgray">#bababa</color>
 	<color name="lightui_darkgray">#999999</color>
 	<color name="lightui_darkergray">#777777</color>
+	<color name="lightui_darkestgray">#444444</color>
 	<color name="lightui_moneygreen">#53833f</color>
+	<color name="lightui_darkorange">#b66400</color>
 
 	<!-- Windows 8 style -->
 	<color name="win8_magenta">#FF0097</color>

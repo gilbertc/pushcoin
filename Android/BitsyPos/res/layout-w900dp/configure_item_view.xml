@@ -2,41 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
+	android:layout_marginLeft="7dp"
+	android:layout_marginRight="7dp"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
-
-	<!-- Window name, button -->
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" >
-
-		<!-- Product name -->
-		<TextView
-			android:background="@drawable/slot_header_shape"
-			android:id="@+id/slot_items_combo_name"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="22dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:textColor="@color/lightui_darkgray"
-			geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
-
-		<Button android:text="Add Combo to Cart" 
-			android:id="@+id/slot_items_add_to_cart" 
-			android:layout_width="wrap_content" 
-			android:layout_height="match_parent"
-			android:layout_marginLeft="7dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:paddingTop="1dp"
-			android:paddingBottom="1dp"
-			android:includeFontPadding="false"
-			android:background="@drawable/btn_blue" 
-			style="@style/SlotItemsAddToCart" />
-
-	</LinearLayout>
 
 	<!-- Slots container -->
 	<LinearLayout
@@ -59,25 +28,64 @@
 
 	</LinearLayout>
 
-	<!-- Popular Together -->
-	<TextView 
-		android:text="Popular Together"
-		android:layout_marginTop="7dp"
-		android:background="@drawable/slot_header_shape"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textSize="22dp"
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-		android:textColor="@color/lightui_darkgray"
-		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
 
-	<!-- Together Items -->
-	<GridView 
-		xmlns:android="http://schemas.android.com/apk/res/android" 
+		<!-- Add Combo button -->
+		<Button
+			android:id="@+id/add_combo_item_to_cart" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:background="@drawable/btn_blue" 
+			style="@style/SlotItemsAddToCart" />
+
+		<View
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="match_parent" />
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="wrap_content"
+			android:background="@drawable/rounded_label_shape"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:layout_height="match_parent">
+
+			<!-- Popular Together -->
+			<com.mobsandgeeks.ui.TypefaceTextView 
+				android:text="9"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:gravity="center"
+				android:textSize="30dp"
+				android:paddingRight="8dp"
+				android:includeFontPadding="false"
+				android:textColor="@color/lightui_darkorange"
+				geekui:customTypeface="fonts/modernpics.otf" />
+
+			<!-- Popular Together -->
+			<com.mobsandgeeks.ui.TypefaceTextView 
+				android:text="Frequently bought&#10;together&#8230;"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:gravity="left"
+				android:textSize="16dp"
+				android:paddingBottom="0dp"
+				android:textColor="@color/lightui_darkorange"
+				geekui:customTypeface="fonts/DejaVuSans-Oblique.ttf" />
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<!-- Shows "Popular Together" Items -->
+	<com.pushcoin.bitsypos.AutofitGridView 
 		android:id="@+id/configure_related_items"
 		android:layout_weight="1"
-		android:layout_width="match_parent" 
+		android:layout_width="wrap_content" 
 		android:layout_height="0dp"
 		android:numColumns="auto_fit"
 		android:verticalSpacing="10dp"
@@ -85,7 +93,6 @@
 		android:stretchMode="columnWidth"
 		android:gravity="left"
 		android:drawSelectorOnTop="false"
-		android:listSelector="@android:color/transparent"
 		android:paddingTop="5dp" />
 
 </LinearLayout>

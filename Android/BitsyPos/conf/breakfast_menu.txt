@@ -46,7 +46,7 @@ index = {
 		{ name= 'Fruit', price= { unit= 2.49 }, tag= { 'breakfast_side' }, id= 'S2' },
 		{ name= 'Oatmeal (plain)', price= { unit= 2.49 }, tag= { 'breakfast_side' }, id= 'S3' },
 		{ name= 'Cottage Cheese & Peaches', price= { unit= 3.29 }, tag= { 'breakfast_side' }, id= 'S4' },
-		{ name= 'Homemade Corned Beef Hash', price= { unit= 3.99 }, tag= { 'breakfast_side' }, id= 'S5' },
+		{ name= 'Corned Beef Hash', price= { unit= 3.99 }, tag= { 'breakfast_side' }, id= 'S5' },
 		{ name= 'Canadian Bacon', price= { unit= 3.49 }, tag= { 'breakfast_side' }, id= 'S6' },
 		{ name= 'Applewood Bacon', price= { unit= 2.99 }, tag= { 'breakfast_side' }, id= 'S7' },
 		{ name= 'Sausage Links', price= { unit= 2.99 }, tag= { 'breakfast_side' }, id= 'S8' },
@@ -61,8 +61,8 @@ index = {
 		{ name= 'Applewood Bacon Strips (2)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI6' },
 		{ name= 'Hashbrown Potatoes', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI7' },
 		{ name= 'English Muffin', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI8' },
-		{ name= 'Homemade Sausage Patties (2)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI9' },
-		{ name= 'Homemade Trukey Patties (2)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI10' },
+		{ name= 'Sausage Patties (2)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI9' },
+		{ name= 'Trukey Patties (2)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI10' },
 		{ name= 'Sausage Links (2)', price= { combo_priced_in= 0.00 }, tag= { 'breakfast_special_item' }, id= 'BSI11' },
 		{ name= 'Fresh Fruit', price= { combo_priced_in= 0.00, greek_yogurt_addon=0.99 }, tag= { 'breakfast_special_item' }, id= 'BSI12' },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
@@ -95,13 +95,13 @@ index = {
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- GABBY'S LIGHT & SIMPLE
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Homemade Greek Yogurt', price= { unit= 3.99 }, tag= { 'breakfast' }, id= 'GLS1' },
+		{ name= 'Greek Yogurt', price= { unit= 3.99 }, tag= { 'breakfast' }, id= 'GLS1' },
 		{ name= 'Multi-Grain Pancakes', price= { unit= 5.79 }, tag= { 'breakfast' }, id= 'GLS2' },
 		{ name= 'Multi-Grain Waffle', price= { unit= 6.29 }, tag= { 'breakfast' }, id= 'GLS3' },
 		{ name= 'Fruit Salad', price= { unit= 5.29 }, tag= { 'breakfast' }, id= 'GLS4' },
 		{ name= 'Country Oatmeal', price= { unit= 5.79 }, tag= { 'breakfast' }, id= 'GLS5' },
 		{
-			name= 'Homemade Greek Yogurt & Side',
+			name= 'Greek Yogurt & Side',
 			combo= {
 				{
 					slot= 'Dish',

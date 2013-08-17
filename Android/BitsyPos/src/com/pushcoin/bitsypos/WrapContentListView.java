@@ -7,8 +7,6 @@ import android.util.AttributeSet;
 
 public class WrapContentListView extends ListView
 {
-	private IconLabelArrayAdapter menu_;
-	 
 	// If built programmatically
 	public WrapContentListView(Context context)
 	{

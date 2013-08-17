@@ -6,16 +6,16 @@
 	android:layout_height="match_parent" >
 
 	<!-- Window Name -->
-	<TextView
-		android:text="1st Fl, Tble #2"
-		android:background="@drawable/slot_header_shape"
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:text="Table #2"
+		android:background="@drawable/window_header_shape"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="22dp"
+		android:textSize="20dp"
 		android:paddingLeft="10dp"
 		android:paddingRight="10dp"
 		android:textColor="@color/lightui_darkgray"
-		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
+		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 	<LinearLayout
 		android:background="@drawable/window_shape"
@@ -24,9 +24,12 @@
 		android:layout_width="wrap_content"
 		android:layout_height="0dp" >
 
-		<ListView xmlns:android="http://schemas.android.com/apk/res/android" 
+		<ListView
 			android:id="@+id/shopping_cart_list"
-			android:divider="@color/black"
+			android:divider="@drawable/dotted"
+			android:dividerHeight="1px"
+			android:footerDividersEnabled="false"
+			android:headerDividersEnabled="false"
 			android:cacheColorHint="@android:color/transparent"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -50,7 +53,7 @@
 				android:textColor="@color/lightui_darkgray"
 				geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
 
-			<TextView android:text="$94.95"
+			<TextView android:text="-.--"
 				android:id="@+id/shopping_cart_total"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
