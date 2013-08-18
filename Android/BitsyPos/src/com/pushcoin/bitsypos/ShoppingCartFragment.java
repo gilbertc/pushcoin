@@ -90,6 +90,7 @@ public class ShoppingCartFragment
 		// The constructor adds 'self' to the provided ListView (first arg)
 		SwipeDismissList dismissList = new SwipeDismissList(cartItemList, callback, SwipeDismissList.UndoMode.SINGLE_UNDO);
 		dismissList.setAutoHideDelay(Conf.CART_UNDO_HIDE_DELAY); 
+		dismissList.setRequireTouchBeforeDismiss(false);
 
 		// Reset cart contents
 		onCartContentChanged();
