@@ -3,7 +3,7 @@
 
 	<stroke
 		android:color="@color/lightui_darkestgray"
-		android:dashWidth="10px"
-		android:dashGap="10px" />
+		android:dashWidth="4dp"
+		android:dashGap="2dp" />
 
 </shape>

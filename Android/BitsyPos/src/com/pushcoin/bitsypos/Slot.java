@@ -40,6 +40,13 @@ public class Slot extends Item
 	}
 
 	/**
+		Returns an item at a given position within slot.
+	*/
+	Item getItem(int position) {
+		return getAlternatives().get(position);
+	}
+
+	/**
 		Returns a single defined-item.
 	*/
 	Item getChosenItem() {

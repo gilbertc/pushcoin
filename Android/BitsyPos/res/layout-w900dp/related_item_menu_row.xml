@@ -4,26 +4,40 @@
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:orientation="horizontal">
+	android:paddingRight="10dp"
+	android:orientation="vertical">
 
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/related_item_label"
-		android:layout_weight="1"
-		android:layout_width="0dp"
+	<LinearLayout 
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:paddingLeft="4dp"
-		android:textSize="18dp"
-		android:textColor="@color/win8_lime"
-		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+		android:orientation="horizontal">
 
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/related_item_price"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:gravity="bottom"
-		android:paddingRight="4dp"
-		android:textSize="14dp"
-		android:textColor="#796c61"
-		geekui:customTypeface="fonts/DejaVuSans.ttf" />
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/related_item_label"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:gravity="top"
+			android:paddingTop="4dp"
+			android:paddingBottom="4dp"
+			android:textSize="18dp"
+			android:textColor="@color/win8_lime"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/related_item_price"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:textSize="14dp"
+			android:textColor="#796c61"
+			geekui:customTypeface="fonts/DejaVuSans.ttf" />
+
+	</LinearLayout>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1px" 
+		android:background="@drawable/dotted" />
 
 </LinearLayout>

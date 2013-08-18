@@ -41,7 +41,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" >
 
-			<TextView android:text="Total:"
+			<com.mobsandgeeks.ui.TypefaceTextView android:text="Total:"
 				android:id="@+id/shopping_cart_total_label"
 				android:layout_weight="1"
 				android:layout_width="0dp"
@@ -51,16 +51,16 @@
 				android:paddingLeft="10dp"
 				android:paddingRight="10dp"
 				android:textColor="@color/lightui_darkgray"
-				geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
+				geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
-			<TextView android:text="-.--"
+			<com.mobsandgeeks.ui.TypefaceTextView android:text="-.--"
 				android:id="@+id/shopping_cart_total"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:textSize="38dp"
 				android:paddingRight="6dp"
 				android:textColor="@color/android_holo_blue_bright"
-				geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
+				geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 		</LinearLayout>
 

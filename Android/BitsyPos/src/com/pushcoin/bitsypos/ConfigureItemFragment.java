@@ -47,7 +47,7 @@ public class ConfigureItemFragment extends Fragment
 
 		// Create a list-view for each slot being configured
 		LinearLayout layoutSlots = (LinearLayout) fragmentRootLayout.findViewById( R.id.item_configuration_arena );
-		for ( Slot slot : item_.getSlots() )
+		for ( final Slot slot : item_.getSlots() )
 		{
 			View slotLayout = inflater.inflate(R.layout.slot_items_view, layoutSlots, false);
 
@@ -63,6 +63,9 @@ public class ConfigureItemFragment extends Fragment
 					R.layout.configure_item_slot_row, 
 					R.id.configure_slot_listview_item_label, 
 					slot.getAlternatives()) );
+
+			// on slot-item clicked
+			listview.setOnItemClickListener(new OnSlotItemClicked(slot));
 
 			// add this slot to the layout
 			layoutSlots.addView( slotLayout );
@@ -92,6 +95,21 @@ public class ConfigureItemFragment extends Fragment
 		return fragmentRootLayout;
 	}
 
+	private class OnSlotItemClicked implements OnItemClickListener
+	{
+		public OnSlotItemClicked(Slot slot) {
+			slot_ = slot;
+		}
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+		{
+			Item item = slot_.getItem(position);
+			Log.v(Conf.TAG, "slot-item-clicked|slot="+slot_.getName()+";name="+item.getName() );
+		}
+		private final Slot slot_;
+	}
+
 	private class OnRelatedItemClicked implements OnItemClickListener
 	{
 		@Override
@@ -104,6 +122,9 @@ public class ConfigureItemFragment extends Fragment
 			// configure-item screen
 			Cart cart = (Cart) access_.session( Conf.SESSION_CART );
 			cart.add( item );
+			//Handler receiver = cart.getDispachable();
+			//Message msg = receiver.obtainMessage(MessageId.CART_ADD_ITEM, item);
+			//receiver.sendMessageDelayed( msg, 500 );
 		}
 	}
 

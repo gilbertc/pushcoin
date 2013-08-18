@@ -55,7 +55,8 @@ public class CartEntryArrayAdapter extends BaseAdapter
 
 	public void remove(int position)
 	{
-		if ( cart_.remove(position) != null ) {
+		if ( cart_.remove(position) != null ) 
+		{
 			refreshView();
 		}
 	};
