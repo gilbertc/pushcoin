@@ -23,8 +23,15 @@ public class UsbReceiver extends BroadcastReceiver {
 			log.d("Device: " + usbDevice.getVendorId() + ":"
 					+ usbDevice.getProductId());
 
-			DeviceManager deviceManager = DeviceManager.getDefault();
+			UsbManager usbManager = (UsbManager) context
+					.getSystemService(Context.USB_SERVICE);
+
+			DeviceManager deviceManager = DeviceManager.createDefault(context,
+					usbManager);
+
 			if (deviceManager != null && deviceManager.isSupported(usbDevice)) {
+				log.d("at-usbreceiver: " + usbDevice.getVendorId() + ":"
+						+ usbDevice.getProductId());
 				deviceManager.requestPermission(context, usbDevice);
 			}
 
@@ -35,16 +42,27 @@ public class UsbReceiver extends BroadcastReceiver {
 
 			if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED,
 					false)) {
-				DeviceManager deviceManager = DeviceManager.getDefault();
+				UsbManager usbManager = (UsbManager) context
+						.getSystemService(Context.USB_SERVICE);
+
+				DeviceManager deviceManager = DeviceManager.createDefault(
+						context, usbManager);
+
 				if (deviceManager != null)
 					deviceManager.onPermissionGranted(context, usbDevice);
 			}
+
 		} else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
 			log.d("Action: " + action);
 			UsbDevice usbDevice = (UsbDevice) intent
 					.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
-			DeviceManager deviceManager = DeviceManager.getDefault();
+			UsbManager usbManager = (UsbManager) context
+					.getSystemService(Context.USB_SERVICE);
+
+			DeviceManager deviceManager = DeviceManager.createDefault(context,
+					usbManager);
+
 			if (deviceManager != null)
 				deviceManager.onDeviceDetached(usbDevice);
 		}

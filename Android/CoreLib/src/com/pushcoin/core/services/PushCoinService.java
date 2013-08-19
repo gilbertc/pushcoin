@@ -8,7 +8,9 @@ import com.pushcoin.core.payment.PaymentListener;
 import com.pushcoin.core.utils.Logger;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -32,12 +34,16 @@ public class PushCoinService extends Service implements PaymentListener {
 	private int startId = -1;
 
 	public PushCoinService() {
+		log.d("constructor");
 	}
 
 	@Override
 	public void onCreate() {
+		log.d("onCreate");
 		super.onCreate();
-		this.deviceManager = DeviceManager.createDefault(this);
+		UsbManager usbManager = (UsbManager) this
+				.getSystemService(Context.USB_SERVICE);
+		this.deviceManager = DeviceManager.createDefault(this, usbManager);
 	}
 
 	@Override
@@ -48,16 +54,20 @@ public class PushCoinService extends Service implements PaymentListener {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		log.d("onStartCommand");
 		onStart(intent, startId);
 		return START_NOT_STICKY;
 	}
 
 	@Override
 	public void onDestroy() {
+		log.d("onDestroy");
+		super.onDestroy();
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
+		log.d("onBind");
 		return null;
 	}
 

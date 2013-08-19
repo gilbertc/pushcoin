@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 import com.pushcoin.core.data.DisplayParcel;
+import com.pushcoin.core.devices.magnetic.magtek.MiniReader;
 import com.pushcoin.core.devices.nfc.acs.ACR1222L;
 import com.pushcoin.core.devices.nfc.acs.ACR122U;
 import com.pushcoin.core.payment.PaymentListener;
@@ -27,11 +28,11 @@ public class DeviceManager {
 		return _defaultDeviceManager;
 	}
 
-	public static DeviceManager createDefault(Context context) {
-
-		if (_defaultDeviceManager == null)
-			_defaultDeviceManager = new DeviceManager(context);
-
+	public static DeviceManager createDefault(Context context,
+			UsbManager usbManager) {
+		if (_defaultDeviceManager == null) {
+			_defaultDeviceManager = new DeviceManager(context, usbManager);
+		}
 		return _defaultDeviceManager;
 	}
 
@@ -43,18 +44,19 @@ public class DeviceManager {
 	private boolean isPermissionRequesting = false;
 	private Queue<PendingPermissionRequest> pendingRequests = new ArrayDeque<PendingPermissionRequest>();
 
-	public DeviceManager(Context context) {
+	public DeviceManager(Context context, UsbManager usbManager) {
 		log.d("***********NEW DEVICEMANAGER!!!***********");
-		this.usbManager = (UsbManager) context
-				.getSystemService(Context.USB_SERVICE);
+		this.usbManager = usbManager;
 		this.devices = new SparseArray<IDevice>();
 
-		for (UsbDevice usbDevice : this.usbManager.getDeviceList().values())
+		for (UsbDevice usbDevice : this.usbManager.getDeviceList().values()) {
+			log.d("at-constr: " + usbDevice.getVendorId() + ":"
+					+ usbDevice.getProductId());
 			requestPermission(context, usbDevice);
+		}
 	}
 
 	public void requestPermission(Context context, UsbDevice usbDevice) {
-
 		if (this.isPermissionRequesting) {
 			PendingPermissionRequest r = new PendingPermissionRequest();
 			r.context = context;
@@ -74,9 +76,13 @@ public class DeviceManager {
 		this.isPermissionRequesting = false;
 		this.onDeviceAttached(usbDevice);
 
-		if (!this.pendingRequests.isEmpty()) {
+		// Ignore attached devices
+		while (!this.pendingRequests.isEmpty()) {
 			PendingPermissionRequest r = this.pendingRequests.remove();
-			this.requestPermission(r.context, r.usbDevice);
+			if (this.devices.indexOfKey(r.usbDevice.getDeviceId()) < 0) {
+				this.requestPermission(r.context, r.usbDevice);
+				break;
+			}
 		}
 	}
 
@@ -93,6 +99,8 @@ public class DeviceManager {
 			return ACR1222L.class;
 		if (ACR122U.Match(usbDevice))
 			return ACR122U.class;
+		if (MiniReader.Match(usbDevice))
+			return MiniReader.class;
 		return null;
 	}
 

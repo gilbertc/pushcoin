@@ -2,6 +2,7 @@ package com.pushcoin.core.devices.nfc.acs;
 
 import java.io.IOException;
 
+import com.acs.smartcard.CommunicationErrorException;
 import com.acs.smartcard.Reader;
 import com.acs.smartcard.Reader.OnStateChangeListener;
 import com.pushcoin.core.devices.DeviceManager;
@@ -13,7 +14,6 @@ import com.pushcoin.core.utils.nfc.NdefReader;
 
 import android.hardware.usb.UsbDevice;
 import android.nfc.NdefMessage;
-import android.os.Message;
 
 public class ACR122U implements IPaymentDevice, OnStateChangeListener {
 	private static Logger log = Logger.getLogger(ACR122U.class);
@@ -41,10 +41,10 @@ public class ACR122U implements IPaymentDevice, OnStateChangeListener {
 		log.d("Opening reader: " + this.getClass().getSimpleName() + " at "
 				+ device.getDeviceName());
 
-		if (reader.isSupported(device))
+		if (reader.isSupported(device)) {
 			reader.open(device);
-
-		ACR122UPICCTag.SuppressTagDetectedBuzz(this.reader);
+			ACR122UPICCTag.SuppressTagDetectedBuzz(this.reader);
+		}
 	}
 
 	@Override
@@ -75,12 +75,6 @@ public class ACR122U implements IPaymentDevice, OnStateChangeListener {
 	@Override
 	public boolean isOpened() {
 		return reader.isOpened();
-	}
-
-	@Override
-	public boolean handleMessage(Message msg) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
@@ -117,6 +111,9 @@ public class ACR122U implements IPaymentDevice, OnStateChangeListener {
 								payload));
 					}
 				}
+			} catch (CommunicationErrorException e) {
+				if (e.getCcidErrorCode() != 66)
+					log.d("connect", e);
 			} catch (Exception e) {
 				log.d("connect", e);
 			} finally {

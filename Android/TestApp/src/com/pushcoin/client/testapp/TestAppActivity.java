@@ -31,54 +31,72 @@ public class TestAppActivity extends Activity {
 		this.btnStop = (Button) this.findViewById(R.id.btnStop);
 		this.btnDisplay = (Button) this.findViewById(R.id.btnDisplay);
 		this.etDisplay = (EditText) this.findViewById(R.id.etDisplay);
+		
 
 		this.btnStart.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(TestAppActivity.this, PushCoinService.class);
-				Messenger messenger = new Messenger(handler);
-
-				intent.setAction(PushCoinService.ACTION_START);
-
-				Bundle bundle = new Bundle();
-				bundle.putString(PushCoinService.KEY_AMOUNT, "12");
-				bundle.putParcelable(PushCoinService.KEY_MESSENGER, messenger);
-
-				intent.putExtras(bundle);
-				startService(intent);
+				start();
+				display(new DisplayParcel("touch now")); 
 			}
 		});
 
 		this.btnStop.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(TestAppActivity.this, PushCoinService.class);
-				Messenger messenger = new Messenger(handler);
-
-				intent.setAction(PushCoinService.ACTION_STOP);
-
-				Bundle bundle = new Bundle();
-				bundle.putParcelable(PushCoinService.KEY_MESSENGER, messenger);
-
-				intent.putExtras(bundle);
-				startService(intent);
+				stop();
+				display(new DisplayParcel("cancelled"));
 			}
 		});
 		this.btnDisplay.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(TestAppActivity.this, PushCoinService.class);
 				DisplayParcel parcel = new DisplayParcel(etDisplay.getText().toString()); 
-				
-				intent.setAction(PushCoinService.ACTION_DISPLAY);
-				
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(PushCoinService.KEY_DISPLAYPARCEL, parcel);
-
-				intent.putExtras(bundle);
-				startService(intent);
+				display(parcel);
 			}
 		});
+	}
+	
+	private void start()
+	{
+		Intent intent = new Intent(TestAppActivity.this, PushCoinService.class);
+		Messenger messenger = new Messenger(handler);
+
+		intent.setAction(PushCoinService.ACTION_START); 
+
+		Bundle bundle = new Bundle();
+		bundle.putString(PushCoinService.KEY_AMOUNT, "12");
+		bundle.putParcelable(PushCoinService.KEY_MESSENGER, messenger);
+
+		intent.putExtras(bundle);
+		startService(intent);
+	}
+
+	private void stop()
+	{
+		Intent intent = new Intent(TestAppActivity.this, PushCoinService.class);
+		Messenger messenger = new Messenger(handler);
+
+		intent.setAction(PushCoinService.ACTION_STOP);
+
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(PushCoinService.KEY_MESSENGER, messenger);
+
+		intent.putExtras(bundle);
+		startService(intent);
+	}
+
+	
+	private void display(DisplayParcel parcel)
+	{
+		Intent intent = new Intent(TestAppActivity.this, PushCoinService.class);
+		intent.setAction(PushCoinService.ACTION_DISPLAY);
+		
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(PushCoinService.KEY_DISPLAYPARCEL, parcel);
+
+		intent.putExtras(bundle);
+		startService(intent);
 	}
 
 	private Handler handler = new Handler() {
@@ -87,6 +105,7 @@ public class TestAppActivity extends Activity {
 			case PushCoinService.MSGID_COMPLETE:
 				Toast.makeText(TestAppActivity.this, "Completed",
 						Toast.LENGTH_LONG).show();
+				display(new DisplayParcel("Completed"));
 				break;
 
 			}
@@ -96,7 +115,6 @@ public class TestAppActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-
 	}
 
 	@Override
