@@ -3,7 +3,6 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:background="@drawable/slot_shape"
-	android:layout_marginTop="4dp"
 	android:layout_marginRight="7dp"
 	android:layout_marginBottom="10dp"
 	android:layout_width="wrap_content"
@@ -14,9 +13,11 @@
 		android:id="@+id/slot_items_header"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:textSize="20dp"
-		android:paddingLeft="10dp"
-		android:textColor="@color/DarkOliveGreen"
+		android:textSize="18dp"
+		android:paddingLeft="8dp"
+		android:paddingTop="6dp"
+		android:paddingBottom="6dp"
+		android:textColor="@color/lightui_darkgray"
 		android:background="@drawable/slot_header_shape"
 		geekui:customTypeface="fonts/DejaVuSans.ttf" />
 

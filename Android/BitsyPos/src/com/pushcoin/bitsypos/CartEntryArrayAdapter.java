@@ -120,8 +120,26 @@ public class CartEntryArrayAdapter extends BaseAdapter
 		ViewHolder holder = (ViewHolder) convertView.getTag();
 		Item item = cart_.get( position );
 
-		// Bind the data efficiently with the holder.
-		holder.title.setText( item.getName() );
+		// Bind the row-data with the holder.
+		
+		// If item has slots, append the name of each.
+		ArrayList<Slot> slots = item.getSlots();
+		if (slots != null)
+		{
+			String label = item.getName() + ": ";
+			int i = 0;
+			for (Slot slot: slots) {
+				if (i++ > 0 ) {
+					label += ", ";
+				}
+				label += slot.getChosenItem().getName();
+			}
+			holder.title.setText( label );
+		}
+		else {
+			holder.title.setText( item.getName() );
+		}
+
 		holder.price.setText( item.getPrettyPrice(Conf.FIELD_PRICE_TAG_DEFAULT) );
 
 		return convertView;

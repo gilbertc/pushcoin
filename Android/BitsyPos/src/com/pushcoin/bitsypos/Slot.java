@@ -4,6 +4,7 @@ import android.util.Log;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
+import java.math.BigDecimal;
 
 public class Slot extends Item
 {
@@ -44,6 +45,20 @@ public class Slot extends Item
 	*/
 	Item getItem(int position) {
 		return getAlternatives().get(position);
+	}
+
+	/**
+		Returns price of chosen item.
+	*/
+	@Override
+	BigDecimal getPrice( String priceTag )
+	{
+		if (chosenItem_ != null) {
+			return chosenItem_.getPrice( priceTag );
+		}
+		else {
+			throw new BitsyError("Slot '" + getName() + " doesn't provide an item with price (yet)");
+		}
 	}
 
 	/**

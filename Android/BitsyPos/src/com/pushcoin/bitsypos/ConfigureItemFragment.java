@@ -42,8 +42,16 @@ public class ConfigureItemFragment extends Fragment
 		View fragmentRootLayout = inflater.inflate(R.layout.configure_item_view, container, false);
 
 		// Set combo name
-		Button comboName = (Button) fragmentRootLayout.findViewById( R.id.add_combo_item_to_cart );
-		comboName.setText( "Add " + item_.getName() );
+		final Button addToCartBtn = (Button) fragmentRootLayout.findViewById( R.id.add_combo_item_to_cart );
+		addToCartBtn.setText( "Add " + item_.getName() );
+		// on click, add item to cart
+		addToCartBtn.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v) {
+				Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+				cart.add( item_ );
+			}
+		});
 
 		// Create a list-view for each slot being configured
 		LinearLayout layoutSlots = (LinearLayout) fragmentRootLayout.findViewById( R.id.item_configuration_arena );
@@ -53,7 +61,19 @@ public class ConfigureItemFragment extends Fragment
 
 			// set header to slot name
 			TextView title = (TextView) slotLayout.findViewById( R.id.slot_items_header );
-			title.setText( slot.getName() );
+
+			// if slot has default item, auto-fill it
+			Item defaultItem = slot.getDefaultItem();
+			if (defaultItem != null && defaultItem.isDefined(slot.getPriceTag()))
+			{
+				title.setText( defaultItem.getName() );
+				title.setTextColor(ctx.getResources().getColor(R.color.DarkBlue));
+				slot.setChosenItem( defaultItem );
+			}
+			else // no default item...
+			{
+				title.setText( slot.getName() );
+			}
 
 			// populate list view with items
 			ListView listview = (ListView) slotLayout.findViewById( R.id.slot_items_listview );
@@ -65,10 +85,22 @@ public class ConfigureItemFragment extends Fragment
 					slot.getAlternatives()) );
 
 			// on slot-item clicked
-			listview.setOnItemClickListener(new OnSlotItemClicked(slot));
+			listview.setOnItemClickListener(new OnSlotItemClicked(ctx, addToCartBtn, item_, slot, title));
 
 			// add this slot to the layout
 			layoutSlots.addView( slotLayout );
+		}
+
+		// If all slots have defaults, user can add this item to the cart right away
+		if ( item_.isDefined(Conf.FIELD_PRICE_TAG_DEFAULT) )
+		{
+			addToCartBtn.setVisibility( View.VISIBLE );
+			addToCartBtn.setEnabled( true );
+		}
+		else 
+		{
+			addToCartBtn.setVisibility( View.INVISIBLE );
+			addToCartBtn.setEnabled( false );
 		}
 
 		// Populate related items
@@ -97,8 +129,13 @@ public class ConfigureItemFragment extends Fragment
 
 	private class OnSlotItemClicked implements OnItemClickListener
 	{
-		public OnSlotItemClicked(Slot slot) {
+		public OnSlotItemClicked(Context ctx, Button addToCartBtn, Item parent, Slot slot, TextView titlePlaceholder)
+		{
+			ctx_ = ctx;
+			addToCartBtn_ = addToCartBtn;
+			item_ = parent;
 			slot_ = slot;
+			titlePlaceholder_ = titlePlaceholder;
 		}
 
 		@Override
@@ -106,8 +143,30 @@ public class ConfigureItemFragment extends Fragment
 		{
 			Item item = slot_.getItem(position);
 			Log.v(Conf.TAG, "slot-item-clicked|slot="+slot_.getName()+";name="+item.getName() );
+			// TODO: what if not defined? this will throw...
+			// create another screen and configure it
+			slot_.setChosenItem( item );
+			titlePlaceholder_.setText( item.getName() );
+			titlePlaceholder_.setTextColor(ctx_.getResources().getColor(R.color.DarkBlue));
+
+			// If all slots are configured, user can add this item to the cart
+			if ( item_.isDefined(Conf.FIELD_PRICE_TAG_DEFAULT) )
+			{
+				addToCartBtn_.setEnabled( true );
+				addToCartBtn_.setVisibility( View.VISIBLE );
+			}
+			else 
+			{
+				addToCartBtn_.setEnabled( false );
+				addToCartBtn_.setVisibility( View.INVISIBLE );
+			}
+
 		}
+		private final Context ctx_;
+		private final Button addToCartBtn_;
+		private final Item item_;
 		private final Slot slot_;
+		private final TextView titlePlaceholder_;
 	}
 
 	private class OnRelatedItemClicked implements OnItemClickListener
@@ -130,6 +189,6 @@ public class ConfigureItemFragment extends Fragment
 
 	private SessionManager access_;
 	private Handler dispatchable_;
-	private Item item_;
+	private final Item item_;
 	ArrayList<Item> relatedItems_;
 }
