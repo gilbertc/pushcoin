@@ -2,32 +2,106 @@ package com.pushcoin.client.testapp;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import android.content.Intent;
 
-import com.pushcoin.client.core.PushCoinService;
+import com.pushcoin.core.data.DisplayParcel;
+import com.pushcoin.core.services.PushCoinService;
 
-public class TestAppActivity extends Activity
-{
-   /** Called when the activity is first created. */
-   @Override
-   public void onCreate(Bundle savedInstanceState)
-   {
-      super.onCreate(savedInstanceState);
-      setContentView(R.layout.main);
-   }
+public class TestAppActivity extends Activity {
 
-   @Override
-   public void onResume()
-   {
-      super.onResume();
-      Intent service = new Intent(this, PushCoinService.class);
-      startService(service);
-   }
+	private Button btnStart;
+	private Button btnStop;
+	private Button btnDisplay;
+	private EditText etDisplay;
 
-   @Override
-   public void onPause()
-   {
-      super.onPause();
-   }
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		this.btnStart = (Button) this.findViewById(R.id.btnStart);
+		this.btnStop = (Button) this.findViewById(R.id.btnStop);
+		this.btnDisplay = (Button) this.findViewById(R.id.btnDisplay);
+		this.etDisplay = (EditText) this.findViewById(R.id.etDisplay);
+
+		this.btnStart.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(TestAppActivity.this, PushCoinService.class);
+				Messenger messenger = new Messenger(handler);
+
+				intent.setAction(PushCoinService.ACTION_START);
+
+				Bundle bundle = new Bundle();
+				bundle.putString(PushCoinService.KEY_AMOUNT, "12");
+				bundle.putParcelable(PushCoinService.KEY_MESSENGER, messenger);
+
+				intent.putExtras(bundle);
+				startService(intent);
+			}
+		});
+
+		this.btnStop.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(TestAppActivity.this, PushCoinService.class);
+				Messenger messenger = new Messenger(handler);
+
+				intent.setAction(PushCoinService.ACTION_STOP);
+
+				Bundle bundle = new Bundle();
+				bundle.putParcelable(PushCoinService.KEY_MESSENGER, messenger);
+
+				intent.putExtras(bundle);
+				startService(intent);
+			}
+		});
+		this.btnDisplay.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(TestAppActivity.this, PushCoinService.class);
+				DisplayParcel parcel = new DisplayParcel(etDisplay.getText().toString()); 
+				
+				intent.setAction(PushCoinService.ACTION_DISPLAY);
+				
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(PushCoinService.KEY_DISPLAYPARCEL, parcel);
+
+				intent.putExtras(bundle);
+				startService(intent);
+			}
+		});
+	}
+
+	private Handler handler = new Handler() {
+		public void handleMessage(Message message) {
+			switch (message.what) {
+			case PushCoinService.MSGID_COMPLETE:
+				Toast.makeText(TestAppActivity.this, "Completed",
+						Toast.LENGTH_LONG).show();
+				break;
+
+			}
+		};
+	};
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+	}
 
 }
