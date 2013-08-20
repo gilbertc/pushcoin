@@ -1,4 +1,4 @@
-CMD="curl -c cookie.txt -b cookie.txt -k -X POST https://pc-dev.com"
+CMD="curl -c cookie.txt -b cookie.txt -k -X POST https://beta.minta.com"
 
 # echo -e "\n\n*** Sign-up ***"
 $CMD/json/account/initiate-signup/ -d '{ "email": "sl+test1@pushcoin.com" }'
@@ -20,6 +20,8 @@ echo -e "\n\n*** Change Name ***"
 $CMD/json/account/change-person-name/ -d '{ "first_name": "first_test_long_and_ugly", "last_name": "last_test_long_and_ugly" }'
 echo -e "\n\n*** Restore Name ***"
 $CMD/json/account/change-person-name/ -d '{ "first_name": "first_test", "last_name": "last_test" }'
+echo -e "\n\n*** Change email preference ***"
+$CMD/json/account/change-email-preference/ -d '{ "level": 2 }'
 echo -e "\n\n*** Account Summary ***"
 $CMD/json/account/summary/ -d ''
 echo -e "\n\n*** Balance ***"
