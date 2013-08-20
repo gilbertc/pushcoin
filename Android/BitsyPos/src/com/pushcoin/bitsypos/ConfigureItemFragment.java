@@ -77,6 +77,7 @@ public class ConfigureItemFragment extends Fragment
 
 			// populate list view with items
 			ListView listview = (ListView) slotLayout.findViewById( R.id.slot_items_listview );
+			listview.setLongClickable(false);
 			listview.setAdapter(
 				new ArrayAdapter<Item>(
 					ctx, 
@@ -120,6 +121,7 @@ public class ConfigureItemFragment extends Fragment
 
 			// on related-item clicked
 			relatedItemsView.setOnItemClickListener(new OnRelatedItemClicked());
+			relatedItemsView.setLongClickable(false);
 			// Fit as many columns as possible
 			relatedItemsView.setColumnWidth( relatedItemsView.measureMaxChildWidth() );
 		}

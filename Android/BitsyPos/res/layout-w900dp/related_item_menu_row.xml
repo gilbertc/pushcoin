@@ -18,9 +18,9 @@
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:gravity="top"
-			android:paddingTop="4dp"
-			android:paddingBottom="4dp"
-			android:textSize="18dp"
+			android:paddingTop="6dp"
+			android:paddingBottom="12dp"
+			android:textSize="20dp"
 			android:textColor="@color/win8_lime"
 			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 

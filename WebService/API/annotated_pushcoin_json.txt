@@ -372,6 +372,22 @@ any of the enumerated message types, depending on the outcome of processing.
 	Output: success | error
 
 #---------------------------------------------------------------------------#
+	Request: json/account/change-email-preference/
+
+	Description:
+		Controls email preference; how frequently should the user be 
+		notified about account activity.
+
+	Input:
+		{
+			# 1: all account activity (possibly heavy traffic)
+      # 2: only low-balance or unusual activity
+			level: number
+		}
+
+	Output: success | error
+
+#---------------------------------------------------------------------------#
 	Request: json/merchant/account/show-info/
 
 	Description:
@@ -458,6 +474,14 @@ any of the enumerated message types, depending on the outcome of processing.
 			# number of questions user has setup to challenge
 			# herself if password is forgotten and needs resetting
 			num_recovery_questions: number
+
+			# daily amount below which PIN is not required
+			cumulative_pin_threshold: number
+
+			# email preference:
+			# 1: all account activity (possibly heavy traffic)
+			# 2: only low-balance or unusual activity
+			email_preference: number
 		}
 
 #---------------------------------------------------------------------------#
