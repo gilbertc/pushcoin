@@ -127,12 +127,8 @@ public class CartEntryArrayAdapter extends BaseAdapter
 		if (slots != null)
 		{
 			String label = item.getName() + ": ";
-			int i = 0;
 			for (Slot slot: slots) {
-				if (i++ > 0 ) {
-					label += ", ";
-				}
-				label += slot.getChosenItem().getName();
+				label += "\n-" +slot.getChosenItem().getName();
 			}
 			holder.title.setText( label );
 		}

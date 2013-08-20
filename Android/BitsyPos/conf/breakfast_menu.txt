@@ -45,7 +45,7 @@ index = {
 		{ name= 'Extra Egg', price= { unit= 1.09 }, tag= { 'breakfast_side' }, id= 'S1' },
 		{ name= 'Fruit', price= { unit= 2.49 }, tag= { 'breakfast_side' }, id= 'S2' },
 		{ name= 'Oatmeal (plain)', price= { unit= 2.49 }, tag= { 'breakfast_side' }, id= 'S3' },
-		{ name= 'Cottage Cheese & Peaches', price= { unit= 3.29 }, tag= { 'breakfast_side' }, id= 'S4' },
+		{ name= 'Cheese & Peaches', price= { unit= 3.29 }, tag= { 'breakfast_side' }, id= 'S4' },
 		{ name= 'Corned Beef Hash', price= { unit= 3.99 }, tag= { 'breakfast_side' }, id= 'S5' },
 		{ name= 'Canadian Bacon', price= { unit= 3.49 }, tag= { 'breakfast_side' }, id= 'S6' },
 		{ name= 'Applewood Bacon', price= { unit= 2.99 }, tag= { 'breakfast_side' }, id= 'S7' },
