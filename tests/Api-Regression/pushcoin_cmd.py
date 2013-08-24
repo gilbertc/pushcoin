@@ -181,11 +181,11 @@ class RmoteCall:
 		#amount
 		value = balance_seg.read_long() # value
 		scale = balance_seg.read_int() # scale
-		rs['balance_amount'] = value * math.pow(10, scale)
+		balance_amount = value * math.pow(10, scale)
 
 		# read block field(s)
 		tm_epoch = balance_seg.read_ulong();
-		rs['balance_as_of_date'] = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
+		balance_as_of_date = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
 
 		#------------------------------------
 		#   Transaction History segment
@@ -248,8 +248,9 @@ class RmoteCall:
 			rs['txn_status'] = hist_seg.read_string()
 
 			printplus( rs )
+			print( '------' )
 
-		log.info('Returned %s of %s records', count, total_count)
+		log.info('Returned %s of %s records, balance %s as of %s', count, total_count, balance_amount, balance_as_of_date )
 
 
 	def preauth(self):
