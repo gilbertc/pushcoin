@@ -250,7 +250,8 @@ class RmoteCall:
 			printplus( rs )
 			print( '------' )
 
-		log.info('Returned %s of %s records, balance %s as of %s', count, total_count, balance_amount, balance_as_of_date )
+		page_size = int(self.args['size'])
+		log.info('Returned page %s of %s, balance %s as of %s', self.args['page'], int(math.ceil(total_count/page_size)), balance_amount, balance_as_of_date )
 
 
 	def preauth(self):
