@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<LinearLayout
+		android:id="@+id/item_configuration_arena"
+		android:orientation="horizontal"
+		android:background="@drawable/top_panel_background"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_marginLeft="7dp"
+		android:maxHeight="60dp"
+		android:gravity="center"
+		android:adjustViewBounds="true"
+		android:src="@drawable/pushcoin_logo" />
+
+		<LinearLayout
+			android:id="@+id/item_configuration_arena"
+			android:orientation="horizontal"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:gravity="center_horizontal"
+			android:padding="8dp"
+			android:layout_height="wrap_content" >
+
+			<com.mobsandgeeks.ui.TypefaceTextView
+				android:text="balance $"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:textSize="20dp"
+				android:gravity="top"
+				android:paddingTop="6dp"
+				android:includeFontPadding="false"
+				android:textColor="@color/lightui_lightgray"
+				geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+			<com.mobsandgeeks.ui.TypefaceTextView
+				android:text="123.12"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:gravity="bottom"
+				android:textSize="46dp"
+				android:includeFontPadding="false"
+				android:textColor="@color/lightui_lightgray"
+				geekui:customTypeface="fonts/TT0468M.ttf" />
+
+		</LinearLayout>
+
+		<Button android:text="Refresh" 
+			android:background="@drawable/btn_blue" 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginRight="7dp"
+			android:padding="6dp"
+			style="@style/CommonButton" />
+
+	</LinearLayout>
+
+	<!-- header drop shadow -->
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="6dp"
+		android:background="@drawable/top_panel_drop_shadow" />
+
+<TextView
+		android:layout_weight="1"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:text="Transaction History"
+		android:background="@drawable/light_background"
+    />
+
+</LinearLayout>
+

@@ -136,12 +136,7 @@ class RmoteCall:
 		#------------------------------------
 		out_bo = pcos.create_output_block( 'Bo' )
 		# MAT
-		out_bo.write_varstr( binascii.unhexlify( self.args['mat'] ) )
-		# ref-data
-		out_bo.write_varstr( '' )
-		# search keywords
-		out_bo.write_varstr( '' )
-
+		out_bo.write_bytestr( binascii.unhexlify( self.args['mat'] ) )
 		# page number and page-size
 		out_bo.write_uint( int(self.args['page']) )
 		out_bo.write_uint( int(self.args['size']) )
@@ -149,12 +144,14 @@ class RmoteCall:
 		#------------------------------------
 		#    History Query Message
 		#------------------------------------
-		req = pcos.Doc( name="Hq" )
+		req = pcos.Doc( name="TxnHistoryQuery" )
 		req.add( out_bo )
 
 		res = self.send( req )
 
-		assert res.message_id == 'Hr'
+		assert res.message_id == 'TxnHistoryReply'
+
+		return True;
 
 		#------------------------------------
 		#      Response Body Block
