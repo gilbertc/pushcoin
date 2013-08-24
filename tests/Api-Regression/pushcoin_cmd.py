@@ -7,6 +7,7 @@ from decimal import Decimal
 from optparse import OptionParser,OptionError
 from pyparsing import *
 from M2Crypto import DSA, BIO, RSA
+from pprint import pprint
 
 PC_DEFAULT_API_URL="https://api.minta.com/pcos/"
 
@@ -72,6 +73,25 @@ Pt6owQKKsZnrpgO1v1N+ciLWAkA9jERRrih0tMqrqBq3iRmpqQXFQhsy+oyPST9v
 +KiP+POtARwoOToKJw8Ub8o3EdjoXWobCvDbxTMPP447uJkTAhR5+vvpezohpW2r
 WBKhBPOqvJ8X+w==
 -----END DSA PRIVATE KEY-----'''
+
+def printplus(obj):
+    """
+    Pretty-prints the object passed in.
+
+    """
+    # Dict
+    if isinstance(obj, dict):
+        for k, v in sorted(obj.items()):
+            print u'{0}: {1}'.format(k, v)
+
+    # List or tuple            
+    elif isinstance(obj, list) or isinstance(obj, tuple):
+        for x in obj:
+            print x
+
+    # Other
+    else:
+        print obj
 
 class RmoteCall:
 
@@ -151,103 +171,85 @@ class RmoteCall:
 
 		assert res.message_id == 'TxnHistoryReply'
 
-		return True;
+		#------------------------------------
+		#      Balanace segment
+		#------------------------------------
+		balance_seg = res.block( 'Bl' )
+
+		rs={}
+
+		#amount
+		value = balance_seg.read_long() # value
+		scale = balance_seg.read_int() # scale
+		rs['balance_amount'] = value * math.pow(10, scale)
+
+		# read block field(s)
+		tm_epoch = balance_seg.read_ulong();
+		rs['balance_as_of_date'] = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
 
 		#------------------------------------
-		#      Response Body Block
+		#   Transaction History segment
 		#------------------------------------
-		body = res.block( 'Bo' )
-		# ref-data
-		ref_data = body.read_varstr()
+		hist_seg = res.block( 'Tr' )
+
+		# total transactions found
+		total_count = hist_seg.read_uint()
 
 		# read number of transactions
-		count = body.read_uint()
+		count = hist_seg.read_uint()
+
 		for i in xrange(1, count+1):
-			# transaction ID
-			tx_id = binascii.hexlify( body.read_varstr() )
+			rs['txn_id'] = hist_seg.read_string()
+			rs['device_name'] = hist_seg.read_string()
+			rs['txn_as_of_date'] = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(hist_seg.read_ulong()))
+			rs['txn_type'] = hist_seg.read_string()
+			rs['txn_context'] = hist_seg.read_string()
+			rs['currency'] = hist_seg.read_string()
 
-			# counterparty ID
-			counterparty = binascii.hexlify( body.read_varstr() )
-
-			# transaction time of day
-			epoch_tx_time = body.read_ulong()
-			tx_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(epoch_tx_time))
-
-			# transaction type
-			tx_type = body.read_fixstr(1)
-
-			# transaction context: (P)ayment or (T)ransfer
-			tx_context = body.read_fixstr(1)
-
-			#amount
-			value = body.read_long() # value
-			scale = body.read_int() # scale
-			amount = value * math.pow(10, scale)
+			value = hist_seg.read_long() # value
+			scale = hist_seg.read_int() # scale
+			rs['txn_amount'] = value * math.pow(10, scale)
 
 			# tax
-			if body.read_bool():
-				value = body.read_long() # value
-				scale = body.read_int() # scale
-				tax = value * math.pow(10, scale)
-			else:
-				tax = 'not provided'
+			if hist_seg.read_bool():
+				value = hist_seg.read_long() # value
+				scale = hist_seg.read_int() # scale
+				rs['txn_tax'] = value * math.pow(10, scale)
 
 			#tip
-			if body.read_bool():
-				value = body.read_long() # value
-				scale = body.read_int() # scale
-				tip = value * math.pow(10, scale)
-			else:
-				tip = 'not provided'
+			if hist_seg.read_bool():
+				value = hist_seg.read_long() # value
+				scale = hist_seg.read_int() # scale
+				rs['txn_tip'] = value * math.pow(10, scale)
 
-			# currency
-			currency = body.read_fixstr(3)
-
-			# merchant name
-			merchant_name = body.read_varstr()
-
-			# PTA recipient
-			recipient = body.read_varstr()
-
-			# ref_data
-			ref_data = binascii.hexlify( body.read_varstr() )
-
-			# invoice
-			invoice = body.read_varstr()
-
-			# note
-			note = body.read_varstr()
+			rs['counterparty'] = hist_seg.read_string()
+			rs['invoice'] = hist_seg.read_string()
+			rs['note'] = hist_seg.read_string()
 
 			# address of the POS station
-			if body.read_bool():
-				street = body.read_varstr()
-				city = body.read_varstr()
-				state = body.read_varstr()
-				zipc = body.read_varstr()
-				country = body.read_fixstr(2)
-				address = '%s, %s, %s %s, %s' % (street, city, state, zipc, country)
-			else:
-				address = 'not provided'
+			if hist_seg.read_bool():
+				street = hist_seg.read_string()
+				city = hist_seg.read_string()
+				state = hist_seg.read_string()
+				zipc = hist_seg.read_string()
+				country = hist_seg.read_string()
+				rs['merchant_address'] = '%s, %s, %s %s, %s' % (street, city, state, zipc, country)
 
-			# contact info at the place of transaction origination
-			if body.read_bool():
-				phone = body.read_varstr()
-				email = body.read_varstr()
-				contact = 'phone: %s, email: %s' % (phone, email)
-			else:
-				contact = 'not provided'
+			# contact info
+			if hist_seg.read_bool():
+				rs['merchant_phone'] = hist_seg.read_string()
+				rs['merchant_email'] = hist_seg.read_string()
 
-			# geo-location of the place of transaction origination
-			if body.read_bool():
-				latitude = body.read_double()
-				longitude = body.read_double()
-				geolocation = '%s, %s' % (latitude, longitude)
-			else:
-				geolocation = 'not provided'
+			# geo location
+			if hist_seg.read_bool():
+				rs['txn_latitude'] = hist_seg.read_double()
+				rs['txn_longitude'] = hist_seg.read_double()
 
-			print "--- %s/%s ---\ntx-id: %s\ncounterparty: %s\ntx_time: %s\naddress: %s\ngeolocation: %s\ncontact: %s\ntx_type: %s\ntx_context: %s\namount: %s\ntip: %s\ntax: %s\ncurrency: %s\nmerchant_name: %s\nrecipient: %s\nref-data: %s\ninvoice: %s\nnote: %s\n" % (i, count, tx_id, counterparty, tx_time, address, geolocation, contact, tx_type, tx_context, amount, tip, tax, currency, merchant_name, recipient, ref_data, invoice, note)
+			rs['txn_status'] = hist_seg.read_string()
 
-		log.info('Returned %s records', count)
+			printplus( rs )
+
+		log.info('Returned %s of %s records', count, total_count)
 
 
 	def preauth(self):
