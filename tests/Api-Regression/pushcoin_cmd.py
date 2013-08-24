@@ -151,15 +151,20 @@ class RmoteCall:
 	def history(self):
 		'''Returns transaction history'''
 
+		# page number and page-size
+		page_num = int(self.args['page'])
+		page_size = int(self.args['size'])
+
 		#------------------------------------
 		#      Request Body Block
 		#------------------------------------
 		out_bo = pcos.create_output_block( 'Bo' )
 		# MAT
 		out_bo.write_bytestr( binascii.unhexlify( self.args['mat'] ) )
-		# page number and page-size
-		out_bo.write_uint( int(self.args['page']) )
-		out_bo.write_uint( int(self.args['size']) )
+
+		# page size and offset
+		out_bo.write_uint( page_num )
+		out_bo.write_uint( page_size )
 
 		#------------------------------------
 		#    History Query Message
@@ -199,6 +204,7 @@ class RmoteCall:
 		count = hist_seg.read_uint()
 
 		for i in xrange(1, count+1):
+			print( '-- [ Row %s ] --' % (i+page_num) )
 			rs['txn_id'] = hist_seg.read_string()
 			rs['device_name'] = hist_seg.read_string()
 			rs['txn_as_of_date'] = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(hist_seg.read_ulong()))
