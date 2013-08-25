@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.os.Bundle;
 import android.os.AsyncTask;
-import com.pushcoin.pcos;
+import com.pushcoin.pcos.*;
 
 public class IceBreakerActivity extends Activity
 {
@@ -61,7 +61,15 @@ public class IceBreakerActivity extends Activity
 
 		protected Long doInBackground(String... mat)
 		{
-			pcos.OutputBlock bo = new pcos.BlockWriter( "Bo" );
+			// Request body block
+			OutputBlock out_bo = new BlockWriter( "Bo" );
+
+			// MAT
+			out_bo.write_bytestr( binascii.unhexlify( 315711B23079B2EB5856C911E4A2B6278FD3D49B ) );
+			
+			// Page size and offset
+			out_bo.write_uint( 0 );
+			out_bo.write_uint( 10 );
 
 			// simulate long fetch
 			try {
