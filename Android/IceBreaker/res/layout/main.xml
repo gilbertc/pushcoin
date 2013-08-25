@@ -45,6 +45,7 @@
 		</LinearLayout>
 
 		<Button android:text="Refresh" 
+			android:id="@+id/refresh_button"
 			android:background="@drawable/btn_blue" 
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -110,10 +111,23 @@
 			android:layout_height="match_parent" >
 
 			<com.mobsandgeeks.ui.TypefaceTextView
+				android:id="@+id/recent_transaction_date_field"
+				android:text="Yesterday 12:01 PM"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentBottom="true"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="10dp"
+				android:layout_marginBottom="10dp"
+				android:textSize="22dp"
+				android:textColor="@color/lightui_darkestgray"
+				geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+			<com.mobsandgeeks.ui.TypefaceTextView
 				android:id="@+id/recent_transaction_amount_field"
 				android:text="$5.00"
 				android:layout_alignParentRight="true"
-				android:layout_alignParentBottom="true"
+				android:layout_above="@id/recent_transaction_date_field"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginRight="10dp"
@@ -123,10 +137,10 @@
 				geekui:customTypeface="fonts/DejaVuSans.ttf" />
 
 			<com.mobsandgeeks.ui.TypefaceTextView
-				android:id="@+id/recent_transaction_date_field"
-				android:text="Yesterday 12:01 PM"
-				android:layout_alignParentRight="true"
-				android:layout_above="@id/recent_transaction_amount_field"
+				android:id="@+id/recent_transaction_type_field"
+				android:text="Paid"
+				android:layout_alignBaseline="@id/recent_transaction_amount_field"
+				android:layout_toLeftOf="@id/recent_transaction_amount_field"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginRight="10dp"
@@ -135,17 +149,6 @@
 				android:textColor="@color/lightui_darkestgray"
 				geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
-			<com.mobsandgeeks.ui.TypefaceTextView
-				android:text="Paid"
-				android:layout_toLeftOf="@id/recent_transaction_amount_field"
-				android:layout_alignParentBottom="true"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginRight="10dp"
-				android:layout_marginBottom="10dp"
-				android:textSize="22dp"
-				android:textColor="@color/lightui_darkestgray"
-				geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 			<com.mobsandgeeks.ui.TypefaceTextView
 				android:id="@+id/recent_transaction_business_name_field"
