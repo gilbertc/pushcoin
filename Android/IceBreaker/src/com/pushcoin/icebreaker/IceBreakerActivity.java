@@ -56,9 +56,31 @@ public class IceBreakerActivity
 	}
 
 	@Override
+	public String getBalance()
+	{
+		return "$0.00";
+	}
+
+	@Override
 	public String getStatus()
 	{
 		return status_;
+	}
+
+	@Override
+	public TransactionRecord getTransaction(int index)
+	{
+		TransactionRecord	txn = new TransactionRecord();
+		txn.counterparty = "Wheaton Academy Lunch";
+		txn.amount = "$5.33";
+		txn.utctime = "Aug 12";
+		return txn;
+	}
+
+	@Override
+	public int getHistorySize()
+	{
+		return 20;
 	}
 
 	/**
@@ -82,18 +104,19 @@ public class IceBreakerActivity
 		@Override
 		public Fragment getItem(int i) 
 		{
-			Fragment fragment = new BalanceFragment();
+			Fragment fragment = null;
+			if (i == 0) {
+				fragment = new BalanceFragment();
+			} 
+			else if (i == 1) {
+				fragment = new HistoryFragment();
+			}
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			return 1;
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			return "Balance";
+			return 2;
 		}
 	}
 

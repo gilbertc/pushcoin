@@ -20,6 +20,10 @@ package com.pushcoin.icebreaker;
 
 public interface Controller
 {
-	void fetchAccountHistory();
+	String getBalance();
 	String getStatus();
+
+	void fetchAccountHistory();
+	TransactionRecord getTransaction(int index);
+	int getHistorySize();
 }

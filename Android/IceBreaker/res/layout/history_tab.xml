@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<ListView
+		android:id="@+id/transaction_history_list"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:cacheColorHint="@android:color/transparent"
+		android:headerDividersEnabled="false"
+		android:footerDividersEnabled="true"
+		android:dividerHeight="2dp"
+		android:divider="@drawable/history_item_drop_shadow"
+		android:fadeScrollbars="false"
+		android:scrollbarFadeDuration="0" />
+
+</LinearLayout>
+

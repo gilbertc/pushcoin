@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="horizontal">
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/txn_counterparty_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/black"
+		android:textSize="14dp"
+		android:padding="6dp"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/txn_amount"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/black"
+		android:textSize="14dp"
+		android:padding="6dp"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/txn_time"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/black"
+		android:textSize="14dp"
+		android:padding="6dp"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+</LinearLayout>
