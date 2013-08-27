@@ -23,19 +23,44 @@ public class IceBreakerActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		// link refresh button with fetching remote data
+		// Cache panel buttons, pager
 		refreshButton_ = (Button) findViewById(R.id.refresh_button);
+		balanceButton_ = (Button) findViewById(R.id.balance_button);
+		historyButton_ = (Button) findViewById(R.id.history_button);
+		pager_ = (ViewPager)findViewById(R.id.pager);
+
+		// Use an icon instead of the "Refresh" label
 		refreshButton_.setTypeface( Typeface.createFromAsset(getAssets(), "fonts/modernpics.otf") );
+
+		// Listen to refresh requests
 		refreshButton_.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				fetchAccountHistory();
 			}
 		});
 
-		pagerAdapter_ = new IceBreakerPagerAdapter( getFragmentManager() );
+		// User can swipe or click page-button in the panel
+		//
+    balanceButton_.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				pager_.setCurrentItem(TAB_ID_BALANCE, true);
+			}
+		});
+    historyButton_.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				pager_.setCurrentItem(TAB_ID_HISTORY, true);
+			}
+		});
 
-		ViewPager pager = (ViewPager)findViewById(R.id.pager);
-		pager.setAdapter(pagerAdapter_);
+		// Manages pages that are part of the pager
+		pagerAdapter_ = new IceBreakerPagerAdapter( getFragmentManager() );
+		// Install the adapter
+		pager_.setAdapter(pagerAdapter_);
+
+		// Highlight currently selected tab, disable its button
+		pager_.setOnPageChangeListener( new PageChangeListener() );
 	}
 
 	@Override
@@ -120,9 +145,53 @@ public class IceBreakerActivity
 		}
 	}
 
+	private class PageChangeListener implements ViewPager.OnPageChangeListener
+	{
+		@Override
+		public void onPageSelected(int position) 
+		{
+			switch (position) 
+			{
+				case TAB_ID_BALANCE:
+					// balance
+					balanceButton_.setEnabled(false);
+					balanceButton_.setBackgroundResource(R.color.tab_selected);
+					// history
+					historyButton_.setEnabled(true);
+					historyButton_.setBackgroundResource(R.color.tab_unselected);
+					break;
+				case TAB_ID_HISTORY:
+					// balance
+					balanceButton_.setEnabled(true);
+					balanceButton_.setBackgroundResource(R.color.tab_unselected);
+					// history
+					historyButton_.setEnabled(false);
+					historyButton_.setBackgroundResource(R.color.tab_selected);
+					break;
+			}
+		}
+
+		/** 
+			We don't care about these events
+		*/
+		@Override
+		public void onPageScrollStateChanged(int state)
+		{ }
+
+		@Override
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+		{ }
+	}
+
+	static final int TAB_ID_BALANCE = 0;
+	static final int TAB_ID_HISTORY = 1;
+
 	IceBreakerPagerAdapter pagerAdapter_;
 
+	ViewPager pager_;
 	Button refreshButton_;
+	Button balanceButton_;
+	Button historyButton_;
 
 	// Model data
 	String status_;
