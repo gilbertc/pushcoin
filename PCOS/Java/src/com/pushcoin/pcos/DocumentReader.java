@@ -63,9 +63,28 @@ public class DocumentReader implements InputDocument
 		return Collections.unmodifiableMap(blocks_);
 	}
 
+	public DocumentReader(byte[] input, int length) throws PcosError
+	{
+		parseBytes(input, length);
+	}
+
 	public DocumentReader(byte[] input) throws PcosError
 	{
-		InputBlock inblock = new BlockReader( input, 0, input.length, "Hd" );
+		parseBytes(input, input.length);
+	}
+
+	@Override
+	public InputBlock getBlock(String name) throws PcosError 
+	{
+		InputBlock blk = blocks_.get(name);
+		if (blk == null)
+			throw new PcosError( PcosErrorCode.ERR_BLOCK_NOT_FOUND, "Block not found in PCOS message: " + name);
+		return blk;
+	}
+
+	private void parseBytes(byte[] input, final int length) throws PcosError
+	{
+		InputBlock inblock = new BlockReader( input, 0, length, "Hd" );
 		// read PCOS magic
 		byte[] magic = inblock.readBytes( ProtocolTag.PROTOCOL_MAGIC_LEN );
 		if (! Arrays.equals(ProtocolTag.PROTOCOL_MAGIC, magic))
@@ -108,17 +127,9 @@ public class DocumentReader implements InputDocument
 			block_offset += blk.length;
 		}
 			
-		if ( block_offset > input.length ) {
+		if ( block_offset > length ) {
 			throw new PcosError( PcosErrorCode.ERR_MALFORMED_MESSAGE, "Incomplete message or wrong block-meta info -- blocks couldn't fit in the received payload" );
 		}
 	}
 
-	@Override
-	public InputBlock getBlock(String name) throws PcosError 
-	{
-		InputBlock blk = blocks_.get(name);
-		if (blk == null)
-			throw new PcosError( PcosErrorCode.ERR_BLOCK_NOT_FOUND, "Block not found in PCOS message: " + name);
-		return blk;
-	}
 }

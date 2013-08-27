@@ -1,15 +1,20 @@
 package com.pushcoin.icebreaker;
 
 import android.app.Activity;
-import android.widget.TextView;
-import android.widget.Button;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.os.Bundle;
-import android.os.AsyncTask;
-import com.pushcoin.pcos.*;
+import android.util.Log;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.view.View.OnClickListener;
+import android.view.View;
+import android.widget.Button;
+import android.support.v4.view.ViewPager;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.graphics.Typeface;
 
-public class IceBreakerActivity extends Activity
+public class IceBreakerActivity 
+	extends Activity
+	implements Controller
 {
 	/** Called when the activity is first created. */
 	@Override
@@ -18,79 +23,84 @@ public class IceBreakerActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		statusField_ = (TextView) findViewById(R.id.status_field);
+		// link refresh button with fetching remote data
 		refreshButton_ = (Button) findViewById(R.id.refresh_button);
-
+		refreshButton_.setTypeface( Typeface.createFromAsset(getAssets(), "fonts/modernpics.otf") );
 		refreshButton_.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				refreshView();
+				fetchAccountHistory();
 			}
 		});
 
-		// fetch latest account state
-		refreshView();
+		pagerAdapter_ = new IceBreakerPagerAdapter( getFragmentManager() );
+
+		ViewPager pager = (ViewPager)findViewById(R.id.pager);
+		pager.setAdapter(pagerAdapter_);
 	}
 
-	private void refreshView()
-	{
-		// Load balance on startup
-		new DownloadHistoryTask(refreshButton_, statusField_).execute("mat here");
-	}
-
+	@Override
   protected void onResume() 
 	{
 		super.onResume();
-		refreshView();
+		fetchAccountHistory();
 	}
 
-	private static class DownloadHistoryTask extends AsyncTask<String, Void, Long>
+	/**
+		Controller interface
+	*/
+	@Override
+	public void fetchAccountHistory()
 	{
-		DownloadHistoryTask(Button refresh, TextView statusField)
-		{
-			refreshButton_ = refresh;
-			statusField_ = statusField;
-		}
-
-		protected void onPreExecute()
-		{
-			statusField_.setText("Loading...");
-
-			// stop useless repeatition
-			refreshButton_.setEnabled(false);
-		}
-
-		protected Long doInBackground(String... mat)
-		{
-			// Request body block
-			OutputBlock out_bo = new BlockWriter( "Bo" );
-
-			// MAT
-			out_bo.write_bytestr( binascii.unhexlify( 315711B23079B2EB5856C911E4A2B6278FD3D49B ) );
-			
-			// Page size and offset
-			out_bo.write_uint( 0 );
-			out_bo.write_uint( 10 );
-
-			// simulate long fetch
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {}
-
-			return 0L;
-		}
-
-		protected void onPostExecute(Long result) 
-		{
-			statusField_.setText("as of Today 5:15 PM");
-
-			// allow manual refresh
-			refreshButton_.setEnabled(true);
-		}
-
-		Button refreshButton_;
-		TextView statusField_;
+		// FIXME: hardcoded MAT (from demo account)
+		new DownloadHistoryTask(this).execute("5AAE3A9E939A1E483E384D6B42E70C0AB44F6C04");
 	}
 
-	TextView statusField_;
+	@Override
+	public String getStatus()
+	{
+		return status_;
+	}
+
+	/**
+		These setters are called by the Downloader Helper
+		after fetching remote data. 
+
+		For now, synchronization is not required as all setters are
+		called from the UI thread.
+	*/
+	public void setStatus(String v) {
+		status_ = v;
+	}
+
+	private static class IceBreakerPagerAdapter extends FragmentPagerAdapter 
+	{
+		public IceBreakerPagerAdapter(FragmentManager fm) 
+		{
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int i) 
+		{
+			Fragment fragment = new BalanceFragment();
+			return fragment;
+		}
+
+		@Override
+		public int getCount() {
+			return 1;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return "Balance";
+		}
+	}
+
+	IceBreakerPagerAdapter pagerAdapter_;
+
 	Button refreshButton_;
+
+	// Model data
+	String status_;
 }
