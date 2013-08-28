@@ -35,6 +35,8 @@ public class BalanceFragment
 
 		// rating scale
 		ratingScale_ = res.getStringArray(R.array.rating_scale);
+		// call to action -- rate now
+		ratingBarLabel_.setText(ratingScale_[0]);
 		ratingBar_.setOnRatingBarChangeListener( new RatingBar.OnRatingBarChangeListener() {
 			public void onRatingChanged(RatingBar b, float rating, boolean fromUser) 
 			{

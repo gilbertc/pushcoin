@@ -5,17 +5,20 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
-	<ListView
+	<com.pushcoin.icebreaker.BounceListView
 		android:id="@+id/transaction_history_list"
-		android:layout_width="wrap_content"
+		android:listSelector="@android:color/transparent"
+		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:cacheColorHint="@android:color/transparent"
 		android:headerDividersEnabled="false"
 		android:footerDividersEnabled="true"
-		android:dividerHeight="2dp"
-		android:divider="@drawable/history_item_drop_shadow"
-		android:fadeScrollbars="false"
-		android:scrollbarFadeDuration="0" />
+		android:dividerHeight="1px"
+		android:overScrollMode="ifContentScrolls"
+		android:divider="@color/black"
+		android:fadeScrollbars="true"
+		android:scrollingCache="true"
+		android:scrollbarFadeDuration="2" />
 
 </LinearLayout>
 

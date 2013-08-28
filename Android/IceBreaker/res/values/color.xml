@@ -10,6 +10,10 @@ Organized by: Willie Tsang
 	<color name="tab_selected">#20000000</color>
 	<color name="tab_unselected">#00000000</color>
 
+	<!-- Alternating rows -->
+	<color name="row_even">#10000000</color>
+	<color name="row_uneven">#00000000</color>
+
 	<!-- Swipe to remove styles -->
 	<color name="btn_pressed">#ff33b5e5</color>
 	<color name="btn_focused">#ff0099cc</color>

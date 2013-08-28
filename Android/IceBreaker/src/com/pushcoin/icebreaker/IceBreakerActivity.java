@@ -96,9 +96,27 @@ public class IceBreakerActivity
 	public TransactionRecord getTransaction(int index)
 	{
 		TransactionRecord	txn = new TransactionRecord();
-		txn.counterparty = "Wheaton Academy Lunch";
-		txn.amount = "$5.33";
-		txn.utctime = "Aug 12";
+		if ( index % 2 == 0 ) {
+			txn.counterparty = "Wheaton";
+			txn.amount = "$51.33";
+			txn.utctime = "12:32 PM";
+		}
+		else if ( index % 3 == 0 ) {
+			txn.counterparty = "Wheaton Academy Lunch";
+			txn.amount = "$511.33";
+			txn.utctime = "Aug 12 '04";
+			txn.utctime = "12:32 PM";
+		}
+		else if ( index % 4 == 0 ) {
+			txn.counterparty = "Wheaton Academy";
+			txn.amount = "$5.33";
+			txn.utctime = "9:01 PM";
+		}
+		else {
+			txn.counterparty = "Wheaton Academy Lunch";
+			txn.amount = "$10.33";
+			txn.utctime = "1:11 PM";
+		}
 		return txn;
 	}
 

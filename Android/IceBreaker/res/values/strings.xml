@@ -3,12 +3,12 @@
 	<string name="app_name">IceBreakerActivity</string>
 
 	<string-array name="rating_scale">
-		<item>Rate Anonymously</item>
-		<item>Very Poor</item>
-		<item>Poor</item>
-		<item>Fair</item>
-		<item>Good</item>
-		<item>Excellent</item>
+		<item>Rate Your Experience!</item>
+		<item>Not At All Satified</item>
+		<item>Slightly Satisfied</item>
+		<item>Moderately Satisfied</item>
+		<item>Very Satisfied</item>
+		<item>Extremely Satisfied</item>
 	</string-array>
 
 </resources>

@@ -4,33 +4,75 @@
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:paddingTop="4dp"
+	android:paddingBottom="4dp"
+	android:paddingRight="6dp"
+	android:paddingLeft="4dp"
 	android:orientation="horizontal">
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/txn_counterparty_name"
-		android:layout_width="wrap_content"
+		android:layout_weight="10"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:textColor="@color/black"
 		android:textSize="14dp"
-		android:padding="6dp"
 		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/txn_amount"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textColor="@color/black"
-		android:textSize="14dp"
-		android:padding="6dp"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+	<LinearLayout 
+		android:layout_weight="4"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_marginRight="4dp"
+		android:orientation="vertical">
 
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/txn_time"
-		android:layout_width="wrap_content"
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/txn_amount"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="right"
+			android:textColor="@color/black"
+			android:textSize="14dp"
+			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+		
+		<RatingBar
+			android:id="@+id/business_rating_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="right"
+			android:layout_marginTop="4dp"
+			style="?android:attr/ratingBarStyleSmall"
+			android:isIndicator="true"
+			android:numStars="5" />
+
+	</LinearLayout>
+
+	<LinearLayout 
+		android:layout_weight="4"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:textColor="@color/black"
-		android:textSize="14dp"
-		android:padding="6dp"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+		android:paddingRight="6dp"
+		android:orientation="vertical">
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/txn_date"
+			android:text="Yesterday"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="right"
+			android:textColor="@color/black"
+			android:textSize="14dp"
+			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/txn_time"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="right"
+			android:textColor="@color/black"
+			android:textSize="14dp"
+			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+	</LinearLayout>
 
 </LinearLayout>

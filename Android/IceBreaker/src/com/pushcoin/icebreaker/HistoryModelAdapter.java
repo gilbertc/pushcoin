@@ -87,6 +87,13 @@ public class HistoryModelAdapter extends BaseAdapter
 		holder.amount.setText( txn.amount );
 		holder.time.setText( txn.utctime );
 		
+		// alternate colors
+		if ((position % 2) == 0) {
+			convertView.setBackgroundResource(R.color.row_even);  
+		} else {
+			convertView.setBackgroundResource(R.color.row_uneven);  
+		}
+
 		return convertView;
 	}
 
