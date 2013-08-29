@@ -10,14 +10,30 @@
 	android:paddingLeft="4dp"
 	android:orientation="horizontal">
 
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/txn_counterparty_name"
+	<LinearLayout 
 		android:layout_weight="10"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:textColor="@color/black"
-		android:textSize="14dp"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+		android:orientation="vertical">
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/txn_counterparty_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/black"
+			android:textSize="14dp"
+			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+		
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/txn_counterparty_name"
+			android:text="Mike"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/black"
+			android:textSize="14dp"
+			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+	</LinearLayout>
 
 	<LinearLayout 
 		android:layout_weight="4"

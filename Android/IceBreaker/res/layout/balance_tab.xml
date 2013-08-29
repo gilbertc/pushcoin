@@ -62,54 +62,30 @@
 			android:layout_alignParentTop="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginRight="10dp"
 			android:layout_marginLeft="10dp"
 			android:layout_marginTop="10dp"
 			android:textSize="22dp"
 			android:textColor="@color/black"
 			geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
 
-		<RatingBar
-			android:id="@+id/business_rating_bar"
-			android:layout_alignParentLeft="true"
-			android:layout_below="@id/recent_transaction_business_name_field"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="4dp"
-			android:layout_marginLeft="10dp"
-			style="?android:attr/ratingBarStyleSmall"
-			android:isIndicator="true"
-			android:numStars="5" />
-
-		<com.mobsandgeeks.ui.TypefaceTextView
-			android:id="@+id/business_rating_value"
-			android:text="Avg. Score 4.3 (312 votes)"
-			android:layout_below="@id/recent_transaction_business_name_field"
-			android:layout_toRightOf="@id/business_rating_bar"
-			android:layout_alignBaseline="@id/business_rating_bar"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10dp"
-			android:textSize="14dp"
-			android:textColor="@color/black"
-			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
-
 		<LinearLayout
 			android:id="@+id/recent_transaction_payment_info"
 			android:orientation="horizontal"
-			android:layout_marginTop="4dp"
 			android:layout_marginBottom="20dp"
+			android:layout_marginRight="10dp"
 			android:layout_marginLeft="10dp"
-			android:layout_below="@id/business_rating_value"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@id/recent_transaction_business_name_field"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" >
 
 			<com.mobsandgeeks.ui.TypefaceTextView
 				android:id="@+id/recent_transaction_type_field"
-				android:text="Paid"
+				android:text="Mike paid"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginRight="5dp"
-				android:layout_gravity="center_vertical"
 				android:textSize="14dp"
 				android:textColor="@color/lightui_darkestgray"
 				geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
@@ -126,7 +102,7 @@
 
 			<com.mobsandgeeks.ui.TypefaceTextView
 				android:id="@+id/recent_transaction_date_field"
-				android:text="Yesterday 12:01 PM"
+				android:text="Yesterday at 12:01\u00A0PM"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center_vertical"
@@ -152,8 +128,9 @@
 			android:id="@+id/recent_transaction_rating_label"
 			android:layout_alignLeft="@id/recent_transaction_rating_bar"
 			android:layout_below="@id/recent_transaction_rating_bar"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginBottom="36dp"
 			android:paddingTop="4dp"
 			android:includeFontPadding="false"
 			android:textSize="22dp"
@@ -168,7 +145,6 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginRight="10dp"
-			android:layout_marginTop="32dp"
 			android:includeFontPadding="false"
 			android:textSize="12dp"
 			android:textColor="@color/lightui_darkestgray"
@@ -195,10 +171,33 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginRight="10dp"
-			android:paddingBottom="10dp"
+			android:paddingBottom="12dp"
 			android:includeFontPadding="false"
 			android:textSize="12dp"
 			android:textColor="@color/lightui_darkestgray"
+			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+		<RatingBar
+			android:id="@+id/business_rating_bar"
+			android:layout_alignParentLeft="true"
+			android:layout_alignBottom="@id/recent_transaction_city_state_zip_field"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			style="?android:attr/ratingBarStyleSmall"
+			android:isIndicator="true"
+			android:numStars="5" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/business_rating_value"
+			android:text="Score 4.3 / 5 (312 votes)"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@id/business_rating_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:textSize="12dp"
+			android:textColor="@color/black"
 			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 	</RelativeLayout>
