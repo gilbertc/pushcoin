@@ -18,7 +18,9 @@ import android.content.Context;
 
 public class SetupFragment 
 	extends Fragment 
-	implements EnterRegistrationCodeFragment.OnSubmitRegistrationCode
+	implements 
+		EnterRegistrationCodeFragment.OnSubmitRegistrationCode,
+		SubmitRegistrationCodeFragment.OnRegistrationProgress
 {
 	SetupFragment( Controller ctrl ) {
 		ctrl_ = ctrl;
@@ -33,10 +35,12 @@ public class SetupFragment
 		View fragmentRootLayout = inflater.inflate(R.layout.setup_fragment, container, false);
 
 		// Locate the pager within the layout
-		pager_ = (ViewPager) fragmentRootLayout.findViewById(R.id.pager);
+		pager_ = (NoSwipingViewPager) fragmentRootLayout.findViewById(R.id.pager);
+		// Turn off swiping; buttons direct which page is shown
+		pager_.setSwipingEnabled(false);
 
 		// Install the adapter with the pager
-		pager_.setAdapter( new SetupPager( getFragmentManager(), this ) );
+		pager_.setAdapter( new SetupPager( getFragmentManager(), this, this ) );
 
 		return fragmentRootLayout;
 	}
@@ -44,41 +48,53 @@ public class SetupFragment
 	@Override
 	public void onSubmitRegistrationCode( String code )
 	{
+		pager_.setCurrentItem(TAB_ID_SUBMIT_REGISTRATION, true);
+	}
+
+	@Override
+	public void onUserCanceled()
+	{
+		pager_.setCurrentItem(TAB_ID_ENTER_REGISTRATION_CODE, true);
 	}
 
 	private static class SetupPager 
 		extends FragmentPagerAdapter 
 	{
-		public SetupPager(FragmentManager fm, EnterRegistrationCodeFragment.OnSubmitRegistrationCode handler )
+		public SetupPager(FragmentManager fm, 
+			EnterRegistrationCodeFragment.OnSubmitRegistrationCode handler1,
+			SubmitRegistrationCodeFragment.OnRegistrationProgress handler2)
 		{
 			super(fm);
 
-			enterRegistrationCode_ = new EnterRegistrationCodeFragment( handler );
-			// submitRegistration_ = new SubmitRegistrationFragment( handler );
+			enterRegistrationCode_ = new EnterRegistrationCodeFragment( handler1 );
+			submitRegistration_ = new SubmitRegistrationCodeFragment( handler2 );
 		}
 
 		@Override
 		public Fragment getItem(int i) 
 		{
 			Fragment fragment = null;
-			if (i == 0) {
+			if (i == TAB_ID_ENTER_REGISTRATION_CODE) {
 				fragment = enterRegistrationCode_;
 			} 
-			else if (i == 1) {
-				//fragment = submitRegistration_;
+			else if (i == TAB_ID_SUBMIT_REGISTRATION) {
+				fragment = submitRegistration_;
 			}
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			return 1;
+			return 2;
 		}
 
 		EnterRegistrationCodeFragment enterRegistrationCode_;
-		//SubmitRegistrationFragment submitRegistration_;
+		SubmitRegistrationCodeFragment submitRegistration_;
 	}
 
+	static final int TAB_ID_ENTER_REGISTRATION_CODE = 0;
+	static final int TAB_ID_SUBMIT_REGISTRATION = 1;
+
 	final Controller ctrl_;
-	ViewPager pager_;
+	NoSwipingViewPager pager_;
 }

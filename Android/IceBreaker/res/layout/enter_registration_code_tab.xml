@@ -7,7 +7,7 @@
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/info_title"
-		android:text="To link this app..."
+		android:text="To use this app..."
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentTop="true"
 		android:layout_width="match_parent"
@@ -26,7 +26,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="12dp"
-		android:textSize="26dp"
+		android:textSize="28dp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/TT0468M.ttf" />
 
@@ -54,7 +54,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="12dp"
-		android:textSize="26dp"
+		android:textSize="28dp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/TT0468M.ttf" />
 
@@ -82,7 +82,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="12dp"
-		android:textSize="26dp"
+		android:textSize="28dp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/TT0468M.ttf" />
 
@@ -111,6 +111,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="22dp"
 		android:textSize="22dp"
+		android:imeOptions="actionDone"
 		android:minEms="10"
 		android:maxLength="11"
 		android:maxLines="1"

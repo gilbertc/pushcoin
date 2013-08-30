@@ -53,16 +53,12 @@ public class EnterRegistrationCodeFragment
 						event.getAction() == KeyEvent.ACTION_DOWN &&
 						event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
 					{
-						if ( !event.isShiftPressed() )
+						String code = v.getText().toString();
+						if ( !code.isEmpty() )
 						{
-							String code = v.getText().toString();
-							if ( !code.isEmpty() )
-							{
-								// the user is done typing. 
-								handler_.onSubmitRegistrationCode( code );
-								return true; // consume.
-							}
-						}                
+							// the user is done typing. 
+							handler_.onSubmitRegistrationCode( code );
+						}
 					}
 					return false; // pass on to other listeners. 
 				}
