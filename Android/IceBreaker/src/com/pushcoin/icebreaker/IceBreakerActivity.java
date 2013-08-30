@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.support.v4.view.ViewPager;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.graphics.Typeface;
+import android.content.SharedPreferences;
+import android.content.Context;
 
 public class IceBreakerActivity 
 	extends Activity
@@ -23,51 +25,38 @@ public class IceBreakerActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		// Cache panel buttons, pager
-		refreshButton_ = (Button) findViewById(R.id.refresh_button);
-		balanceButton_ = (Button) findViewById(R.id.balance_button);
-		historyButton_ = (Button) findViewById(R.id.history_button);
-		pager_ = (ViewPager)findViewById(R.id.pager);
-
-		// Use an icon instead of the "Refresh" label
-		refreshButton_.setTypeface( Typeface.createFromAsset(getAssets(), "fonts/modernpics.otf") );
-
-		// Listen to refresh requests
-		refreshButton_.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				fetchAccountHistory();
-			}
-		});
-
-		// User can swipe or click page-button in the panel
+		// The app can be in one of two modes:
+		//  * configuration mode (fresh install, no MAT yet)
+		//  * operating mode
 		//
-    balanceButton_.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				pager_.setCurrentItem(TAB_ID_BALANCE, true);
-			}
-		});
-    historyButton_.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				pager_.setCurrentItem(TAB_ID_HISTORY, true);
-			}
-		});
+		mat_ = getPreferences(Context.MODE_PRIVATE).getString(PREF_KEY_MAT_KEY, null);
 
-		// Manages pages that are part of the pager
-		pagerAdapter_ = new IceBreakerPagerAdapter( getFragmentManager() );
-		// Install the adapter
-		pager_.setAdapter(pagerAdapter_);
+		// This will hold the fragment approprate to the mode we are in.
+		Fragment modeViewHandler;
 
-		// Highlight currently selected tab, disable its button
-		pager_.setOnPageChangeListener( new PageChangeListener() );
+		// if has MAT, we must have been configured
+		if (mat_ == null) {
+			// We are in configuration mode
+			modeViewHandler = new SetupFragment( this );
+		}
+		else { 
+			// Instantatiate operational fragment
+			modeViewHandler = new OperationalFragment( this );
+		}
+
+		// We picked the fragment, pass any parameters to it
+		modeViewHandler.setArguments(getIntent().getExtras());
+
+		// Show the fragment
+		getFragmentManager().beginTransaction()
+			.add( R.id.main_fragment, modeViewHandler )
+			.commit();
 	}
 
 	@Override
   protected void onResume() 
 	{
 		super.onResume();
-		fetchAccountHistory();
 	}
 
 	/**
@@ -76,8 +65,7 @@ public class IceBreakerActivity
 	@Override
 	public void fetchAccountHistory()
 	{
-		// FIXME: hardcoded MAT (from demo account)
-		new DownloadHistoryTask(this).execute("5AAE3A9E939A1E483E384D6B42E70C0AB44F6C04");
+		new DownloadHistoryTask(this).execute(mat_);
 	}
 
 	@Override
@@ -137,76 +125,13 @@ public class IceBreakerActivity
 		status_ = v;
 	}
 
-	private static class IceBreakerPagerAdapter extends FragmentPagerAdapter 
-	{
-		public IceBreakerPagerAdapter(FragmentManager fm) 
-		{
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int i) 
-		{
-			Fragment fragment = null;
-			if (i == 0) {
-				fragment = new BalanceFragment();
-			} 
-			else if (i == 1) {
-				fragment = new HistoryFragment();
-			}
-			return fragment;
-		}
-
-		@Override
-		public int getCount() {
-			return 2;
-		}
-	}
-
-	private class PageChangeListener implements ViewPager.OnPageChangeListener
-	{
-		@Override
-		public void onPageSelected(int position) 
-		{
-			switch (position) 
-			{
-				case TAB_ID_BALANCE:
-					// balance
-					balanceButton_.setEnabled(false);
-					balanceButton_.setBackgroundResource(R.color.tab_selected);
-					// history
-					historyButton_.setEnabled(true);
-					historyButton_.setBackgroundResource(R.color.tab_unselected);
-					break;
-				case TAB_ID_HISTORY:
-					// balance
-					balanceButton_.setEnabled(true);
-					balanceButton_.setBackgroundResource(R.color.tab_unselected);
-					// history
-					historyButton_.setEnabled(false);
-					historyButton_.setBackgroundResource(R.color.tab_selected);
-					break;
-			}
-		}
-
-		/** 
-			We don't care about these events
-		*/
-		@Override
-		public void onPageScrollStateChanged(int state)
-		{ }
-
-		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-		{ }
-	}
-
 	static final int TAB_ID_BALANCE = 0;
 	static final int TAB_ID_HISTORY = 1;
+	static final String PREF_KEY_MAT_KEY = "mat";
 
-	IceBreakerPagerAdapter pagerAdapter_;
-
+	SharedPreferences prefs_;
 	ViewPager pager_;
+	String mat_;
 	Button refreshButton_;
 	Button balanceButton_;
 	Button historyButton_;

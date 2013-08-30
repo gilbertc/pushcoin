@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:background="@drawable/backrepeat"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<LinearLayout 
+		android:background="@drawable/top_panel_background"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/pushcoin_logo_part_one"
+			android:text="Push"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:layout_gravity="center_vertical"
+			android:textSize="18dp"
+			android:paddingRight="2dp"
+			android:shadowColor="#333333"
+			android:shadowDx="-0.5"
+			android:shadowDy="-0.5"
+			android:shadowRadius="0.6"
+			android:textColor="@color/lightui_lightgray"
+			android:includeFontPadding="false"
+			geekui:customTypeface="fonts/TT0468M.ttf" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/pushcoin_logo_part_two"
+			android:text="Coin"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="40dp"
+			android:layout_gravity="center_vertical"
+			android:textSize="18dp"
+			android:shadowColor="#333333"
+			android:shadowDx="-0.5"
+			android:shadowDy="-0.5"
+			android:shadowRadius="0.6"
+			android:textColor="@color/black"
+			android:includeFontPadding="false"
+			geekui:customTypeface="fonts/TT0468M.ttf" />
+
+	</LinearLayout>
+
+	<!-- header drop shadow -->
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="4dp"
+		android:background="@drawable/top_panel_drop_shadow" />
+
+	<android.support.v4.view.ViewPager
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/pager"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" />
+
+</LinearLayout>
+

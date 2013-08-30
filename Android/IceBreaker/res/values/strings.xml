@@ -11,4 +11,8 @@
 		<item>Extremely Satisfied</item>
 	</string-array>
 
+	<string name="registration_instruction_step_1">Login at <b>pushcoin.com</b></string>
+	<string name="registration_instruction_step_2">Click on <b>Devices</b> &#8211; <b>Add Device</b> and choose <b>Phone App</b></string>
+	<string name="registration_instruction_step_3">Name it and click <b>Add Phone App</b></string>
+	<string name="input_reg_code_hint">Enter Activation Code</string>
 </resources>

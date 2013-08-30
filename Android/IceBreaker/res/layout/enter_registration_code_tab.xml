@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/info_title"
+		android:text="To link this app..."
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentTop="true"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="12dp"
+		android:textSize="28dp"
+		android:textColor="@color/black"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+	<!-- Step 1 -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/info_step_num1"
+		android:text="1."
+		android:layout_alignParentLeft="true"
+		android:layout_below="@id/info_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="12dp"
+		android:textSize="26dp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/TT0468M.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/info_step_txt1"
+		android:text="@string/registration_instruction_step_1"
+		android:layout_toRightOf="@id/info_step_num1"
+		android:layout_below="@id/info_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="6dp"
+		android:layout_marginRight="12dp"
+		android:layout_marginTop="12dp"
+		android:layout_marginBottom="12dp"
+		android:textSize="18dp"
+		android:textColor="@color/black"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+	<!-- Step 2 -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/info_step_num2"
+		android:text="2."
+		android:layout_alignParentLeft="true"
+		android:layout_below="@id/info_step_txt1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="12dp"
+		android:textSize="26dp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/TT0468M.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/info_step_txt2"
+		android:text="@string/registration_instruction_step_2"
+		android:layout_toRightOf="@id/info_step_num2"
+		android:layout_below="@id/info_step_txt1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="6dp"
+		android:layout_marginRight="12dp"
+		android:layout_marginTop="12dp"
+		android:layout_marginBottom="12dp"
+		android:textSize="18dp"
+		android:textColor="@color/black"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+	<!-- Step 3 -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/info_step_num3"
+		android:text="3."
+		android:layout_alignParentLeft="true"
+		android:layout_below="@id/info_step_txt2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="12dp"
+		android:textSize="26dp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/TT0468M.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/info_step_txt3"
+		android:text="@string/registration_instruction_step_3"
+		android:layout_toRightOf="@id/info_step_num3"
+		android:layout_below="@id/info_step_txt2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="6dp"
+		android:layout_marginRight="12dp"
+		android:layout_marginTop="12dp"
+		android:layout_marginBottom="12dp"
+		android:textSize="18dp"
+		android:textColor="@color/black"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
+
+	<!-- Step 4 -->
+	<EditText
+		android:id="@+id/info_step_input_reg_code"
+		android:hint="@string/input_reg_code_hint"
+		android:layout_centerHorizontal="true"
+		android:layout_below="@id/info_step_txt3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="22dp"
+		android:textSize="22dp"
+		android:minEms="10"
+		android:maxLength="11"
+		android:maxLines="1"
+		android:inputType="textCapCharacters"
+		android:textColor="@color/black" />
+
+</RelativeLayout>
+
