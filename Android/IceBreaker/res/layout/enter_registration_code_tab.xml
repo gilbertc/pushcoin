@@ -29,7 +29,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="12dp"
-		android:textSize="28dp"
+		android:textSize="24dp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/TT0468M.ttf" />
 
@@ -57,7 +57,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="12dp"
-		android:textSize="28dp"
+		android:textSize="24dp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/TT0468M.ttf" />
 
@@ -85,7 +85,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="12dp"
-		android:textSize="28dp"
+		android:textSize="24dp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/TT0468M.ttf" />
 
@@ -120,6 +120,20 @@
 		android:maxLines="1"
 		android:inputType="textCapCharacters"
 		android:textColor="@color/black" />
+
+	<!-- Reminder -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:text="@string/reminder_of_no_payments"
+		android:layout_alignParentLeft="true"
+		android:layout_below="@id/info_step_input_reg_code"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="18dp"
+		android:layout_marginLeft="12dp"
+		android:layout_marginRight="12dp"
+		android:textSize="14dp"
+		android:textColor="@color/black"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 </RelativeLayout>
 

@@ -31,7 +31,9 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 			
 			// DSA pub key
 			CryptoHelper.DsaKeyPair key = CryptoHelper.generateDsaKeyPair();
-			out_bo.writeByteStr( key.publicKey.getEncoded() );
+			byte[] encodedPubKey = key.publicKey.getEncoded();
+			Log.e( TAG, "pub-key-size=" + encodedPubKey.length );
+			out_bo.writeByteStr( encodedPubKey );
 
 			OutputDocument req = new DocumentWriter("Register");
 			req.addBlock(out_bo);

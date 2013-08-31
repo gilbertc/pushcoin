@@ -2,6 +2,7 @@ package com.pushcoin.icebreaker;
 
 public class Conf 
 {
+	static final int DSA_KEY_LENGTH = 1024;
 	// PCOS doc names
 	static final String PCOS_DOC_ERROR = "Error";
 	static final String PCOS_DOC_REGISTER_ACK = "RegisterAck";
