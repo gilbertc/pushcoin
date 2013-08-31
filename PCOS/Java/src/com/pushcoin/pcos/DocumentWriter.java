@@ -38,6 +38,12 @@ public class DocumentWriter implements OutputDocument
 	}
 		
 	@Override
+	public String getDocumentName()
+	{
+		return name_;
+	}
+
+	@Override
 	public void addBlock(OutputBlock b) throws PcosError
 	{
 		blocks_.add( b );

@@ -13,6 +13,6 @@
 
 	<string name="registration_instruction_step_1">Login at <b>pushcoin.com</b></string>
 	<string name="registration_instruction_step_2">Click on <b>Devices</b> &#8211; <b>Add Device</b> and choose <b>Mobile App</b></string>
-	<string name="registration_instruction_step_3">Fill out description and hit <b>Done</b>. You are provided with the <b>Activation Code</b>, enter it below.</string>
+	<string name="registration_instruction_step_3">Fill out description and hit <b>Done</b>. When you are provided with the <b>Activation Code</b>, enter it below.</string>
 	<string name="input_reg_code_hint">Enter Activation Code</string>
 </resources>

@@ -20,6 +20,7 @@ package com.pushcoin.pcos;
 
 public interface OutputDocument 
 {
+	String getDocumentName();
 	void addBlock(OutputBlock b) throws PcosError;
 	byte[] toBytes() throws PcosError;
 }

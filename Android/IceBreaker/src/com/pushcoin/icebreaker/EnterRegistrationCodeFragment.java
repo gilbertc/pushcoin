@@ -23,13 +23,8 @@ import android.widget.ArrayAdapter;
 public class EnterRegistrationCodeFragment 
 	extends Fragment
 {
-	public interface OnSubmitRegistrationCode 
-	{
-		void onSubmitRegistrationCode( String code );
-	}
-
-	EnterRegistrationCodeFragment( OnSubmitRegistrationCode handler ) {
-		handler_ = handler;
+	EnterRegistrationCodeFragment( Controller ctrl ) {
+		ctrl_ = ctrl;
 	}
 
 	@Override
@@ -56,8 +51,10 @@ public class EnterRegistrationCodeFragment
 						String code = v.getText().toString();
 						if ( !code.isEmpty() )
 						{
-							// the user is done typing. 
-							handler_.onSubmitRegistrationCode( code );
+							Message m = Message.obtain();
+							m.what = MessageId.REGISTER_DEVICE_REQUEST;
+							m.obj = code;
+							ctrl_.post(m);
 						}
 					}
 					return false; // pass on to other listeners. 
@@ -67,5 +64,5 @@ public class EnterRegistrationCodeFragment
 		return fragmentRootLayout;
 	}
 
-	final OnSubmitRegistrationCode handler_;
+	final Controller ctrl_;
 }

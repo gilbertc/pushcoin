@@ -2,6 +2,7 @@ package com.pushcoin.icebreaker;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -41,10 +42,13 @@ public class OperationalFragment extends Fragment
 		// Use an icon instead of the "Refresh" label
 		refreshButton_.setTypeface( Typeface.createFromAsset( getActivity().getAssets(), "fonts/modernpics.otf") );
 
-		// Listen to refresh requests
+		// Listen to refresh presses and fire requests
 		refreshButton_.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				ctrl_.fetchAccountHistory();
+			public void onClick(View v) 
+			{
+				Message m = Message.obtain();
+				m.what = MessageId.FETCH_ACCOUNT_HISTORY;
+				ctrl_.post(m);
 			}
 		});
 

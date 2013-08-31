@@ -2,6 +2,8 @@ package com.pushcoin.icebreaker;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Message;
+import android.os.Handler;
 import android.util.Log;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -18,9 +20,6 @@ import android.content.Context;
 
 public class SetupFragment 
 	extends Fragment 
-	implements 
-		EnterRegistrationCodeFragment.OnSubmitRegistrationCode,
-		SubmitRegistrationCodeFragment.OnRegistrationProgress
 {
 	SetupFragment( Controller ctrl ) {
 		ctrl_ = ctrl;
@@ -31,6 +30,11 @@ public class SetupFragment
 	{
 		super.onCreate(savedInstanceState);
 
+		// When user finishes typing registration code, we want to
+		// show progress bar. So we register for this event.
+		ctrl_.registerHandler( handler_, MessageId.REGISTER_DEVICE_REQUEST );
+		ctrl_.registerHandler( handler_, MessageId.REGISTER_DEVICE_USER_CANCELED );
+
 		// Inflate setup fragment (with the pager inside)
 		View fragmentRootLayout = inflater.inflate(R.layout.setup_fragment, container, false);
 
@@ -40,34 +44,18 @@ public class SetupFragment
 		pager_.setSwipingEnabled(false);
 
 		// Install the adapter with the pager
-		pager_.setAdapter( new SetupPager( getFragmentManager(), this, this ) );
+		pager_.setAdapter( new SetupPager( getFragmentManager(), ctrl_ ) );
 
 		return fragmentRootLayout;
-	}
-
-	@Override
-	public void onSubmitRegistrationCode( String code )
-	{
-		pager_.setCurrentItem(TAB_ID_SUBMIT_REGISTRATION, true);
-	}
-
-	@Override
-	public void onUserCanceled()
-	{
-		pager_.setCurrentItem(TAB_ID_ENTER_REGISTRATION_CODE, true);
 	}
 
 	private static class SetupPager 
 		extends FragmentPagerAdapter 
 	{
-		public SetupPager(FragmentManager fm, 
-			EnterRegistrationCodeFragment.OnSubmitRegistrationCode handler1,
-			SubmitRegistrationCodeFragment.OnRegistrationProgress handler2)
+		public SetupPager(FragmentManager fm, Controller ctrl)
 		{
 			super(fm);
-
-			enterRegistrationCode_ = new EnterRegistrationCodeFragment( handler1 );
-			submitRegistration_ = new SubmitRegistrationCodeFragment( handler2 );
+			ctrl_ = ctrl;
 		}
 
 		@Override
@@ -75,10 +63,10 @@ public class SetupFragment
 		{
 			Fragment fragment = null;
 			if (i == TAB_ID_ENTER_REGISTRATION_CODE) {
-				fragment = enterRegistrationCode_;
+				fragment = new EnterRegistrationCodeFragment( ctrl_ );
 			} 
 			else if (i == TAB_ID_SUBMIT_REGISTRATION) {
-				fragment = submitRegistration_;
+				fragment = new SubmitRegistrationCodeFragment( ctrl_ );
 			}
 			return fragment;
 		}
@@ -88,9 +76,26 @@ public class SetupFragment
 			return 2;
 		}
 
-		EnterRegistrationCodeFragment enterRegistrationCode_;
-		SubmitRegistrationCodeFragment submitRegistration_;
+		final Controller ctrl_;
 	}
+
+	/** Dispatch events. */
+	private Handler handler_ = new Handler() 
+	{
+		@Override
+		public void handleMessage(Message msg) 
+		{
+			switch( msg.what )
+			{
+				case MessageId.REGISTER_DEVICE_REQUEST:
+					pager_.setCurrentItem(TAB_ID_SUBMIT_REGISTRATION, true);
+				break;
+				case MessageId.REGISTER_DEVICE_USER_CANCELED:
+					pager_.setCurrentItem(TAB_ID_ENTER_REGISTRATION_CODE, true);
+				break;
+			}
+		}
+	};
 
 	static final int TAB_ID_ENTER_REGISTRATION_CODE = 0;
 	static final int TAB_ID_SUBMIT_REGISTRATION = 1;

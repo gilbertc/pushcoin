@@ -17,13 +17,17 @@
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
 package com.pushcoin.icebreaker;
+import android.os.Handler;
+import android.os.Message;
 
 public interface Controller
 {
+	// Model access
 	String getBalance();
 	String getStatus();
-
-	void fetchAccountHistory();
 	TransactionRecord getTransaction(int index);
 	int getHistorySize();
+
+	void registerHandler( Handler h, int messageId );
+	void post( Message m );
 }
