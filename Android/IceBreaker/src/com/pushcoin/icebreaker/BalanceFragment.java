@@ -17,15 +17,23 @@ import android.widget.RatingBar;
 
 public class BalanceFragment 
 	extends Fragment
-	implements ModelEventHandler
 {
+	public BalanceFragment(Controller ctrl)
+	{
+		ctrl_ = ctrl;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
+		ctrl_.registerHandler( handler_, MessageId.MODEL_CHANGED );
+
 		// Inflate the layout for this fragment
 		View fragmentRootLayout = inflater.inflate(R.layout.balance_tab, container, false);
 
 		// lookup fields
+		balanceField_ = (TextView) fragmentRootLayout.findViewById(R.id.account_balance_field);
+		balanceTimeField_ = (TextView) fragmentRootLayout.findViewById(R.id.account_balance_time_field);
 		statusField_ = (TextView) fragmentRootLayout.findViewById(R.id.status_field);
 		ratingBar_ = (RatingBar) fragmentRootLayout.findViewById(R.id.recent_transaction_rating_bar);
 		ratingBarLabel_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_rating_label);
@@ -51,14 +59,43 @@ public class BalanceFragment
 		return fragmentRootLayout;
 	}
 
+	/** Dispatch events. */
+	private Handler handler_ = new Handler() 
+	{
+		@Override
+		public void handleMessage(Message msg) 
+		{
+			switch( msg.what )
+			{
+				case MessageId.MODEL_CHANGED:
+					onAccountHistoryChanged();
+				break;
+			}
+		}
+	};
+
 	// Invoked by the Controller
-	@Override
 	public void onAccountHistoryChanged()
 	{
 		// update this fragment's view
+		balanceField_.setText( ctrl_.getBalance() );
+		balanceTimeField_.setText( ctrl_.getBalanceTime() );
+
+		String status = ctrl_.getStatus();
+		if (status.isEmpty()) {
+			statusField_.setVisibility(View.INVISIBLE);
+		}
+		else {
+			statusField_.setText( status );
+			statusField_.setVisibility(View.VISIBLE);
+		}
 	}
 
+	final Controller ctrl_;
+
 	// Cached widget views
+	TextView balanceField_;
+	TextView balanceTimeField_;
 	TextView statusField_;
 	RatingBar ratingBar_;
 	TextView ratingBarLabel_;

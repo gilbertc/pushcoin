@@ -47,7 +47,7 @@ public class OperationalFragment extends Fragment
 			public void onClick(View v) 
 			{
 				Message m = Message.obtain();
-				m.what = MessageId.FETCH_ACCOUNT_HISTORY;
+				m.what = MessageId.ACCOUNT_HISTORY_REQUEST;
 				ctrl_.post(m);
 			}
 		});
@@ -67,7 +67,7 @@ public class OperationalFragment extends Fragment
 			}
 		});
 
-		OperationalPager pagerAdapter = new OperationalPager( getFragmentManager() );
+		OperationalPager pagerAdapter = new OperationalPager( getFragmentManager(), ctrl_ );
 
 		// Install the adapter
 		pager_.setAdapter(pagerAdapter);
@@ -80,9 +80,10 @@ public class OperationalFragment extends Fragment
 
 	private static class OperationalPager extends FragmentPagerAdapter 
 	{
-		public OperationalPager(FragmentManager fm) 
+		public OperationalPager(FragmentManager fm, Controller ctrl)
 		{
 			super(fm);
+			ctrl_ = ctrl;
 		}
 
 		@Override
@@ -90,7 +91,7 @@ public class OperationalFragment extends Fragment
 		{
 			Fragment fragment = null;
 			if (i == 0) {
-				fragment = new BalanceFragment();
+				fragment = new BalanceFragment(ctrl_);
 			} 
 			else if (i == 1) {
 				fragment = new HistoryFragment();
@@ -102,6 +103,8 @@ public class OperationalFragment extends Fragment
 		public int getCount() {
 			return 2;
 		}
+
+		final Controller ctrl_;
 	}
 
 	private class PageChangeListener implements ViewPager.OnPageChangeListener

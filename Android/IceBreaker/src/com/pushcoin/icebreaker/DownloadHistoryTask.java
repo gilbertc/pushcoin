@@ -1,7 +1,7 @@
 package com.pushcoin.icebreaker;
 
 import android.os.Bundle;
-import android.os.AsyncTask;
+import android.os.Message;
 import android.util.Log;
 import java.io.InputStream;
 import java.io.IOException;
@@ -18,7 +18,12 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 
 	protected void onPreExecute()
 	{
-		// notify model handlers data is being fetched
+		// handlers may want to show a busy-status..
+		Message m = Message.obtain();
+		m.what = MessageId.ACCOUNT_HISTORY_PENDING;
+		model_.post(m);
+		// Start clean
+		status_ = "";
 	}
 
 	protected Void doInBackground(String... none)
@@ -38,11 +43,34 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 			OutputDocument req = new DocumentWriter("TxnHistoryQuery");
 			req.addBlock(out_bo);
 
-			// ship over HTTPS
+			// call server
 			InputDocument res = invokeRemote( req );
 			if (res != null) 
 			{
-				status_ = "as of Today 5:15 PM";
+				String docName = res.getDocumentName();
+				if ( docName.equals( Conf.PCOS_DOC_ERROR ) )
+				{
+					PcosHelper.ErrorInfo err = PcosHelper.parseError( res );
+					Log.e( TAG, "reason="+err.message+";code="+err.errorCode );
+					if (err.message.isEmpty()) {
+						status_ = Conf.STATUS_UNEXPECTED_HAPPENED;
+					}
+					else {
+						status_ = err.message;
+					}
+				}
+				else if (docName.equals( Conf.PCOS_DOC_TXN_HISTORY_REPLY ) )
+				{
+					Message m = Message.obtain();
+					m.what = MessageId.ACCOUNT_HISTORY_REPLY;
+					m.obj = PcosHelper.parseTxnHistoryReply(res);
+					model_.post(m);
+				}
+				else // Not an Error nor Ack!?
+				{
+					Log.e( TAG, "unexpected-server-response|doc="+docName );
+					status_ = Conf.STATUS_UNEXPECTED_HAPPENED;
+				}
 			}
 		} catch (Exception e) {
 			status_ = e.getMessage();
@@ -52,10 +80,18 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 
 	protected void onPostExecute(Void v) 
 	{
-		// notify model we have the data
-		model_.beginModelUpdates();
-		model_.setStatus("as of Today 5:15 PM");
-		model_.endModelUpdates();
+		// may need to display an error
+		if ( !status_.isEmpty() ) 
+		{
+			model_.beginModelUpdates();
+			model_.setStatus(status_);
+			model_.endModelUpdates();
+		}
+
+		// download is done, stop busy-indicators
+		Message m = Message.obtain();
+		m.what = MessageId.ACCOUNT_HISTORY_STOPPED;
+		model_.post(m);
 	}
 
 	private static final String TAG = "TxnHistoryQuery|";

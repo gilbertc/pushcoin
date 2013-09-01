@@ -26,7 +26,7 @@
 
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/account_balance_field"
-			android:text="$12.49"
+			android:text="..."
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center"
@@ -36,8 +36,7 @@
 			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 		<com.mobsandgeeks.ui.TypefaceTextView
-			android:id="@+id/status_field"
-			android:text="as of Today 12:01 PM"
+			android:id="@+id/account_balance_time_field"
 			android:gravity="center"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -69,48 +68,19 @@
 			android:textColor="@color/black"
 			geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
 
-		<LinearLayout
+		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/recent_transaction_payment_info"
-			android:orientation="horizontal"
+			android:text="Mike paid $3.50 Yesterday at 12:01\u00A0PM"
 			android:layout_marginBottom="20dp"
 			android:layout_marginRight="10dp"
 			android:layout_marginLeft="10dp"
 			android:layout_alignParentLeft="true"
 			android:layout_below="@id/recent_transaction_business_name_field"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" >
-
-			<com.mobsandgeeks.ui.TypefaceTextView
-				android:id="@+id/recent_transaction_type_field"
-				android:text="Mike paid"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginRight="5dp"
-				android:textSize="14dp"
-				android:textColor="@color/lightui_darkestgray"
-				geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
-
-			<com.mobsandgeeks.ui.TypefaceTextView
-				android:id="@+id/recent_transaction_amount_field"
-				android:text="$3.50"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginRight="5dp"
-				android:textSize="14dp"
-				android:textColor="@color/black"
-				geekui:customTypeface="fonts/DejaVuSans-Bold.ttf" />
-
-			<com.mobsandgeeks.ui.TypefaceTextView
-				android:id="@+id/recent_transaction_date_field"
-				android:text="Yesterday at 12:01\u00A0PM"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_vertical"
-				android:textSize="14dp"
-				android:textColor="@color/lightui_darkestgray"
-				geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
-
-		</LinearLayout>
+			android:layout_height="wrap_content"
+			android:textSize="14dp"
+			android:textColor="@color/lightui_darkestgray"
+			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 		<RatingBar
 			android:id="@+id/recent_transaction_rating_bar"
@@ -201,6 +171,14 @@
 			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 	</RelativeLayout>
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/status_field"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="14dp"
+		android:textColor="@color/red"
+		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 </LinearLayout>
 

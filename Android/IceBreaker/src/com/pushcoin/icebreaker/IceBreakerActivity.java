@@ -21,6 +21,9 @@ import android.content.Intent;
 import java.util.TreeMap;
 import java.util.List;
 import java.util.ArrayList;
+import android.text.format.DateUtils;
+import java.text.NumberFormat;
+import java.math.BigDecimal;
 import com.pushcoin.Binascii;
 
 public class IceBreakerActivity 
@@ -36,9 +39,10 @@ public class IceBreakerActivity
 		setContentView(R.layout.main);
 
 		// Register self as a handler of certain types of messages
-		registerHandler( handler_, MessageId.FETCH_ACCOUNT_HISTORY );
+		registerHandler( handler_, MessageId.ACCOUNT_HISTORY_REQUEST );
 		registerHandler( handler_, MessageId.REGISTER_DEVICE_REQUEST );
 		registerHandler( handler_, MessageId.REGISTER_DEVICE_SUCCESS );
+		registerHandler( handler_, MessageId.ACCOUNT_HISTORY_REPLY );
 		// Messages emitted by this Controller - DO NOT SUBSCRIBE
 		// * MODEL_CHANGED
 
@@ -77,6 +81,8 @@ public class IceBreakerActivity
   protected void onResume() 
 	{
 		super.onResume();
+		// fetch data
+		reload();
 	}
 
 	/**
@@ -85,7 +91,25 @@ public class IceBreakerActivity
 	@Override
 	public String getBalance()
 	{
-		return "$0.00";
+		if (txnHistory_ != null ) {
+			return NumberFormat.getCurrencyInstance().format( txnHistory_.balance );
+		} else {
+			return "-.--";
+		}
+	}
+
+	@Override
+	public String getBalanceTime()
+	{
+		long recent = recentRequestTime() * 1000;
+		Log.v( TAG, "balance-as-of="+recent );
+		if (txnHistory_ != null ) 
+		{
+			return "as of " + 
+				DateUtils.getRelativeDateTimeString( this, recent, 
+				Conf.STATUS_MIN_RESOLUTION, Conf.STATUS_TRANSITION_RESOLUTION, Conf.STATUS_FLAGS );
+		}
+		else return "...";
 	}
 
 	@Override
@@ -151,7 +175,49 @@ public class IceBreakerActivity
 	@Override
 	public int getHistorySize()
 	{
-		return 20;
+		if (txnHistory_ != null) {
+			return txnHistory_.transactionInfo.length;
+		} else {
+		  return 0;
+		}
+	}
+
+	@Override
+	public void reload()
+	{
+		long nowEpoch = PcosHelper.getEpochUtc();
+		// Throttle number of refreshes.
+		if (requestTimestamps_.size() < Conf.THROTTLE_MAX_REQUESTS_PER_WINDOW)
+		{
+			requestTimestamps_.add( new Long(nowEpoch) );
+			new DownloadHistoryTask(this, mat_).execute();
+		} 
+		else
+		{
+			// check oldest request timestamp
+			Long reqTm = requestTimestamps_.get(0);
+			long diffTm = nowEpoch - reqTm;
+			if ( diffTm > Conf.THROTTLE_REQUEST_WINDOW_DURATION )
+			{
+				// pop oldest request
+				requestTimestamps_.remove(0);
+				// add this request
+				requestTimestamps_.add( new Long(nowEpoch) );
+				new DownloadHistoryTask(this, mat_).execute();
+			}
+			else {
+				Log.v( TAG, "throttled-until-seconds="+(Conf.THROTTLE_REQUEST_WINDOW_DURATION-diffTm) );
+			}
+		}
+	}
+
+	private long recentRequestTime()
+	{
+		if (requestTimestamps_.isEmpty()) {
+			return 0;
+		} else {
+			return requestTimestamps_.get(requestTimestamps_.size() - 1);
+		}
 	}
 
 	/**
@@ -189,14 +255,17 @@ public class IceBreakerActivity
 		{
 			switch( msg.what )
 			{
-				case MessageId.FETCH_ACCOUNT_HISTORY:
-					new DownloadHistoryTask(IceBreakerActivity.this, mat_).execute();
+				case MessageId.ACCOUNT_HISTORY_REQUEST:
+					reload();
 				break;
 				case MessageId.REGISTER_DEVICE_REQUEST:
 					new RegisterDeviceTask(IceBreakerActivity.this).execute( (String) msg.obj );
 				break;
 				case MessageId.REGISTER_DEVICE_SUCCESS:
 					onDeviceRegistered( (PcosHelper.RegisterAckResult) msg.obj );
+				break;
+				case MessageId.ACCOUNT_HISTORY_REPLY:
+					onTxnHistoryReply( (PcosHelper.TxnHistoryReply) msg.obj );
 				break;
 			}
 		}
@@ -210,6 +279,17 @@ public class IceBreakerActivity
 
 		// We are leaving configuration mode...
 		restart();
+	}
+
+	private void onTxnHistoryReply(PcosHelper.TxnHistoryReply txData)
+	{
+		txnHistory_ = txData;
+		status_ = "";
+
+		// Notify of changes applied
+		Message m = Message.obtain();
+		m.what = MessageId.MODEL_CHANGED;
+		post(m);
 	}
 
 	/** 
@@ -234,12 +314,11 @@ public class IceBreakerActivity
 	SharedPreferences prefs_;
 	ViewPager pager_;
 	byte[] mat_;
-	Button refreshButton_;
-	Button balanceButton_;
-	Button historyButton_;
+	ArrayList<Long> requestTimestamps_ = new ArrayList<Long>();
 
 	// Model data
-	String status_;
+	String status_ = "";
+	PcosHelper.TxnHistoryReply txnHistory_;
 
 	TreeMap<Integer, List<Handler> > messageReceiver_ =
 		new TreeMap<Integer, List<Handler> >();

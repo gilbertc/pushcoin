@@ -22,8 +22,12 @@ import android.os.Message;
 
 public interface Controller
 {
+	// Ask for fresh data
+	void reload();
+
 	// Model access
 	String getBalance();
+	String getBalanceTime();
 	String getStatus();
 	TransactionRecord getTransaction(int index);
 	int getHistorySize();
