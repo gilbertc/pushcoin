@@ -23,6 +23,7 @@
 		0D64183817D2E7D500C85327 /* storage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D64183717D2E7D500C85327 /* storage.png */; };
 		0D64183A17D2E80700C85327 /* dollar-sign.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D64183917D2E80700C85327 /* dollar-sign.png */; };
 		0D64183D17D2E87900C85327 /* HistoryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D64183C17D2E87900C85327 /* HistoryViewController.mm */; };
+		0D696F9117D3B6B500055AF8 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D696F9017D3B6B500055AF8 /* CoreText.framework */; };
 		0D7A8F80154202EC00634A79 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7E154202EC00634A79 /* AddressBook.framework */; };
 		0D7A8F81154202EC00634A79 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */; };
 		0D7A8F83154202F700634A79 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F82154202F700634A79 /* AudioToolbox.framework */; };
@@ -50,6 +51,7 @@
 		0DDBA5CB17D1A44100B7DEC6 /* PasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDBA5CA17D1A44100B7DEC6 /* PasscodeViewController.m */; };
 		0DF02FE817D2A20C00E6E66D /* SummaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0DF02FE717D2A20C00E6E66D /* SummaryViewController.mm */; };
 		0DF680261545B28500F5E784 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 0DF680251545B28500F5E784 /* README */; };
+		1514EA99A0E4467E975CC57F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F5F490B9DB496C82E2DECD /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00F5F490B9DB496C82E2DECD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D19E2C81541CCAE00C8671B /* PushCoin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PushCoin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D19E2CC1541CCAE00C8671B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0D19E2CE1541CCAE00C8671B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -106,12 +109,13 @@
 		0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinWebService.m; sourceTree = "<group>"; };
 		0D4E98471584A8F20009622B /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+URLEncoding.h"; path = "PushCoin/NSString+URLEncoding.h"; sourceTree = "<group>"; };
 		0D4E98481584A8F20009622B /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+URLEncoding.m"; path = "PushCoin/NSString+URLEncoding.m"; sourceTree = "<group>"; };
-		0D64183517D2DBE300C85327 /* MessageUpdatedDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageUpdatedDelegate.h; sourceTree = "<group>"; };
-		0D64183617D2DE4C00C85327 /* MessageUpdaterDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageUpdaterDelegate.h; sourceTree = "<group>"; };
+		0D64183517D2DBE300C85327 /* MessageUpdatedDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MessageUpdatedDelegate.h; path = PushCoin/MessageUpdatedDelegate.h; sourceTree = "<group>"; };
+		0D64183617D2DE4C00C85327 /* MessageUpdaterDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MessageUpdaterDelegate.h; path = PushCoin/MessageUpdaterDelegate.h; sourceTree = "<group>"; };
 		0D64183717D2E7D500C85327 /* storage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = storage.png; sourceTree = "<group>"; };
 		0D64183917D2E80700C85327 /* dollar-sign.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dollar-sign.png"; sourceTree = "<group>"; };
 		0D64183B17D2E87900C85327 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
 		0D64183C17D2E87900C85327 /* HistoryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HistoryViewController.mm; sourceTree = "<group>"; };
+		0D696F9017D3B6B500055AF8 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		0D7A8F7E154202EC00634A79 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		0D7A8F82154202F700634A79 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -128,8 +132,8 @@
 		0D887E3A15688DC9004228F3 /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		0D8B597317D254370096E907 /* RegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationController.h; sourceTree = "<group>"; };
 		0D8B597417D254370096E907 /* RegistrationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RegistrationController.mm; sourceTree = "<group>"; };
-		0D8B597717D261E30096E907 /* PcosHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PcosHelper.h; sourceTree = "<group>"; };
-		0D8B597817D261E30096E907 /* PcosHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PcosHelper.mm; sourceTree = "<group>"; };
+		0D8B597717D261E30096E907 /* PcosHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PcosHelper.h; path = PushCoin/PcosHelper.h; sourceTree = "<group>"; };
+		0D8B597817D261E30096E907 /* PcosHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PcosHelper.mm; path = PushCoin/PcosHelper.mm; sourceTree = "<group>"; };
 		0D8BBFF117D2EDCD0065EE35 /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transaction.h; sourceTree = "<group>"; };
 		0D8BBFF217D2EDCD0065EE35 /* Transaction.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Transaction.mm; sourceTree = "<group>"; };
 		0DA259EF157F2E89009AB9A6 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
@@ -151,6 +155,7 @@
 		0DF02FE617D2A20C00E6E66D /* SummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryViewController.h; sourceTree = "<group>"; };
 		0DF02FE717D2A20C00E6E66D /* SummaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SummaryViewController.mm; sourceTree = "<group>"; };
 		0DF680251545B28500F5E784 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		BE6163C468DB4C3593C09C5F /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,12 +163,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
+				0D696F9117D3B6B500055AF8 /* CoreText.framework in Frameworks */,
 				0DDBA5C817D1859200B7DEC6 /* libcrypto.a in Frameworks */,
 				0DDBA5B117D1619000B7DEC6 /* libpcos.a in Frameworks */,
 				0DA25A7A1582EDF0009AB9A6 /* CoreLocation.framework in Frameworks */,
 				0DA25A1D1581BDB0009AB9A6 /* MessageUI.framework in Frameworks */,
 				0D4923CA1568C37A00626AC2 /* libiconv.dylib in Frameworks */,
-				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
 				0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */,
 				0D7A8F881542031400634A79 /* CoreMedia.framework in Frameworks */,
 				0D7A8F891542031400634A79 /* CoreVideo.framework in Frameworks */,
@@ -174,6 +180,7 @@
 				0D19E2CD1541CCAE00C8671B /* UIKit.framework in Frameworks */,
 				0D19E2CF1541CCAE00C8671B /* Foundation.framework in Frameworks */,
 				0D19E2D11541CCAE00C8671B /* CoreGraphics.framework in Frameworks */,
+				1514EA99A0E4467E975CC57F /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +190,7 @@
 		0D19E2BD1541CCAE00C8671B = {
 			isa = PBXGroup;
 			children = (
+				0D696F9017D3B6B500055AF8 /* CoreText.framework */,
 				0DDBA5BF17D1839E00B7DEC6 /* openssl.xcodeproj */,
 				0D27FE0617D1615C0079B630 /* pcos.xcodeproj */,
 				0D19E2D21541CCAE00C8671B /* PushCoin.App */,
@@ -190,6 +198,7 @@
 				0D19E2CB1541CCAE00C8671B /* Frameworks */,
 				0D19E2C91541CCAE00C8671B /* Products */,
 				0DF680251545B28500F5E784 /* README */,
+				BE6163C468DB4C3593C09C5F /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -219,6 +228,7 @@
 				0D19E2CC1541CCAE00C8671B /* UIKit.framework */,
 				0D19E2CE1541CCAE00C8671B /* Foundation.framework */,
 				0D19E2D01541CCAE00C8671B /* CoreGraphics.framework */,
+				00F5F490B9DB496C82E2DECD /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -350,9 +360,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D19E2F11541CCAE00C8671B /* Build configuration list for PBXNativeTarget "PushCoin" */;
 			buildPhases = (
+				6F431BDCCCE54981B00BBD0B /* Check Pods Manifest.lock */,
 				0D19E2C41541CCAE00C8671B /* Sources */,
 				0D19E2C51541CCAE00C8671B /* Frameworks */,
 				0D19E2C61541CCAE00C8671B /* Resources */,
+				352EEF7CC6A54574B3B298C6 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -436,6 +448,39 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		352EEF7CC6A54574B3B298C6 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6F431BDCCCE54981B00BBD0B /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		0D19E2C41541CCAE00C8671B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -515,10 +560,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"/Users/gilbert/v1/openssl-xcode/openssl/build/openssl.build/openssl/include",
-					/Users/gilbert/workbench/pushcoin/iOS/pcos,
-				);
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "247668E8-FEA9-497B-9C9D-45464D855DF5";
@@ -546,10 +588,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"/Users/gilbert/v1/openssl-xcode/openssl/build/openssl.build/openssl/include",
-					/Users/gilbert/workbench/pushcoin/iOS/pcos,
-				);
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
@@ -562,9 +601,16 @@
 		};
 		0D19E2F21541CCAE00C8671B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE6163C468DB4C3593C09C5F /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/MGBox2\"",
+					"/Users/gilbert/v1/openssl-xcode/openssl/include/",
+					/Users/gilbert/workbench/pushcoin/iOS/pcos/,
+				);
 				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -577,9 +623,16 @@
 		};
 		0D19E2F31541CCAE00C8671B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE6163C468DB4C3593C09C5F /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/MGBox2\"",
+					"/Users/gilbert/v1/openssl-xcode/openssl/include/",
+					/Users/gilbert/workbench/pushcoin/iOS/pcos/,
+				);
 				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -609,10 +662,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"/Users/gilbert/v1/openssl-xcode/openssl/build/openssl.build/openssl/include",
-					/Users/gilbert/workbench/pushcoin/iOS/pcos,
-				);
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
@@ -625,9 +675,16 @@
 		};
 		0D4E9877158512F20009622B /* Distribution */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE6163C468DB4C3593C09C5F /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/MGBox2\"",
+					"/Users/gilbert/v1/openssl-xcode/openssl/include/",
+					/Users/gilbert/workbench/pushcoin/iOS/pcos/,
+				);
 				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";

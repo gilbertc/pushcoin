@@ -1,0 +1,10 @@
+PODS:
+  - MGBox2 (2.0.0)
+
+DEPENDENCIES:
+  - MGBox2 (~> 2.0.0)
+
+SPEC CHECKSUMS:
+  MGBox2: 7c09e36c2271f9af16fdb5141a0ca554ecee4d8d
+
+COCOAPODS: 0.23.0
