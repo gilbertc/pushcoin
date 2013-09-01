@@ -102,7 +102,6 @@ public class IceBreakerActivity
 	public String getBalanceTime()
 	{
 		long recent = recentRequestTime() * 1000;
-		Log.v( TAG, "balance-as-of="+recent );
 		if (txnHistory_ != null ) 
 		{
 			return "as of " + 

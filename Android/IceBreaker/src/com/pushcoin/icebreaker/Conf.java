@@ -5,8 +5,8 @@ import android.text.format.DateUtils;
 public class Conf 
 {
 	// Request throttling
-	static final long THROTTLE_MAX_REQUESTS_PER_WINDOW = 2;
-	static final long THROTTLE_REQUEST_WINDOW_DURATION = 30;
+	static final long THROTTLE_MAX_REQUESTS_PER_WINDOW = 1;
+	static final long THROTTLE_REQUEST_WINDOW_DURATION = 10;
 
 	// The minimum elapsed time (in milliseconds) to report when showing relative times. 
 	// For example, a time 3 seconds in the past will be reported as "0 minutes ago" 
