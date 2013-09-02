@@ -34,7 +34,7 @@ abstract class PushCoinAsyncTask extends AsyncTask<String, Void, Void>
 		HttpPost httpPost = new HttpPost(HTTP_API_URL);
 		httpPost.setEntity( new ByteArrayEntity( doc.toBytes() ) );
 
-		Log.v(TAG, HTTP_API_URL+doc.getDocumentName());
+		Log.v(Conf.TAG, HTTP_API_URL+doc.getDocumentName());
 		HttpResponse res = httpClient.execute( httpPost );
 
 		InputStream in = new BufferedInputStream(res.getEntity().getContent());
@@ -44,6 +44,4 @@ abstract class PushCoinAsyncTask extends AsyncTask<String, Void, Void>
 
 		return new DocumentReader( resultBuf, bytesLen );
 	}
-
-	private static final String TAG = "PcosInvoke";
 }

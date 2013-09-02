@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.support.v4.view.ViewPager;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.graphics.Typeface;
 import android.content.SharedPreferences;
 import android.content.Context;
@@ -44,11 +44,8 @@ public class OperationalFragment extends Fragment
 
 		// Listen to refresh presses and fire requests
 		refreshButton_.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) 
-			{
-				Message m = Message.obtain();
-				m.what = MessageId.ACCOUNT_HISTORY_REQUEST;
-				ctrl_.post(m);
+			public void onClick(View v) {
+				accountHistoryRequest();
 			}
 		});
 
@@ -72,13 +69,24 @@ public class OperationalFragment extends Fragment
 		// Install the adapter
 		pager_.setAdapter(pagerAdapter);
 
-		// Highlight currently selected tab, disable its button
+		// Highlights currently viewed tab in the bar, disable its button
 		pager_.setOnPageChangeListener( new PageChangeListener() );
+
+		// kick off download
+		accountHistoryRequest();
 
 		return fragmentRootLayout;
 	}
 
-	private static class OperationalPager extends FragmentPagerAdapter 
+	private void accountHistoryRequest()
+	{
+		Message m = Message.obtain();
+		m.what = MessageId.ACCOUNT_HISTORY_REQUEST;
+		ctrl_.post(m);
+	}
+
+	private static class OperationalPager 
+		extends FragmentStatePagerAdapter 
 	{
 		public OperationalPager(FragmentManager fm, Controller ctrl)
 		{

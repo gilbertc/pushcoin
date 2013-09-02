@@ -26,6 +26,9 @@ public class Conf
 	static final String PCOS_DOC_REGISTER_ACK = "RegisterAck";
 	static final String PCOS_DOC_TXN_HISTORY_REPLY = "TxnHistoryReply";
 
+	// Error codes
+	static final int PCOS_ERROR_DEVICE_NOT_ACTIVE = 1107;
+
 	// PCOS limits
 	static final int PCOS_MAXLEN_TXN_ID = 20;
 	static final int PCOS_MAXLEN_TXN_NOTE = 127;
@@ -47,4 +50,6 @@ public class Conf
 
 	static final String STATUS_UNEXPECTED_HAPPENED = "Oops, it didn't work )-:";
 	static final String DEFAULT_CURRENCY = "USD";
+
+	static final String TAG = "PushCoin";
 }

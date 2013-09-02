@@ -32,6 +32,7 @@ public class BalanceFragment
 		View fragmentRootLayout = inflater.inflate(R.layout.balance_tab, container, false);
 
 		// lookup fields
+		titleField_ = (TextView) fragmentRootLayout.findViewById(R.id.page_title);
 		balanceField_ = (TextView) fragmentRootLayout.findViewById(R.id.account_balance_field);
 		balanceTimeField_ = (TextView) fragmentRootLayout.findViewById(R.id.account_balance_time_field);
 		statusField_ = (TextView) fragmentRootLayout.findViewById(R.id.status_field);
@@ -78,6 +79,7 @@ public class BalanceFragment
 	public void onAccountHistoryChanged()
 	{
 		// update this fragment's view
+		titleField_.setText( ctrl_.getPageTitle() );
 		balanceField_.setText( ctrl_.getBalance() );
 		balanceTimeField_.setText( ctrl_.getBalanceTime() );
 
@@ -94,6 +96,7 @@ public class BalanceFragment
 	final Controller ctrl_;
 
 	// Cached widget views
+	TextView titleField_;
 	TextView balanceField_;
 	TextView balanceTimeField_;
 	TextView statusField_;

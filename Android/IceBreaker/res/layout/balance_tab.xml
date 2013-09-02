@@ -15,7 +15,8 @@
 		android:layout_height="wrap_content" >
 
 		<com.mobsandgeeks.ui.TypefaceTextView
-			android:text="Balance"
+			android:id="@+id/page_title"
+			android:text="Loading..."
 			android:gravity="center"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -26,7 +27,6 @@
 
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/account_balance_field"
-			android:text="..."
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center"

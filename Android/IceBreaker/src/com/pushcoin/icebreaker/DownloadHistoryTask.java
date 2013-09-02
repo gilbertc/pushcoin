@@ -16,6 +16,7 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 		mat_ = mat;
 	}
 
+	@Override
 	protected void onPreExecute()
 	{
 		// handlers may want to show a busy-status..
@@ -51,7 +52,16 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 				if ( docName.equals( Conf.PCOS_DOC_ERROR ) )
 				{
 					PcosHelper.ErrorInfo err = PcosHelper.parseError( res );
-					Log.e( TAG, "reason="+err.message+";code="+err.errorCode );
+					Log.e( Conf.TAG, "reason="+err.message+";code="+err.errorCode );
+
+					// If device was disabled, we need to go back to Setup mode
+					if (err.errorCode == Conf.PCOS_ERROR_DEVICE_NOT_ACTIVE)
+					{
+						Message m = Message.obtain();
+						m.what = MessageId.DEVICE_NOT_ACTIVE;
+						model_.post(m);
+					}
+
 					if (err.message.isEmpty()) {
 						status_ = Conf.STATUS_UNEXPECTED_HAPPENED;
 					}
@@ -68,7 +78,7 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 				}
 				else // Not an Error nor Ack!?
 				{
-					Log.e( TAG, "unexpected-server-response|doc="+docName );
+					Log.e( Conf.TAG, "unexpected-server-response|doc="+docName );
 					status_ = Conf.STATUS_UNEXPECTED_HAPPENED;
 				}
 			}
@@ -78,6 +88,7 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 		return null;
 	}
 
+	@Override
 	protected void onPostExecute(Void v) 
 	{
 		// may need to display an error
@@ -94,8 +105,7 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 		model_.post(m);
 	}
 
-	private static final String TAG = "TxnHistoryQuery|";
 	private final IceBreakerActivity model_;
 	private final byte[] mat_;
-	private String status_;
+	private String status_ = "";
 }

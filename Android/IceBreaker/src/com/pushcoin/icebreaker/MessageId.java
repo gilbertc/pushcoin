@@ -14,4 +14,5 @@ public class MessageId
 	final static int REGISTER_DEVICE_SUCCESS = 15;
 
 	final static int MODEL_CHANGED = 21;
+	final static int DEVICE_NOT_ACTIVE = 31;
 }

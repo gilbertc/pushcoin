@@ -26,6 +26,7 @@ public interface Controller
 	void reload();
 
 	// Model access
+	String getPageTitle();
 	String getBalance();
 	String getBalanceTime();
 	String getStatus();
