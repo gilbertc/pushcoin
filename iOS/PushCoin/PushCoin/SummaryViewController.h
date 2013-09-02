@@ -8,5 +8,4 @@
 @property (weak, nonatomic) IBOutlet UILabel *balanceLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timestampLabel;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (strong, nonatomic) UIRefreshControl *refreshControl;
 @end

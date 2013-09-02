@@ -32,3 +32,12 @@ CGMutablePathRef createRoundedRectForRectCCW(CGRect rect, CGFloat radius);
 NSNumberFormatter *standardNumberFormatter();
 void RetinaAwareUIGraphicsBeginImageContext(CGSize size);
 
+
+NSString * TxContextToString(NSString * txContext);
+NSString * TxTypeToString(NSString * txType);
+NSString * UtcTimestampToString(uint64_t utc, NSString * format = @"yyyy-MM-dd hh:mm a");
+
+NSString * fileAtDocumentDirectory(NSString * fileName);
+BOOL fileExistsInDocumentDirectory(NSString * fileName);
+
+

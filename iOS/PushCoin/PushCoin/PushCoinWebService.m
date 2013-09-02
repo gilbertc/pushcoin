@@ -27,7 +27,7 @@
 {
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:PushCoinWebServicePath] 
                                                         cachePolicy:NSURLRequestReloadIgnoringLocalCacheData 
-                                                    timeoutInterval:60.0];
+                                                    timeoutInterval:10.0];
     NSString *postLength = [NSString stringWithFormat:@"%d", [message length]];
     
     [req setHTTPMethod:@"POST"];
@@ -78,6 +78,7 @@
 
 - (void)connection:(NSURLConnection *) connection didFailWithError:(NSError *)error
 {
+    NSLog(@"connection error: %@", error.description);
     [delegate webService:self didFailWithStatusCode:-1 andDescription:error.description];
 }
 

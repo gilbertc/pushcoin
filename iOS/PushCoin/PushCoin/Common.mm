@@ -185,3 +185,45 @@ NSNumberFormatter * standardNumberFormatter() {
     //[formatter setMinimumIntegerDigits:1];
     return formatter;
 }
+
+NSString * UtcTimestampToString(uint64_t utc, NSString * format)
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:format];
+    
+    NSTimeInterval _interval= utc;
+    NSDate * date = [NSDate dateWithTimeIntervalSince1970:_interval];
+    return [dateFormatter stringFromDate:date];
+}
+
+NSString * TxContextToString(NSString * txContext)
+{
+    if ([txContext compare:@"P"] == 0)
+        return @"Payment";
+    else
+        return @"Unknown";
+}
+
+NSString * TxTypeToString(NSString * txType)
+{
+    if ([txType compare:@"C"] == 0)
+        return @"Credit";
+    else if ([txType compare:@"D"] == 0)
+        return @"Debit";
+    else
+        return @"Unknown";
+}
+
+NSString * fileAtDocumentDirectory(NSString * fileName)
+{
+    NSString * applicationDocumentsDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [applicationDocumentsDir stringByAppendingPathComponent:fileName];
+}
+
+BOOL fileExistsInDocumentDirectory(NSString * fileName)
+{
+    NSString * storePath = fileAtDocumentDirectory(fileName);
+    return [[NSFileManager defaultManager] fileExistsAtPath:storePath];
+}
+
+

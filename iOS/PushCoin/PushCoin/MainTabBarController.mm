@@ -5,6 +5,7 @@
 #import "PushCoinWebService.h"
 #import "MessageUpdatedDelegate.h"
 #import "Transaction.h"
+#import "Common.h"
 
 @interface MainTabBarController ()
 
@@ -13,6 +14,9 @@
 using namespace pcos;
 
 @implementation MainTabBarController
+{
+    BOOL dataReceived;
+}
 
 @synthesize timestamp;
 @synthesize balance;
@@ -39,7 +43,18 @@ using namespace pcos;
 {
     NSLog(@"MainTabBarController didLoad");
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    dataReceived = NO;
+    
+    NSString * storePath = fileAtDocumentDirectory(PushCoinLastTxnHistoryFile);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:storePath])
+    {
+        NSData * lastTxnHistory = [NSData dataWithContentsOfFile:storePath];
+        if (lastTxnHistory != nil)
+        {
+            NSLog(@"Processing cached txn data: %@", storePath);
+            [self handleData: lastTxnHistory];
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -84,16 +99,17 @@ using namespace pcos;
         self.messageListeners = [[NSMutableArray alloc] init];
     
     [self.messageListeners addObject:listener];
+    
+    if (dataReceived)
+        [listener messageDidUpdatedBy:self];
+    else
+        [self refresh];
 }
 
 - (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
 {
     [self handleData: data];
     
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MMM d, h:mm a"];
-    
-    self.timestamp = [formatter stringFromDate:[NSDate date]];
     
     for (id<MessageUpdatedDelegate> listener in self.messageListeners)
     {
@@ -102,6 +118,7 @@ using namespace pcos;
     
     NSLog(@"Updated");
     refreshing = NO;
+
 }
 
 - (void)handleData: (NSData*) data
@@ -120,8 +137,10 @@ using namespace pcos;
                 
                 long value = bl.readLong();
                 int scale = bl.readInt();
+                uint64_t utc = bl.readULong();
                 
-                NSLog(@"Balance %ld %d", value, scale);
+                NSLog(@"Balance %ld %d as of %lld", value, scale, utc);
+                self.timestamp = UtcTimestampToString(utc, @"MMM d, h:mm a");
                 self.balance = [NSString stringWithFormat:@"$%.02lf", value * pow(10, scale)];
             }
             
@@ -137,6 +156,14 @@ using namespace pcos;
                 for (size_t i = 0; i < count; ++i)
                     [self.transactions addObject:[[Transaction alloc] initWithReader:tr]];
             }
+
+            dataReceived = YES;
+            
+            // Save this result for next use
+            NSString * storePath = fileAtDocumentDirectory(PushCoinLastTxnHistoryFile);
+            NSLog(@"Writing to cache file: %@", storePath);
+            
+            [data writeToFile:storePath atomically:YES];
         }
         
         if ([documentName isEqualToString:@"Error"])
@@ -164,8 +191,17 @@ using namespace pcos;
 - (void)webService:(PushCoinWebService *)webService didFailWithStatusCode:(NSInteger)statusCode
     andDescription:(NSString *)description
 {
+    /*
     [[self appDelegate] showAlert:description
                         withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
+    */
+    
+    refreshing = NO;
+    
+    for (id<MessageUpdatedDelegate> listener in self.messageListeners)
+    {
+        [listener messageDidFailedBy:self withDescription:description];
+    }
 }
 
 

@@ -59,7 +59,7 @@
 			<key>TintColor</key>
 			<dict>
 				<key>Blue</key>
-				<real>0.0</real>
+				<real>0</real>
 				<key>Green</key>
 				<real>0.5</real>
 				<key>Red</key>
@@ -69,6 +69,10 @@
 			<false/>
 		</dict>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>TT0467M.ttf</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

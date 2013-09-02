@@ -14,10 +14,14 @@
 @end
 
 @implementation SummaryViewController
+{
+    UIRefreshControl * refreshControl;
+}
+
 @synthesize balanceLabel;
 @synthesize timestampLabel;
 @synthesize scrollView;
-@synthesize refreshControl;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,10 +37,10 @@
 {
     NSLog(@"SummaryViewDidLoad");
     [super viewDidLoad];
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
-    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
-    [self.scrollView addSubview:self.refreshControl];
+    refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
+    [self.scrollView addSubview:refreshControl];
     
     [self.appDelegate.mainTabBarController registerMessageListener:self];
 }
@@ -63,13 +67,18 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)messageDidFailedBy:(id <MessageUpdaterDelegate>)updater withDescription:description
+{
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refresh Failed"];
+    [refreshControl endRefreshing];
+}
+
 - (void) messageDidUpdatedBy:(id <MessageUpdaterDelegate>)updater
 {
-    NSLog(@"ending");
-    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
     self.timestampLabel.text = [NSString stringWithFormat:@"As of %@", updater.timestamp];
     self.balanceLabel.text = updater.balance;
-    [self.refreshControl endRefreshing];
+    [refreshControl endRefreshing];
 }
 
 @end

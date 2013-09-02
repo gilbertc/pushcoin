@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "MessageUpdatedDelegate.h"
 
-@interface HistoryViewController : UITableViewController<MessageUpdatedDelegate, UITableViewDataSource, UITableViewDelegate>
+@class MGScrollView;
+@interface HistoryViewController : UIViewController<MessageUpdatedDelegate>
 {
     
 }
-@property (strong, nonatomic) UIRefreshControl *refreshControl;
+@property (weak, nonatomic) IBOutlet MGScrollView * scroller;
 
 @end

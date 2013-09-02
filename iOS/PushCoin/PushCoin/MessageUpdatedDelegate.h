@@ -12,5 +12,5 @@
 @protocol MessageUpdatedDelegate <NSObject>
 
 - (void)messageDidUpdatedBy:(id <MessageUpdaterDelegate>)updater;
-
+- (void)messageDidFailedBy:(id <MessageUpdaterDelegate>)updater withDescription:description;
 @end
