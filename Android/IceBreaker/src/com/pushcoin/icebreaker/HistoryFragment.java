@@ -18,29 +18,43 @@ import android.widget.ArrayAdapter;
 
 public class HistoryFragment 
 	extends Fragment
-	implements ModelEventHandler
 {
+	public HistoryFragment(Controller ctrl)
+	{
+		ctrl_ = ctrl;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
+		ctrl_.registerHandler( handler_, MessageId.MODEL_CHANGED );
+
 		// Inflate the layout for this fragment
 		View fragmentRootLayout = inflater.inflate(R.layout.history_tab, container, false);
 		ListView history = (ListView)fragmentRootLayout.findViewById( R.id.transaction_history_list );
 
-		HistoryModelAdapter arrayAdapter = 
-			new HistoryModelAdapter(getActivity(), 
-				R.layout.history_row, R.id.txn_counterparty_name, 
-				R.id.txn_amount, R.id.txn_time, (Controller) getActivity() );
-		history.setAdapter(arrayAdapter); 
+		arrayAdapter_ = new HistoryModelAdapter( getActivity(), ctrl_ );
+		history.setAdapter(arrayAdapter_); 
 
 		return fragmentRootLayout;
 	}
 
-	// Invoked by the Controller
-	@Override
-	public void onAccountHistoryChanged()
+	/** Dispatch events. */
+	private Handler handler_ = new Handler() 
 	{
-		// update this fragment's view
-	}
+		@Override
+		public void handleMessage(Message msg) 
+		{
+			switch( msg.what )
+			{
+				case MessageId.MODEL_CHANGED:
+					arrayAdapter_.notifyDataSetChanged();
+				break;
+			}
+		}
+	};
 
+	final Controller ctrl_;
+
+	HistoryModelAdapter arrayAdapter_;
 }

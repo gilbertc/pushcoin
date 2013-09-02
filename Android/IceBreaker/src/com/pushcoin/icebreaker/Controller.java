@@ -29,7 +29,7 @@ public interface Controller
 	String getBalance();
 	String getBalanceTime();
 	String getStatus();
-	TransactionRecord getTransaction(int index);
+	PcosHelper.TransactionInfo getTransaction(int index);
 	int getHistorySize();
 
 	void registerHandler( Handler h, int messageId );

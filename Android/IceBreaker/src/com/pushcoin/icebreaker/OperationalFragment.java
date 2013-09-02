@@ -94,7 +94,7 @@ public class OperationalFragment extends Fragment
 				fragment = new BalanceFragment(ctrl_);
 			} 
 			else if (i == 1) {
-				fragment = new HistoryFragment();
+				fragment = new HistoryFragment(ctrl_);
 			}
 			return fragment;
 		}

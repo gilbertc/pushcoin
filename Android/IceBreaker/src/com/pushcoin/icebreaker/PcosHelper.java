@@ -2,9 +2,13 @@ package com.pushcoin.icebreaker;
 
 import com.pushcoin.Binascii;
 import com.pushcoin.pcos.*;
+import android.content.Context;
+import android.text.format.DateUtils;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.regex.Pattern;
+import java.text.NumberFormat;
 
 class PcosHelper
 {
@@ -213,5 +217,40 @@ class PcosHelper
 	static long getEpochUtc()
 	{
 		return System.currentTimeMillis() / 1000;
+	}
+
+	static String prettyTime( Context ctx, long sinceEpoch )
+	{
+		return DateUtils.getRelativeDateTimeString( ctx, sinceEpoch * 1000, 
+				Conf.STATUS_MIN_RESOLUTION, Conf.STATUS_TRANSITION_RESOLUTION, Conf.STATUS_FLAGS ).toString();
+	}
+
+	static public class DateTimePair
+	{
+		String date;
+		String time;
+	}
+
+	static final Pattern dateSplitRegEx = Pattern.compile(", ");
+	static DateTimePair prettyTimeParts( Context ctx, long sinceEpoch )
+	{
+		DateTimePair res = new DateTimePair();
+		String[] together = dateSplitRegEx.split(prettyTime(ctx, sinceEpoch));
+		if (together.length > 1)
+		{
+			res.date = together[0];
+			res.time = together[1];
+		} 
+		else
+		{
+			res.date = together[0];
+			res.time = "";
+		}
+		return res;
+	}
+
+	static String prettyAmount( BigDecimal val, String currency )
+	{
+		return NumberFormat.getCurrencyInstance().format(val);
 	}
 }

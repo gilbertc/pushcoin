@@ -21,8 +21,6 @@ import android.content.Intent;
 import java.util.TreeMap;
 import java.util.List;
 import java.util.ArrayList;
-import android.text.format.DateUtils;
-import java.text.NumberFormat;
 import java.math.BigDecimal;
 import com.pushcoin.Binascii;
 
@@ -92,23 +90,20 @@ public class IceBreakerActivity
 	public String getBalance()
 	{
 		if (txnHistory_ != null ) {
-			return NumberFormat.getCurrencyInstance().format( txnHistory_.balance );
+			return PcosHelper.prettyAmount( txnHistory_.balance, Conf.DEFAULT_CURRENCY );
 		} else {
-			return "-.--";
+			return "...";
 		}
 	}
 
 	@Override
 	public String getBalanceTime()
 	{
-		long recent = recentRequestTime() * 1000;
-		if (txnHistory_ != null ) 
-		{
-			return "as of " + 
-				DateUtils.getRelativeDateTimeString( this, recent, 
-				Conf.STATUS_MIN_RESOLUTION, Conf.STATUS_TRANSITION_RESOLUTION, Conf.STATUS_FLAGS );
+		if (txnHistory_ != null ) {
+			return "as of " + PcosHelper.prettyTime(this, recentRequestTime());
+		} else {
+			return "...";
 		}
-		else return "...";
 	}
 
 	@Override
@@ -118,31 +113,13 @@ public class IceBreakerActivity
 	}
 
 	@Override
-	public TransactionRecord getTransaction(int index)
+	public PcosHelper.TransactionInfo getTransaction(int index)
 	{
-		TransactionRecord	txn = new TransactionRecord();
-		if ( index % 2 == 0 ) {
-			txn.counterparty = "Wheaton";
-			txn.amount = "$51.33";
-			txn.utctime = "12:32 PM";
+		if (txnHistory_ != null && index < txnHistory_.transactionInfo.length ) {
+			return txnHistory_.transactionInfo[index];
+		} else {
+			throw new RuntimeException("No transaction record at index "+index);
 		}
-		else if ( index % 3 == 0 ) {
-			txn.counterparty = "Wheaton Academy Lunch";
-			txn.amount = "$511.33";
-			txn.utctime = "Aug 12 '04";
-			txn.utctime = "12:32 PM";
-		}
-		else if ( index % 4 == 0 ) {
-			txn.counterparty = "Wheaton Academy";
-			txn.amount = "$5.33";
-			txn.utctime = "9:01 PM";
-		}
-		else {
-			txn.counterparty = "Wheaton Academy Lunch";
-			txn.amount = "$10.33";
-			txn.utctime = "1:11 PM";
-		}
-		return txn;
 	}
 
 	@Override

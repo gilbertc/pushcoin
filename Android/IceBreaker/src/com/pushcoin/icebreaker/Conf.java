@@ -46,4 +46,5 @@ public class Conf
 	static final String PREFS_KEY_MAT_KEY = "mat";
 
 	static final String STATUS_UNEXPECTED_HAPPENED = "Oops, it didn't work )-:";
+	static final String DEFAULT_CURRENCY = "USD";
 }
