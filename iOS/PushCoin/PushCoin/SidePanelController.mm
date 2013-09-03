@@ -156,14 +156,8 @@ using namespace pcos;
             if (blIt != reader.end())
             {
                 auto & bl = blIt->second;
-                
-                long value = bl.readLong();
-                int scale = bl.readInt();
-                uint64_t utc = bl.readULong();
-                
-                NSLog(@"Balance %ld %d as of %lld", value, scale, utc);
-                self.timestamp = UtcTimestampToString(utc, @"MMM d, h:mm a");
-                self.balance = [NSString stringWithFormat:@"$%.02lf", value * pow(10, scale)];
+                self.balance = [[Amount alloc] initWithReader:bl];
+                self.timestamp = UtcTimestampToString(bl.readULong(), @"MMM d, h:mm a");
             }
             
             auto trIt = reader.find("Tr");

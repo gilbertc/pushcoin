@@ -7,7 +7,9 @@
 //
 
 #import "SummaryViewController.h"
+#import "Transaction.h"
 #import "AppDelegate.h"
+#import "Common.h"
 
 @interface SummaryViewController ()
 
@@ -19,6 +21,11 @@
 }
 
 @synthesize balanceLabel;
+@synthesize balanceDecimalLabel;
+@synthesize lastPaymentLabel;
+@synthesize lastAddressLabel;
+@synthesize lastCounterPartyLabel;
+@synthesize lastTimeLabel;
 @synthesize timestampLabel;
 @synthesize scrollView;
 
@@ -37,6 +44,15 @@
 {
     NSLog(@"SummaryViewDidLoad");
     [super viewDidLoad];
+
+    // Title Bar
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pushcoin.png"]];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    CGRect newFrame = imageView.frame;
+    newFrame.size.height = 24;
+    imageView.frame = newFrame;
+    self.navigationItem.titleView = imageView;
+    
     refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
@@ -77,7 +93,33 @@
 {
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
     self.timestampLabel.text = [NSString stringWithFormat:@"As of %@", updater.timestamp];
-    self.balanceLabel.text = updater.balance;
+    
+    double balance = updater.balance.doubleValue;
+    
+    self.balanceLabel.text = [NSString stringWithFormat:@"%d", (int) balance];
+    self.balanceDecimalLabel.text = [NSString stringWithFormat:@"%d", (int)(balance * 100) - ((int)balance) * 100];
+    
+    if (updater.transactions.count > 0)
+    {
+        Transaction * trx = ((Transaction *)[updater.transactions objectAtIndex:0]);
+        self.lastCounterPartyLabel.text = trx.counterPartyName;
+        self.lastPaymentLabel.text = trx.payment.text;
+        self.lastTimeLabel.text = UtcTimestampToString(trx.utcTransactionTime);
+        
+        if (trx.address != nil)
+            self.lastAddressLabel.text = [NSString stringWithFormat:@"%@, %@", trx.address.city, trx.address.state];
+        else
+            self.lastAddressLabel.text = @"";
+        
+    }
+    else
+    {
+        self.lastCounterPartyLabel.text = @"No Activity";
+        self.lastAddressLabel.text = @"";
+        self.lastPaymentLabel.text = @"";
+        self.lastTimeLabel.text = @"";
+    }
+    
     [refreshControl endRefreshing];
 }
 

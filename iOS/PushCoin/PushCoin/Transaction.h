@@ -18,6 +18,7 @@
 }
 @property (assign) int64_t value;
 @property (assign) int32_t scale;
+@property (assign, readonly) double doubleValue;
 
 -(Amount *) initWithReader:(pcos::BlockReader &) reader;
 -(NSString *)text;

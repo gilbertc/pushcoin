@@ -14,7 +14,6 @@
 		0D19E2D91541CCAE00C8671B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D19E2D81541CCAE00C8671B /* main.m */; };
 		0D19E2DD1541CCAE00C8671B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D19E2DC1541CCAE00C8671B /* AppDelegate.m */; };
 		0D27FE0717D1615C0079B630 /* pcos.xcodeproj in Resources */ = {isa = PBXBuildFile; fileRef = 0D27FE0617D1615C0079B630 /* pcos.xcodeproj */; };
-		0D36107C17D447BB00919AC5 /* TT0467M.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D36107817D447BB00919AC5 /* TT0467M.ttf */; };
 		0D36108217D4498F00919AC5 /* UILabel+CustomFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D36108117D4498F00919AC5 /* UILabel+CustomFont.m */; };
 		0D36108517D50DCF00919AC5 /* TransactionBox.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D36108417D50DCF00919AC5 /* TransactionBox.mm */; };
 		0D377612156839BC003FB8B3 /* Common.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D377611156839BC003FB8B3 /* Common.mm */; };
@@ -23,6 +22,14 @@
 		0D3EA6231548FB0A0088EFE1 /* PushCoinWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */; };
 		0D4923CA1568C37A00626AC2 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F8A1542031C00634A79 /* libiconv.dylib */; };
 		0D4E98491584A8F20009622B /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E98481584A8F20009622B /* NSString+URLEncoding.m */; };
+		0D54CD3517D5B0B900E5D71E /* logo-retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D54CD3417D5B0B900E5D71E /* logo-retina.png */; };
+		0D54CD3717D5B0EC00E5D71E /* app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D54CD3617D5B0EC00E5D71E /* app-icon.png */; };
+		0D54CD3917D5B11C00E5D71E /* app-icon-retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D54CD3817D5B11C00E5D71E /* app-icon-retina.png */; };
+		0D54CD3B17D5B2FB00E5D71E /* TT0468M.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D54CD3A17D5B2FB00E5D71E /* TT0468M.ttf */; };
+		0D54CD3D17D5B58E00E5D71E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D54CD3C17D5B58E00E5D71E /* Default.png */; };
+		0D54CD3F17D5B59300E5D71E /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D54CD3E17D5B59300E5D71E /* Default@2x.png */; };
+		0D54CD4117D5B59900E5D71E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D54CD4017D5B59900E5D71E /* Default-568h@2x.png */; };
+		0D54CD4317D5C4CB00E5D71E /* pushcoin.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D54CD4217D5C4CB00E5D71E /* pushcoin.png */; };
 		0D64183817D2E7D500C85327 /* storage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D64183717D2E7D500C85327 /* storage.png */; };
 		0D64183A17D2E80700C85327 /* dollar-sign.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D64183917D2E80700C85327 /* dollar-sign.png */; };
 		0D64183D17D2E87900C85327 /* HistoryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D64183C17D2E87900C85327 /* HistoryViewController.mm */; };
@@ -47,7 +54,7 @@
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
 		0DB67A5D1564C8C200CA997C /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DB67A5C1564C8C200CA997C /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DC10D5617D564DD00992ABB /* SidePanelController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0DC10D5517D564DD00992ABB /* SidePanelController.mm */; };
-		0DC10D5C17D5734D00992ABB /* LeftSidePanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DC10D5B17D5734D00992ABB /* LeftSidePanelViewController.m */; };
+		0DC10D5C17D5734D00992ABB /* LeftSidePanelViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0DC10D5B17D5734D00992ABB /* LeftSidePanelViewController.mm */; };
 		0DD692B615660FC500391E25 /* iphone_delete_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DD692B515660FC500391E25 /* iphone_delete_button.png */; };
 		0DD7EBA517CF793400F9CE3B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0DD7EBA417CF793400F9CE3B /* MainStoryboard.storyboard */; };
 		0DDBA5B117D1619000B7DEC6 /* libpcos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DDBA5AD17D1617700B7DEC6 /* libpcos.a */; };
@@ -102,7 +109,6 @@
 		0D19E2DB1541CCAE00C8671B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0D19E2DC1541CCAE00C8671B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		0D27FE0617D1615C0079B630 /* pcos.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pcos.xcodeproj; path = ../pcos/pcos.xcodeproj; sourceTree = "<group>"; };
-		0D36107817D447BB00919AC5 /* TT0467M.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = TT0467M.ttf; sourceTree = "<group>"; };
 		0D36108017D4498F00919AC5 /* UILabel+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UILabel+CustomFont.h"; path = "PushCoin/UILabel+CustomFont.h"; sourceTree = "<group>"; };
 		0D36108117D4498F00919AC5 /* UILabel+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UILabel+CustomFont.m"; path = "PushCoin/UILabel+CustomFont.m"; sourceTree = "<group>"; };
 		0D36108317D50DCF00919AC5 /* TransactionBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionBox.h; sourceTree = "<group>"; };
@@ -118,6 +124,14 @@
 		0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinWebService.m; sourceTree = "<group>"; };
 		0D4E98471584A8F20009622B /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+URLEncoding.h"; path = "PushCoin/NSString+URLEncoding.h"; sourceTree = "<group>"; };
 		0D4E98481584A8F20009622B /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+URLEncoding.m"; path = "PushCoin/NSString+URLEncoding.m"; sourceTree = "<group>"; };
+		0D54CD3417D5B0B900E5D71E /* logo-retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-retina.png"; sourceTree = "<group>"; };
+		0D54CD3617D5B0EC00E5D71E /* app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon.png"; sourceTree = "<group>"; };
+		0D54CD3817D5B11C00E5D71E /* app-icon-retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon-retina.png"; sourceTree = "<group>"; };
+		0D54CD3A17D5B2FB00E5D71E /* TT0468M.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = TT0468M.ttf; sourceTree = "<group>"; };
+		0D54CD3C17D5B58E00E5D71E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		0D54CD3E17D5B59300E5D71E /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		0D54CD4017D5B59900E5D71E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		0D54CD4217D5C4CB00E5D71E /* pushcoin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pushcoin.png; sourceTree = "<group>"; };
 		0D64183517D2DBE300C85327 /* MessageUpdatedDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MessageUpdatedDelegate.h; path = PushCoin/MessageUpdatedDelegate.h; sourceTree = "<group>"; };
 		0D64183617D2DE4C00C85327 /* MessageUpdaterDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MessageUpdaterDelegate.h; path = PushCoin/MessageUpdaterDelegate.h; sourceTree = "<group>"; };
 		0D64183717D2E7D500C85327 /* storage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = storage.png; sourceTree = "<group>"; };
@@ -156,7 +170,7 @@
 		0DC10D5417D564DD00992ABB /* SidePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidePanelController.h; sourceTree = "<group>"; };
 		0DC10D5517D564DD00992ABB /* SidePanelController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SidePanelController.mm; sourceTree = "<group>"; };
 		0DC10D5A17D5734D00992ABB /* LeftSidePanelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftSidePanelViewController.h; sourceTree = "<group>"; };
-		0DC10D5B17D5734D00992ABB /* LeftSidePanelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftSidePanelViewController.m; sourceTree = "<group>"; };
+		0DC10D5B17D5734D00992ABB /* LeftSidePanelViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LeftSidePanelViewController.mm; sourceTree = "<group>"; };
 		0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = pushcoin_dsa.pub; sourceTree = "<group>"; };
 		0DD692B515660FC500391E25 /* iphone_delete_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphone_delete_button.png; sourceTree = "<group>"; };
 		0DD7EBA417CF793400F9CE3B /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
@@ -201,6 +215,12 @@
 		0D19E2BD1541CCAE00C8671B = {
 			isa = PBXGroup;
 			children = (
+				0D54CD4017D5B59900E5D71E /* Default-568h@2x.png */,
+				0D54CD3E17D5B59300E5D71E /* Default@2x.png */,
+				0D54CD3C17D5B58E00E5D71E /* Default.png */,
+				0D54CD3817D5B11C00E5D71E /* app-icon-retina.png */,
+				0D54CD3617D5B0EC00E5D71E /* app-icon.png */,
+				0D54CD3417D5B0B900E5D71E /* logo-retina.png */,
 				0DDBA5BF17D1839E00B7DEC6 /* openssl.xcodeproj */,
 				0D27FE0617D1615C0079B630 /* pcos.xcodeproj */,
 				0D19E2D21541CCAE00C8671B /* PushCoin.App */,
@@ -310,7 +330,7 @@
 				0DC10D5417D564DD00992ABB /* SidePanelController.h */,
 				0DC10D5517D564DD00992ABB /* SidePanelController.mm */,
 				0DC10D5A17D5734D00992ABB /* LeftSidePanelViewController.h */,
-				0DC10D5B17D5734D00992ABB /* LeftSidePanelViewController.m */,
+				0DC10D5B17D5734D00992ABB /* LeftSidePanelViewController.mm */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -345,7 +365,8 @@
 		0DBC491D1543C59A00E56EDF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0D36107817D447BB00919AC5 /* TT0467M.ttf */,
+				0D54CD4217D5C4CB00E5D71E /* pushcoin.png */,
+				0D54CD3A17D5B2FB00E5D71E /* TT0468M.ttf */,
 				0D64183917D2E80700C85327 /* dollar-sign.png */,
 				0D64183717D2E7D500C85327 /* storage.png */,
 				0DA259EF157F2E89009AB9A6 /* logo.png */,
@@ -461,7 +482,14 @@
 				0D27FE0717D1615C0079B630 /* pcos.xcodeproj in Resources */,
 				0D64183817D2E7D500C85327 /* storage.png in Resources */,
 				0D64183A17D2E80700C85327 /* dollar-sign.png in Resources */,
-				0D36107C17D447BB00919AC5 /* TT0467M.ttf in Resources */,
+				0D54CD3517D5B0B900E5D71E /* logo-retina.png in Resources */,
+				0D54CD3717D5B0EC00E5D71E /* app-icon.png in Resources */,
+				0D54CD3917D5B11C00E5D71E /* app-icon-retina.png in Resources */,
+				0D54CD3B17D5B2FB00E5D71E /* TT0468M.ttf in Resources */,
+				0D54CD3D17D5B58E00E5D71E /* Default.png in Resources */,
+				0D54CD3F17D5B59300E5D71E /* Default@2x.png in Resources */,
+				0D54CD4117D5B59900E5D71E /* Default-568h@2x.png in Resources */,
+				0D54CD4317D5C4CB00E5D71E /* pushcoin.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,7 +553,7 @@
 				0D36108217D4498F00919AC5 /* UILabel+CustomFont.m in Sources */,
 				0D36108517D50DCF00919AC5 /* TransactionBox.mm in Sources */,
 				0DC10D5617D564DD00992ABB /* SidePanelController.mm in Sources */,
-				0DC10D5C17D5734D00992ABB /* LeftSidePanelViewController.m in Sources */,
+				0DC10D5C17D5734D00992ABB /* LeftSidePanelViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,7 +26,12 @@
 
 -(NSString *) text
 {
-    return [NSString stringWithFormat:@"$%.02lf", self.value * pow(10, self.scale)];
+    return [NSString stringWithFormat:@"$%.02lf", self.doubleValue];
+}
+
+-(double) doubleValue
+{
+    return self.value * pow(10, self.scale);
 }
 
 @end

@@ -27,7 +27,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+    // Title Bar
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pushcoin.png"]];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    CGRect newFrame = imageView.frame;
+    newFrame.size.height = 24;
+    imageView.frame = newFrame;
+    self.navigationItem.titleView = imageView;
+
     refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];

@@ -29,10 +29,25 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UIView *backgroundSelectedCell = [[UIView alloc] init];
+    [backgroundSelectedCell setBackgroundColor:[UIColor colorWithRed:80/256.0 green:80/256.0 blue:80/256.0 alpha:1.0]];
+    
+    for (int section = 0; section < [self.tableView numberOfSections]; section++)
+    {
+        for (int row = 0; row < [self.tableView numberOfRowsInSection:section]; row++)
+        {
+            NSIndexPath* cellPath = [NSIndexPath indexPathForRow:row inSection:section];
+            UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:cellPath];
+            
+            [cell setSelectedBackgroundView:backgroundSelectedCell];
+        }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    self.tableView.delegate = self;
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
                                 animated:NO
                           scrollPosition:UITableViewScrollPositionTop];
@@ -53,6 +68,10 @@
 {
     return 3;
 }
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+ }
 
 #pragma mark - Table view delegate
 

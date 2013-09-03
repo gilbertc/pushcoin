@@ -9,7 +9,7 @@
 #import "RegistrationController.h"
 #import "PushCoinWebService.h"
 #import "MessageUpdaterDelegate.h"
-
+#import "Transaction.h"
 
 @interface SidePanelController : JASidePanelController<RegistrationControllerDelegate, PushCoinWebServiceDelegate, MessageUpdaterDelegate>
 {
@@ -18,7 +18,7 @@
 
 
 @property (strong, nonatomic) NSString * timestamp;
-@property (strong, nonatomic) NSString * balance;
+@property (strong, nonatomic) Amount * balance;
 @property (strong, nonatomic) NSMutableArray * transactions;
 @property (strong, nonatomic) NSMutableArray * messageListeners;
 

@@ -14,6 +14,8 @@
 		<string>PushCoinLogo-Small.png</string>
 		<string>Default.png</string>
 		<string>Default@2x.png</string>
+		<string>app-icon-retina.png</string>
+		<string>app-icon.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -25,7 +27,11 @@
 				<string>PushCoinLogo-Small.png</string>
 				<string>Default.png</string>
 				<string>Default@2x.png</string>
+				<string>app-icon-retina.png</string>
+				<string>app-icon.png</string>
 			</array>
+			<key>UIPrerenderedIcon</key>
+			<true/>
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
@@ -44,8 +50,14 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>TT0468M.ttf</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard</string>
+	<key>UIPrerenderedIcon</key>
+	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -55,24 +67,11 @@
 		<key>UINavigationBar</key>
 		<dict>
 			<key>Style</key>
-			<string>UIBarStyleDefault</string>
-			<key>TintColor</key>
-			<dict>
-				<key>Blue</key>
-				<real>0</real>
-				<key>Green</key>
-				<real>0.5</real>
-				<key>Red</key>
-				<real>1</real>
-			</dict>
+			<string>UIBarStyleBlack</string>
 			<key>Translucent</key>
-			<false/>
+			<true/>
 		</dict>
 	</dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>TT0467M.ttf</string>
-	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
