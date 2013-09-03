@@ -84,8 +84,7 @@
         MGBox * table = (MGBox *) weakSelf.parentBox;
         MGScrollView * scrollView = (MGScrollView *) table.parentBox;
 
-        [table layoutWithSpeed:0.3 completion:nil];
-//        [scrollView layoutWithSpeed:1 completion:nil];
+        [table layout];
         [scrollView scrollToView:weakSelf withMargin:8];
     };
 }

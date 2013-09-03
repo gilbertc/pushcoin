@@ -102,8 +102,8 @@
 		0D19E2DC1541CCAE00C8671B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		0D27FE0617D1615C0079B630 /* pcos.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pcos.xcodeproj; path = ../pcos/pcos.xcodeproj; sourceTree = "<group>"; };
 		0D36107817D447BB00919AC5 /* TT0467M.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = TT0467M.ttf; sourceTree = "<group>"; };
-		0D36108017D4498F00919AC5 /* UILabel+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+CustomFont.h"; sourceTree = "<group>"; };
-		0D36108117D4498F00919AC5 /* UILabel+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+CustomFont.m"; sourceTree = "<group>"; };
+		0D36108017D4498F00919AC5 /* UILabel+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UILabel+CustomFont.h"; path = "PushCoin/UILabel+CustomFont.h"; sourceTree = "<group>"; };
+		0D36108117D4498F00919AC5 /* UILabel+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UILabel+CustomFont.m"; path = "PushCoin/UILabel+CustomFont.m"; sourceTree = "<group>"; };
 		0D36108317D50DCF00919AC5 /* TransactionBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionBox.h; sourceTree = "<group>"; };
 		0D36108417D50DCF00919AC5 /* TransactionBox.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TransactionBox.mm; sourceTree = "<group>"; };
 		0D377610156839BC003FB8B3 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = PushCoin/Common.h; sourceTree = "<group>"; };
