@@ -116,6 +116,12 @@ public class IceBreakerActivity
 	}
 
 	@Override
+	public void castRating( String txnId, int rating )
+	{
+		new CastRatingTask(this, mat_, txnId, rating).execute();
+	}
+
+	@Override
 	public void registerHandler( Handler h, int messageId )
 	{
 		List<Handler> slot = messageReceiver_.get(messageId);

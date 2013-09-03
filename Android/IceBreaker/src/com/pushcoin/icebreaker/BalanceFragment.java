@@ -37,8 +37,10 @@ public class BalanceFragment
 		balanceField_ = (TextView) fragmentRootLayout.findViewById(R.id.account_balance_field);
 		balanceTimeField_ = (TextView) fragmentRootLayout.findViewById(R.id.account_balance_time_field);
 		statusField_ = (TextView) fragmentRootLayout.findViewById(R.id.status_field);
-		ratingBar_ = (RatingBar) fragmentRootLayout.findViewById(R.id.recent_transaction_rating_bar);
-		ratingBarLabel_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_rating_label);
+		recentTransactionUserRatingBar_ = (RatingBar) fragmentRootLayout.findViewById(R.id.recent_transaction_rating_bar);
+		recentTransactionUserRatingBarLabel_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_rating_label);
+		recentTransactionMerchantScore_ = (RatingBar) fragmentRootLayout.findViewById(R.id.merchant_score_bar);
+		recentTransactionMerchantScoreLabel_ = (TextView) fragmentRootLayout.findViewById(R.id.merchant_score_label);
 		recentTransactionPanel_ = fragmentRootLayout.findViewById(R.id.recent_transaction_panel);
 
 		recentTransactionBusinessName_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_business_name_field);
@@ -53,15 +55,19 @@ public class BalanceFragment
 		// rating scale
 		ratingScale_ = res.getStringArray(R.array.rating_scale);
 		// call to action -- rate now
-		ratingBarLabel_.setText(ratingScale_[0]);
-		ratingBar_.setOnRatingBarChangeListener( new RatingBar.OnRatingBarChangeListener() {
+		recentTransactionUserRatingBarLabel_.setText(ratingScale_[0]);
+		recentTransactionUserRatingBar_.setOnRatingBarChangeListener( new RatingBar.OnRatingBarChangeListener() {
 			public void onRatingChanged(RatingBar b, float rating, boolean fromUser) 
 			{
+				int roundedRating = (int) Math.round(rating);
 				// change label
-				ratingBarLabel_.setText(ratingScale_[ (int) Math.round(rating) ]);
+				recentTransactionUserRatingBarLabel_.setText(ratingScale_[ roundedRating ]);
 
-				// send to backend
-				// TODO...
+				// send vote 
+				PcosHelper.TransactionInfo mostRecent = ctrl_.getRecentTransaction();
+				if (mostRecent != null) {
+					ctrl_.castRating( mostRecent.txnId, roundedRating );
+				}
 			}
 		});
 
@@ -125,11 +131,39 @@ public class BalanceFragment
 				deviceName = mostRecent.deviceName;
 			}
 
+			// transaction rating
+			recentTransactionUserRatingBar_.setRating(mostRecent.txnRating);
+			// turn off voting if transaction took place more than CUTOFF ago
+			if ( (PcosHelper.getEpochUtc() - mostRecent.txnTimeEpoch) > Conf.USER_RATING_CUTOFF )
+			{
+				recentTransactionUserRatingBar_.setIsIndicator( true );
+				// dont even show the component if didn't vote
+				if (mostRecent.txnRating > 0)
+				{
+					recentTransactionUserRatingBarLabel_.setText(ratingScale_[ mostRecent.txnRating ]);
+					recentTransactionUserRatingBarLabel_.setVisibility(View.VISIBLE);
+				}
+				else // hide label and bar
+				{	
+					recentTransactionUserRatingBar_.setVisibility(View.INVISIBLE);
+					recentTransactionUserRatingBarLabel_.setVisibility(View.INVISIBLE);
+				}
+			}
+			else 
+			{
+				recentTransactionUserRatingBar_.setIsIndicator( false );
+				recentTransactionUserRatingBarLabel_.setText(ratingScale_[ mostRecent.txnRating ]);
+			}
+
+			// business name, address, rating
 			recentTransactionBusinessName_.setText( mostRecent.counterParty );
 			recentTransactionPaymentInfo_.setText(Html.fromHtml( deviceName + " " + transactionType + " <b>" + PcosHelper.prettyAmount( mostRecent.amount, mostRecent.currency ) + "</b> " + PcosHelper.prettyTime(getActivity(), mostRecent.txnTimeEpoch)) );
 			recentTransactionAddressStreet_.setText( mostRecent.posAddress.street );
 			recentTransactionAddressCityStateZip_.setText(mostRecent.posAddress.city + ", " + mostRecent.posAddress.state + " " + mostRecent.posAddress.zipCode);
 			recentTransactionAddressPhone_.setText( "Ph: " + mostRecent.merchantPhone );
+			recentTransactionMerchantScore_.setRating(mostRecent.merchantScore);		
+			recentTransactionMerchantScoreLabel_.setText( String.format("Score %.1f / 5 (%d votes)", mostRecent.merchantScore, mostRecent.totalVotes) );
+
 			recentTransactionPanel_.setVisibility(View.VISIBLE);
 		} 
 		else {
@@ -144,8 +178,10 @@ public class BalanceFragment
 	TextView balanceField_;
 	TextView balanceTimeField_;
 	TextView statusField_;
-	RatingBar ratingBar_;
-	TextView ratingBarLabel_;
+	RatingBar recentTransactionUserRatingBar_;
+	TextView recentTransactionUserRatingBarLabel_;
+	RatingBar recentTransactionMerchantScore_;
+	TextView recentTransactionMerchantScoreLabel_;
 	View recentTransactionPanel_;
 
 	TextView recentTransactionBusinessName_;

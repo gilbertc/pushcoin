@@ -34,6 +34,8 @@ public interface Controller
 	PcosHelper.TransactionInfo getRecentTransaction();
 	int getHistorySize();
 
+	// voting 
+	void castRating( String txnId, int rating );
 	void registerHandler( Handler h, int messageId );
 	void post( Message m );
 }

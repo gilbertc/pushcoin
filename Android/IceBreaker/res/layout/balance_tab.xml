@@ -145,7 +145,7 @@
 			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 
 		<RatingBar
-			android:id="@+id/business_rating_bar"
+			android:id="@+id/merchant_score_bar"
 			android:layout_alignParentLeft="true"
 			android:layout_alignBottom="@id/recent_transaction_city_state_zip_field"
 			android:layout_width="wrap_content"
@@ -156,10 +156,9 @@
 			android:numStars="5" />
 
 		<com.mobsandgeeks.ui.TypefaceTextView
-			android:id="@+id/business_rating_value"
-			android:text="Score 4.3 / 5 (312 votes)"
+			android:id="@+id/merchant_score_label"
 			android:layout_alignParentLeft="true"
-			android:layout_below="@id/business_rating_bar"
+			android:layout_below="@id/merchant_score_bar"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="10dp"

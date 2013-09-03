@@ -4,9 +4,16 @@ import android.text.format.DateUtils;
 
 public class Conf 
 {
+	static final String HTTP_API_URL = "https://api.pushcoin.com/pcos/";
+	static final int HTTP_API_MAX_RESPONSE_LEN = 20*1024;
+	static final int HTTP_API_TIMEOUT = 4000; // ms
+
 	// Request throttling
 	static final long THROTTLE_MAX_REQUESTS_PER_WINDOW = 1;
 	static final long THROTTLE_REQUEST_WINDOW_DURATION = 10;
+
+	// Disable user rating for transactions older than this many seconds.
+	static final int USER_RATING_CUTOFF = 24*3600; // one day
 
 	// The minimum elapsed time (in milliseconds) to report when showing relative times. 
 	// For example, a time 3 seconds in the past will be reported as "0 minutes ago" 
@@ -22,6 +29,7 @@ public class Conf
 
 	static final int DSA_KEY_LENGTH = 1024;
 	// PCOS doc names
+	static final String PCOS_DOC_SUCCESS = "Success";
 	static final String PCOS_DOC_ERROR = "Error";
 	static final String PCOS_DOC_REGISTER_ACK = "RegisterAck";
 	static final String PCOS_DOC_TXN_HISTORY_REPLY = "TxnHistoryReply";

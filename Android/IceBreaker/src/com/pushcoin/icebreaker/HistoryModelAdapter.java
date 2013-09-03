@@ -3,6 +3,7 @@ package com.pushcoin.icebreaker;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.RatingBar;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,7 @@ public class HistoryModelAdapter extends BaseAdapter
 			holder.date = (TextView) convertView.findViewById(R.id.txn_date);
 			holder.time = (TextView) convertView.findViewById(R.id.txn_time);
 			holder.deviceName = (TextView) convertView.findViewById(R.id.txn_device_name);
+			holder.merchantScore = (RatingBar) convertView.findViewById(R.id.merchant_score_bar);
 			convertView.setTag(holder);
 		} 
 		else
@@ -86,6 +88,13 @@ public class HistoryModelAdapter extends BaseAdapter
 		holder.date.setText( txnTime.date );
 		holder.time.setText( txnTime.time );
 		holder.deviceName.setText( txn.deviceName );
+		if (txn.totalVotes > 0) {
+			holder.merchantScore.setRating( txn.merchantScore );
+			holder.merchantScore.setVisibility(View.VISIBLE);
+		}
+		else {
+			holder.merchantScore.setVisibility(View.INVISIBLE);
+		}
 		
 		// alternate colors
 		if ((position % 2) == 0) {
@@ -104,6 +113,7 @@ public class HistoryModelAdapter extends BaseAdapter
 		TextView date;
 		TextView time;
 		TextView deviceName;
+		RatingBar merchantScore;
 	}
 
 	private LayoutInflater inflater_;

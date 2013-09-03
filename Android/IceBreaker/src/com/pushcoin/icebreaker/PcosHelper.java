@@ -83,6 +83,7 @@ class PcosHelper
 		String txnContext;
 		String txnStatus;
 		long txnTimeEpoch;
+		int txnRating;
 		String deviceName;
 		String currency;
 		BigDecimal amount;
@@ -96,6 +97,8 @@ class PcosHelper
 		String merchantEmail;
 		double posLatitude;
 		double posLongitude;
+		float merchantScore;
+		int totalVotes;
 	}
 
 	static public class TxnHistoryReply
@@ -196,6 +199,9 @@ class PcosHelper
 				}
 
 				record.txnStatus = tr.readString(1);
+				record.txnRating = (int)tr.readUint();
+				record.merchantScore = (float)tr.readDouble();
+				record.totalVotes = (int)tr.readUint();
 			}
 			return res;
 		}

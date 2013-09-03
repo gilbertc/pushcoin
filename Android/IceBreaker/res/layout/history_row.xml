@@ -51,7 +51,7 @@
 			geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf" />
 		
 		<RatingBar
-			android:id="@+id/business_rating_bar"
+			android:id="@+id/merchant_score_bar"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="right"

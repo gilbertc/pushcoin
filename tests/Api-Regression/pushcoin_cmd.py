@@ -252,6 +252,11 @@ class RmoteCall:
 				rs['txn_longitude'] = hist_seg.read_double()
 
 			rs['txn_status'] = hist_seg.read_string()
+			
+			# rating and score
+			rs['user_rating'] = hist_seg.read_uint()
+			rs['merchant_score'] = hist_seg.read_double()
+ 			rs['vote_count'] = hist_seg.read_uint()
 
 			printplus( rs )
 			print( '------' )
