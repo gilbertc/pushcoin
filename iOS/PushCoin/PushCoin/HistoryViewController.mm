@@ -42,7 +42,7 @@
     [self.scroller.boxes addObject:tablesGrid];
     [tablesGrid layout];
     
-    [self.appDelegate.mainTabBarController registerMessageListener:self];
+    [self.appDelegate.messageUpdater registerMessageListener:self];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -54,7 +54,7 @@
 -(void) handleRefresh:(UIRefreshControl *) refresher
 {
     refresher.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing..."];
-    [self.appDelegate.mainTabBarController refresh];
+    [self.appDelegate.messageUpdater refresh];
 }
 
 - (AppDelegate *)appDelegate

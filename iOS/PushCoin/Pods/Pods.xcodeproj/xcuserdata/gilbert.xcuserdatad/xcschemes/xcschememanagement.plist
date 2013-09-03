@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-JASidePanels.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
 		<key>Pods-MGBox2.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -17,7 +22,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>2F5D46EAC30549E1BE703921</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>5E58FD8F6A214035AA2298CB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CD6F15FE50C34547B5CA5810</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E5F95AD9581B4E1BAC80DD73</key>
 		<dict>
 			<key>primary</key>
 			<true/>

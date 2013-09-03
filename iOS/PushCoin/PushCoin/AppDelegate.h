@@ -2,7 +2,7 @@
 #import "KeychainItemWrapper.h"
 #import "PasscodeViewController.h"
 #import "RegistrationController.h"
-#import "MainTabBarController.h"
+#import "MessageUpdaterDelegate.h"
 #import "OpenSSLWrapper.h"
 
 @interface SingleUseData : NSObject
@@ -54,7 +54,7 @@
 -(RegistrationController *) requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate
                                              viewController:(UIViewController *)controller;
 
--(MainTabBarController * ) mainTabBarController;
+-(id<MessageUpdaterDelegate>) messageUpdater;
 
 -(bool) handleErrorMessage:(NSString *)reason withErrorCode:(UInt32)errorCode;
 -(bool) handleUnknownMessage:(NSString *)documentName;

@@ -1,6 +1,5 @@
 #import "AppDelegate.h"
 #import "OpenSSLWrapper.h"
-#import "MainTabBarController.h"
 
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
@@ -146,9 +145,9 @@
     return YES;
 }
 
--(MainTabBarController * ) mainTabBarController
+-(id<MessageUpdaterDelegate>) messageUpdater
 {
-    return (MainTabBarController * ) (self.window.rootViewController);
+    return (id<MessageUpdaterDelegate>) (self.window.rootViewController);
 }
 
 - (BOOL) prepareRSA

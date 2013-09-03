@@ -1,4 +1,5 @@
-#import "MainTabBarController.h"
+
+#import "SidePanelController.h"
 #import "AppDelegate.h"
 #import "NSString+HexStringToBytes.h"
 #import "PcosHelper.h"
@@ -7,15 +8,17 @@
 #import "Transaction.h"
 #import "Common.h"
 
-@interface MainTabBarController ()
+@interface SidePanelController ()
 
 @end
 
 using namespace pcos;
 
-@implementation MainTabBarController
+@implementation SidePanelController
 {
     BOOL dataReceived;
+    UIViewController *summaryView;
+    UIViewController *historyView;
 }
 
 @synthesize timestamp;
@@ -32,16 +35,28 @@ using namespace pcos;
     return self;
 }
 
--(void) viewDidAppear:(BOOL)animated
+-(void) awakeFromNib
 {
-    NSLog(@"MainTabBarController didAppear");
-    [super viewDidAppear:(BOOL)animated];
-    [self.appDelegate requestRegistrationWithDelegate:self];
+    [self setLeftPanel:[self.storyboard instantiateViewControllerWithIdentifier:@"leftViewController"]];
+    [self showSummary];
+}
+
+-(void) showSummary
+{
+    if (summaryView == nil)
+        summaryView = [self.storyboard instantiateViewControllerWithIdentifier:@"SummaryViewController"];
+    [self setCenterPanel:summaryView];
+}
+
+-(void) showHistory
+{
+    if (historyView == nil)
+        historyView = [self.storyboard instantiateViewControllerWithIdentifier:@"HistoryViewController"];
+    [self setCenterPanel:historyView];
 }
 
 - (void)viewDidLoad
 {
-    NSLog(@"MainTabBarController didLoad");
     [super viewDidLoad];
     dataReceived = NO;
     
@@ -57,22 +72,29 @@ using namespace pcos;
     }
 }
 
+-(void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:(BOOL)animated];
+    [self.appDelegate requestRegistrationWithDelegate:self];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+
 - (AppDelegate *)appDelegate
 {
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-
 -(void) registrationControllerDidClose:(RegistrationController *)controller
 {
     [self dismissModalViewControllerAnimated:YES];
 }
+
 
 
 -(void) refresh
@@ -118,7 +140,7 @@ using namespace pcos;
     
     NSLog(@"Updated");
     refreshing = NO;
-
+    
 }
 
 - (void)handleData: (NSData*) data
@@ -156,7 +178,7 @@ using namespace pcos;
                 for (size_t i = 0; i < count; ++i)
                     [self.transactions addObject:[[Transaction alloc] initWithReader:tr]];
             }
-
+            
             dataReceived = YES;
             
             // Save this result for next use
@@ -192,9 +214,9 @@ using namespace pcos;
     andDescription:(NSString *)description
 {
     /*
-    [[self appDelegate] showAlert:description
-                        withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
-    */
+     [[self appDelegate] showAlert:description
+     withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
+     */
     
     refreshing = NO;
     
@@ -203,6 +225,5 @@ using namespace pcos;
         [listener messageDidFailedBy:self withDescription:description];
     }
 }
-
 
 @end

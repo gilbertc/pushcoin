@@ -6,6 +6,12 @@
 // project.
 
 
+// JASidePanels
+#define COCOAPODS_POD_AVAILABLE_JASidePanels
+#define COCOAPODS_VERSION_MAJOR_JASidePanels 1
+#define COCOAPODS_VERSION_MINOR_JASidePanels 3
+#define COCOAPODS_VERSION_PATCH_JASidePanels 2
+
 // MGBox2
 #define COCOAPODS_POD_AVAILABLE_MGBox2
 #define COCOAPODS_VERSION_MAJOR_MGBox2 2

@@ -46,8 +46,9 @@
 		0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
 		0DB67A5D1564C8C200CA997C /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DB67A5C1564C8C200CA997C /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0DC10D5617D564DD00992ABB /* SidePanelController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0DC10D5517D564DD00992ABB /* SidePanelController.mm */; };
+		0DC10D5C17D5734D00992ABB /* LeftSidePanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DC10D5B17D5734D00992ABB /* LeftSidePanelViewController.m */; };
 		0DD692B615660FC500391E25 /* iphone_delete_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DD692B515660FC500391E25 /* iphone_delete_button.png */; };
-		0DD7EB9417CEE2E700F9CE3B /* MainTabBarController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7EB9317CEE2E700F9CE3B /* MainTabBarController.mm */; };
 		0DD7EBA517CF793400F9CE3B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0DD7EBA417CF793400F9CE3B /* MainStoryboard.storyboard */; };
 		0DDBA5B117D1619000B7DEC6 /* libpcos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DDBA5AD17D1617700B7DEC6 /* libpcos.a */; };
 		0DDBA5C817D1859200B7DEC6 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DDBA5C417D1839E00B7DEC6 /* libcrypto.a */; };
@@ -152,10 +153,12 @@
 		0DAFD24D1547ACBA0010459A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0DB67A5B1564C8C200CA997C /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+Base64.h"; path = "PushCoin/NSData+Base64.h"; sourceTree = "<group>"; };
 		0DB67A5C1564C8C200CA997C /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Base64.m"; path = "PushCoin/NSData+Base64.m"; sourceTree = "<group>"; };
+		0DC10D5417D564DD00992ABB /* SidePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidePanelController.h; sourceTree = "<group>"; };
+		0DC10D5517D564DD00992ABB /* SidePanelController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SidePanelController.mm; sourceTree = "<group>"; };
+		0DC10D5A17D5734D00992ABB /* LeftSidePanelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftSidePanelViewController.h; sourceTree = "<group>"; };
+		0DC10D5B17D5734D00992ABB /* LeftSidePanelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftSidePanelViewController.m; sourceTree = "<group>"; };
 		0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = pushcoin_dsa.pub; sourceTree = "<group>"; };
 		0DD692B515660FC500391E25 /* iphone_delete_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphone_delete_button.png; sourceTree = "<group>"; };
-		0DD7EB9217CEE2E700F9CE3B /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
-		0DD7EB9317CEE2E700F9CE3B /* MainTabBarController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainTabBarController.mm; sourceTree = "<group>"; };
 		0DD7EBA417CF793400F9CE3B /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 		0DDBA5BF17D1839E00B7DEC6 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
 		0DDBA5C917D1A44100B7DEC6 /* PasscodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasscodeViewController.h; sourceTree = "<group>"; };
@@ -298,14 +301,16 @@
 				0D8B597417D254370096E907 /* RegistrationController.mm */,
 				0DDBA5C917D1A44100B7DEC6 /* PasscodeViewController.h */,
 				0DDBA5CA17D1A44100B7DEC6 /* PasscodeViewController.m */,
-				0DD7EB9217CEE2E700F9CE3B /* MainTabBarController.h */,
-				0DD7EB9317CEE2E700F9CE3B /* MainTabBarController.mm */,
 				0DF02FE617D2A20C00E6E66D /* SummaryViewController.h */,
 				0DF02FE717D2A20C00E6E66D /* SummaryViewController.mm */,
 				0D64183B17D2E87900C85327 /* HistoryViewController.h */,
 				0D64183C17D2E87900C85327 /* HistoryViewController.mm */,
 				0D36108317D50DCF00919AC5 /* TransactionBox.h */,
 				0D36108417D50DCF00919AC5 /* TransactionBox.mm */,
+				0DC10D5417D564DD00992ABB /* SidePanelController.h */,
+				0DC10D5517D564DD00992ABB /* SidePanelController.mm */,
+				0DC10D5A17D5734D00992ABB /* LeftSidePanelViewController.h */,
+				0DC10D5B17D5734D00992ABB /* LeftSidePanelViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -511,7 +516,6 @@
 				0DB67A5D1564C8C200CA997C /* NSData+Base64.m in Sources */,
 				0D377612156839BC003FB8B3 /* Common.mm in Sources */,
 				0D4E98491584A8F20009622B /* NSString+URLEncoding.m in Sources */,
-				0DD7EB9417CEE2E700F9CE3B /* MainTabBarController.mm in Sources */,
 				0DDBA5CB17D1A44100B7DEC6 /* PasscodeViewController.m in Sources */,
 				0D8B597517D254370096E907 /* RegistrationController.mm in Sources */,
 				0D8B597917D261E30096E907 /* PcosHelper.mm in Sources */,
@@ -520,6 +524,8 @@
 				0D8BBFF317D2EDCD0065EE35 /* Transaction.mm in Sources */,
 				0D36108217D4498F00919AC5 /* UILabel+CustomFont.m in Sources */,
 				0D36108517D50DCF00919AC5 /* TransactionBox.mm in Sources */,
+				0DC10D5617D564DD00992ABB /* SidePanelController.mm in Sources */,
+				0DC10D5C17D5734D00992ABB /* LeftSidePanelViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -623,6 +629,7 @@
 				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/JASidePanels\"",
 					"\"${PODS_ROOT}/Headers/MGBox2\"",
 					"/Users/gilbert/v1/openssl-xcode/openssl/include/",
 					/Users/gilbert/workbench/pushcoin/iOS/pcos/,
@@ -645,6 +652,7 @@
 				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/JASidePanels\"",
 					"\"${PODS_ROOT}/Headers/MGBox2\"",
 					"/Users/gilbert/v1/openssl-xcode/openssl/include/",
 					/Users/gilbert/workbench/pushcoin/iOS/pcos/,
@@ -697,6 +705,7 @@
 				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/JASidePanels\"",
 					"\"${PODS_ROOT}/Headers/MGBox2\"",
 					"/Users/gilbert/v1/openssl-xcode/openssl/include/",
 					/Users/gilbert/workbench/pushcoin/iOS/pcos/,
