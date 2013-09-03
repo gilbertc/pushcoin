@@ -52,4 +52,7 @@ public class Conf
 	static final String DEFAULT_CURRENCY = "USD";
 
 	static final String TAG = "PushCoin";
+
+	static final String TRANSACTION_TYPE_CREDIT = "C";
+	static final String TRANSACTION_TYPE_DEBIT = "D";
 }

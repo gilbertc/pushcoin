@@ -107,6 +107,15 @@ public class IceBreakerActivity
 	}
 
 	@Override
+	public PcosHelper.TransactionInfo getRecentTransaction()
+	{
+		if (txnHistory_ != null && txnHistory_.transactionInfo.length > 0) {
+			return txnHistory_.transactionInfo[0];
+		}
+		return null;
+	}
+
+	@Override
 	public void registerHandler( Handler h, int messageId )
 	{
 		List<Handler> slot = messageReceiver_.get(messageId);

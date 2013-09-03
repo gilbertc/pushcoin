@@ -48,6 +48,7 @@
 	</LinearLayout>
 
 	<RelativeLayout
+		android:id="@+id/recent_transaction_panel"
 		android:background="@drawable/window_shape"
 		android:layout_marginLeft="10dp"
 		android:layout_marginRight="10dp"
@@ -56,7 +57,6 @@
 
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/recent_transaction_business_name_field"
-			android:text="Wheaton Academy Lunch"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentTop="true"
 			android:layout_width="wrap_content"
@@ -70,7 +70,6 @@
 
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/recent_transaction_payment_info"
-			android:text="Mike paid $3.50 Yesterday at 12:01\u00A0PM"
 			android:layout_marginBottom="20dp"
 			android:layout_marginRight="10dp"
 			android:layout_marginLeft="10dp"
@@ -109,7 +108,6 @@
 
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/recent_transaction_street_field"
-			android:text="900 Prince Crossing"
 			android:layout_alignParentRight="true"
 			android:layout_below="@id/recent_transaction_rating_label"
 			android:layout_width="wrap_content"
@@ -122,7 +120,6 @@
 
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/recent_transaction_city_state_zip_field"
-			android:text="West Chicago, IL 60185"
 			android:layout_alignParentRight="true"
 			android:layout_below="@id/recent_transaction_street_field"
 			android:layout_width="wrap_content"
@@ -135,7 +132,6 @@
 
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/recent_transaction_phone_field"
-			android:text="Ph: 630-562-7500"
 			android:layout_alignParentRight="true"
 			android:layout_below="@id/recent_transaction_city_state_zip_field"
 			android:layout_width="wrap_content"

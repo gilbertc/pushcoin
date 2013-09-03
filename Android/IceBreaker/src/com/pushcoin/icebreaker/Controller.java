@@ -31,6 +31,7 @@ public interface Controller
 	String getBalanceTime();
 	String getStatus();
 	PcosHelper.TransactionInfo getTransaction(int index);
+	PcosHelper.TransactionInfo getRecentTransaction();
 	int getHistorySize();
 
 	void registerHandler( Handler h, int messageId );

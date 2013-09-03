@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.RatingBar;
+import android.text.Html;
 
 public class BalanceFragment 
 	extends Fragment
@@ -38,6 +39,13 @@ public class BalanceFragment
 		statusField_ = (TextView) fragmentRootLayout.findViewById(R.id.status_field);
 		ratingBar_ = (RatingBar) fragmentRootLayout.findViewById(R.id.recent_transaction_rating_bar);
 		ratingBarLabel_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_rating_label);
+		recentTransactionPanel_ = fragmentRootLayout.findViewById(R.id.recent_transaction_panel);
+
+		recentTransactionBusinessName_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_business_name_field);
+		recentTransactionPaymentInfo_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_payment_info);
+		recentTransactionAddressStreet_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_street_field);
+		recentTransactionAddressCityStateZip_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_city_state_zip_field);
+		recentTransactionAddressPhone_ = (TextView) fragmentRootLayout.findViewById(R.id.recent_transaction_phone_field);
 
 		// access resources
 		Resources res = getResources();
@@ -57,6 +65,11 @@ public class BalanceFragment
 			}
 		});
 
+		// Hide recent transaction view if there is nothing to show
+		if (ctrl_.getRecentTransaction() == null) {
+			recentTransactionPanel_.setVisibility(View.INVISIBLE);
+		}
+
 		return fragmentRootLayout;
 	}
 
@@ -75,7 +88,6 @@ public class BalanceFragment
 		}
 	};
 
-	// Invoked by the Controller
 	public void onAccountHistoryChanged()
 	{
 		// update this fragment's view
@@ -91,6 +103,38 @@ public class BalanceFragment
 			statusField_.setText( status );
 			statusField_.setVisibility(View.VISIBLE);
 		}
+
+		// Show most recent transaction
+		PcosHelper.TransactionInfo mostRecent = ctrl_.getRecentTransaction();
+		if (mostRecent != null)
+		{
+			String transactionType;
+			if (mostRecent.txnType.equals(Conf.TRANSACTION_TYPE_DEBIT)) {
+				transactionType = "paid";
+			} else if (mostRecent.txnType.equals(Conf.TRANSACTION_TYPE_CREDIT)){
+				transactionType = "received";
+			}
+			else {
+				transactionType = " transacted "; 
+			}
+
+			String deviceName;
+			if (mostRecent.deviceName.isEmpty()) {
+				deviceName = "You";
+			} else {
+				deviceName = mostRecent.deviceName;
+			}
+
+			recentTransactionBusinessName_.setText( mostRecent.counterParty );
+			recentTransactionPaymentInfo_.setText(Html.fromHtml( deviceName + " " + transactionType + " <b>" + PcosHelper.prettyAmount( mostRecent.amount, mostRecent.currency ) + "</b> " + PcosHelper.prettyTime(getActivity(), mostRecent.txnTimeEpoch)) );
+			recentTransactionAddressStreet_.setText( mostRecent.posAddress.street );
+			recentTransactionAddressCityStateZip_.setText(mostRecent.posAddress.city + ", " + mostRecent.posAddress.state + " " + mostRecent.posAddress.zipCode);
+			recentTransactionAddressPhone_.setText( "Ph: " + mostRecent.merchantPhone );
+			recentTransactionPanel_.setVisibility(View.VISIBLE);
+		} 
+		else {
+			recentTransactionPanel_.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	final Controller ctrl_;
@@ -102,6 +146,13 @@ public class BalanceFragment
 	TextView statusField_;
 	RatingBar ratingBar_;
 	TextView ratingBarLabel_;
+	View recentTransactionPanel_;
+
+	TextView recentTransactionBusinessName_;
+	TextView recentTransactionPaymentInfo_;
+	TextView recentTransactionAddressStreet_;
+	TextView recentTransactionAddressCityStateZip_;
+	TextView recentTransactionAddressPhone_;
 
 	String[] ratingScale_;
 }
