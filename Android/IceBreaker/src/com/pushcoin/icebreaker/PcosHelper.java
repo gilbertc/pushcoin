@@ -1,5 +1,6 @@
 package com.pushcoin.icebreaker;
 
+import android.util.Log;
 import com.pushcoin.Binascii;
 import com.pushcoin.pcos.*;
 import android.content.Context;
@@ -163,7 +164,7 @@ class PcosHelper
 					record.tip = BigDecimal.ZERO;
 				}
 
-				record.counterParty = tr.readString(Conf.PCOS_MAXLEN_ACCOUNT_ID);
+				record.counterParty = tr.readString(Conf.PCOS_MAXLEN_COUNTERPARTY);
 				record.invoice = tr.readString(Conf.PCOS_MAXLEN_INVOICE);
 				record.note = tr.readString(Conf.PCOS_MAXLEN_TXN_NOTE);
 

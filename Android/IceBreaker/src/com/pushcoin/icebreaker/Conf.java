@@ -29,7 +29,7 @@ public class Conf
 
 	static final int DSA_KEY_LENGTH = 1024;
 	// PCOS doc names
-	static final String PCOS_DOC_SUCCESS = "Success";
+	static final String PCOS_DOC_SUCCESS = "Ok";
 	static final String PCOS_DOC_ERROR = "Error";
 	static final String PCOS_DOC_REGISTER_ACK = "RegisterAck";
 	static final String PCOS_DOC_TXN_HISTORY_REPLY = "TxnHistoryReply";
@@ -52,6 +52,7 @@ public class Conf
 	static final int PCOS_MAXLEN_ADDRESS_COUNTRY = 2;
 	static final int PCOS_MAXLEN_PHONE = 20;
 	static final int PCOS_MAXLEN_WEBSITE = 64;
+	static final int PCOS_MAXLEN_COUNTERPARTY = 64;
 
 	// Preferences keys
 	static final String PREFS_KEY_MAT_KEY = "mat";
