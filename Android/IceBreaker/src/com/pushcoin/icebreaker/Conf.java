@@ -5,12 +5,15 @@ import android.text.format.DateUtils;
 public class Conf 
 {
 	static final String HTTP_API_URL = "https://api.pushcoin.com/pcos/";
-	// static final String HTTP_API_URL = "https://api.minta.com/pcos/";
-	static final int HTTP_API_MAX_RESPONSE_LEN = 20*1024;
+	//static final String HTTP_API_URL = "https://api.minta.com/pcos/";
+	static final int HTTP_API_MAX_RESPONSE_LEN = 10*1024;
 	static final int HTTP_API_TIMEOUT = 4000; // ms
 
 	// Number of transactions in history
 	static final int TRANSACTION_HISTORY_SIZE=20;
+	
+	// Local filename where we store downloaded history data
+	static final String CACHED_HISTORY_FILENAME = "history_cache";
 
 	// Request throttling
 	static final long THROTTLE_MAX_REQUESTS_PER_WINDOW = 1;

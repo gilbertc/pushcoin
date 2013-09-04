@@ -28,6 +28,7 @@ public class BalanceFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		ctrl_.registerHandler( handler_, MessageId.MODEL_CHANGED );
+		ctrl_.registerHandler( handler_, MessageId.STATUS_CHANGED );
 
 		// Inflate the layout for this fragment
 		View fragmentRootLayout = inflater.inflate(R.layout.balance_tab, container, false);
@@ -63,10 +64,12 @@ public class BalanceFragment
 				// change label
 				recentTransactionUserRatingBarLabel_.setText(ratingScale_[ roundedRating ]);
 
-				// send vote 
-				PcosHelper.TransactionInfo mostRecent = ctrl_.getRecentTransaction();
-				if (mostRecent != null) {
-					ctrl_.castRating( mostRecent.txnId, roundedRating );
+				if (fromUser) // send user vote 
+				{
+					PcosHelper.TransactionInfo mostRecent = ctrl_.getRecentTransaction();
+					if (mostRecent != null) {
+						ctrl_.castRating( mostRecent.txnId, roundedRating );
+					}
 				}
 			}
 		});
@@ -90,17 +93,15 @@ public class BalanceFragment
 				case MessageId.MODEL_CHANGED:
 					onAccountHistoryChanged();
 				break;
+				case MessageId.STATUS_CHANGED:
+					onStatusChanged();
+				break;
 			}
 		}
 	};
 
-	public void onAccountHistoryChanged()
+	public void onStatusChanged()
 	{
-		// update this fragment's view
-		titleField_.setText( ctrl_.getPageTitle() );
-		balanceField_.setText( ctrl_.getBalance() );
-		balanceTimeField_.setText( ctrl_.getBalanceTime() );
-
 		String status = ctrl_.getStatus();
 		if (status.isEmpty()) {
 			statusField_.setVisibility(View.INVISIBLE);
@@ -109,6 +110,17 @@ public class BalanceFragment
 			statusField_.setText( status );
 			statusField_.setVisibility(View.VISIBLE);
 		}
+	}
+
+	public void onAccountHistoryChanged()
+	{
+		// update this fragment's view
+		titleField_.setText( ctrl_.getPageTitle() );
+		balanceField_.setText( ctrl_.getBalance() );
+		balanceTimeField_.setText( ctrl_.getBalanceTime() );
+
+		// show status if necesery
+		onStatusChanged();
 
 		// Show most recent transaction
 		PcosHelper.TransactionInfo mostRecent = ctrl_.getRecentTransaction();
@@ -131,28 +143,37 @@ public class BalanceFragment
 				deviceName = mostRecent.deviceName;
 			}
 
-			// transaction rating
-			recentTransactionUserRatingBar_.setRating(mostRecent.txnRating);
-			// turn off voting if transaction took place more than CUTOFF ago
-			if ( (PcosHelper.getEpochUtc() - mostRecent.txnTimeEpoch) > Conf.USER_RATING_CUTOFF )
+			if (mostRecent.txnType.equals(Conf.TRANSACTION_TYPE_DEBIT) && !mostRecent.counterParty.isEmpty())
 			{
-				recentTransactionUserRatingBar_.setIsIndicator( true );
-				// dont even show the component if didn't vote
-				if (mostRecent.txnRating > 0)
+				// transaction rating
+				recentTransactionUserRatingBar_.setRating(mostRecent.txnRating);
+				// turn off voting if transaction took place more than CUTOFF ago
+				if ( 
+					(PcosHelper.getEpochUtc() - mostRecent.txnTimeEpoch) > Conf.USER_RATING_CUTOFF )
 				{
-					recentTransactionUserRatingBarLabel_.setText(ratingScale_[ mostRecent.txnRating ]);
-					recentTransactionUserRatingBarLabel_.setVisibility(View.VISIBLE);
+					recentTransactionUserRatingBar_.setIsIndicator( true );
+					// dont even show the component if didn't vote
+					if (mostRecent.txnRating > 0)
+					{
+						recentTransactionUserRatingBarLabel_.setText(ratingScale_[ mostRecent.txnRating ]);
+						recentTransactionUserRatingBarLabel_.setVisibility(View.VISIBLE);
+					}
+					else // hide label and bar
+					{	
+						recentTransactionUserRatingBar_.setVisibility(View.INVISIBLE);
+						recentTransactionUserRatingBarLabel_.setVisibility(View.INVISIBLE);
+					}
 				}
-				else // hide label and bar
-				{	
-					recentTransactionUserRatingBar_.setVisibility(View.INVISIBLE);
-					recentTransactionUserRatingBarLabel_.setVisibility(View.INVISIBLE);
+				else 
+				{
+					recentTransactionUserRatingBar_.setIsIndicator( false );
+					recentTransactionUserRatingBarLabel_.setText(ratingScale_[ mostRecent.txnRating ]);
 				}
 			}
-			else 
+			else
 			{
-				recentTransactionUserRatingBar_.setIsIndicator( false );
-				recentTransactionUserRatingBarLabel_.setText(ratingScale_[ mostRecent.txnRating ]);
+				recentTransactionUserRatingBar_.setVisibility(View.INVISIBLE);
+				recentTransactionUserRatingBarLabel_.setVisibility(View.INVISIBLE);
 			}
 
 			// business name, address, rating

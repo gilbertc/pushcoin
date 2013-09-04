@@ -38,7 +38,8 @@ class CastRatingTask extends PushCoinAsyncTask
 			req.addBlock(out_bo);
 
 			// call server
-			InputDocument res = invokeRemote( req );
+			PushCoinAsyncTask.ResultByteBuffer resultBuf = new PushCoinAsyncTask.ResultByteBuffer();
+			InputDocument res = invokeRemote( req, resultBuf );
 			if (res != null) 
 			{
 				String docName = res.getDocumentName();

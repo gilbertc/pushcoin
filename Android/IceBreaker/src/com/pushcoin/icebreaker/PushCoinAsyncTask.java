@@ -18,7 +18,13 @@ import com.pushcoin.pcos.*;
 
 abstract class PushCoinAsyncTask extends AsyncTask<String, Void, Void>
 {
-	protected InputDocument invokeRemote(OutputDocument doc) throws PcosError, IOException
+	public class ResultByteBuffer
+	{
+		byte[] dest = new byte[Conf.HTTP_API_MAX_RESPONSE_LEN];;
+		int bytesRead = 0;
+	};
+
+	protected InputDocument invokeRemote( OutputDocument doc, ResultByteBuffer resBuffer ) throws PcosError, IOException
 	{
 		HttpClient httpClient = new DefaultHttpClient();
 
@@ -33,10 +39,8 @@ abstract class PushCoinAsyncTask extends AsyncTask<String, Void, Void>
 		HttpResponse res = httpClient.execute( httpPost );
 
 		InputStream in = new BufferedInputStream(res.getEntity().getContent());
+		resBuffer.bytesRead = in.read(resBuffer.dest);
 
-		byte[] resultBuf = new byte[Conf.HTTP_API_MAX_RESPONSE_LEN];
-		int bytesLen = in.read(resultBuf);
-
-		return new DocumentReader( resultBuf, bytesLen );
+		return new DocumentReader( resBuffer.dest, resBuffer.bytesRead );
 	}
 }
