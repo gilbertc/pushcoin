@@ -85,6 +85,10 @@
     {
         [(SidePanelController *) self.sidePanelController showHistory];
     }
+    else if (indexPath.row == 2)
+    {
+        [(SidePanelController *) self.sidePanelController showSettings];
+    }
 }
 
 @end

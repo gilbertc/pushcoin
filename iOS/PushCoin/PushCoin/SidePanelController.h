@@ -24,4 +24,6 @@
 
 -(void) showSummary;
 -(void) showHistory;
+-(void) showSettings;
+
 @end

@@ -76,6 +76,9 @@
 @property (strong, nonatomic) Contact * contact;
 @property (strong, nonatomic) GeoLocation * geolocation;
 @property (strong, nonatomic) NSString * status;
+@property (assign) uint32_t rating;
+@property (assign) double merchantScore;
+@property (assign) uint32_t merchantVoteCount;
 
 -(Transaction *) initWithReader:(pcos::BlockReader &) reader;
 

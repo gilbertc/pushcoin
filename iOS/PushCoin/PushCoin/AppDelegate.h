@@ -55,6 +55,7 @@
                                              viewController:(UIViewController *)controller;
 
 -(id<MessageUpdaterDelegate>) messageUpdater;
+-(id<RegistrationControllerDelegate>) registrationController;
 
 -(bool) handleErrorMessage:(NSString *)reason withErrorCode:(UInt32)errorCode;
 -(bool) handleUnknownMessage:(NSString *)documentName;

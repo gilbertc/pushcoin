@@ -150,6 +150,11 @@
     return (id<MessageUpdaterDelegate>) (self.window.rootViewController);
 }
 
+-(id<RegistrationControllerDelegate>) registrationController
+{
+    return (id<RegistrationControllerDelegate>) (self.window.rootViewController);
+}
+
 - (BOOL) prepareRSA
 {
     OpenSSLWrapper * ssl = [OpenSSLWrapper instance];

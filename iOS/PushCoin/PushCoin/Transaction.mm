@@ -112,6 +112,10 @@
 @synthesize contact;
 @synthesize geolocation;
 @synthesize status;
+@synthesize rating;
+@synthesize merchantScore;
+@synthesize merchantVoteCount;
+
 
 -(void) read:(pcos::BlockReader &)reader
 {
@@ -131,6 +135,9 @@
     self.contact = reader.readBool() ? [[Contact alloc] initWithReader:reader] : nil;
     self.geolocation = reader.readBool() ? [[GeoLocation alloc] initWithReader:reader] : nil;
     self.status = readString(reader);
+    self.rating = reader.readUInt();
+    self.merchantScore = reader.readDouble();
+    self.merchantVoteCount = reader.readUInt();
 }
 -(Transaction *) initWithReader:(pcos::BlockReader & ) reader
 {

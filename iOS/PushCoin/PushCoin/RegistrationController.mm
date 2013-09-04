@@ -11,6 +11,8 @@ using namespace pcos;
 
 @implementation RegistrationController
 @synthesize registrationIDTextBox;
+@synthesize registrationView;
+@synthesize waitingView;
 @synthesize delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -48,7 +50,17 @@ using namespace pcos;
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [self register];
+    textField.enabled = NO;
+    self.registrationView.hidden = YES;
+    self.waitingView.hidden = NO;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData * message = [self register];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [webService sendMessage:message];
+        });
+    });
+    
     return YES;
 }
 
@@ -56,7 +68,7 @@ using namespace pcos;
     replacementString:(NSString *)string 
 {
     NSUInteger newLength = textField.text.length + string.length - range.length;
-    return (newLength > 10) ? NO : YES;
+    return (newLength > 11) ? NO : YES;
 }
 
 - (AppDelegate *)appDelegate
@@ -65,7 +77,7 @@ using namespace pcos;
 }
 
 
--(void)register
+-(NSData *)register
 {
     NSData * privateKey;
     NSData * publicKey;
@@ -82,11 +94,15 @@ using namespace pcos;
     bo.writeString(self.registrationIDTextBox.text.UTF8String);
     bo.writeByteStr((byte const *)pemDsaPublickey.bytes, 0, pemDsaPublickey.length);
     
-    [webService sendMessage:[NSData dataWithBytes:writer.bytes() length:writer.size()]];
+    return [NSData dataWithBytes:writer.bytes() length:writer.size()];
 }
 
 - (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
 {
+    self.registrationIDTextBox.enabled = YES;
+    self.waitingView.hidden = YES;
+    self.registrationView.hidden = NO;
+
     try{
         DocumentReader reader((byte const * )data.bytes, 0, data.length);
         NSString * documentName = [NSString stringWithUTF8String:reader.getDocumentName().c_str()];
@@ -126,7 +142,8 @@ using namespace pcos;
         [self.appDelegate handleUnknownMessage:documentName];
         [self.registrationIDTextBox becomeFirstResponder];
         
-    }catch(PcosException ex)
+    }
+    catch(PcosException ex)
     {
         NSLog(@"Exception");
     }   
@@ -135,6 +152,10 @@ using namespace pcos;
 - (void)webService:(PushCoinWebService *)webService didFailWithStatusCode:(NSInteger)statusCode 
     andDescription:(NSString *)description
 {
+    self.registrationIDTextBox.enabled = YES;
+    self.waitingView.hidden = YES;
+    self.registrationView.hidden = NO;
+
     [[self appDelegate] showAlert:description
                         withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
     [self.registrationIDTextBox becomeFirstResponder];

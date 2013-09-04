@@ -21,4 +21,6 @@
 
 @property (nonatomic, weak) id <RegistrationControllerDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UITextField *registrationIDTextBox;
+@property (weak, nonatomic) IBOutlet UIView *registrationView;
+@property (weak, nonatomic) IBOutlet UIView *waitingView;
 @end

@@ -78,7 +78,10 @@ namespace pcos {
         byte const * ret;
         if (readBytes(ret, TYPE_WIRE_SIZE_DOUBLE) != TYPE_WIRE_SIZE_DOUBLE)
             throw MalformedException();
-        return *((double *)ret);
+        
+        double value;
+        memcpy(&value, ret, TYPE_WIRE_SIZE_DOUBLE);
+        return value;
     }
 
     std::string BlockReader::readString(size_t maxLen)

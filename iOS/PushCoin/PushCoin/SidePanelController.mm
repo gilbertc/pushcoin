@@ -7,6 +7,7 @@
 #import "MessageUpdatedDelegate.h"
 #import "Transaction.h"
 #import "Common.h"
+#import "SettingsViewController.h"
 
 @interface SidePanelController ()
 
@@ -19,6 +20,7 @@ using namespace pcos;
     BOOL dataReceived;
     UIViewController *summaryView;
     UIViewController *historyView;
+    UIViewController *settingsView;
 }
 
 @synthesize timestamp;
@@ -53,6 +55,17 @@ using namespace pcos;
     if (historyView == nil)
         historyView = [self.storyboard instantiateViewControllerWithIdentifier:@"HistoryViewController"];
     [self setCenterPanel:historyView];
+}
+
+-(void) showSettings
+{
+    if (settingsView == nil)
+    {
+        UINavigationController *settings = [[UINavigationController alloc]
+                                            initWithRootViewController:[[SettingsViewController alloc] init]];
+        settingsView = settings;
+    }
+    [self setCenterPanel:settingsView];
 }
 
 - (void)viewDidLoad
