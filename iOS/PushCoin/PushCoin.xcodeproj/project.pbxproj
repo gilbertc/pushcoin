@@ -12,7 +12,7 @@
 		0D19E2D11541CCAE00C8671B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D19E2D01541CCAE00C8671B /* CoreGraphics.framework */; };
 		0D19E2D71541CCAE00C8671B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0D19E2D51541CCAE00C8671B /* InfoPlist.strings */; };
 		0D19E2D91541CCAE00C8671B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D19E2D81541CCAE00C8671B /* main.m */; };
-		0D19E2DD1541CCAE00C8671B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D19E2DC1541CCAE00C8671B /* AppDelegate.m */; };
+		0D19E2DD1541CCAE00C8671B /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D19E2DC1541CCAE00C8671B /* AppDelegate.mm */; };
 		0D27FE0717D1615C0079B630 /* pcos.xcodeproj in Resources */ = {isa = PBXBuildFile; fileRef = 0D27FE0617D1615C0079B630 /* pcos.xcodeproj */; };
 		0D36108217D4498F00919AC5 /* UILabel+CustomFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D36108117D4498F00919AC5 /* UILabel+CustomFont.m */; };
 		0D36108517D50DCF00919AC5 /* TransactionBox.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D36108417D50DCF00919AC5 /* TransactionBox.mm */; };
@@ -109,7 +109,7 @@
 		0D19E2D81541CCAE00C8671B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0D19E2DA1541CCAE00C8671B /* PushCoin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PushCoin-Prefix.pch"; sourceTree = "<group>"; };
 		0D19E2DB1541CCAE00C8671B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		0D19E2DC1541CCAE00C8671B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		0D19E2DC1541CCAE00C8671B /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		0D27FE0617D1615C0079B630 /* pcos.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pcos.xcodeproj; path = ../pcos/pcos.xcodeproj; sourceTree = "<group>"; };
 		0D36108017D4498F00919AC5 /* UILabel+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UILabel+CustomFont.h"; path = "PushCoin/UILabel+CustomFont.h"; sourceTree = "<group>"; };
 		0D36108117D4498F00919AC5 /* UILabel+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UILabel+CustomFont.m"; path = "PushCoin/UILabel+CustomFont.m"; sourceTree = "<group>"; };
@@ -193,8 +193,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
 				0D696F9117D3B6B500055AF8 /* CoreText.framework in Frameworks */,
+				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
 				0DDBA5C817D1859200B7DEC6 /* libcrypto.a in Frameworks */,
 				0DDBA5B117D1619000B7DEC6 /* libpcos.a in Frameworks */,
 				0DA25A7A1582EDF0009AB9A6 /* CoreLocation.framework in Frameworks */,
@@ -271,7 +271,7 @@
 				0D37761315683B17003FB8B3 /* ViewControllers */,
 				0D19E2D31541CCAE00C8671B /* Supporting Files */,
 				0D19E2DB1541CCAE00C8671B /* AppDelegate.h */,
-				0D19E2DC1541CCAE00C8671B /* AppDelegate.m */,
+				0D19E2DC1541CCAE00C8671B /* AppDelegate.mm */,
 			);
 			name = PushCoin.App;
 			path = PushCoin;
@@ -543,7 +543,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D19E2D91541CCAE00C8671B /* main.m in Sources */,
-				0D19E2DD1541CCAE00C8671B /* AppDelegate.m in Sources */,
+				0D19E2DD1541CCAE00C8671B /* AppDelegate.mm in Sources */,
 				0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */,
 				0D3EA61D154877670088EFE1 /* OpenSSLWrapper.mm in Sources */,
 				0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */,
@@ -672,6 +672,7 @@
 					"/Users/gilbert/v1/openssl-xcode/openssl/include/",
 					/Users/gilbert/workbench/pushcoin/iOS/pcos/,
 					"\"${PODS_ROOT}/Headers/InAppSettingsKit\"",
+					"\"${PODS_ROOT}/Headers/FlatUIKit\"",
 				);
 				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
@@ -696,6 +697,7 @@
 					"/Users/gilbert/v1/openssl-xcode/openssl/include/",
 					/Users/gilbert/workbench/pushcoin/iOS/pcos/,
 					"\"${PODS_ROOT}/Headers/InAppSettingsKit\"",
+					"\"${PODS_ROOT}/Headers/FlatUIKit\"",
 				);
 				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
@@ -750,6 +752,7 @@
 					"/Users/gilbert/v1/openssl-xcode/openssl/include/",
 					/Users/gilbert/workbench/pushcoin/iOS/pcos/,
 					"\"${PODS_ROOT}/Headers/InAppSettingsKit\"",
+					"\"${PODS_ROOT}/Headers/FlatUIKit\"",
 				);
 				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;

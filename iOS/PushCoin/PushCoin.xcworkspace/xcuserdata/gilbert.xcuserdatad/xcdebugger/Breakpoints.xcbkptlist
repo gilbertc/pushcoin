@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/SidePanelController.mm"
-         timestampString = "399905920.533229"
+         timestampString = "399949435.858091"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "76"
-         endingLineNumber = "76"
+         startingLineNumber = "94"
+         endingLineNumber = "94"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -209,6 +209,58 @@
          startingLineNumber = "87"
          endingLineNumber = "87"
          landmarkName = "-connectionDidFinishLoading:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Pods/FlatUIKit/Classes/ios/UINavigationBar+FlatUI.m"
+         timestampString = "399948816.179855"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "15"
+         endingLineNumber = "15"
+         landmarkName = "-configureFlatNavigationBarWithColor:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/SidePanelController.mm"
+         timestampString = "399949435.858091"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "63"
+         endingLineNumber = "63"
+         landmarkName = "-showSummary"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/SidePanelController.mm"
+         timestampString = "399949435.858091"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "73"
+         endingLineNumber = "73"
+         landmarkName = "-showHistory"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/SidePanelController.mm"
+         timestampString = "399949435.858091"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "83"
+         endingLineNumber = "83"
+         landmarkName = "-showSettings"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

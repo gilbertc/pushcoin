@@ -3,6 +3,7 @@
 
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
+#import "Common.h"
 
 @implementation SingleUseData
 
@@ -357,6 +358,7 @@
     self.authToken = @"";
     [self setPasscode:@"" oldPasscode:@""];
     [self setDsaPrivateKey:emptyData withPasscode:@""];
+    [[NSFileManager defaultManager] removeItemAtPath:fileAtDocumentDirectory(PushCoinLastTxnHistoryFile) error:nil];
 }
 
 - (UIAlertView *) showAlert:(NSString *)message withTitle:(NSString *)title
@@ -374,9 +376,9 @@
 {
     switch (errorCode)
     {
-        case 201: //invalid mat
+        case 1107: //not authorized
             [self clearDevice];
-            [self showAlert:reason withTitle:@"Registration Error"];
+            [self showAlert:reason withTitle:@"Device needs registration"];
             [self requestRegistrationWithDelegate:nil];
             break;
         default:

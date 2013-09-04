@@ -6,6 +6,12 @@
 // project.
 
 
+// FlatUIKit
+#define COCOAPODS_POD_AVAILABLE_FlatUIKit
+#define COCOAPODS_VERSION_MAJOR_FlatUIKit 1
+#define COCOAPODS_VERSION_MINOR_FlatUIKit 2
+#define COCOAPODS_VERSION_PATCH_FlatUIKit 0
+
 // InAppSettingsKit
 #define COCOAPODS_POD_AVAILABLE_InAppSettingsKit
 #define COCOAPODS_VERSION_MAJOR_InAppSettingsKit 1

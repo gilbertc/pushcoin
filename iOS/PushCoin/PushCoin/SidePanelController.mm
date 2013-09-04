@@ -8,6 +8,9 @@
 #import "Transaction.h"
 #import "Common.h"
 #import "SettingsViewController.h"
+#import "UINavigationBar+FlatUI.h"
+#import "UIColor+FlatUI.h"
+#import "UIBarButtonItem+FlatUI.h"
 
 @interface SidePanelController ()
 
@@ -18,9 +21,10 @@ using namespace pcos;
 @implementation SidePanelController
 {
     BOOL dataReceived;
-    UIViewController *summaryView;
-    UIViewController *historyView;
-    UIViewController *settingsView;
+    UIColor * titleColor;
+    UINavigationController *summaryView;
+    UINavigationController *historyView;
+    UINavigationController *settingsView;
 }
 
 @synthesize timestamp;
@@ -39,21 +43,35 @@ using namespace pcos;
 
 -(void) awakeFromNib
 {
+    titleColor = [UIColor colorWithRed:51.0/255 green:51.0/255 blue:51.0/255 alpha:1];
     [self setLeftPanel:[self.storyboard instantiateViewControllerWithIdentifier:@"leftViewController"]];
     [self showSummary];
+}
+
+/* custom left button */
+- (UIBarButtonItem *)leftButtonForCenterPanel {
+    UIBarButtonItem *ret = [[UIBarButtonItem alloc] initWithImage:[[self class] defaultImage] style:UIBarButtonItemStylePlain target:self action:@selector(toggleLeftPanel:)];
+    [ret configureFlatButtonWithColor:titleColor highlightedColor:titleColor cornerRadius:3];
+    return ret;
 }
 
 -(void) showSummary
 {
     if (summaryView == nil)
+    {
         summaryView = [self.storyboard instantiateViewControllerWithIdentifier:@"SummaryViewController"];
+        [summaryView.navigationBar configureFlatNavigationBarWithColor:titleColor];
+    }
     [self setCenterPanel:summaryView];
 }
 
 -(void) showHistory
 {
     if (historyView == nil)
+    {
         historyView = [self.storyboard instantiateViewControllerWithIdentifier:@"HistoryViewController"];
+        [historyView.navigationBar configureFlatNavigationBarWithColor:titleColor];
+    }
     [self setCenterPanel:historyView];
 }
 
@@ -61,9 +79,8 @@ using namespace pcos;
 {
     if (settingsView == nil)
     {
-        UINavigationController *settings = [[UINavigationController alloc]
-                                            initWithRootViewController:[[SettingsViewController alloc] init]];
-        settingsView = settings;
+        settingsView = [[UINavigationController alloc] initWithRootViewController:[[SettingsViewController alloc] init]];
+        [settingsView.navigationBar configureFlatNavigationBarWithColor:titleColor];
     }
     [self setCenterPanel:settingsView];
 }
@@ -72,6 +89,7 @@ using namespace pcos;
 {
     [super viewDidLoad];
     dataReceived = NO;
+
     
     NSString * storePath = fileAtDocumentDirectory(PushCoinLastTxnHistoryFile);
     if ([[NSFileManager defaultManager] fileExistsAtPath:storePath])
@@ -89,6 +107,7 @@ using namespace pcos;
 {
     [super viewDidAppear:(BOOL)animated];
     [self.appDelegate requestRegistrationWithDelegate:self];
+    [self refresh];
 }
 
 - (void)didReceiveMemoryWarning
