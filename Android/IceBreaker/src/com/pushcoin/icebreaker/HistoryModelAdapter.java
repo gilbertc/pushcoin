@@ -56,6 +56,7 @@ public class HistoryModelAdapter extends BaseAdapter
 	public View getView(int position, View convertView, ViewGroup parent) 
 	{
 		ViewHolder holder;
+
 		// First time around, just blindly inflate
 		if (convertView == null) 
 		{
@@ -79,10 +80,22 @@ public class HistoryModelAdapter extends BaseAdapter
 			holder = (ViewHolder) convertView.getTag();
 		}
 
+		// alternate colors
+		if ((position % 2) == 0) {
+			convertView.setBackgroundResource(R.color.row_even);  
+		} else {
+			convertView.setBackgroundResource(R.color.row_uneven);  
+		}
+
 		PcosHelper.TransactionInfo txn = ctrl_.getTransaction( position );
 
 		// Bind the row-data with the holder.
-		holder.counterparty.setText( txn.counterParty );
+		if (txn.txnType.equals( Conf.TRANSACTION_TYPE_CREDIT )) {
+			holder.counterparty.setText( "Deposit "+txn.note );
+			convertView.setBackgroundResource(R.color.row_credit);  
+		} else {
+			holder.counterparty.setText( txn.counterParty );
+		}
 		holder.amount.setText( PcosHelper.prettyAmount( txn.amount, txn.currency ) );
 		PcosHelper.DateTimePair txnTime = PcosHelper.prettyTimeParts( context_, txn.txnTimeEpoch );
 		holder.date.setText( txnTime.date );
@@ -96,13 +109,6 @@ public class HistoryModelAdapter extends BaseAdapter
 			holder.merchantScore.setVisibility(View.INVISIBLE);
 		}
 		
-		// alternate colors
-		if ((position % 2) == 0) {
-			convertView.setBackgroundResource(R.color.row_even);  
-		} else {
-			convertView.setBackgroundResource(R.color.row_uneven);  
-		}
-
 		return convertView;
 	}
 

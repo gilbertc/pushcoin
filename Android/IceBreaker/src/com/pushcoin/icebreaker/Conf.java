@@ -8,6 +8,9 @@ public class Conf
 	static final int HTTP_API_MAX_RESPONSE_LEN = 20*1024;
 	static final int HTTP_API_TIMEOUT = 4000; // ms
 
+	// Number of transactions in history
+	static final int TRANSACTION_HISTORY_SIZE=20;
+
 	// Request throttling
 	static final long THROTTLE_MAX_REQUESTS_PER_WINDOW = 1;
 	static final long THROTTLE_REQUEST_WINDOW_DURATION = 10;
@@ -22,7 +25,7 @@ public class Conf
 
 	// The elapsed time (in milliseconds) at which to stop reporting relative measurements.
 	// For example, will transition from "6 days ago" to "Dec 12" when using WEEK_IN_MILLIS. 
-	static final long STATUS_TRANSITION_RESOLUTION = DateUtils.WEEK_IN_MILLIS;
+	static final long STATUS_TRANSITION_RESOLUTION = 2*24*3600*1000;
 
 	// The flags argument is a bitmask of options found in DateUtils class
 	static final int STATUS_FLAGS = DateUtils.FORMAT_NO_YEAR | DateUtils.FORMAT_12HOUR;
@@ -39,7 +42,7 @@ public class Conf
 
 	// PCOS limits
 	static final int PCOS_MAXLEN_TXN_ID = 20;
-	static final int PCOS_MAXLEN_TXN_NOTE = 127;
+	static final int PCOS_MAXLEN_TXN_NOTE = 127+64;
 	static final int PCOS_MAXLEN_CURRENCY = 3;
 	static final int PCOS_MAXLEN_ERROR_MESSAGE = 256;
 	static final int PCOS_MAXLEN_DEVICE_NAME = 40;

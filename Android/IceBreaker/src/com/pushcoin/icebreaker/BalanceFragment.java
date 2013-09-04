@@ -156,13 +156,34 @@ public class BalanceFragment
 			}
 
 			// business name, address, rating
-			recentTransactionBusinessName_.setText( mostRecent.counterParty );
+			if (mostRecent.counterParty.isEmpty() ) {
+				recentTransactionBusinessName_.setText( mostRecent.note );
+			} else {
+				recentTransactionBusinessName_.setText( mostRecent.counterParty );
+			}
+
 			recentTransactionPaymentInfo_.setText(Html.fromHtml( deviceName + " " + transactionType + " <b>" + PcosHelper.prettyAmount( mostRecent.amount, mostRecent.currency ) + "</b> " + PcosHelper.prettyTime(getActivity(), mostRecent.txnTimeEpoch)) );
 			recentTransactionAddressStreet_.setText( mostRecent.posAddress.street );
 			recentTransactionAddressCityStateZip_.setText(mostRecent.posAddress.city + ", " + mostRecent.posAddress.state + " " + mostRecent.posAddress.zipCode);
-			recentTransactionAddressPhone_.setText( "Ph: " + mostRecent.merchantPhone );
-			recentTransactionMerchantScore_.setRating(mostRecent.merchantScore);		
-			recentTransactionMerchantScoreLabel_.setText( String.format("Score %.1f / 5 (%d votes)", mostRecent.merchantScore, mostRecent.totalVotes) );
+			String merchantPhone;
+			if ( !mostRecent.merchantPhone.isEmpty() ) {
+				merchantPhone = "Ph: " + mostRecent.merchantPhone;
+			} else {
+				merchantPhone = "";
+			}
+			recentTransactionAddressPhone_.setText( merchantPhone );
+			if (mostRecent.totalVotes > 0) 
+			{
+				recentTransactionMerchantScore_.setRating(mostRecent.merchantScore);		
+				recentTransactionMerchantScoreLabel_.setText( String.format("Score %.1f / 5 (%d votes)", mostRecent.merchantScore, mostRecent.totalVotes) );
+				recentTransactionMerchantScore_.setVisibility(View.VISIBLE);		
+				recentTransactionMerchantScoreLabel_.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				recentTransactionMerchantScore_.setVisibility(View.INVISIBLE);		
+				recentTransactionMerchantScoreLabel_.setVisibility(View.INVISIBLE);
+			}
 
 			recentTransactionPanel_.setVisibility(View.VISIBLE);
 		} 

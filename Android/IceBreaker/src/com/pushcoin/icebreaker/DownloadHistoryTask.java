@@ -39,7 +39,7 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 			
 			// Page size and offset
 			out_bo.writeUint( 0 );
-			out_bo.writeUint( 10 );
+			out_bo.writeUint( Conf.TRANSACTION_HISTORY_SIZE );
 
 			OutputDocument req = new DocumentWriter("TxnHistoryQuery");
 			req.addBlock(out_bo);

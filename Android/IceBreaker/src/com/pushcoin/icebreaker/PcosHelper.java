@@ -178,6 +178,14 @@ class PcosHelper
 					record.posAddress.zipCode = tr.readString(Conf.PCOS_MAXLEN_ADDRESS_CODE);
 					record.posAddress.country = tr.readString(Conf.PCOS_MAXLEN_ADDRESS_COUNTRY);
 				}
+				else
+				{
+					record.posAddress.street = "";
+					record.posAddress.city = "";
+					record.posAddress.state = "";
+					record.posAddress.zipCode = "";
+					record.posAddress.country = "";
+				}
 
 				// contact info
 				if ( tr.readBool() )
