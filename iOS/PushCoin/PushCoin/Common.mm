@@ -208,20 +208,26 @@ NSString * UtcTimestampToPrettyDate(uint64_t utc)
     
     if (date.isToday)
     {
-        [dateFormatter setDateFormat:@"h:mma"];
-        return [NSString stringWithFormat:@"Today at %@",[dateFormatter stringFromDate: date]];
+        [dateFormatter setDateFormat:@"'Today at' h:mma"];
+        return [dateFormatter stringFromDate: date];
     }
     
     if (date.isYesterday)
     {
-        [dateFormatter setDateFormat:@"h:mma"];
-        return [NSString stringWithFormat:@"Yesterday at %@",[dateFormatter stringFromDate: date]];
+        [dateFormatter setDateFormat:@"'Yesterday at' h:mma"];
+        return [dateFormatter stringFromDate: date];
     }
-    
-    if (date.isLastWeek)
+
+    if (date.isThisWeek)
     {
         [dateFormatter setDateFormat:@"EEE 'at' h:mma"];
-        return [NSString stringWithFormat:@"Last %@",[dateFormatter stringFromDate: date]];
+        return [dateFormatter stringFromDate: date];
+    }
+
+    if (date.isLastWeek)
+    {
+        [dateFormatter setDateFormat:@"'Last' EEE 'at' h:mma"];
+        return [dateFormatter stringFromDate: date];
     }
     
     if (date.isThisYear)
