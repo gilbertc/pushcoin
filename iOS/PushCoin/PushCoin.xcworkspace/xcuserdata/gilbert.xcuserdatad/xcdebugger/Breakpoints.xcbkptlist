@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/HistoryViewController.mm"
-         timestampString = "399886183.971269"
+         timestampString = "399967451.758997"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "100"
-         endingLineNumber = "100"
+         startingLineNumber = "102"
+         endingLineNumber = "102"
          landmarkName = "-messageDidUpdatedBy:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/SidePanelController.mm"
-         timestampString = "399949435.858091"
+         timestampString = "399972487.671952"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "94"
-         endingLineNumber = "94"
+         startingLineNumber = "82"
+         endingLineNumber = "82"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -47,11 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/SummaryViewController.mm"
-         timestampString = "399886986.470175"
+         timestampString = "399969867.291425"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "53"
-         endingLineNumber = "53"
+         startingLineNumber = "54"
+         endingLineNumber = "54"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -66,19 +66,6 @@
          startingLineNumber = "74"
          endingLineNumber = "74"
          landmarkName = "-tableView:willDisplayCell:forRowAtIndexPath:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "PushCoin/LeftSidePanelViewController.mm"
-         timestampString = "399905274.524125"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "90"
-         endingLineNumber = "90"
-         landmarkName = "-tableView:didSelectRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -112,11 +99,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/RegistrationController.mm"
-         timestampString = "399947202.775563"
+         timestampString = "399963394.796689"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "82"
-         endingLineNumber = "82"
+         startingLineNumber = "86"
+         endingLineNumber = "86"
          landmarkName = "@implementation RegistrationController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -125,11 +112,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/RegistrationController.mm"
-         timestampString = "399947202.775563"
+         timestampString = "399963394.796689"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "105"
-         endingLineNumber = "105"
+         startingLineNumber = "109"
+         endingLineNumber = "109"
          landmarkName = "-webService:didReceiveMessage:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -138,11 +125,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/RegistrationController.mm"
-         timestampString = "399947202.775563"
+         timestampString = "399963394.796689"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "158"
-         endingLineNumber = "158"
+         startingLineNumber = "162"
+         endingLineNumber = "162"
          landmarkName = "-webService:didFailWithStatusCode:andDescription:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -229,11 +216,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/SidePanelController.mm"
-         timestampString = "399949435.858091"
+         timestampString = "399969239.227776"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "63"
-         endingLineNumber = "63"
+         startingLineNumber = "62"
+         endingLineNumber = "62"
          landmarkName = "-showSummary"
          landmarkType = "5">
       </FileBreakpoint>
@@ -242,11 +229,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/SidePanelController.mm"
-         timestampString = "399949435.858091"
+         timestampString = "399969239.227776"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "73"
-         endingLineNumber = "73"
+         startingLineNumber = "72"
+         endingLineNumber = "72"
          landmarkName = "-showHistory"
          landmarkType = "5">
       </FileBreakpoint>
@@ -254,13 +241,91 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "PushCoin/SidePanelController.mm"
-         timestampString = "399949435.858091"
+         filePath = "PushCoin/Common.mm"
+         timestampString = "399964979.40051"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "83"
-         endingLineNumber = "83"
-         landmarkName = "-showSettings"
+         startingLineNumber = "204"
+         endingLineNumber = "204"
+         landmarkName = "UtcTimestampToPrettyDate(uint64_t utc)"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/Common.mm"
+         timestampString = "399964979.40051"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "203"
+         endingLineNumber = "203"
+         landmarkName = "UtcTimestampToPrettyDate(uint64_t utc)"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/Common.mm"
+         timestampString = "399966379.909558"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "231"
+         endingLineNumber = "231"
+         landmarkName = "UtcTimestampToPrettyDate(uint64_t utc)"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/Common.mm"
+         timestampString = "399966379.909558"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "224"
+         endingLineNumber = "224"
+         landmarkName = "UtcTimestampToPrettyDate(uint64_t utc)"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/Common.mm"
+         timestampString = "399966379.909558"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "218"
+         endingLineNumber = "218"
+         landmarkName = "UtcTimestampToPrettyDate(uint64_t utc)"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/Common.mm"
+         timestampString = "399966379.909558"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "212"
+         endingLineNumber = "212"
+         landmarkName = "UtcTimestampToPrettyDate(uint64_t utc)"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/SidePanelController.mm"
+         timestampString = "399972538.779823"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "124"
+         endingLineNumber = "124"
+         landmarkName = "-refresh"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

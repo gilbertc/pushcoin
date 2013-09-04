@@ -24,7 +24,6 @@ using namespace pcos;
     UIColor * titleColor;
     UINavigationController *summaryView;
     UINavigationController *historyView;
-    UINavigationController *settingsView;
 }
 
 @synthesize timestamp;
@@ -75,21 +74,10 @@ using namespace pcos;
     [self setCenterPanel:historyView];
 }
 
--(void) showSettings
-{
-    if (settingsView == nil)
-    {
-        settingsView = [[UINavigationController alloc] initWithRootViewController:[[SettingsViewController alloc] init]];
-        [settingsView.navigationBar configureFlatNavigationBarWithColor:titleColor];
-    }
-    [self setCenterPanel:settingsView];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     dataReceived = NO;
-
     
     NSString * storePath = fileAtDocumentDirectory(PushCoinLastTxnHistoryFile);
     if ([[NSFileManager defaultManager] fileExistsAtPath:storePath])
@@ -107,7 +95,9 @@ using namespace pcos;
 {
     [super viewDidAppear:(BOOL)animated];
     [self.appDelegate requestRegistrationWithDelegate:self];
-    [self refresh];
+    
+    if (self.appDelegate.registered == YES)
+        [self refresh];
 }
 
 - (void)didReceiveMemoryWarning
@@ -156,8 +146,6 @@ using namespace pcos;
     
     if (dataReceived)
         [listener messageDidUpdatedBy:self];
-    else
-        [self refresh];
 }
 
 - (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
@@ -189,7 +177,7 @@ using namespace pcos;
             {
                 auto & bl = blIt->second;
                 self.balance = [[Amount alloc] initWithReader:bl];
-                self.timestamp = UtcTimestampToString(bl.readULong(), @"MMM d, h:mm a");
+                self.timestamp = bl.readULong();
             }
             
             auto trIt = reader.find("Tr");

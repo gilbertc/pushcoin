@@ -32,7 +32,7 @@ using namespace pcos;
     webService = [[PushCoinWebService alloc] initWithDelegate:self];
     buffer =  [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
     
-    [self.registrationIDTextBox becomeFirstResponder];
+   // [self.registrationIDTextBox becomeFirstResponder];
     self.registrationIDTextBox.delegate = self;
 }
 
@@ -76,6 +76,10 @@ using namespace pcos;
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES]; // dismiss the keyboard
+    [super touchesBegan:touches withEvent:event];
+}
 
 -(NSData *)register
 {
@@ -135,12 +139,12 @@ using namespace pcos;
                 [self.appDelegate showAlert:reason
                                   withTitle:[NSString stringWithFormat:@"Error %d", (unsigned int)errorCode]];
                 
-                [self.registrationIDTextBox becomeFirstResponder];
+                //[self.registrationIDTextBox becomeFirstResponder];
                 return;
             }
         }
         [self.appDelegate handleUnknownMessage:documentName];
-        [self.registrationIDTextBox becomeFirstResponder];
+        //[self.registrationIDTextBox becomeFirstResponder];
         
     }
     catch(PcosException ex)
@@ -158,7 +162,7 @@ using namespace pcos;
 
     [[self appDelegate] showAlert:description
                         withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
-    [self.registrationIDTextBox becomeFirstResponder];
+    //[self.registrationIDTextBox becomeFirstResponder];
 }
 
 @end

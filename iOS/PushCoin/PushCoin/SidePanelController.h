@@ -17,13 +17,12 @@
 }
 
 
-@property (strong, nonatomic) NSString * timestamp;
+@property (assign) uint64_t timestamp;
 @property (strong, nonatomic) Amount * balance;
 @property (strong, nonatomic) NSMutableArray * transactions;
 @property (strong, nonatomic) NSMutableArray * messageListeners;
 
 -(void) showSummary;
 -(void) showHistory;
--(void) showSettings;
 
 @end

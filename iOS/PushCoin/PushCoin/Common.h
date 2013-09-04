@@ -35,7 +35,8 @@ void RetinaAwareUIGraphicsBeginImageContext(CGSize size);
 
 NSString * TxContextToString(NSString * txContext);
 NSString * TxTypeToString(NSString * txType);
-NSString * UtcTimestampToString(uint64_t utc, NSString * format = @"yyyy-MM-dd h:mm a");
+NSString * UtcTimestampToString(uint64_t utc, NSString * format = @"yyyy-MM-dd h:mma");
+NSString * UtcTimestampToPrettyDate(uint64_t utc);
 
 NSString * fileAtDocumentDirectory(NSString * fileName);
 BOOL fileExistsInDocumentDirectory(NSString * fileName);

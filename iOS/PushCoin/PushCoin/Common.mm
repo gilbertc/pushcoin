@@ -14,6 +14,8 @@
 // THE SOFTWARE.
 
 #import "Common.h"
+#import "NSDate+Utilities.h"
+
 //NSNumberFormatter *standardNumberFormatter();
 
 
@@ -191,15 +193,53 @@ NSString * UtcTimestampToString(uint64_t utc, NSString * format)
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:format];
     
-    NSTimeInterval _interval= utc;
-    NSDate * date = [NSDate dateWithTimeIntervalSince1970:_interval];
+    NSTimeInterval interval= utc;
+    NSDate * date = [NSDate dateWithTimeIntervalSince1970:interval];
     return [dateFormatter stringFromDate:date];
+}
+
+NSString * UtcTimestampToPrettyDate(uint64_t utc)
+{
+    NSTimeInterval interval= utc;
+    NSDate * date = [NSDate dateWithTimeIntervalSince1970:interval];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setAMSymbol:@"am"];
+    [dateFormatter setPMSymbol:@"pm"];
+    
+    if (date.isToday)
+    {
+        [dateFormatter setDateFormat:@"h:mma"];
+        return [NSString stringWithFormat:@"Today at %@",[dateFormatter stringFromDate: date]];
+    }
+    
+    if (date.isYesterday)
+    {
+        [dateFormatter setDateFormat:@"h:mma"];
+        return [NSString stringWithFormat:@"Yesterday at %@",[dateFormatter stringFromDate: date]];
+    }
+    
+    if (date.isLastWeek)
+    {
+        [dateFormatter setDateFormat:@"EEE 'at' h:mma"];
+        return [NSString stringWithFormat:@"Last %@",[dateFormatter stringFromDate: date]];
+    }
+    
+    if (date.isThisYear)
+    {
+        [dateFormatter setDateFormat:@"MMM dd 'at' h:mma"];
+        return [dateFormatter stringFromDate: date];
+    }
+    
+    [dateFormatter setDateFormat:@"yyyy-MM-dd 'at' h:mma"];
+    return [dateFormatter stringFromDate: date];
 }
 
 NSString * TxContextToString(NSString * txContext)
 {
     if ([txContext compare:@"P"] == 0)
         return @"Payment";
+    else if ([txContext compare:@"D"] == 0)
+        return @"Deposit";
     else
         return @"Unknown";
 }

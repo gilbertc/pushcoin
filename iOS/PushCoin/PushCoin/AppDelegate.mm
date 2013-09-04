@@ -3,6 +3,9 @@
 
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
+#import "FUIAlertView.h"
+#import "UIColor+FlatUI.h"
+#import "UIFont+FlatUI.h"
 #import "Common.h"
 
 @implementation SingleUseData
@@ -361,15 +364,27 @@
     [[NSFileManager defaultManager] removeItemAtPath:fileAtDocumentDirectory(PushCoinLastTxnHistoryFile) error:nil];
 }
 
-- (UIAlertView *) showAlert:(NSString *)message withTitle:(NSString *)title
+- (FUIAlertView *) showAlert:(NSString *)message withTitle:(NSString *)title
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+    FUIAlertView *alertView = [[FUIAlertView alloc] initWithTitle:title
                                                     message:message
                                                    delegate:nil
                                           cancelButtonTitle:@"Close" 
                                           otherButtonTitles:nil];
-    [alert show];
-    return alert;
+    
+    alertView.titleLabel.textColor = [UIColor cloudsColor];
+    alertView.titleLabel.font = [UIFont boldFlatFontOfSize:16];
+    alertView.messageLabel.textColor = [UIColor cloudsColor];
+    alertView.messageLabel.font = [UIFont flatFontOfSize:14];
+    alertView.backgroundOverlay.backgroundColor = [[UIColor cloudsColor] colorWithAlphaComponent:0.8];
+    alertView.alertContainer.backgroundColor = [UIColor midnightBlueColor];
+    alertView.defaultButtonColor = [UIColor cloudsColor];
+    alertView.defaultButtonShadowColor = [UIColor asbestosColor];
+    alertView.defaultButtonFont = [UIFont boldFlatFontOfSize:16];
+    alertView.defaultButtonTitleColor = [UIColor asbestosColor];
+    
+    [alertView show];
+    return alertView;
 }
 
 -(bool) handleErrorMessage:(NSString *)reason withErrorCode:(UInt32)errorCode

@@ -11,7 +11,7 @@
 @protocol MessageUpdatedDelegate;
 @protocol MessageUpdaterDelegate <NSObject>
 
-- (NSString *) timestamp;
+- (uint64_t) timestamp;
 - (NSString *) balance;
 - (NSMutableArray * ) transactions;
 

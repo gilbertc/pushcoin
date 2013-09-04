@@ -46,7 +46,9 @@
     
     CGSize tablesGridSize = (CGSize){320, 0};
     tablesGrid = [MGBox boxWithSize:tablesGridSize];
-    tablesGrid.contentLayoutMode = MGLayoutGridStyle;
+    tablesGrid.contentLayoutMode = MGLayoutTableStyle;
+    tablesGrid.borderStyle = MGBorderNone;
+    
     [self.scroller.boxes addObject:tablesGrid];
     [tablesGrid layout];
     

@@ -66,7 +66,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 2;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -84,10 +84,6 @@
     else if (indexPath.row == 1)
     {
         [(SidePanelController *) self.sidePanelController showHistory];
-    }
-    else if (indexPath.row == 2)
-    {
-        [(SidePanelController *) self.sidePanelController showSettings];
     }
 }
 

@@ -12,8 +12,11 @@
 #import "MGLineStyled.h"
 #import "MGScrollView.h"
 #import "Common.h"
+#import "UIFont+FlatUI.h"
+#import "UIColor+FlatUI.h"
 
-#define ROW_SIZE (CGSize){304, 44}
+
+#define ROW_SIZE (CGSize){304, 34}
 
 @implementation TransactionBox
 {
@@ -23,13 +26,17 @@
     MGTableBoxStyled * mainBox;
     
     MGLineStyled * headerLine;
-    MGLineStyled * trxIdLine;
     MGLineStyled * timeLine;
     MGLineStyled * typeLine;
     MGLineStyled * deviceLine;
     MGLineStyled * locationLine;
     MGLineStyled * taxLine;
     MGLineStyled * tipsLine;
+    
+    UIFont * keyFont;
+    UIFont * valueFont;
+    UIColor * keyColor;
+    UIColor * valueColor;
 }
 
 + (TransactionBox *)transactionBoxFor:(Transaction *)trx {
@@ -49,6 +56,10 @@
     if (self != nil)
     {
         isExpanded_ = NO;
+        keyFont = [UIFont fontWithName:@"HelveticaNeue" size:12];
+        valueFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
+        keyColor = [UIColor darkGrayColor];
+        valueColor = [UIColor darkGrayColor];
     }
     
     return self;
@@ -71,11 +82,25 @@
     [self.boxes addObject:mainBox];
     
     // header line
-    headerLine = [MGLineStyled lineWithLeft:trx.counterPartyName
-                                      right:[NSString stringWithFormat:@"%@ %@", trx.currency, trx.payment.text]
-                                       size:ROW_SIZE];
-    headerLine.font = [UIFont fontWithName:@"HelveticaNeue" size:18];
+    NSString * title;
+    if ([trx.txContext compare:@"D"] == 0)
+        title = trx.note;
+    else
+        title = trx.counterPartyName;
+    
+    headerLine = [MGLineStyled lineWithLeft:title
+                                      right:trx.payment.text
+                                       size:(CGSize){304, 44}];
+    headerLine.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
+    headerLine.rightFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
+    headerLine.sidePrecedence = MGSidePrecedenceRight;
+
     [mainBox.topLines addObject:headerLine];
+    
+    if ([trx.txType compare:@"C"] == 0)
+        headerLine.rightTextColor = [UIColor greenSeaColor];
+    else
+        headerLine.rightTextColor = [UIColor pomegranateColor];
     
     __unsafe_unretained TransactionBox * weakSelf = self;
     self.onTap = ^{
@@ -102,11 +127,8 @@
                 break;
             }
         }
-        
         isExpanded_ = YES;
         [self addDetails];
-        
-        headerLine.textColor = [UIColor orangeColor];
     }
 }
 
@@ -117,70 +139,72 @@
         isExpanded_ = NO;
         [mainBox.topLines removeAllObjects];
         
-        headerLine.backgroundColor = [UIColor colorWithRed:0.94 green:0.94 blue:0.95 alpha:1];
-        headerLine.textColor = [UIColor blackColor];
-        headerLine.textShadowColor = UIColor.whiteColor;
-       
         [mainBox.topLines addObject:headerLine];
     }
+}
+
+- (MGLineStyled *) prepareLine:(MGLineStyled *) line
+{
+    line.font = keyFont;
+    line.textColor = keyColor;
+    line.rightFont = valueFont;
+    line.rightTextColor = valueColor;
+    line.sidePrecedence = MGSidePrecedenceRight;
+    return line;
 }
 
 
 - (void) addDetails
 {
-    if (trxIdLine == nil)
-    {
-        trxIdLine = [MGLineStyled lineWithLeft:@"Trx ID"
-                                         right:self.trx.transactionId
-                                          size:ROW_SIZE];
-    }
-    [mainBox.topLines addObject:trxIdLine];
-    
     if (timeLine == nil)
     {
-        timeLine = [MGLineStyled lineWithLeft:@"Time"
-                                        right:UtcTimestampToString(self.trx.utcTransactionTime)
-                                         size:ROW_SIZE];
+        timeLine = [self prepareLine:[MGLineStyled lineWithLeft:@"Time"
+                                                          right:UtcTimestampToPrettyDate(self.trx.utcTransactionTime)
+                                                           size:ROW_SIZE]];
     }
     [mainBox.topLines addObject:timeLine];
     
     if (typeLine == nil)
     {
-        typeLine = [MGLineStyled lineWithLeft:@"Type"
-                                        right:[NSString stringWithFormat:@"%@ %@",
-                                               TxTypeToString(self.trx.txType),
-                                               TxContextToString(self.trx.txContext)]
-                                         size:ROW_SIZE];
+        typeLine = [self prepareLine:[MGLineStyled lineWithLeft:@"Type"
+                                                          right:[NSString stringWithFormat:@"%@ %@",
+                                                                 TxContextToString(self.trx.txContext),
+                                                                 TxTypeToString(self.trx.txType)]
+                                                           size:ROW_SIZE]];
     }
     [mainBox.topLines addObject:typeLine];
     
-    
-    if (deviceLine == nil)
+    if ([self.trx.txType compare:@"D"] == 0)
     {
-        deviceLine = [MGLineStyled lineWithLeft:@"Device"
-                                          right:self.trx.deviceName
-                                           size:ROW_SIZE];
+        if (deviceLine == nil)
+        {
+            deviceLine = [self prepareLine:[MGLineStyled lineWithLeft:@"Device"
+                                                                right:self.trx.deviceName
+                                                                 size:ROW_SIZE]];
+        }
+        [mainBox.topLines addObject:deviceLine];
     }
-    [mainBox.topLines addObject:deviceLine];
     
-    
-    if (locationLine == nil)
+    if ([self.trx.txContext compare:@"P"] == 0)
     {
-        locationLine = [MGLineStyled lineWithLeft:@"Location"
-                                            right:[NSString stringWithFormat:@"%@, %@",
-                                                   self.trx.address.city,
-                                                   self.trx.address.state]
-                                             size:ROW_SIZE];
+        if (locationLine == nil)
+        {
+            locationLine =  [self prepareLine:[MGLineStyled lineWithLeft:@"Location"
+                                                                   right:[NSString stringWithFormat:@"%@, %@",
+                                                                          self.trx.address.city,
+                                                                          self.trx.address.state]
+                                                                    size:ROW_SIZE]];
+        }
+        [mainBox.topLines addObject:locationLine];
     }
-    [mainBox.topLines addObject:locationLine];
     
     if (self.trx.tax != nil)
     {
         if (taxLine == nil)
         {
-            taxLine = [MGLineStyled lineWithLeft:@"Tax"
-                                           right:self.trx.tax.text
-                                            size:ROW_SIZE];
+            taxLine = [self prepareLine:[MGLineStyled lineWithLeft:@"Tax"
+                                                             right:self.trx.tax.text
+                                                              size:ROW_SIZE]];
         }
         [mainBox.topLines addObject:taxLine];
     }
@@ -189,16 +213,12 @@
     {
         if (tipsLine == nil)
         {
-            tipsLine = [MGLineStyled lineWithLeft:@"Tips"
-                                            right:self.trx.tip.text
-                                             size:ROW_SIZE];
+            tipsLine = [self prepareLine:[MGLineStyled lineWithLeft:@"Tips"
+                                                              right:self.trx.tip.text
+                                                               size:ROW_SIZE]];
         }
         [mainBox.topLines addObject:tipsLine];
     }
-}
-
-- (void) layout {
-    [super layout];
 }
 
 /*

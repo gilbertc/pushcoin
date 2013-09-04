@@ -10,6 +10,7 @@
 #import "Transaction.h"
 #import "AppDelegate.h"
 #import "Common.h"
+#import "UIColor+FlatUI.h"
 
 @interface SummaryViewController ()
 
@@ -92,21 +93,31 @@
 - (void) messageDidUpdatedBy:(id <MessageUpdaterDelegate>)updater
 {
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
-    self.timestampLabel.text = [NSString stringWithFormat:@"As of %@", updater.timestamp];
+    self.timestampLabel.text = [NSString stringWithFormat:@"As of %@", UtcTimestampToPrettyDate(updater.timestamp)];
     
     double balance = updater.balance.doubleValue;
     
-    self.balanceLabel.text = [NSString stringWithFormat:@"%d", (int) balance];
+    self.balanceLabel.text = [NSString stringWithFormat:@"$%d", (int) balance];
     self.balanceDecimalLabel.text = [NSString stringWithFormat:@"%d", (int)(balance * 100) - ((int)balance) * 100];
     
     if (updater.transactions.count > 0)
     {
         Transaction * trx = ((Transaction *)[updater.transactions objectAtIndex:0]);
-        self.lastCounterPartyLabel.text = trx.counterPartyName;
-        self.lastPaymentLabel.text = trx.payment.text;
-        self.lastTimeLabel.text = UtcTimestampToString(trx.utcTransactionTime);
         
-        if (trx.address != nil)
+        if ([trx.txType compare:@"C"] == 0)
+            self.lastPaymentLabel.textColor = [UIColor greenSeaColor];
+        else
+            self.lastPaymentLabel.textColor = [UIColor pomegranateColor];
+        
+        if ([trx.txContext compare:@"D"] == 0)
+            self.lastCounterPartyLabel.text = trx.note;
+        else
+            self.lastCounterPartyLabel.text = trx.counterPartyName;
+        
+        self.lastPaymentLabel.text = trx.payment.text;
+        self.lastTimeLabel.text = UtcTimestampToPrettyDate(trx.utcTransactionTime);
+        
+        if ([trx.txContext compare:@"P"] == 0 && trx.address != nil)
             self.lastAddressLabel.text = [NSString stringWithFormat:@"%@, %@", trx.address.city, trx.address.state];
         else
             self.lastAddressLabel.text = @"";

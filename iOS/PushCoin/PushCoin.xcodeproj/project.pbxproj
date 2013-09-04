@@ -34,6 +34,8 @@
 		0D64183A17D2E80700C85327 /* dollar-sign.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D64183917D2E80700C85327 /* dollar-sign.png */; };
 		0D64183D17D2E87900C85327 /* HistoryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D64183C17D2E87900C85327 /* HistoryViewController.mm */; };
 		0D696F9117D3B6B500055AF8 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D696F9017D3B6B500055AF8 /* CoreText.framework */; };
+		0D77EFCC17D6FAA70071C318 /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D77EFCB17D6FAA70071C318 /* NSDate+Utilities.m */; };
+		0D77EFD017D711680071C318 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D77EFCF17D711680071C318 /* logo.png */; };
 		0D7A8F80154202EC00634A79 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7E154202EC00634A79 /* AddressBook.framework */; };
 		0D7A8F81154202EC00634A79 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */; };
 		0D7A8F83154202F700634A79 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F82154202F700634A79 /* AudioToolbox.framework */; };
@@ -43,11 +45,9 @@
 		0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8FBE154218B700634A79 /* QuartzCore.framework */; };
 		0D7E10B9155FF82800429C9A /* NSData+BytesToHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */; };
 		0D7E10BC155FF8E200429C9A /* NSString+HexStringToBytes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */; };
-		0D887E3B15688DC9004228F3 /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E3A15688DC9004228F3 /* title.png */; };
 		0D8B597517D254370096E907 /* RegistrationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B597417D254370096E907 /* RegistrationController.mm */; };
 		0D8B597917D261E30096E907 /* PcosHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B597817D261E30096E907 /* PcosHelper.mm */; };
 		0D8BBFF317D2EDCD0065EE35 /* Transaction.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BBFF217D2EDCD0065EE35 /* Transaction.mm */; };
-		0DA259F0157F2E89009AB9A6 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DA259EF157F2E89009AB9A6 /* logo.png */; };
 		0DA25A1D1581BDB0009AB9A6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA25A1C1581BDAF009AB9A6 /* MessageUI.framework */; };
 		0DA25A7A1582EDF0009AB9A6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA25A791582EDF0009AB9A6 /* CoreLocation.framework */; };
 		0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -62,7 +62,6 @@
 		0DDBA5CB17D1A44100B7DEC6 /* PasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDBA5CA17D1A44100B7DEC6 /* PasscodeViewController.m */; };
 		0DF02FE817D2A20C00E6E66D /* SummaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0DF02FE717D2A20C00E6E66D /* SummaryViewController.mm */; };
 		0DF680261545B28500F5E784 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 0DF680251545B28500F5E784 /* README */; };
-		0DFCA81A17D60DB000C5DECB /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0DFCA81917D60DB000C5DECB /* Settings.bundle */; };
 		0DFCA81D17D60ED900C5DECB /* SettingsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0DFCA81C17D60ED900C5DECB /* SettingsViewController.mm */; };
 		1514EA99A0E4467E975CC57F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F5F490B9DB496C82E2DECD /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -141,6 +140,9 @@
 		0D64183B17D2E87900C85327 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
 		0D64183C17D2E87900C85327 /* HistoryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HistoryViewController.mm; sourceTree = "<group>"; };
 		0D696F9017D3B6B500055AF8 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		0D77EFCA17D6FAA70071C318 /* NSDate+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+Utilities.h"; path = "PushCoin/NSDate+Utilities.h"; sourceTree = "<group>"; };
+		0D77EFCB17D6FAA70071C318 /* NSDate+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+Utilities.m"; path = "PushCoin/NSDate+Utilities.m"; sourceTree = "<group>"; };
+		0D77EFCF17D711680071C318 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		0D7A8F7E154202EC00634A79 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		0D7A8F82154202F700634A79 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -154,14 +156,12 @@
 		0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+BytesToHexString.m"; path = "PushCoin/NSData+BytesToHexString.m"; sourceTree = "<group>"; };
 		0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HexStringToBytes.h"; path = "PushCoin/NSString+HexStringToBytes.h"; sourceTree = "<group>"; };
 		0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HexStringToBytes.m"; path = "PushCoin/NSString+HexStringToBytes.m"; sourceTree = "<group>"; };
-		0D887E3A15688DC9004228F3 /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		0D8B597317D254370096E907 /* RegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationController.h; sourceTree = "<group>"; };
 		0D8B597417D254370096E907 /* RegistrationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RegistrationController.mm; sourceTree = "<group>"; };
 		0D8B597717D261E30096E907 /* PcosHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PcosHelper.h; path = PushCoin/PcosHelper.h; sourceTree = "<group>"; };
 		0D8B597817D261E30096E907 /* PcosHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PcosHelper.mm; path = PushCoin/PcosHelper.mm; sourceTree = "<group>"; };
 		0D8BBFF117D2EDCD0065EE35 /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transaction.h; sourceTree = "<group>"; };
 		0D8BBFF217D2EDCD0065EE35 /* Transaction.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Transaction.mm; sourceTree = "<group>"; };
-		0DA259EF157F2E89009AB9A6 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		0DA25A1C1581BDAF009AB9A6 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		0DA25A791582EDF0009AB9A6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0DAFD24A1547A8180010459A /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
@@ -182,7 +182,6 @@
 		0DF02FE617D2A20C00E6E66D /* SummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryViewController.h; sourceTree = "<group>"; };
 		0DF02FE717D2A20C00E6E66D /* SummaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SummaryViewController.mm; sourceTree = "<group>"; };
 		0DF680251545B28500F5E784 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		0DFCA81917D60DB000C5DECB /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = ../Settings.bundle; sourceTree = "<group>"; };
 		0DFCA81B17D60ED900C5DECB /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		0DFCA81C17D60ED900C5DECB /* SettingsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SettingsViewController.mm; sourceTree = "<group>"; };
 		BE6163C468DB4C3593C09C5F /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -307,6 +306,8 @@
 				0D64183617D2DE4C00C85327 /* MessageUpdaterDelegate.h */,
 				0D36108017D4498F00919AC5 /* UILabel+CustomFont.h */,
 				0D36108117D4498F00919AC5 /* UILabel+CustomFont.m */,
+				0D77EFCA17D6FAA70071C318 /* NSDate+Utilities.h */,
+				0D77EFCB17D6FAA70071C318 /* NSDate+Utilities.m */,
 			);
 			name = Utilities;
 			path = ..;
@@ -366,7 +367,7 @@
 		0DBC491D1543C59A00E56EDF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0DFCA81917D60DB000C5DECB /* Settings.bundle */,
+				0D77EFCF17D711680071C318 /* logo.png */,
 				0D54CD4017D5B59900E5D71E /* Default-568h@2x.png */,
 				0D54CD3E17D5B59300E5D71E /* Default@2x.png */,
 				0D54CD3C17D5B58E00E5D71E /* Default.png */,
@@ -377,8 +378,6 @@
 				0D54CD3A17D5B2FB00E5D71E /* TT0468M.ttf */,
 				0D64183917D2E80700C85327 /* dollar-sign.png */,
 				0D64183717D2E7D500C85327 /* storage.png */,
-				0DA259EF157F2E89009AB9A6 /* logo.png */,
-				0D887E3A15688DC9004228F3 /* title.png */,
 				0DD692B515660FC500391E25 /* iphone_delete_button.png */,
 			);
 			path = Resources;
@@ -484,8 +483,6 @@
 				0D19E2D71541CCAE00C8671B /* InfoPlist.strings in Resources */,
 				0DF680261545B28500F5E784 /* README in Resources */,
 				0DD692B615660FC500391E25 /* iphone_delete_button.png in Resources */,
-				0D887E3B15688DC9004228F3 /* title.png in Resources */,
-				0DA259F0157F2E89009AB9A6 /* logo.png in Resources */,
 				0DD7EBA517CF793400F9CE3B /* MainStoryboard.storyboard in Resources */,
 				0D27FE0717D1615C0079B630 /* pcos.xcodeproj in Resources */,
 				0D64183817D2E7D500C85327 /* storage.png in Resources */,
@@ -498,7 +495,7 @@
 				0D54CD3F17D5B59300E5D71E /* Default@2x.png in Resources */,
 				0D54CD4117D5B59900E5D71E /* Default-568h@2x.png in Resources */,
 				0D54CD4317D5C4CB00E5D71E /* pushcoin.png in Resources */,
-				0DFCA81A17D60DB000C5DECB /* Settings.bundle in Resources */,
+				0D77EFD017D711680071C318 /* logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,6 +561,7 @@
 				0DC10D5617D564DD00992ABB /* SidePanelController.mm in Sources */,
 				0DC10D5C17D5734D00992ABB /* LeftSidePanelViewController.mm in Sources */,
 				0DFCA81D17D60ED900C5DECB /* SettingsViewController.mm in Sources */,
+				0D77EFCC17D6FAA70071C318 /* NSDate+Utilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
