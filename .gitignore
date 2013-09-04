@@ -26,6 +26,7 @@ local.properties
 
 # other...
 cookie.txt
+Android/IceBreaker/ant.properties
 Android/BitsyPos/assets/databases/bitsypos.zip
 Android/BitsyPos/assets/databases/example.json
 Android/BitsyPos/assets/databases/bitsypos
