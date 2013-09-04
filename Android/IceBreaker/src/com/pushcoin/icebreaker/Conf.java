@@ -5,6 +5,7 @@ import android.text.format.DateUtils;
 public class Conf 
 {
 	static final String HTTP_API_URL = "https://api.pushcoin.com/pcos/";
+	// static final String HTTP_API_URL = "https://api.minta.com/pcos/";
 	static final int HTTP_API_MAX_RESPONSE_LEN = 20*1024;
 	static final int HTTP_API_TIMEOUT = 4000; // ms
 
