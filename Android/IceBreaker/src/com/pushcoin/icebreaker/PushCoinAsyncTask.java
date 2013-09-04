@@ -18,32 +18,25 @@ import com.pushcoin.pcos.*;
 
 abstract class PushCoinAsyncTask extends AsyncTask<String, Void, Void>
 {
-	static final String HTTP_API_URL = "https://api.minta.com/pcos/";
-	static final int HTTP_API_MAX_RESPONSE_LEN = 4096;
-	static final int HTTP_API_TIMEOUT = 3000; // ms
-	static final String HTTP_API_USER_AGENT = "PushCoin-IceBreaker-v1";
-
 	protected InputDocument invokeRemote(OutputDocument doc) throws PcosError, IOException
 	{
 		HttpClient httpClient = new DefaultHttpClient();
 
 		HttpParams params = httpClient.getParams();
-		HttpConnectionParams.setConnectionTimeout(params, HTTP_API_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(params, HTTP_API_TIMEOUT);
+		HttpConnectionParams.setConnectionTimeout(params, Conf.HTTP_API_TIMEOUT);
+		HttpConnectionParams.setSoTimeout(params, Conf.HTTP_API_TIMEOUT);
 
-		HttpPost httpPost = new HttpPost(HTTP_API_URL);
+		HttpPost httpPost = new HttpPost(Conf.HTTP_API_URL);
 		httpPost.setEntity( new ByteArrayEntity( doc.toBytes() ) );
 
-		Log.v(TAG, HTTP_API_URL+doc.getDocumentName());
+		Log.v(Conf.TAG, Conf.HTTP_API_URL+doc.getDocumentName());
 		HttpResponse res = httpClient.execute( httpPost );
 
 		InputStream in = new BufferedInputStream(res.getEntity().getContent());
 
-		byte[] resultBuf = new byte[HTTP_API_MAX_RESPONSE_LEN];
+		byte[] resultBuf = new byte[Conf.HTTP_API_MAX_RESPONSE_LEN];
 		int bytesLen = in.read(resultBuf);
 
 		return new DocumentReader( resultBuf, bytesLen );
 	}
-
-	private static final String TAG = "PcosInvoke";
 }

@@ -2,11 +2,17 @@ package com.pushcoin.icebreaker;
 
 public class MessageId 
 {
-	final static int FETCH_ACCOUNT_HISTORY = 1;
-	final static int MODEL_CHANGED = 2;
-	final static int REGISTER_DEVICE_REQUEST = 3;
-	final static int REGISTER_DEVICE_USER_CANCELED = 4;
-	final static int REGISTER_DEVICE_PENDING = 5;
-	final static int REGISTER_DEVICE_STOPPED = 6;
-	final static int REGISTER_DEVICE_SUCCESS = 7;
+	final static int ACCOUNT_HISTORY_REQUEST = 1;
+	final static int ACCOUNT_HISTORY_REPLY = 2;
+	final static int ACCOUNT_HISTORY_PENDING = 3;
+	final static int ACCOUNT_HISTORY_STOPPED = 4;
+
+	final static int REGISTER_DEVICE_REQUEST = 11;
+	final static int REGISTER_DEVICE_USER_CANCELED = 12;
+	final static int REGISTER_DEVICE_PENDING = 13;
+	final static int REGISTER_DEVICE_STOPPED = 14;
+	final static int REGISTER_DEVICE_SUCCESS = 15;
+
+	final static int MODEL_CHANGED = 21;
+	final static int DEVICE_NOT_ACTIVE = 31;
 }

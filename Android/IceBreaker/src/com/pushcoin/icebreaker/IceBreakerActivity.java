@@ -21,6 +21,7 @@ import android.content.Intent;
 import java.util.TreeMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.math.BigDecimal;
 import com.pushcoin.Binascii;
 
 public class IceBreakerActivity 
@@ -31,61 +32,62 @@ public class IceBreakerActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		Log.i( TAG, "build-info|make="+Build.MANUFACTURER+";model"+Build.MODEL+";product="+Build.PRODUCT );
+		Log.i( Conf.TAG, "build-info|make="+Build.MANUFACTURER+";model"+Build.MODEL+";product="+Build.PRODUCT );
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		// Register self as a handler of certain types of messages
-		registerHandler( handler_, MessageId.FETCH_ACCOUNT_HISTORY );
+		registerHandler( handler_, MessageId.ACCOUNT_HISTORY_REQUEST );
 		registerHandler( handler_, MessageId.REGISTER_DEVICE_REQUEST );
 		registerHandler( handler_, MessageId.REGISTER_DEVICE_SUCCESS );
+		registerHandler( handler_, MessageId.ACCOUNT_HISTORY_REPLY );
+		registerHandler( handler_, MessageId.DEVICE_NOT_ACTIVE );
 		// Messages emitted by this Controller - DO NOT SUBSCRIBE
 		// * MODEL_CHANGED
-
-		// The app can be in one of two modes:
-		//  * configuration mode (fresh install, no MAT yet)
-		//  * operating mode
-		//
-		String encodedMat = getPreferences(Context.MODE_PRIVATE).getString(Conf.PREFS_KEY_MAT_KEY, null);
-		if (encodedMat != null) {
-			mat_ = Binascii.unhexlify( encodedMat );
-		}
-
-		// This will hold the fragment approprate to the mode we are in.
-		Fragment modeViewHandler;
-
-		// if has MAT, we must have been configured
-		if (mat_ == null) {
-			// We are in configuration mode
-			modeViewHandler = new SetupFragment( this );
-		}
-		else { 
-			// Instantatiate operational fragment
-			modeViewHandler = new OperationalFragment( this );
-		}
-
-		// We picked the fragment, pass any parameters to it
-		modeViewHandler.setArguments(getIntent().getExtras());
-
-		// Show the fragment
-		getFragmentManager().beginTransaction()
-			.add( R.id.main_fragment, modeViewHandler )
-			.commit();
 	}
 
 	@Override
   protected void onResume() 
 	{
 		super.onResume();
+		// The app can be in one of two modes:
+		//  * configuration mode (fresh install, no MAT yet)
+		//  * operating mode
+		//
+		pickMode();
 	}
 
 	/**
 		Controller interface
 	*/
 	@Override
+	public String getPageTitle()
+	{
+		if (txnHistory_ != null ) {
+			return "Balance";
+		} else {
+			return "Not available";
+		}
+	}
+
+	@Override
 	public String getBalance()
 	{
-		return "$0.00";
+		if (txnHistory_ != null ) {
+			return PcosHelper.prettyAmount( txnHistory_.balance, Conf.DEFAULT_CURRENCY );
+		} else {
+			return "";
+		}
+	}
+
+	@Override
+	public String getBalanceTime()
+	{
+		if (txnHistory_ != null ) {
+			return "as of " + PcosHelper.prettyTime(this, recentRequestTime());
+		} else {
+			return "";
+		}
 	}
 
 	@Override
@@ -95,31 +97,28 @@ public class IceBreakerActivity
 	}
 
 	@Override
-	public TransactionRecord getTransaction(int index)
+	public PcosHelper.TransactionInfo getTransaction(int index)
 	{
-		TransactionRecord	txn = new TransactionRecord();
-		if ( index % 2 == 0 ) {
-			txn.counterparty = "Wheaton";
-			txn.amount = "$51.33";
-			txn.utctime = "12:32 PM";
+		if (txnHistory_ != null && index < txnHistory_.transactionInfo.length ) {
+			return txnHistory_.transactionInfo[index];
+		} else {
+			throw new RuntimeException("No transaction record at index "+index);
 		}
-		else if ( index % 3 == 0 ) {
-			txn.counterparty = "Wheaton Academy Lunch";
-			txn.amount = "$511.33";
-			txn.utctime = "Aug 12 '04";
-			txn.utctime = "12:32 PM";
+	}
+
+	@Override
+	public PcosHelper.TransactionInfo getRecentTransaction()
+	{
+		if (txnHistory_ != null && txnHistory_.transactionInfo.length > 0) {
+			return txnHistory_.transactionInfo[0];
 		}
-		else if ( index % 4 == 0 ) {
-			txn.counterparty = "Wheaton Academy";
-			txn.amount = "$5.33";
-			txn.utctime = "9:01 PM";
-		}
-		else {
-			txn.counterparty = "Wheaton Academy Lunch";
-			txn.amount = "$10.33";
-			txn.utctime = "1:11 PM";
-		}
-		return txn;
+		return null;
+	}
+
+	@Override
+	public void castRating( String txnId, int rating )
+	{
+		new CastRatingTask(this, mat_, txnId, rating).execute();
 	}
 
 	@Override
@@ -151,7 +150,94 @@ public class IceBreakerActivity
 	@Override
 	public int getHistorySize()
 	{
-		return 20;
+		if (txnHistory_ != null) {
+			return txnHistory_.transactionInfo.length;
+		} else {
+		  return 0;
+		}
+	}
+
+	@Override
+	public void reload()
+	{
+		long nowEpoch = PcosHelper.getEpochUtc();
+		// Throttle number of refreshes.
+		if (requestTimestamps_.size() < Conf.THROTTLE_MAX_REQUESTS_PER_WINDOW)
+		{
+			requestTimestamps_.add( new Long(nowEpoch) );
+			new DownloadHistoryTask(this, mat_).execute();
+			enqueuedReload_ = 0;
+		} 
+		else
+		{
+			// check oldest request timestamp
+			Long reqTm = requestTimestamps_.get(0);
+			long diffTm = nowEpoch - reqTm;
+			if ( diffTm > Conf.THROTTLE_REQUEST_WINDOW_DURATION )
+			{
+				// pop oldest request
+				requestTimestamps_.remove(0);
+				// add this request
+				requestTimestamps_.add( new Long(nowEpoch) );
+				new DownloadHistoryTask(this, mat_).execute();
+				enqueuedReload_ = 0;
+			}
+			else 
+			{
+				long waitUntil = Conf.THROTTLE_REQUEST_WINDOW_DURATION-diffTm+1;
+				Log.v( Conf.TAG, "throttled-until-seconds="+waitUntil );
+
+				// Schedule reload in the future, when throttle window expires
+				if (nowEpoch - enqueuedReload_ > Conf.THROTTLE_REQUEST_WINDOW_DURATION)
+				{
+					enqueuedReload_ = nowEpoch;
+					Message deferredReload = handler_.obtainMessage(MessageId.ACCOUNT_HISTORY_REQUEST);
+					handler_.sendMessageDelayed(deferredReload, waitUntil*1000);
+				} else {
+					Log.v( Conf.TAG, "reload-ignored;already-scheduled" );
+				}
+			}
+		}
+	}
+
+	private void pickMode()
+	{
+		String encodedMat = getPreferences(Context.MODE_PRIVATE).getString(Conf.PREFS_KEY_MAT_KEY, null);
+		if (encodedMat != null) {
+			mat_ = Binascii.unhexlify( encodedMat );
+		} else {
+			mat_ = null;
+		}
+
+		// This will hold the fragment appropriate to the mode we are in.
+		Fragment modeViewHandler;
+
+		// if has MAT, we must have been configured
+		if (mat_ == null) {
+			// We are in configuration mode
+			modeViewHandler = new SetupFragment( this );
+		}
+		else { 
+			// Instantatiate operational fragment
+			modeViewHandler = new OperationalFragment( this );
+		}
+
+		// We picked the fragment, pass any parameters to it
+		modeViewHandler.setArguments(getIntent().getExtras());
+
+		// Show the fragment
+		getFragmentManager().beginTransaction()
+			.replace( R.id.main_fragment, modeViewHandler )
+			.commit();
+	}
+
+	private long recentRequestTime()
+	{
+		if (requestTimestamps_.isEmpty()) {
+			return 0;
+		} else {
+			return requestTimestamps_.get(requestTimestamps_.size() - 1);
+		}
 	}
 
 	/**
@@ -189,14 +275,20 @@ public class IceBreakerActivity
 		{
 			switch( msg.what )
 			{
-				case MessageId.FETCH_ACCOUNT_HISTORY:
-					new DownloadHistoryTask(IceBreakerActivity.this, mat_).execute();
+				case MessageId.ACCOUNT_HISTORY_REQUEST:
+					reload();
 				break;
 				case MessageId.REGISTER_DEVICE_REQUEST:
 					new RegisterDeviceTask(IceBreakerActivity.this).execute( (String) msg.obj );
 				break;
 				case MessageId.REGISTER_DEVICE_SUCCESS:
 					onDeviceRegistered( (PcosHelper.RegisterAckResult) msg.obj );
+				break;
+				case MessageId.ACCOUNT_HISTORY_REPLY:
+					onTxnHistoryReply( (PcosHelper.TxnHistoryReply) msg.obj );
+				break;
+				case MessageId.DEVICE_NOT_ACTIVE:
+					onDeviceNotRegistered();
 				break;
 			}
 		}
@@ -210,6 +302,27 @@ public class IceBreakerActivity
 
 		// We are leaving configuration mode...
 		restart();
+	}
+
+	private void onDeviceNotRegistered()
+	{
+		SharedPreferences.Editor store = getPreferences(Context.MODE_PRIVATE).edit();
+		store.clear().commit();
+
+		// We are entering configuration mode...
+		restart();
+	}
+
+
+	private void onTxnHistoryReply(PcosHelper.TxnHistoryReply txData)
+	{
+		txnHistory_ = txData;
+		status_ = "";
+
+		// Notify of changes applied
+		Message m = Message.obtain();
+		m.what = MessageId.MODEL_CHANGED;
+		post(m);
 	}
 
 	/** 
@@ -228,18 +341,17 @@ public class IceBreakerActivity
 
 	static final int TAB_ID_BALANCE = 0;
 	static final int TAB_ID_HISTORY = 1;
-	static final String TAG = "IceBr-Ctrl";
 
 	private final Object lock_ = new Object();
 	SharedPreferences prefs_;
 	ViewPager pager_;
 	byte[] mat_;
-	Button refreshButton_;
-	Button balanceButton_;
-	Button historyButton_;
+	ArrayList<Long> requestTimestamps_ = new ArrayList<Long>();
+	long enqueuedReload_ = 0;
 
 	// Model data
-	String status_;
+	String status_ = "";
+	PcosHelper.TxnHistoryReply txnHistory_;
 
 	TreeMap<Integer, List<Handler> > messageReceiver_ =
 		new TreeMap<Integer, List<Handler> >();

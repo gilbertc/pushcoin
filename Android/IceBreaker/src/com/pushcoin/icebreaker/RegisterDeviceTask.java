@@ -32,7 +32,6 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 			// DSA pub key
 			CryptoHelper.DsaKeyPair key = CryptoHelper.generateDsaKeyPair();
 			byte[] encodedPubKey = key.publicKey.getEncoded();
-			Log.e( TAG, "pub-key-size=" + encodedPubKey.length );
 			out_bo.writeByteStr( encodedPubKey );
 
 			OutputDocument req = new DocumentWriter("Register");
@@ -46,7 +45,7 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 				if ( docName.equals( Conf.PCOS_DOC_ERROR ) )
 				{
 					PcosHelper.ErrorInfo err = PcosHelper.parseError( res );
-					Log.e( TAG, "reason="+err.message+";code="+err.errorCode );
+					Log.e( Conf.TAG, "reason="+err.message+";code="+err.errorCode );
 					if (err.message.isEmpty()) {
 						status_ = Conf.STATUS_UNEXPECTED_HAPPENED;
 					}
@@ -56,7 +55,6 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 				}
 				else if (docName.equals( Conf.PCOS_DOC_REGISTER_ACK ) )
 				{
-					Log.i( TAG, "device-registered" );
 					status_ = "Success!";
 					Message m = Message.obtain();
 					m.what = MessageId.REGISTER_DEVICE_SUCCESS;
@@ -65,7 +63,7 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 				}
 				else // Not an Error nor Ack!?
 				{
-					Log.e( TAG, "unexpected-server-response|doc="+docName );
+					Log.e( Conf.TAG, "unexpected-server-response|doc="+docName );
 					status_ = Conf.STATUS_UNEXPECTED_HAPPENED;
 				}
 			}
@@ -87,7 +85,6 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 		model_.post(m);
 	}
 
-	private static final String TAG = "PcosRegister";
 	private final IceBreakerActivity model_;
 	String status_;
 }

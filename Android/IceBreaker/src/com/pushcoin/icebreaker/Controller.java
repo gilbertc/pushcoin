@@ -22,12 +22,20 @@ import android.os.Message;
 
 public interface Controller
 {
+	// Ask for fresh data
+	void reload();
+
 	// Model access
+	String getPageTitle();
 	String getBalance();
+	String getBalanceTime();
 	String getStatus();
-	TransactionRecord getTransaction(int index);
+	PcosHelper.TransactionInfo getTransaction(int index);
+	PcosHelper.TransactionInfo getRecentTransaction();
 	int getHistorySize();
 
+	// voting 
+	void castRating( String txnId, int rating );
 	void registerHandler( Handler h, int messageId );
 	void post( Message m );
 }

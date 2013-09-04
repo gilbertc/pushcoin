@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.support.v4.view.ViewPager;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.graphics.Typeface;
 import android.content.SharedPreferences;
 import android.content.Context;
@@ -50,7 +50,7 @@ public class SetupFragment
 	}
 
 	private static class SetupPager 
-		extends FragmentPagerAdapter 
+		extends FragmentStatePagerAdapter 
 	{
 		public SetupPager(FragmentManager fm, Controller ctrl)
 		{

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">IceBreakerActivity</string>
+	<string name="app_name">PushCoin</string>
 
 	<string-array name="rating_scale">
 		<item>Rate Your Experience!</item>
@@ -11,9 +11,9 @@
 		<item>Extremely Satisfied</item>
 	</string-array>
 
-	<string name="registration_instruction_step_1">Login at <b>pushcoin.com</b></string>
+	<string name="registration_instruction_step_1">Login to <b>pushcoin.com</b></string>
 	<string name="registration_instruction_step_2">Click on <b>Devices</b> &#8211; <b>Add Device</b> and choose <b>Mobile App</b></string>
 	<string name="registration_instruction_step_3">Fill out description and hit <b>Done</b>. When you are provided with the <b>Activation Code</b>, enter it below.</string>
 	<string name="input_reg_code_hint">Enter Activation Code</string>
-	<string name="reminder_of_no_payments"><i><b>Reminder:</b> This application cannot be used to make payments (yet). Use it to check your account balance or view recent transactions.</i></string>
+	<string name="reminder_of_no_payments"><i><b>Reminder:</b> This application cannot be used to make payments (yet). You can check the account balance or view recent transactions.</i></string>
 </resources>

@@ -3,6 +3,7 @@ package com.pushcoin.icebreaker;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.RatingBar;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +16,13 @@ import java.util.ArrayList;
 
 public class HistoryModelAdapter extends BaseAdapter 
 {
-	public HistoryModelAdapter(Context context, int entryLayoutResourceId, int counterpartyRscId, int amountRscId, int timeRscId, Controller ctrl)
+	public HistoryModelAdapter(Context context, Controller ctrl)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from( context );
-		// Cart instance we are serving the view 
-		ctrl_ = ctrl;
 
-		// Resource IDs of views for the row
-		entryLayoutResourceId_ = entryLayoutResourceId;
-		counterpartyRscId_ = counterpartyRscId;
-		amountRscId_ = amountRscId;
-		timeRscId_ = timeRscId;
+		context_ = context;
+		ctrl_ = ctrl;
 	}
 
 	public int getCount() 
@@ -60,17 +56,21 @@ public class HistoryModelAdapter extends BaseAdapter
 	public View getView(int position, View convertView, ViewGroup parent) 
 	{
 		ViewHolder holder;
+
 		// First time around, just blindly inflate
 		if (convertView == null) 
 		{
-			convertView = inflater_.inflate(entryLayoutResourceId_, null);
+			convertView = inflater_.inflate(R.layout.history_row, null);
 			
 			// Creates a ViewHolder and store references to the children views
 			// we want to bind data to.
 			holder = new ViewHolder();
-			holder.counterparty = (TextView) convertView.findViewById(counterpartyRscId_);
-			holder.amount = (TextView) convertView.findViewById(amountRscId_);
-			holder.time = (TextView) convertView.findViewById(timeRscId_);
+			holder.counterparty = (TextView) convertView.findViewById(R.id.txn_counterparty_name);
+			holder.amount = (TextView) convertView.findViewById(R.id.txn_amount);
+			holder.date = (TextView) convertView.findViewById(R.id.txn_date);
+			holder.time = (TextView) convertView.findViewById(R.id.txn_time);
+			holder.deviceName = (TextView) convertView.findViewById(R.id.txn_device_name);
+			holder.merchantScore = (RatingBar) convertView.findViewById(R.id.merchant_score_bar);
 			convertView.setTag(holder);
 		} 
 		else
@@ -80,13 +80,6 @@ public class HistoryModelAdapter extends BaseAdapter
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		TransactionRecord txn = ctrl_.getTransaction( position );
-
-		// Bind the row-data with the holder.
-		holder.counterparty.setText( txn.counterparty );
-		holder.amount.setText( txn.amount );
-		holder.time.setText( txn.utctime );
-		
 		// alternate colors
 		if ((position % 2) == 0) {
 			convertView.setBackgroundResource(R.color.row_even);  
@@ -94,6 +87,28 @@ public class HistoryModelAdapter extends BaseAdapter
 			convertView.setBackgroundResource(R.color.row_uneven);  
 		}
 
+		PcosHelper.TransactionInfo txn = ctrl_.getTransaction( position );
+
+		// Bind the row-data with the holder.
+		if (txn.txnType.equals( Conf.TRANSACTION_TYPE_CREDIT )) {
+			holder.counterparty.setText( "Deposit "+txn.note );
+			convertView.setBackgroundResource(R.color.row_credit);  
+		} else {
+			holder.counterparty.setText( txn.counterParty );
+		}
+		holder.amount.setText( PcosHelper.prettyAmount( txn.amount, txn.currency ) );
+		PcosHelper.DateTimePair txnTime = PcosHelper.prettyTimeParts( context_, txn.txnTimeEpoch );
+		holder.date.setText( txnTime.date );
+		holder.time.setText( txnTime.time );
+		holder.deviceName.setText( txn.deviceName );
+		if (txn.totalVotes > 0) {
+			holder.merchantScore.setRating( txn.merchantScore );
+			holder.merchantScore.setVisibility(View.VISIBLE);
+		}
+		else {
+			holder.merchantScore.setVisibility(View.INVISIBLE);
+		}
+		
 		return convertView;
 	}
 
@@ -101,15 +116,13 @@ public class HistoryModelAdapter extends BaseAdapter
 	{
 		TextView counterparty;
 		TextView amount;
+		TextView date;
 		TextView time;
+		TextView deviceName;
+		RatingBar merchantScore;
 	}
 
 	private LayoutInflater inflater_;
-	private Controller ctrl_;
-
-	// The resource IDs
-	final private int entryLayoutResourceId_;
-	final private int counterpartyRscId_;
-	final private int amountRscId_;
-	final private int timeRscId_;
+	final private Context context_;
+	final private Controller ctrl_;
 }
