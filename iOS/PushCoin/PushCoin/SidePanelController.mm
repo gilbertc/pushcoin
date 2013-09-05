@@ -24,6 +24,7 @@ using namespace pcos;
     UIColor * titleColor;
     UINavigationController *summaryView;
     UINavigationController *historyView;
+    UINavigationController *aboutView;
 }
 
 @synthesize timestamp;
@@ -238,6 +239,8 @@ using namespace pcos;
     {
         [listener messageDidFailedBy:self withDescription:description];
     }
+    
+    [self.appDelegate handleWebServiceFailureWithStatusCode:statusCode andDescription:description];
 }
 
 @end

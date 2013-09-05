@@ -320,7 +320,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qxf-MU-EU7">
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Enter Activiation Code" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="dCa-2M-Zsb">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Enter Registration Code" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="dCa-2M-Zsb">
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="b4Q-D4-byf"/>
@@ -341,51 +341,51 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="2. Click on Devices - Add Device " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O4h-AK-AbD">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="2. Click on Devices - Add Device and     choose Mobile App." lineBreakMode="characterWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="O4h-AK-AbD">
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="21" id="hmx-K2-lKu"/>
+                                            <constraint firstAttribute="height" constant="41" id="MxV-fc-ceC"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="and choose Mobile App" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DOU-Gb-oUU">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="3. Fill out description and hit Done, and     enter provided Registration Code below." lineBreakMode="characterWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="m2z-JP-czW">
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="21" id="hZH-bS-mAQ"/>
+                                            <constraint firstAttribute="height" constant="41" id="ocY-Ur-EWS"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="3. Name it and click Done" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m2z-JP-czW">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="enF-ZD-kKR">
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="21" id="5Gq-iA-9u9"/>
+                                            <constraint firstAttribute="height" constant="51" id="LIq-re-ztm"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="14"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <string key="text">Reminder: This application cannot be used to make payments (yet). You can check the account balance or view recent transactions.</string>
+                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="12"/>
+                                        <color key="textColor" red="0.74065053209999998" green="0.75" blue="0.71485989520000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="DOU-Gb-oUU" firstAttribute="leading" secondItem="Qxf-MU-EU7" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="A8f-HF-cgn"/>
+                                    <constraint firstItem="dCa-2M-Zsb" firstAttribute="top" secondItem="Qxf-MU-EU7" secondAttribute="top" constant="179" id="76v-fg-RPS"/>
                                     <constraint firstItem="O4h-AK-AbD" firstAttribute="leading" secondItem="Qxf-MU-EU7" secondAttribute="leading" type="default" id="Eud-tM-4Vc"/>
                                     <constraint firstItem="VLn-F4-tVE" firstAttribute="leading" secondItem="Qxf-MU-EU7" secondAttribute="leading" type="default" id="Fe2-1O-xkQ"/>
                                     <constraint firstItem="UdC-Kd-IZ4" firstAttribute="leading" secondItem="Qxf-MU-EU7" secondAttribute="leading" type="default" id="JE8-5e-DGI"/>
+                                    <constraint firstItem="m2z-JP-czW" firstAttribute="top" secondItem="O4h-AK-AbD" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="JIo-KJ-NAa"/>
                                     <constraint firstItem="dCa-2M-Zsb" firstAttribute="trailing" secondItem="Qxf-MU-EU7" secondAttribute="trailing" type="default" id="JJG-ED-vaQ"/>
                                     <constraint firstItem="VLn-F4-tVE" firstAttribute="trailing" secondItem="Qxf-MU-EU7" secondAttribute="trailing" type="default" id="KIe-05-yd3"/>
-                                    <constraint firstItem="DOU-Gb-oUU" firstAttribute="trailing" secondItem="Qxf-MU-EU7" secondAttribute="trailing" type="default" id="OBH-uU-Xhy"/>
-                                    <constraint firstItem="O4h-AK-AbD" firstAttribute="top" secondItem="VLn-F4-tVE" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Oub-AU-gaV"/>
+                                    <constraint firstItem="enF-ZD-kKR" firstAttribute="bottom" secondItem="Qxf-MU-EU7" secondAttribute="bottom" type="default" id="LOx-N2-d7f"/>
                                     <constraint firstItem="dCa-2M-Zsb" firstAttribute="leading" secondItem="Qxf-MU-EU7" secondAttribute="leading" type="default" id="PTZ-Ez-GoQ"/>
-                                    <constraint firstAttribute="bottom" secondItem="dCa-2M-Zsb" secondAttribute="bottom" constant="71" id="RZQ-Zq-z61"/>
-                                    <constraint firstItem="m2z-JP-czW" firstAttribute="centerY" secondItem="Qxf-MU-EU7" secondAttribute="centerY" type="default" id="Vd7-TU-q7X"/>
-                                    <constraint firstItem="DOU-Gb-oUU" firstAttribute="top" secondItem="O4h-AK-AbD" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="aK7-hY-FAz"/>
+                                    <constraint firstItem="m2z-JP-czW" firstAttribute="trailing" secondItem="Qxf-MU-EU7" secondAttribute="trailing" type="default" id="TZ8-Y4-A35"/>
+                                    <constraint firstItem="enF-ZD-kKR" firstAttribute="trailing" secondItem="Qxf-MU-EU7" secondAttribute="trailing" type="default" id="Trc-3N-tzP"/>
+                                    <constraint firstItem="O4h-AK-AbD" firstAttribute="top" secondItem="VLn-F4-tVE" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="acM-n4-dSx"/>
+                                    <constraint firstItem="enF-ZD-kKR" firstAttribute="leading" secondItem="Qxf-MU-EU7" secondAttribute="leading" type="default" id="dBS-N9-Uk9"/>
                                     <constraint firstItem="UdC-Kd-IZ4" firstAttribute="top" secondItem="Qxf-MU-EU7" secondAttribute="top" type="default" id="pGc-xe-fyI"/>
                                     <constraint firstItem="UdC-Kd-IZ4" firstAttribute="trailing" secondItem="Qxf-MU-EU7" secondAttribute="trailing" type="default" id="pT7-z4-L3f"/>
-                                    <constraint firstItem="m2z-JP-czW" firstAttribute="trailing" secondItem="Qxf-MU-EU7" secondAttribute="trailing" type="default" id="psB-5E-iM7"/>
-                                    <constraint firstItem="VLn-F4-tVE" firstAttribute="top" secondItem="UdC-Kd-IZ4" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="ryq-wb-J91"/>
+                                    <constraint firstItem="VLn-F4-tVE" firstAttribute="top" secondItem="UdC-Kd-IZ4" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="vfx-sr-4bL"/>
                                     <constraint firstItem="O4h-AK-AbD" firstAttribute="trailing" secondItem="Qxf-MU-EU7" secondAttribute="trailing" type="default" id="ygk-TO-AaI"/>
-                                    <constraint firstItem="m2z-JP-czW" firstAttribute="top" secondItem="DOU-Gb-oUU" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="yhW-7R-UyY"/>
                                     <constraint firstItem="m2z-JP-czW" firstAttribute="leading" secondItem="Qxf-MU-EU7" secondAttribute="leading" type="default" id="zHS-v3-wt5"/>
                                 </constraints>
                             </view>
@@ -396,17 +396,9 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="We are registering your mobile app" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j0C-jm-BeL">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="We are registering your mobile app. It will be finished in a moment." lineBreakMode="characterWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="j0C-jm-BeL">
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="21" id="V8s-gL-JMB"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="14"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="It will be done soon..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OmD-Hx-O1g">
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="21" id="0zs-a2-NDR"/>
+                                            <constraint firstAttribute="height" constant="33" id="feN-eC-pHn"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -416,29 +408,27 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="M7J-DX-Z4n" secondAttribute="bottom" constant="75" id="CNB-SM-mZA"/>
                                     <constraint firstItem="7Ed-Y0-mel" firstAttribute="leading" secondItem="yQj-BP-fjE" secondAttribute="leading" type="default" id="GUb-VM-jcj"/>
+                                    <constraint firstItem="M7J-DX-Z4n" firstAttribute="centerY" secondItem="yQj-BP-fjE" secondAttribute="centerY" type="default" id="TuK-I4-zx8"/>
                                     <constraint firstItem="7Ed-Y0-mel" firstAttribute="trailing" secondItem="yQj-BP-fjE" secondAttribute="trailing" type="default" id="Uab-rq-wJo"/>
                                     <constraint firstItem="j0C-jm-BeL" firstAttribute="top" secondItem="yQj-BP-fjE" secondAttribute="top" constant="61" id="Y9D-DL-jvG"/>
                                     <constraint firstItem="j0C-jm-BeL" firstAttribute="trailing" secondItem="yQj-BP-fjE" secondAttribute="trailing" type="default" id="aeU-n4-Nse"/>
-                                    <constraint firstItem="OmD-Hx-O1g" firstAttribute="leading" secondItem="yQj-BP-fjE" secondAttribute="leading" type="default" id="ceE-aD-H11"/>
                                     <constraint firstItem="j0C-jm-BeL" firstAttribute="leading" secondItem="yQj-BP-fjE" secondAttribute="leading" type="default" id="fnu-YD-ld8"/>
-                                    <constraint firstItem="M7J-DX-Z4n" firstAttribute="top" secondItem="yQj-BP-fjE" secondAttribute="top" constant="184" scoringType="5" id="kRs-iu-iYa"/>
-                                    <constraint firstItem="OmD-Hx-O1g" firstAttribute="top" secondItem="yQj-BP-fjE" secondAttribute="top" constant="91" id="nqh-9X-uja"/>
+                                    <constraint firstItem="M7J-DX-Z4n" firstAttribute="centerX" secondItem="j0C-jm-BeL" secondAttribute="centerX" type="default" id="vrs-6l-YtT"/>
                                     <constraint firstItem="7Ed-Y0-mel" firstAttribute="top" secondItem="yQj-BP-fjE" secondAttribute="top" type="default" id="ys2-Hx-Esl"/>
-                                    <constraint firstItem="M7J-DX-Z4n" firstAttribute="centerX" secondItem="OmD-Hx-O1g" secondAttribute="centerX" type="default" id="zDY-OE-bA5"/>
-                                    <constraint firstItem="OmD-Hx-O1g" firstAttribute="trailing" secondItem="yQj-BP-fjE" secondAttribute="trailing" type="default" id="zeN-pa-Ddt"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="0.20000001788139343" green="0.20000001788139343" blue="0.20000001788139343" alpha="1" colorSpace="deviceRGB"/>
                         <constraints>
-                            <constraint firstItem="yQj-BP-fjE" firstAttribute="leading" secondItem="jEf-Lm-IYW" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="8ua-my-e5D"/>
+                            <constraint firstAttribute="bottom" secondItem="Qxf-MU-EU7" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="7Z3-jN-bYu"/>
                             <constraint firstAttribute="trailing" secondItem="Qxf-MU-EU7" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="Dh8-oy-hSu"/>
+                            <constraint firstAttribute="bottom" secondItem="yQj-BP-fjE" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="NyD-v2-T5Y"/>
+                            <constraint firstAttribute="trailing" secondItem="yQj-BP-fjE" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="V5h-6r-coN"/>
+                            <constraint firstItem="yQj-BP-fjE" firstAttribute="leading" secondItem="jEf-Lm-IYW" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="WID-D7-oix"/>
+                            <constraint firstItem="Qxf-MU-EU7" firstAttribute="top" secondItem="jEf-Lm-IYW" secondAttribute="top" constant="20" symbolic="YES" type="default" id="Ybg-eg-MUG"/>
                             <constraint firstItem="Qxf-MU-EU7" firstAttribute="leading" secondItem="jEf-Lm-IYW" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="dMh-jM-DLH"/>
-                            <constraint firstAttribute="trailing" secondItem="yQj-BP-fjE" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="hIb-Gq-ld6"/>
-                            <constraint firstItem="Qxf-MU-EU7" firstAttribute="top" secondItem="jEf-Lm-IYW" secondAttribute="top" constant="21" id="m74-NQ-hCn"/>
-                            <constraint firstItem="yQj-BP-fjE" firstAttribute="top" secondItem="jEf-Lm-IYW" secondAttribute="top" constant="20" symbolic="YES" type="default" id="uAq-PB-INJ"/>
+                            <constraint firstItem="yQj-BP-fjE" firstAttribute="top" secondItem="jEf-Lm-IYW" secondAttribute="top" constant="20" symbolic="YES" type="default" id="vu1-8R-56s"/>
                         </constraints>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>

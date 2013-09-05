@@ -4,7 +4,6 @@
 #import "NSData+BytesToHexString.h"
 #import "NSData+Base64.h"
 #import "PcosHelper.h"
-
 #include <pcos/pcos.h>
 
 using namespace pcos;
@@ -76,7 +75,8 @@ using namespace pcos;
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
     [self.view endEditing:YES]; // dismiss the keyboard
     [super touchesBegan:touches withEvent:event];
 }
@@ -101,13 +101,10 @@ using namespace pcos;
     return [NSData dataWithBytes:writer.bytes() length:writer.size()];
 }
 
-- (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
+- (void)handleData: (NSData *) data
 {
-    self.registrationIDTextBox.enabled = YES;
-    self.waitingView.hidden = YES;
-    self.registrationView.hidden = NO;
-
-    try{
+    try
+    {
         DocumentReader reader((byte const * )data.bytes, 0, data.length);
         NSString * documentName = [NSString stringWithUTF8String:reader.getDocumentName().c_str()];
         
@@ -143,25 +140,34 @@ using namespace pcos;
                 return;
             }
         }
+        
         [self.appDelegate handleUnknownMessage:documentName];
         //[self.registrationIDTextBox becomeFirstResponder];
-        
     }
     catch(PcosException ex)
     {
         NSLog(@"Exception");
-    }   
+    }
+}
+
+- (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
+{
+    [self handleData:data];
+    
+    self.registrationIDTextBox.enabled = YES;
+    self.waitingView.hidden = YES;
+    self.registrationView.hidden = NO;
 }
 
 - (void)webService:(PushCoinWebService *)webService didFailWithStatusCode:(NSInteger)statusCode 
     andDescription:(NSString *)description
 {
+    [self.appDelegate handleWebServiceFailureWithStatusCode:statusCode andDescription:description];
+    
     self.registrationIDTextBox.enabled = YES;
     self.waitingView.hidden = YES;
     self.registrationView.hidden = NO;
-
-    [[self appDelegate] showAlert:description
-                        withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
+    
     //[self.registrationIDTextBox becomeFirstResponder];
 }
 

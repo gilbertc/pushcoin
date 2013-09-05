@@ -392,8 +392,8 @@
     switch (errorCode)
     {
         case 1107: //not authorized
-            [self clearDevice];
             [self showAlert:reason withTitle:@"Device needs registration"];
+            [self clearDevice];
             [self requestRegistrationWithDelegate:nil];
             break;
         default:
@@ -405,8 +405,26 @@
 
 -(bool) handleUnknownMessage:(NSString *)documentName
 {
-    [self showAlert:[NSString stringWithFormat:@"unexpected message received: [%@]", documentName]
+    [self showAlert:[NSString stringWithFormat:@"Unexpected message received: [%@]", documentName]
           withTitle:@"Error"];
+    return YES;
+}
+
+-(bool) handleWebServiceFailureWithStatusCode:(NSInteger)statusCode
+                               andDescription:(NSString *)description
+{
+    switch (statusCode)
+    {
+        case -1:
+            [self showAlert:@"We weren't able to connect to the PushCoin server. Make sure your network connection is active and try again."
+                  withTitle:@"No Internet Connection"];
+            break;
+        default:
+            [self showAlert:description
+                  withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
+            break;
+    }
+    
     return YES;
 }
 

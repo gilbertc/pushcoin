@@ -59,6 +59,8 @@
 
 -(bool) handleErrorMessage:(NSString *)reason withErrorCode:(UInt32)errorCode;
 -(bool) handleUnknownMessage:(NSString *)documentName;
+-(bool) handleWebServiceFailureWithStatusCode:(NSInteger)statusCode
+                               andDescription:(NSString *)description;
 
 -(UIAlertView *) showAlert:(NSString *)message withTitle:(NSString *)title;
 

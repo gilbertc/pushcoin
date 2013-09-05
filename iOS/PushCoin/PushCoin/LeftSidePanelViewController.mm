@@ -86,5 +86,4 @@
         [(SidePanelController *) self.sidePanelController showHistory];
     }
 }
-
 @end
