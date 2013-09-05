@@ -36,6 +36,11 @@ public class DeviceManager {
 		return _defaultDeviceManager;
 	}
 
+	private class PendingPermissionRequest {
+		public Context context;
+		public UsbDevice usbDevice;
+	}
+
 	private SparseArray<IDevice> devices;
 	private PaymentListener dispatchListener;
 	private UsbManager usbManager;
