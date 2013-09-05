@@ -77,6 +77,8 @@ public class BalanceFragment
 		// Hide recent transaction view if there is nothing to show
 		if (ctrl_.getRecentTransaction() == null) {
 			recentTransactionPanel_.setVisibility(View.INVISIBLE);
+		} else {
+			onAccountHistoryChanged();
 		}
 
 		return fragmentRootLayout;
