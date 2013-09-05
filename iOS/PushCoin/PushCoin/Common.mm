@@ -236,7 +236,7 @@ NSString * UtcTimestampToPrettyDate(uint64_t utc)
         return [dateFormatter stringFromDate: date];
     }
     
-    [dateFormatter setDateFormat:@"yyyy-MM-dd 'at' h:mma"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd h:mma"];
     return [dateFormatter stringFromDate: date];
 }
 
