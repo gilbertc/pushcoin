@@ -145,38 +145,33 @@ public class BalanceFragment
 				deviceName = mostRecent.deviceName;
 			}
 
+			// transaction rating only if we paid to a merchant
+			boolean showRatingBar = false;
 			if (mostRecent.txnType.equals(Conf.TRANSACTION_TYPE_DEBIT) && !mostRecent.counterParty.isEmpty())
 			{
-				// transaction rating
 				recentTransactionUserRatingBar_.setRating(mostRecent.txnRating);
 				// turn off voting if transaction took place more than CUTOFF ago
-				if ( 
-					(PcosHelper.getEpochUtc() - mostRecent.txnTimeEpoch) > Conf.USER_RATING_CUTOFF )
+				long nowEpoch = PcosHelper.getEpochUtc();
+				if (nowEpoch < mostRecent.txnTimeEpoch || (nowEpoch - mostRecent.txnTimeEpoch) < Conf.USER_RATING_CUTOFF)
 				{
-					recentTransactionUserRatingBar_.setIsIndicator( true );
-					// dont even show the component if didn't vote
-					if (mostRecent.txnRating > 0)
-					{
-						recentTransactionUserRatingBarLabel_.setText(ratingScale_[ mostRecent.txnRating ]);
-						recentTransactionUserRatingBarLabel_.setVisibility(View.VISIBLE);
-					}
-					else // hide label and bar
-					{	
-						recentTransactionUserRatingBar_.setVisibility(View.INVISIBLE);
-						recentTransactionUserRatingBarLabel_.setVisibility(View.INVISIBLE);
-					}
-				}
-				else 
-				{
+					showRatingBar = true;
 					recentTransactionUserRatingBar_.setIsIndicator( false );
 					recentTransactionUserRatingBarLabel_.setText(ratingScale_[ mostRecent.txnRating ]);
 				}
+				else // voting right expired
+				{
+					recentTransactionUserRatingBar_.setIsIndicator( true );
+					// if user voted, we show how
+					if (mostRecent.txnRating > 0)
+					{
+						showRatingBar = true;
+						recentTransactionUserRatingBarLabel_.setText(ratingScale_[ mostRecent.txnRating ]);
+					}
+				}
 			}
-			else
-			{
-				recentTransactionUserRatingBar_.setVisibility(View.INVISIBLE);
-				recentTransactionUserRatingBarLabel_.setVisibility(View.INVISIBLE);
-			}
+
+			recentTransactionUserRatingBar_.setVisibility(showRatingBar ? View.VISIBLE : View.INVISIBLE);
+			recentTransactionUserRatingBarLabel_.setVisibility(showRatingBar ? View.VISIBLE : View.INVISIBLE);
 
 			// business name, address, rating
 			if (mostRecent.counterParty.isEmpty() ) {
