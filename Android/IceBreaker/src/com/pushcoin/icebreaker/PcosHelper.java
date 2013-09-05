@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.regex.Pattern;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.io.FileInputStream;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
@@ -239,10 +240,11 @@ class PcosHelper
 		return System.currentTimeMillis() / 1000;
 	}
 
+	static final SimpleDateFormat prettyDateFormatter_ = new SimpleDateFormat("EEEE MMM d, hh:mm aaa");
 	static String prettyTime( Context ctx, long sinceEpoch )
 	{
-		return DateUtils.getRelativeDateTimeString( ctx, sinceEpoch * 1000, 
-				Conf.STATUS_MIN_RESOLUTION, Conf.STATUS_TRANSITION_RESOLUTION, Conf.STATUS_FLAGS ).toString();
+		Date tm = new Date( sinceEpoch * 1000 );
+		return prettyDateFormatter_.format(tm);
 	}
 
 	static public class DateTimePair
@@ -251,11 +253,16 @@ class PcosHelper
 		String time;
 	}
 
+	static final SimpleDateFormat prettyDatePairFormatter_ = new SimpleDateFormat("MMM d, hh:mm aaa");
 	static final Pattern dateSplitRegEx = Pattern.compile(", ");
 	static DateTimePair prettyTimeParts( Context ctx, long sinceEpoch )
 	{
 		DateTimePair res = new DateTimePair();
-		String[] together = dateSplitRegEx.split(prettyTime(ctx, sinceEpoch));
+
+		Date tm = new Date( sinceEpoch * 1000 );
+		String tmRes = prettyDatePairFormatter_.format(tm);
+
+		String[] together = dateSplitRegEx.split(tmRes);
 		if (together.length > 1)
 		{
 			res.date = together[0];

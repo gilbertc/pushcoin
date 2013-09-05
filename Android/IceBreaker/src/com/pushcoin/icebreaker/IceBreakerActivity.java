@@ -84,7 +84,7 @@ public class IceBreakerActivity
 	public String getBalanceTime()
 	{
 		if (txnHistory_ != null ) {
-			return "as of " + PcosHelper.prettyTime(this, txnHistory_.balanceTimeEpoch);
+			return PcosHelper.prettyTime(this, txnHistory_.balanceTimeEpoch);
 		} else {
 			return "";
 		}
