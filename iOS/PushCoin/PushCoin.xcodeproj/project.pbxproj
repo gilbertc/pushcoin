@@ -45,6 +45,7 @@
 		0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8FBE154218B700634A79 /* QuartzCore.framework */; };
 		0D7E10B9155FF82800429C9A /* NSData+BytesToHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */; };
 		0D7E10BC155FF8E200429C9A /* NSString+HexStringToBytes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */; };
+		0D8B426D17D950290079ED62 /* FUIAlertViewDelegateBlockWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B426C17D950290079ED62 /* FUIAlertViewDelegateBlockWrapper.m */; };
 		0D8B597517D254370096E907 /* RegistrationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B597417D254370096E907 /* RegistrationController.mm */; };
 		0D8B597917D261E30096E907 /* PcosHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D8B597817D261E30096E907 /* PcosHelper.mm */; };
 		0D8BBFF317D2EDCD0065EE35 /* Transaction.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BBFF217D2EDCD0065EE35 /* Transaction.mm */; };
@@ -156,6 +157,8 @@
 		0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+BytesToHexString.m"; path = "PushCoin/NSData+BytesToHexString.m"; sourceTree = "<group>"; };
 		0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HexStringToBytes.h"; path = "PushCoin/NSString+HexStringToBytes.h"; sourceTree = "<group>"; };
 		0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HexStringToBytes.m"; path = "PushCoin/NSString+HexStringToBytes.m"; sourceTree = "<group>"; };
+		0D8B426B17D950290079ED62 /* FUIAlertViewDelegateBlockWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FUIAlertViewDelegateBlockWrapper.h; path = PushCoin/FUIAlertViewDelegateBlockWrapper.h; sourceTree = "<group>"; };
+		0D8B426C17D950290079ED62 /* FUIAlertViewDelegateBlockWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FUIAlertViewDelegateBlockWrapper.m; path = PushCoin/FUIAlertViewDelegateBlockWrapper.m; sourceTree = "<group>"; };
 		0D8B597317D254370096E907 /* RegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationController.h; sourceTree = "<group>"; };
 		0D8B597417D254370096E907 /* RegistrationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RegistrationController.mm; sourceTree = "<group>"; };
 		0D8B597717D261E30096E907 /* PcosHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PcosHelper.h; path = PushCoin/PcosHelper.h; sourceTree = "<group>"; };
@@ -308,6 +311,8 @@
 				0D36108117D4498F00919AC5 /* UILabel+CustomFont.m */,
 				0D77EFCA17D6FAA70071C318 /* NSDate+Utilities.h */,
 				0D77EFCB17D6FAA70071C318 /* NSDate+Utilities.m */,
+				0D8B426B17D950290079ED62 /* FUIAlertViewDelegateBlockWrapper.h */,
+				0D8B426C17D950290079ED62 /* FUIAlertViewDelegateBlockWrapper.m */,
 			);
 			name = Utilities;
 			path = ..;
@@ -562,6 +567,7 @@
 				0DC10D5C17D5734D00992ABB /* LeftSidePanelViewController.mm in Sources */,
 				0DFCA81D17D60ED900C5DECB /* SettingsViewController.mm in Sources */,
 				0D77EFCC17D6FAA70071C318 /* NSDate+Utilities.m in Sources */,
+				0D8B426D17D950290079ED62 /* FUIAlertViewDelegateBlockWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

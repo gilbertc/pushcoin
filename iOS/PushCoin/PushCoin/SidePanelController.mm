@@ -228,11 +228,6 @@ using namespace pcos;
 - (void)webService:(PushCoinWebService *)webService didFailWithStatusCode:(NSInteger)statusCode
     andDescription:(NSString *)description
 {
-    /*
-     [[self appDelegate] showAlert:description
-     withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
-     */
-    
     refreshing = NO;
     
     for (id<MessageUpdatedDelegate> listener in self.messageListeners)

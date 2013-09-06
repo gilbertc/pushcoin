@@ -7,6 +7,7 @@
 #import "UIColor+FlatUI.h"
 #import "UIFont+FlatUI.h"
 #import "Common.h"
+#import "FUIAlertViewDelegateBlockWrapper.h"
 
 @implementation SingleUseData
 
@@ -39,6 +40,9 @@
 
 
 @implementation AppDelegate
+{
+    id<FUIAlertViewDelegate> delegateBlock;
+}
 
 @synthesize window = _window;
 @synthesize privateKeyKeychainItem;
@@ -145,7 +149,7 @@
     
     self.pinHashKeychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"com.pushcoin.pinhash" accessGroup:nil];
     [self.pinHashKeychainItem setObject:@"com.pushcoin.pinhash" forKey:(__bridge id)kSecAttrService];
-        
+    
     return YES;
 }
 
@@ -173,7 +177,7 @@
 
 - (BOOL) hasPasscode
 {
-    NSString * saltedHash = [self.pinHashKeychainItem objectForKey:(__bridge id)kSecValueData];            
+    NSString * saltedHash = [self.pinHashKeychainItem objectForKey:(__bridge id)kSecValueData];
     return (saltedHash && saltedHash.length != 0);
 }
 
@@ -186,7 +190,7 @@
     {
         [self setDsaPrivateKey:privateKey withPasscode:passcode];
     }
-
+    
     if (passcode && passcode.length != 0)
     {
         NSString * salt = [NSString stringWithFormat:@"%u", arc4random()];
@@ -198,7 +202,7 @@
     }
     else
     {
-        [self.pinHashKeychainItem setObject:@"" forKey:(__bridge id)kSecValueData];      
+        [self.pinHashKeychainItem setObject:@"" forKey:(__bridge id)kSecValueData];
     }
 }
 
@@ -207,22 +211,22 @@
     //passcode
     
     [[NSUserDefaults standardUserDefaults] setBool:self.hasPasscode forKey:@"passcode"];
-    [[NSUserDefaults standardUserDefaults] synchronize];        
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(BOOL) validatePasscode:(NSString *)passcode
 {
     NSString * saltedHash = [self.pinHashKeychainItem objectForKey:(__bridge id)kSecValueData];
-    NSArray * array = [saltedHash componentsSeparatedByString:@"|"]; 
-
-    if (array.count != 2) 
+    NSArray * array = [saltedHash componentsSeparatedByString:@"|"];
+    
+    if (array.count != 2)
         return NO;
     
     NSString * salt = (NSString *) [array objectAtIndex:0];
     NSString * hash = (NSString *) [array objectAtIndex:1];
     NSString * saltedPasscode = [NSString stringWithFormat:@"%@%@", salt, passcode];
     
-    if (!hash || hash.length == 0) 
+    if (!hash || hash.length == 0)
         return YES;
     
     NSData * data = [[OpenSSLWrapper instance] sha1_hashData:[saltedPasscode dataUsingEncoding:NSASCIIStringEncoding]];
@@ -241,7 +245,7 @@
 
 -(NSString *) pemDsaPublicKey
 {
-    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.documentPath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] 
+    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.documentPath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile]
                                                         encoding:NSASCIIStringEncoding error:nil];
     
     NSRange headerRange = [pemPublicKey rangeOfString:@"---\n"];
@@ -263,7 +267,7 @@
             OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
             self.dsaDecryptedKey.data = [ssl des3_decrypt:encryptedKey withKey:passcode];
         }
-        else 
+        else
         {
             self.dsaDecryptedKey.data = encryptedKey;
         }
@@ -343,7 +347,7 @@
     controller.passcodeLockOn = YES;
     controller.eraseData = NO;
     controller.passcode = @"";
-
+    
     [navController pushViewController:controller animated:YES];
     return controller;
 }
@@ -364,13 +368,14 @@
     [[NSFileManager defaultManager] removeItemAtPath:fileAtDocumentDirectory(PushCoinLastTxnHistoryFile) error:nil];
 }
 
-- (FUIAlertView *) showAlert:(NSString *)message withTitle:(NSString *)title
+- (FUIAlertView *) showAlert:(NSString *)message
+                   withTitle:(NSString *)title
 {
     FUIAlertView *alertView = [[FUIAlertView alloc] initWithTitle:title
-                                                    message:message
-                                                   delegate:nil
-                                          cancelButtonTitle:@"Close" 
-                                          otherButtonTitles:nil];
+                                                          message:message
+                                                         delegate:nil
+                                                cancelButtonTitle:@"Close"
+                                                otherButtonTitles:nil];
     
     alertView.titleLabel.textColor = [UIColor cloudsColor];
     alertView.titleLabel.font = [UIFont boldFlatFontOfSize:16];
@@ -387,18 +392,58 @@
     return alertView;
 }
 
+
+- (FUIAlertView *) showAlert:(NSString *)message
+                   withTitle:(NSString *)title
+                withDelegate:(id<FUIAlertViewDelegate>) delegate
+{
+    FUIAlertView *alertView = [[FUIAlertView alloc] initWithTitle:title
+                                                          message:message
+                                                         delegate:delegate
+                                                cancelButtonTitle:@"Close"
+                                                otherButtonTitles:nil];
+    
+    // retain this delegate else it will be arc removed after this call.
+    // because alertview delegate are not retained.
+    delegateBlock = delegate;
+    alertView.titleLabel.textColor = [UIColor cloudsColor];
+    alertView.titleLabel.font = [UIFont boldFlatFontOfSize:16];
+    alertView.messageLabel.textColor = [UIColor cloudsColor];
+    alertView.messageLabel.font = [UIFont flatFontOfSize:14];
+    alertView.backgroundOverlay.backgroundColor = [[UIColor cloudsColor] colorWithAlphaComponent:0.8];
+    alertView.alertContainer.backgroundColor = [UIColor midnightBlueColor];
+    alertView.defaultButtonColor = [UIColor cloudsColor];
+    alertView.defaultButtonShadowColor = [UIColor asbestosColor];
+    alertView.defaultButtonFont = [UIFont boldFlatFontOfSize:16];
+    alertView.defaultButtonTitleColor = [UIColor asbestosColor];
+    
+    [alertView show];
+    return alertView;
+}
+
+
 -(bool) handleErrorMessage:(NSString *)reason withErrorCode:(UInt32)errorCode
 {
     switch (errorCode)
     {
         case 1107: //not authorized
-            [self showAlert:reason withTitle:@"Device needs registration"];
-            [self clearDevice];
-            [self requestRegistrationWithDelegate:nil];
+        {
+            AppDelegate * This = self;
+            [self showAlert:reason
+                  withTitle:@"Device needs registration"
+               withDelegate:[[FUIAlertViewDelegateBlockWrapper alloc] initWithBlock:^(NSInteger index)
+                             {
+                                 [This clearDevice];
+                                 [This requestRegistrationWithDelegate:nil];
+                             }]];
             break;
+        }
         default:
+        {
             [self showAlert:reason
                   withTitle:[NSString stringWithFormat:@"Error - %d", (unsigned int)errorCode]];
+            break;
+        }
     }
     return YES;
 }
@@ -416,7 +461,7 @@
     switch (statusCode)
     {
         case -1:
-            [self showAlert:@"We weren't able to connect to the PushCoin server. Make sure your network connection is active and try again."
+            [self showAlert:@"We weren't able to connect to the PushCoin server. Please make sure your network connection is active and try again."
                   withTitle:@"No Internet Connection"];
             break;
         default:
@@ -440,12 +485,12 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
     
-    [[NSNotificationCenter defaultCenter] postNotificationName: @"handleCleanup" 
-                                                        object: nil 
+    [[NSNotificationCenter defaultCenter] postNotificationName: @"handleCleanup"
+                                                        object: nil
                                                       userInfo: nil];
 }
 
