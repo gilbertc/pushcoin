@@ -7,13 +7,40 @@ import java.io.InputStream;
 import java.io.IOException;
 import com.pushcoin.Binascii;
 import com.pushcoin.pcos.*;
+import java.io.File;
 
 class DownloadHistoryTask extends PushCoinAsyncTask
 {
-	DownloadHistoryTask( IceBreakerActivity model, byte[] mat ) {
+	DownloadHistoryTask( IceBreakerActivity model, byte[] mat, PcosHelper.TxnHistoryReply oldData ) {
 		// Stores fetched data. Must only access from UI thread!
 		model_ = model;
 		mat_ = mat;
+
+		// While we are waiting for download, it's OK to show old results
+		if (oldData == null)
+		{
+			try 
+			{
+				byte[] readData = new byte[Conf.HTTP_API_MAX_RESPONSE_LEN];
+				int bytesRead = PcosHelper.loadFromFile( new File( model_.getCacheDir(), Conf.CACHED_HISTORY_FILENAME), readData ); 
+				if (bytesRead > 0)
+				{
+					Message m = Message.obtain();
+					m.what = MessageId.ACCOUNT_HISTORY_REPLY;
+					m.obj = PcosHelper.parseTxnHistoryReply(new DocumentReader( readData, bytesRead ));
+					model_.post(m);
+				}
+			} catch (PcosError e) { 
+				Log.e( Conf.TAG, "error-loading-cached-history|"+e.getMessage() );
+			}
+		} 
+		else 
+		{
+			Message m = Message.obtain();
+			m.what = MessageId.ACCOUNT_HISTORY_REPLY;
+			m.obj = oldData;
+			model_.post(m);
+		}
 	}
 
 	@Override
@@ -45,7 +72,8 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 			req.addBlock(out_bo);
 
 			// call server
-			InputDocument res = invokeRemote( req );
+			PushCoinAsyncTask.ResultByteBuffer resultBuf = new PushCoinAsyncTask.ResultByteBuffer();
+			InputDocument res = invokeRemote( req, resultBuf );
 			if (res != null) 
 			{
 				String docName = res.getDocumentName();
@@ -71,6 +99,11 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 				}
 				else if (docName.equals( Conf.PCOS_DOC_TXN_HISTORY_REPLY ) )
 				{
+					// store result locally in case we go offline
+					// and want to show something
+					PcosHelper.saveToFile( new File(model_.getCacheDir(), Conf.CACHED_HISTORY_FILENAME), resultBuf.dest, resultBuf.bytesRead ); 
+
+					// post event data arrived
 					Message m = Message.obtain();
 					m.what = MessageId.ACCOUNT_HISTORY_REPLY;
 					m.obj = PcosHelper.parseTxnHistoryReply(res);
@@ -92,11 +125,8 @@ class DownloadHistoryTask extends PushCoinAsyncTask
 	protected void onPostExecute(Void v) 
 	{
 		// may need to display an error
-		if ( !status_.isEmpty() ) 
-		{
-			model_.beginModelUpdates();
+		if ( !status_.isEmpty() ) {
 			model_.setStatus(status_);
-			model_.endModelUpdates();
 		}
 
 		// download is done, stop busy-indicators

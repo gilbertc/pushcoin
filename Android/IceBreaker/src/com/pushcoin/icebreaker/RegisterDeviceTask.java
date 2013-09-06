@@ -17,6 +17,8 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 		Message m = Message.obtain();
 		m.what = MessageId.REGISTER_DEVICE_PENDING;
 		model_.post(m);
+		// Start clean
+		status_ = "";
 	}
 
 	protected Void doInBackground(String... activationCode)
@@ -38,7 +40,8 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 			req.addBlock(out_bo);
 
 			// ship over HTTPS
-			InputDocument res = invokeRemote( req );
+			PushCoinAsyncTask.ResultByteBuffer resultBuf = new PushCoinAsyncTask.ResultByteBuffer();
+			InputDocument res = invokeRemote( req, resultBuf );
 			if (res != null) 
 			{
 				String docName = res.getDocumentName();
@@ -55,7 +58,6 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 				}
 				else if (docName.equals( Conf.PCOS_DOC_REGISTER_ACK ) )
 				{
-					status_ = "Success!";
 					Message m = Message.obtain();
 					m.what = MessageId.REGISTER_DEVICE_SUCCESS;
 					m.obj = PcosHelper.parseRegisterAck(res);
@@ -76,9 +78,9 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 	protected void onPostExecute(Void v) 
 	{
 		// notify model we have the data
-		model_.beginModelUpdates();
-		model_.setStatus(status_);
-		model_.endModelUpdates();
+		if ( !status_.isEmpty() ) {
+			model_.setStatus(status_);
+		}
 
 		Message m = Message.obtain();
 		m.what = MessageId.REGISTER_DEVICE_STOPPED;
@@ -86,5 +88,5 @@ class RegisterDeviceTask extends PushCoinAsyncTask
 	}
 
 	private final IceBreakerActivity model_;
-	String status_;
+	String status_ = "";
 }

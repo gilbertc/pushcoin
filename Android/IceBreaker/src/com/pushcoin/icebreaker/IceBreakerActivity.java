@@ -84,7 +84,7 @@ public class IceBreakerActivity
 	public String getBalanceTime()
 	{
 		if (txnHistory_ != null ) {
-			return "as of " + PcosHelper.prettyTime(this, recentRequestTime());
+			return PcosHelper.prettyTime(this, txnHistory_.balanceTimeEpoch);
 		} else {
 			return "";
 		}
@@ -165,7 +165,7 @@ public class IceBreakerActivity
 		if (requestTimestamps_.size() < Conf.THROTTLE_MAX_REQUESTS_PER_WINDOW)
 		{
 			requestTimestamps_.add( new Long(nowEpoch) );
-			new DownloadHistoryTask(this, mat_).execute();
+			new DownloadHistoryTask(this, mat_, txnHistory_).execute();
 			enqueuedReload_ = 0;
 		} 
 		else
@@ -179,7 +179,7 @@ public class IceBreakerActivity
 				requestTimestamps_.remove(0);
 				// add this request
 				requestTimestamps_.add( new Long(nowEpoch) );
-				new DownloadHistoryTask(this, mat_).execute();
+				new DownloadHistoryTask(this, mat_, txnHistory_).execute();
 				enqueuedReload_ = 0;
 			}
 			else 
@@ -241,30 +241,14 @@ public class IceBreakerActivity
 	}
 
 	/**
-		Before updating model data, callers must wrap
-		updates between begin/end calls.
-
-		"Bad call sequence" exception will be thrown otherwise.
+		On error, tasks update the status (on UI thread).
 	*/
-	public void beginModelUpdates() {
-	}
-
-	public void endModelUpdates() 
+	public void setStatus(String v)
 	{
-		// Notify of changes applied
-		Message m = Message.obtain();
-		m.what = MessageId.MODEL_CHANGED;
-		post(m);
-	}
-
-	/**
-		These setters are called by "tasks".
-
-		Synchronization is not required as all setters are
-		called from the UI thread.
-	*/
-	public void setStatus(String v) {
 		status_ = v;
+		Message m = Message.obtain();
+		m.what = MessageId.STATUS_CHANGED;
+		post(m);
 	}
 
 	/** Dispatch events. */

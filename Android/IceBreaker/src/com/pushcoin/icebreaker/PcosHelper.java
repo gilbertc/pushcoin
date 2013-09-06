@@ -10,6 +10,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.regex.Pattern;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 
 class PcosHelper
 {
@@ -234,10 +240,11 @@ class PcosHelper
 		return System.currentTimeMillis() / 1000;
 	}
 
+	static final SimpleDateFormat prettyDateFormatter_ = new SimpleDateFormat("EEEE MMM d, hh:mm aaa");
 	static String prettyTime( Context ctx, long sinceEpoch )
 	{
-		return DateUtils.getRelativeDateTimeString( ctx, sinceEpoch * 1000, 
-				Conf.STATUS_MIN_RESOLUTION, Conf.STATUS_TRANSITION_RESOLUTION, Conf.STATUS_FLAGS ).toString();
+		Date tm = new Date( sinceEpoch * 1000 );
+		return prettyDateFormatter_.format(tm);
 	}
 
 	static public class DateTimePair
@@ -246,11 +253,16 @@ class PcosHelper
 		String time;
 	}
 
+	static final SimpleDateFormat prettyDatePairFormatter_ = new SimpleDateFormat("MMM d, hh:mm aaa");
 	static final Pattern dateSplitRegEx = Pattern.compile(", ");
 	static DateTimePair prettyTimeParts( Context ctx, long sinceEpoch )
 	{
 		DateTimePair res = new DateTimePair();
-		String[] together = dateSplitRegEx.split(prettyTime(ctx, sinceEpoch));
+
+		Date tm = new Date( sinceEpoch * 1000 );
+		String tmRes = prettyDatePairFormatter_.format(tm);
+
+		String[] together = dateSplitRegEx.split(tmRes);
 		if (together.length > 1)
 		{
 			res.date = together[0];
@@ -267,5 +279,50 @@ class PcosHelper
 	static String prettyAmount( BigDecimal val, String currency )
 	{
 		return NumberFormat.getCurrencyInstance().format(val);
+	}
+
+	static int loadFromFile( java.io.File file, byte[] dest )
+	{
+		int bytesRead = 0;
+		FileInputStream fio = null;
+		try 
+		{
+			Log.v( Conf.TAG, "loading-file|path="+file );
+			fio = new FileInputStream(file);
+			BufferedInputStream br = new BufferedInputStream(fio);
+			
+			int thisRead = 0;
+			while ( thisRead != -1)
+			{
+				thisRead = br.read(dest, bytesRead, dest.length - bytesRead);
+				bytesRead += (thisRead == -1) ? 0 : thisRead;
+			}
+			fio.close();
+			Log.v( Conf.TAG, "file-loaded|size="+bytesRead);
+		} catch (IOException e)
+		{
+			Log.e( Conf.TAG, "error-loading-file|"+e.getMessage());
+			// on any error, we give nothing back
+			bytesRead = 0;
+		}
+		return bytesRead;
+	}
+
+	static boolean saveToFile( java.io.File file, byte[] data, int len )
+	{
+		try 
+		{
+			Log.v( Conf.TAG, "saving-file|path="+file );
+			FileOutputStream fw = new FileOutputStream(file);
+			BufferedOutputStream bw = new BufferedOutputStream(fw);
+			bw.write(data, 0, len);
+			bw.close();
+			Log.v( Conf.TAG, "file-saved|size="+len);
+			return true;
+		} 
+		catch (IOException e) { 
+			Log.e( Conf.TAG, "file-error-on-save|"+e.getMessage());
+		}
+		return false;
 	}
 }
