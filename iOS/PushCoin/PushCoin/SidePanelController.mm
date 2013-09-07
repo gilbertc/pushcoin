@@ -107,7 +107,6 @@ using namespace pcos;
     // Dispose of any resources that can be recreated.
 }
 
-
 - (AppDelegate *)appDelegate
 {
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -117,8 +116,6 @@ using namespace pcos;
 {
     [self dismissModalViewControllerAnimated:YES];
 }
-
-
 
 -(void) refresh
 {

@@ -294,11 +294,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "PushCoin/SidePanelController.mm"
-         timestampString = "400036088.935359"
+         timestampString = "400215805.423653"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "125"
-         endingLineNumber = "125"
+         startingLineNumber = "122"
+         endingLineNumber = "122"
          landmarkName = "-refresh"
          landmarkType = "5">
       </FileBreakpoint>
@@ -313,6 +313,19 @@
          startingLineNumber = "22"
          endingLineNumber = "22"
          landmarkName = "-alertView:clickedButtonAtIndex:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/AppDelegate.mm"
+         timestampString = "400216042.816814"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "175"
+         endingLineNumber = "175"
+         landmarkName = "-registered"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
