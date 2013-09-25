@@ -215,11 +215,11 @@ public class IceBreakerActivity
 		// if has MAT, we must have been configured
 		if (mat_ == null) {
 			// We are in configuration mode
-			modeViewHandler = new SetupFragment( this );
+			modeViewHandler = new SetupFragment();
 		}
 		else { 
 			// Instantatiate operational fragment
-			modeViewHandler = new OperationalFragment( this );
+			modeViewHandler = new OperationalFragment();
 		}
 
 		// We picked the fragment, pass any parameters to it

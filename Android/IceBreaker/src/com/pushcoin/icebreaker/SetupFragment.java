@@ -21,14 +21,13 @@ import android.content.Context;
 public class SetupFragment 
 	extends Fragment 
 {
-	SetupFragment( Controller ctrl ) {
-		ctrl_ = ctrl;
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+
+		// Activity holding this fragment is our Controller
+		ctrl_ = (Controller) getActivity();
 
 		// When user finishes typing registration code, we want to
 		// show progress bar. So we register for this event.
@@ -100,6 +99,6 @@ public class SetupFragment
 	static final int TAB_ID_ENTER_REGISTRATION_CODE = 0;
 	static final int TAB_ID_SUBMIT_REGISTRATION = 1;
 
-	final Controller ctrl_;
+	Controller ctrl_;
 	NoSwipingViewPager pager_;
 }

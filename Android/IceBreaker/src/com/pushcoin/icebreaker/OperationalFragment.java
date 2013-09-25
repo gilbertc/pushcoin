@@ -19,14 +19,13 @@ import android.content.Context;
 
 public class OperationalFragment extends Fragment
 {
-	OperationalFragment( Controller ctrl ) {
-		ctrl_ = ctrl;
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+
+		// Activity holding this fragment is our Controller
+		ctrl_ = (Controller) getActivity();
 
 		View fragmentRootLayout = inflater.inflate(R.layout.operational_fragment, container, false);
 
@@ -156,7 +155,7 @@ public class OperationalFragment extends Fragment
 	static final int TAB_ID_BALANCE = 0;
 	static final int TAB_ID_HISTORY = 1;
 
-	final Controller ctrl_;
+	Controller ctrl_;
 	SharedPreferences prefs_;
 	ViewPager pager_;
 	Button refreshButton_;
