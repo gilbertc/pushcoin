@@ -12,6 +12,9 @@ echo -e "\n***************"
 echo -e "\n*** Account ***"
 echo -e "\n***************"
 
+echo -e "\n\n*** Change Timezone ***"
+$CMD/json/account/change-timezone/ -d '{ "timezone": "UTC" }'
+$CMD/json/account/change-timezone/ -d '{ "timezone": "America/Chicago" }'
 echo -e "\n\n*** Change Password ***"
 $CMD/json/account/change-password/ -d '{ "old_password": "test", "new_password": "test2" }'
 echo -e "\n\n*** Restore Password ***"
