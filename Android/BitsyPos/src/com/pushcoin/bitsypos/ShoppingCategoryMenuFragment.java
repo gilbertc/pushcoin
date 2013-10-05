@@ -24,7 +24,7 @@ public class ShoppingCategoryMenuFragment extends Fragment
 		View layout = inflater.inflate(R.layout.shopping_category_menu, container, false);
 		ListView menu = (ListView)layout.findViewById( R.id.shopping_category_menu );
 
-		model_ = new CategoryListAdapter(getActivity(), R.layout.shopping_category_menu_row, R.id.shopping_category_menu_icon, R.id.shopping_category_menu_label);
+		model_ = new CategoryListAdapter(getActivity(), R.layout.shopping_category_menu_row, R.id.shopping_category_menu_label);
 		menu.setAdapter(model_);
 
 		// install click-event listener
@@ -38,7 +38,8 @@ public class ShoppingCategoryMenuFragment extends Fragment
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 		{
-			Message m = dispatchable_.obtainMessage(MessageId.SHOPPING_CATEGORY_CLICKED, position, 0);
+			CategoryListAdapter.Entry entry = model_.getEntry( position );
+			Message m = dispatchable_.obtainMessage( MessageId.SHOPPING_CATEGORY_CLICKED, 0, 0, entry.tag_id );
 			m.sendToTarget();
 		}
 	}

@@ -31,28 +31,6 @@ public class BitsyPosActivity
 		FragmentManager fragmentManager = getFragmentManager();
 		cartFragmentHandler_ = ((IDispatcher)fragmentManager.findFragmentById(R.id.shopping_cart_frag)).getDispachable();
 
-		AppDb db = AppDb.getInstance(this);
-		ArrayList<Item> items = db.findItems( "breakfast", Conf.FIELD_PRICE_TAG_DEFAULT );
-		if ( items.isEmpty() ) {
-			Log.v(Conf.TAG, "no-items-found|tag=breakfast");
-		}
-		else 
-		{
-			ConfigureItemFragment itemList = new ConfigureItemFragment("uuid", items.get(0));
-			itemList.setArguments(getIntent().getExtras());
-
-			getFragmentManager().beginTransaction()
-				.add( R.id.hz_center_pane, itemList, FragmentTag.CONFIGURE_ITEM )
-				.commit();
-		}
-		
-//	ShoppingItemListFragment itemList = new ShoppingItemListFragment();
-//	itemList.setArguments(getIntent().getExtras());
-//	
-//	getFragmentManager().beginTransaction()
-//		.add( R.id.hz_center_pane, itemList, FragmentTag.SHOPPING_ITEM_LIST )
-//		.commit();
-
 		// Don't let device go to sleep.
 		// TODO: Let user change this behavior in Settings
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -74,7 +52,7 @@ public class BitsyPosActivity
 			switch( msg.what )
 			{
 				case MessageId.SHOPPING_CATEGORY_CLICKED:
-					onShoppingCategoryClicked(msg.arg1);
+					onShoppingCategoryClicked( (String) msg.obj );
 				break;
 
 				case MessageId.SHOPPING_ITEM_CLICKED:
@@ -91,20 +69,22 @@ public class BitsyPosActivity
 
 	public static void printViewHierarchy(ViewGroup $vg, String $prefix)
 	{
-			for (int i = 0; i < $vg.getChildCount(); i++) {
-					View v = $vg.getChildAt(i);
-					String desc = String.format("%s|[%d/%d] %s ID:0x%x", $prefix, i, $vg.getChildCount()-1, v.getClass().getSimpleName(), v.getId());
-					Log.v(Conf.TAG, desc);
+		for (int i = 0; i < $vg.getChildCount(); i++)
+		{
+			View v = $vg.getChildAt(i);
+			String desc = String.format("%s|[%d/%d] %s ID:0x%x", $prefix, i, $vg.getChildCount()-1, v.getClass().getSimpleName(), v.getId());
+			Log.v(Conf.TAG, desc);
 
-					if (v instanceof ViewGroup) {
-							printViewHierarchy((ViewGroup)v, desc);
-					}
+			if (v instanceof ViewGroup) {
+				printViewHierarchy((ViewGroup)v, desc);
 			}
+		}
 	}
 
 	/** User clicks on category item. */
-	private void onShoppingCategoryClicked(int pos)
+	private void onShoppingCategoryClicked(String categoryTag)
 	{
+		Log.v( Conf.TAG, "browse-category;name="+categoryTag );
 		/*
 		FragmentManager fragmentManager = getFragmentManager();
 	

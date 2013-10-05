@@ -17,17 +17,14 @@ public class CategoryListAdapter extends BaseAdapter
 {
 	public static class Entry
 	{
-		Entry(String ic, String lb)
-		{
-			icon = ic;
-			label = lb;
-		}
+		// Label text
+		String label;
 
-		final String icon;
-		final String label;
+		// Tag ID
+		String tag_id;
 	}
 
-	public CategoryListAdapter(Context context, int rowLayoutResourceId, int iconViewResourceId, int labelViewResourceId)
+	public CategoryListAdapter(Context context, int rowLayoutResourceId, int labelViewResourceId)
 	{
 		ctx_ = context;
 		// Cache the LayoutInflate to avoid asking for a new one each time.
@@ -35,7 +32,6 @@ public class CategoryListAdapter extends BaseAdapter
 
 		// Resource IDs of views for a row, icon and label
 		rowLayoutResourceId_ = rowLayoutResourceId;
-		iconViewResourceId_ = iconViewResourceId;
 		labelViewResourceId_ = labelViewResourceId;
 
 		// Try loading data.
@@ -48,11 +44,10 @@ public class CategoryListAdapter extends BaseAdapter
 	public void reloadData()
 	{
 		// Decode icon resource IDs to speed up drawing on scroll.
-		entries_ = new ArrayList<CachedEntry>();
+		entries_ = new ArrayList<Entry>();
 		for ( Category cat : AppDb.getInstance(ctx_).getMainCategories() )
 		{
-			CachedEntry ce = new CachedEntry();
-			ce.icon = "%";
+			Entry ce = new Entry();
 			ce.label = cat.category_id;
 			ce.tag_id = cat.tag_id;
 			entries_.add( ce );
@@ -88,6 +83,14 @@ public class CategoryListAdapter extends BaseAdapter
 	}
 
 	/**
+	 * Use the array index to lookup entry.
+	 */
+	public Entry getEntry(int position) 
+	{
+		return entries_.get(position);
+	}
+
+	/**
 	 * Make a view to hold each row.
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) 
@@ -106,7 +109,7 @@ public class CategoryListAdapter extends BaseAdapter
 			// Creates a ViewHolder and store references to the two children views
 			// we want to bind data to.
 			holder = new ViewHolder();
-			holder.icon = (TextView) convertView.findViewById(iconViewResourceId_);
+			holder.icon = (TextView) convertView.findViewById(R.id.shopping_category_menu_icon);
 			holder.label = (TextView) convertView.findViewById(labelViewResourceId_);
 
 			convertView.setTag(holder);
@@ -119,7 +122,7 @@ public class CategoryListAdapter extends BaseAdapter
 		}
 
 		// Bind the data efficiently with the holder.
-		holder.icon.setText( entries_.get( position ).icon );
+		holder.icon.setText( "%" );
 		holder.label.setText( entries_.get( position ).label );
 
 		return convertView;
@@ -131,26 +134,13 @@ public class CategoryListAdapter extends BaseAdapter
 		TextView label;
 	}
 
-	private static class CachedEntry
-	{
-		// Image data
-		String icon;
-
-		// Label text
-		String label;
-
-		// Tag ID
-		String tag_id;
-	}
-
 	private Context ctx_;
 	private LayoutInflater inflater_;
-	private List<CachedEntry> entries_;
+	private List<Entry> entries_;
 
 	// The resource ID for a layout file containing a layout to use when instantiating views.
 	final private int rowLayoutResourceId_;
 
 	// Icon and label resource IDs
-	final private int iconViewResourceId_;
 	final private int labelViewResourceId_;
 }

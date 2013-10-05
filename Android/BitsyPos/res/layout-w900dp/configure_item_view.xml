@@ -68,10 +68,10 @@
 
 			<!-- Popular Together -->
 			<com.mobsandgeeks.ui.TypefaceTextView 
-				android:text="Frequently bought&#10;together&#8230;"
+				android:text="Frequently bought together&#8230;"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
-				android:gravity="left"
+				android:gravity="center"
 				android:textSize="16dp"
 				android:paddingBottom="0dp"
 				android:textColor="@color/lightui_darkorange"
