@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView 
+<com.pushcoin.bitsypos.AutofitGridView 
 	xmlns:android="http://schemas.android.com/apk/res/android" 
 	android:id="@+id/shopping_item_list"
+	android:layout_marginLeft="7dp"
+	android:layout_marginRight="7dp"
 	android:layout_width="match_parent" 
 	android:layout_height="match_parent"
-	android:columnWidth="200dp"
 	android:numColumns="auto_fit"
 	android:verticalSpacing="10dp"
 	android:horizontalSpacing="10dp"
 	android:stretchMode="columnWidth"
 	android:gravity="left"
-	android:background="@color/white"
-	android:cacheColorHint="@color/white"
 	android:drawSelectorOnTop="false"
-	android:listSelector="@android:color/transparent"
 	android:paddingTop="5dp" />

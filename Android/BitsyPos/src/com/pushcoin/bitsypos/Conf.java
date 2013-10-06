@@ -119,7 +119,7 @@ public class Conf
 	static final String SAMPLE_DATA_FILE= "databases/example.json";
 
 	/**
-		JSON fields
+		JSON and Bundle fields
 	*/
 	static final String FIELD_CATEGORY = "category";
 	static final String FIELD_NAME = "name";

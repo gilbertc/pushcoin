@@ -33,7 +33,7 @@ public class BitsyPosActivity
 
 		// Don't let device go to sleep.
 		// TODO: Let user change this behavior in Settings
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	/** Used by fragments to access our dispatcher. */
@@ -85,28 +85,20 @@ public class BitsyPosActivity
 	private void onShoppingCategoryClicked(String categoryTag)
 	{
 		Log.v( Conf.TAG, "browse-category;name="+categoryTag );
-		/*
+
 		FragmentManager fragmentManager = getFragmentManager();
-	
-		ViewGroup panel_w1 = (ViewGroup)findViewById(R.id.panel_w1);
-		// printViewHierarchy(panel_w1, "panel_w1");
 
-		GridView view = (GridView)fragmentManager.findFragmentByTag(FragmentTag.SHOPPING_ITEM_LIST).getView();
+		// Crate category-browser passing it category tag
+		BrowseItemsFragment browseCategory = new BrowseItemsFragment();
+		// Only one arg: category-tag
+		Bundle args = new Bundle(1);
+		args.putString(	Conf.FIELD_CATEGORY, categoryTag );
+		browseCategory.setArguments( args );
 
-		ArrayList<ItemSummaryArrayAdapter.Entry> items = 
-			new ArrayList<ItemSummaryArrayAdapter.Entry>();
-
-		// populate item(s)
-		for (int i = 0; i < pos+10; ++i)
-		{
-			items.add( new ItemSummaryArrayAdapter.Entry(icons_[i%icons_.length], "Coffee", "Maine Roasted", "$3.75", R.drawable.cart_empty_gray) );
-		}
-
-		ItemSummaryArrayAdapter adapter =		
-			new ItemSummaryArrayAdapter(this, R.layout.shopping_item_list_block, R.id.shopping_item_list_product, R.id.shopping_item_list_title, R.id.shopping_item_list_desc, R.id.shopping_item_list_price, R.id.shopping_item_list_indicator, items);
-
-		view.setAdapter( adapter );
-		*/
+		// Replace the fragment without appending to back stack
+		getFragmentManager().beginTransaction()
+			.replace( R.id.hz_center_pane, browseCategory, FragmentTag.SHOPPING_ITEM_LIST )
+			.commit();
 	}
 
 	/** User clicks on item. */
