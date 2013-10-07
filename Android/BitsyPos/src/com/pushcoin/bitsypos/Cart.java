@@ -6,19 +6,63 @@ import android.os.Message;
 import android.util.Log;
 import java.util.ArrayList;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
-public class Cart implements IDispatcher
+public class Cart
 {
-	public Cart( Context context ) 
+	public static class Entry 
 	{
-		ctx_ = context;
-		parentContext_ = ((IDispatcher)ctx_).getDispachable();
-		items_ = new ArrayList<Item>();
+		String sku;
+		String name;
+		int qty;
+		BigDecimal unitPrice;
 	}
 
-	void add( Item item )
+	public static class Combo
 	{
-		Log.v(Conf.TAG, "place=cart;add_item="+item.getName() );
+		ArrayList<Entry> entries = new ArrayList<Cart.Entry>();
+		String note;
+		String name;
+		BigDecimal basePrice;
+
+		String getName()
+		{
+			assert ( !entries.isEmpty() );
+
+			if (entries.size() > 1) {
+				return name;
+			} else {
+				return entries.get(0).name;
+			}
+		}
+
+		BigDecimal getPrice() 
+		{
+			// start with base and keep adding slot prices
+			BigDecimal total = basePrice;
+			for (Entry entry: entries) {
+				total = total.add( entry.unitPrice.multiply( new BigDecimal( entry.qty ) ) );
+			}
+			return total;
+		}
+
+		/**
+			Returns price formatted according to currency precision.
+		*/
+		String getPrettyPrice() 
+		{
+			return NumberFormat.getCurrencyInstance().format( getPrice() );
+		}
+	}
+	
+	public Cart( Context context ) 
+	{
+		parentContext_ = ((IDispatcher)context).getDispachable();
+	}
+
+	void add( Combo item )
+	{
+		Log.v(Conf.TAG, "cart-append-item="+item.getName() );
 		synchronized (lock_) {
 			items_.add(item);
 		}
@@ -28,9 +72,9 @@ public class Cart implements IDispatcher
 		m.sendToTarget();
 	}
 
-	void insert( Item item, int position )
+	void insert( Combo item, int position )
 	{
-		Log.v(Conf.TAG, "place=cart;insert_item="+item.getName() );
+		Log.v(Conf.TAG, "cart-insert-item="+item.getName() );
 		synchronized (lock_) 
 		{
 			if ( position > items_.size() ) {
@@ -46,9 +90,9 @@ public class Cart implements IDispatcher
 		m.sendToTarget();
 	}
 
-	Item remove( int position )
+	Combo remove( int position )
 	{
-		Item item = null;
+		Combo item = null;
 		synchronized (lock_) 
 		{
 			if ( position < items_.size() ) {
@@ -57,7 +101,7 @@ public class Cart implements IDispatcher
 		}
 		if (item != null) 
 		{
-			Log.v(Conf.TAG, "place=cart;remove_item="+item.getName()+";at-pos="+position);
+			Log.v(Conf.TAG, "cart-remove-item="+item.getName()+";at-pos="+position);
 			// broadcast cart content has changed
 			Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
 			m.sendToTarget();
@@ -85,7 +129,7 @@ public class Cart implements IDispatcher
 	/**
 		Retrieves an item at a position.
 	*/
-	Item get( int position )
+	Combo get( int position )
 	{
 		synchronized (lock_) {
 			return items_.get( position );
@@ -107,40 +151,15 @@ public class Cart implements IDispatcher
 		synchronized (lock_) 
 		{
 			BigDecimal total = new BigDecimal(0);
-			for (Item item: items_) {
-				total = total.add( item.getPrice(Conf.FIELD_PRICE_TAG_DEFAULT) );
+			for (Combo item: items_) {
+				total = total.add( item.getPrice() );
 			}
 			return total;
 		}
 	}
 
-	/**
-		Offloads callers by enquing actions rather than executing in-line.
-	*/
-	@Override
-	public Handler getDispachable() 
-	{
-		return handler_;
-	}
-	
-	/** Dispatch events. */
-	private Handler handler_ = new Handler() {
-		@Override
-		public void handleMessage( Message msg ) 
-		{
-			Log.v(Conf.TAG, "place=cart;event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
-			switch( msg.what )
-			{
-				case MessageId.CART_ADD_ITEM:
-					add( (Item)msg.obj );
-				break;
-			}
-		}
-	};
-
-	private Context ctx_;
 	private Handler parentContext_;
 	private final Object lock_ = new Object();
 
-	ArrayList<Item> items_;
+	ArrayList<Combo> items_ = new ArrayList<Combo>();
 }

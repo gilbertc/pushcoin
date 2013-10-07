@@ -63,7 +63,7 @@ public class ShoppingCartFragment
 					// Get the item from the cart (before it's deleted)
 					if (cart.size() > position)
 					{
-						final Item deletedItem = cart.get(position);
+						final Cart.Combo deletedItem = cart.get(position);
 
 						// Delete from cart
 						adapter_.remove(position);

@@ -49,7 +49,7 @@ public class ConfigureItemFragment extends Fragment
 		{
 			public void onClick(View v) {
 				Cart cart = (Cart) access_.session( Conf.SESSION_CART );
-				cart.add( item_ );
+				cart.add( Util.toCartCombo(item_) );
 			}
 		});
 
@@ -75,7 +75,7 @@ public class ConfigureItemFragment extends Fragment
 				title.setText( slot.getName() );
 			}
 
-			// populate list view with items
+			// Fetch products which qualify as slot alternatives
 			ListView listview = (ListView) slotLayout.findViewById( R.id.slot_items_listview );
 			listview.setLongClickable(false);
 			listview.setAdapter(
@@ -182,10 +182,7 @@ public class ConfigureItemFragment extends Fragment
 			// TODO: Add to cart if item isDefined, otherwise start another
 			// configure-item screen
 			Cart cart = (Cart) access_.session( Conf.SESSION_CART );
-			cart.add( item );
-			//Handler receiver = cart.getDispachable();
-			//Message msg = receiver.obtainMessage(MessageId.CART_ADD_ITEM, item);
-			//receiver.sendMessageDelayed( msg, 500 );
+			cart.add( Util.toCartCombo(item) );
 		}
 	}
 

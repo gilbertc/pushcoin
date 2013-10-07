@@ -24,4 +24,4 @@ Third-party dependencies
 To Test JSON import
 ===================
 
-lua < conf/breakfast_diner.bitsy | java -classpath /home/sl/src/JSON-java:bin/classes com.pushcoin.bitsypos.JsonImporter
+lua < conf/breakfast_menu.txt | java -classpath /home/sl/src/JSON-java:bin/classes com.pushcoin.bitsypos.JsonImporter

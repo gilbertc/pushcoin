@@ -27,10 +27,10 @@ public class BrowseItemsFragment extends Fragment
 		// What category are we displaying? 
     String categoryTag = getArguments().getString( Conf.FIELD_CATEGORY );
 
-		ArrayList<Item> items = 
-			AppDb.getInstance( context ).findItems( categoryTag, Conf.FIELD_PRICE_TAG_DEFAULT );
+		// Fetch items in a given category
+		items_ = AppDb.getInstance( context ).findItems( categoryTag, Conf.FIELD_PRICE_TAG_DEFAULT );
 
-		if ( items.isEmpty() ) 
+		if ( items_.isEmpty() ) 
 		{
 			// TODO: return view with message "no items were found"
 			Log.v(Conf.TAG, "no-items-found|tag=breakfast");
@@ -40,7 +40,7 @@ public class BrowseItemsFragment extends Fragment
 		AutofitGridView view = (AutofitGridView) inflater.inflate(R.layout.browse_items_view, container, false);
 
 		ItemSummaryArrayAdapter adapter =		
-			new ItemSummaryArrayAdapter(context, R.layout.browse_items_cell, items);
+			new ItemSummaryArrayAdapter(context, R.layout.browse_items_cell, items_);
 
 		view.setAdapter( adapter );
 
@@ -58,10 +58,11 @@ public class BrowseItemsFragment extends Fragment
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 		{
-			Message m = dispatchable_.obtainMessage(MessageId.SHOPPING_ITEM_CLICKED, position, 0);
+			Message m = dispatchable_.obtainMessage( MessageId.SHOPPING_ITEM_CLICKED, 0, 0, items_.get(position).getId() );
 			m.sendToTarget();
 		}
 	}
 
 	private Handler dispatchable_;
+	private ArrayList<Item> items_;
 }

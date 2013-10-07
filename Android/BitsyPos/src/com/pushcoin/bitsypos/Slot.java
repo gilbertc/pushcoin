@@ -23,7 +23,7 @@ public class Slot extends Item
 	*/
 	ArrayList<Item> getAlternatives() 
 	{
-		if ( alternativesCache_ == null && choiceItemTag_ != null ) {
+		if ( alternativesCache_.isEmpty() && choiceItemTag_ != null ) {
 			alternativesCache_ = db_.findItems( choiceItemTag_, priceTag_ );
 		}
 		return alternativesCache_;
@@ -102,5 +102,5 @@ public class Slot extends Item
 
 	// -- cached DB objects
 	private Item defaultItemCache_ = null;
-	private ArrayList<Item> alternativesCache_ = null;
+	private ArrayList<Item> alternativesCache_ = new ArrayList<Item>();
 }

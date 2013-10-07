@@ -61,9 +61,9 @@ public class CartEntryArrayAdapter extends BaseAdapter
 		}
 	};
 
-	public void insert(Item item, int position)
+	public void insert(Cart.Combo item, int position)
 	{
-		cart_.insert(item, position);
+		cart_.insert( item, position );
 		refreshView();
 	};
 
@@ -118,25 +118,22 @@ public class CartEntryArrayAdapter extends BaseAdapter
 		// A ViewHolder keeps references to children views to avoid unneccessary calls
 		// to findViewById() on each row.
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		Item item = cart_.get( position );
+		Cart.Combo item = cart_.get( position );
 
 		// Bind the row-data with the holder.
+		String label = item.getName();
 		
 		// If item has slots, append the name of each.
-		ArrayList<Slot> slots = item.getSlots();
-		if (slots != null)
+		if (item.entries.size() > 1)	
 		{
-			String label = item.getName() + ": ";
-			for (Slot slot: slots) {
-				label += "\n-" +slot.getChosenItem().getName();
+			label += ": ";
+			for (Cart.Entry entry: item.entries) {
+				label += "\n-" +entry.name;
 			}
-			holder.title.setText( label );
-		}
-		else {
-			holder.title.setText( item.getName() );
 		}
 
-		holder.price.setText( item.getPrettyPrice(Conf.FIELD_PRICE_TAG_DEFAULT) );
+		holder.title.setText( label );
+		holder.price.setText( item.getPrettyPrice() );
 
 		return convertView;
 	}

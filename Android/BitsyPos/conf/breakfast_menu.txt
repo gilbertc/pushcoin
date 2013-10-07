@@ -96,27 +96,11 @@ index = {
 		-- GABBY'S LIGHT & SIMPLE
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		{ name= 'Greek Yogurt', price= { unit= 3.99 }, tag= { 'breakfast' }, id= 'GLS1' },
-		{ name= 'Multi-Grain Pancakes', price= { unit= 5.79 }, tag= { 'breakfast' }, id= 'GLS2' },
-		{ name= 'Multi-Grain Waffle', price= { unit= 6.29 }, tag= { 'breakfast' }, id= 'GLS3' },
-		{ name= 'Fruit Salad', price= { unit= 5.29 }, tag= { 'breakfast' }, id= 'GLS4' },
-		{ name= 'Country Oatmeal', price= { unit= 5.79 }, tag= { 'breakfast' }, id= 'GLS5' },
-		{
-			name= 'Greek Yogurt & Side',
-			combo= {
-				{
-					slot= 'Dish',
-					default= 'GLS1',
-				},
-				{
-					slot= 'Side',
-					default= 'BSI12',
-					price_tag='greek_yogurt_addon',
-				},
-			},
-			tag= { 'breakfast' },
-			id='GLS6',
-		},
-
+		{ name= 'Greek Yogurt & Fruit', price= { unit= 4.98 }, tag= { 'breakfast' }, id= 'GLS2' },
+		{ name= 'Multi-Grain Pancakes', price= { unit= 5.79 }, tag= { 'breakfast' }, id= 'GLS3' },
+		{ name= 'Multi-Grain Waffle', price= { unit= 6.29 }, tag= { 'breakfast' }, id= 'GLS4' },
+		{ name= 'Fruit Salad', price= { unit= 5.29 }, tag= { 'breakfast' }, id= 'GLS5' },
+		{ name= 'Country Oatmeal', price= { unit= 5.79 }, tag= { 'breakfast' }, id= 'GLS6' },
 	}, -- end of products
 
 	--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--

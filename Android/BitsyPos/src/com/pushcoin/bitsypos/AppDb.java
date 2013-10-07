@@ -143,12 +143,15 @@ public class AppDb extends SQLiteAssetHelper
 			// insert new records
 			for ( JsonImporter.Statement stmt: imp.generateDbStatements() )
 			{
-				// Log.v(Conf.TAG, "sample|stmt="+stmt.sql+";args="+java.util.Arrays.toString(stmt.args));
+				//Log.v(Conf.TAG, "db|stmt="+stmt.sql+";args="+java.util.Arrays.toString(stmt.args));
 				SQLiteStatement complStmt = getStatement( db, stmt.sql );
 				int ix = 1;
 				for (String arg: stmt.args)
 				{
-					if (arg != null) {
+					if (arg == null) {
+						complStmt.bindNull( ix );
+					}
+					else {
 						complStmt.bindString( ix, arg );
 					}
 					++ix;

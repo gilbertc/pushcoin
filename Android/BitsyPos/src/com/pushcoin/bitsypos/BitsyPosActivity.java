@@ -27,6 +27,9 @@ public class BitsyPosActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shopping_main);
 
+		// Session manager
+		access_ = SessionManager.getInstance( this );
+
 		// Store message dispatcher for the cart fragment
 		FragmentManager fragmentManager = getFragmentManager();
 		cartFragmentHandler_ = ((IDispatcher)fragmentManager.findFragmentById(R.id.shopping_cart_frag)).getDispachable();
@@ -56,7 +59,7 @@ public class BitsyPosActivity
 				break;
 
 				case MessageId.SHOPPING_ITEM_CLICKED:
-					onShoppingItemClicked(msg.arg1);
+					onShoppingItemClicked( (String) msg.obj );
 				break;
 
 				case MessageId.CART_CONTENT_CHANGED:
@@ -102,26 +105,29 @@ public class BitsyPosActivity
 	}
 
 	/** User clicks on item. */
-	private void onShoppingItemClicked(int pos)
+	private void onShoppingItemClicked(String itemId)
 	{
-		ShoppingPanelFragment newFragment = new ShoppingPanelFragment();
-		Bundle args = new Bundle();
-		newFragment.setArguments(args);
+		Log.v( Conf.TAG, "add-or-configure-item;itemId="+itemId );
 
-		FragmentManager fragmentManager = getFragmentManager();
-		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		// Get the item
+		Item item = AppDb.getInstance( this ).getItemById( itemId, Conf.FIELD_PRICE_TAG_DEFAULT );
 
-		// Remove categories
-		Fragment categoryMenu = fragmentManager.findFragmentByTag(FragmentTag.SHOPPING_CATEGORY_MENU);
-		transaction.remove(categoryMenu);
+		// If our item is defined, we can add it to the cart
+		if ( item.isDefined( Conf.FIELD_PRICE_TAG_DEFAULT ) )
+		{
+			Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+			cart.add( Util.toCartCombo( item ) );
+		}
+		else // or, we need to configure the item first
+		{
+			ConfigureItemFragment configureItem = new ConfigureItemFragment("uuid", item);
 
-		// Replace items with the combo editor
-		transaction.replace(R.id.hz_center_pane, newFragment);
-
-		// and add the transaction to the back stack so the user can navigate back
-		transaction.addToBackStack(null);
-		transaction.commit();
+			getFragmentManager().beginTransaction()
+				.replace( R.id.hz_center_pane, configureItem, FragmentTag.CONFIGURE_ITEM )
+				.commit();
+		}
 	}
 
-	Handler cartFragmentHandler_;
+	private SessionManager access_;
+	private Handler cartFragmentHandler_;
 }

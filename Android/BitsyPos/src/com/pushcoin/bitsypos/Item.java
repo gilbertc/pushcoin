@@ -89,9 +89,12 @@ public class Item
 	*/
 	BigDecimal getPrice( String priceTag )
 	{
-		BigDecimal price = optionalPrice( priceTag );
+		BigDecimal price = basePrice( priceTag );
+		Log.v(Conf.TAG, "fetching-price|item="+getId()+"("+getName()+");price_tag="+priceTag+";price="+price );
 
-		// Furthermore, if item has slots we need to iterate over
+		// Furthermore, if item has slots we need to iterate over.
+		// Note: If slot doesn't provide a "choice_tag" it must provide a 
+		// "default" and we use directly -- no choices shown for that slot.
 		if ( slotCount_ > 0 )
 		{
 			ArrayList<Slot> slots = getSlots();
@@ -141,9 +144,11 @@ public class Item
 
 				do 
 				{
-					// default slot item can be null
+					// default slot item can be null or a choice tag can be null
+					// but not both!
 					String defaultItemId = c.isNull(2) ? null : c.getString(2);
 					String choiceItemTag = c.isNull(3) ? null : c.getString(3);
+
 					if (defaultItemId == null && choiceItemTag == null) {
 						throw new BitsyError("Slot '" + c.getString(0) + "' of item '" + getName() + "' is missing a default item and has no alternative choices");
 					}
@@ -157,8 +162,8 @@ public class Item
 					String slotPriceTag = c.isNull(5) ? Conf.FIELD_PRICE_TAG_DEFAULT : c.getString(5);
 
 					Slot slot = new Slot(db_, c.getString(0), c.getString(1), defaultItemId, choiceItemTag, quantity, slotPriceTag);
+					Log.v(Conf.TAG, "slot|parent="+itemId_+"("+getName()+");name="+slot.getName()+";default_item_id="+defaultItemId+";choice_item_tag="+choiceItemTag+";qty="+quantity+";price_tag="+slotPriceTag );
 					slots_.add( slot );
-					Log.v(Conf.TAG, "slot|parent="+getName()+";name="+slot.getName()+";default_item_id="+defaultItemId+";choice_item_tag="+choiceItemTag+";qty="+quantity+";price_tag="+slotPriceTag );
 				}
 				while (c.moveToNext());
 
@@ -216,14 +221,14 @@ public class Item
 		return relatedItemsCache_;
 	}
 
-	protected BigDecimal optionalPrice( String priceTag )
+	public BigDecimal basePrice( String priceTag )
 	{
 		if (priceTag == null) {
 			priceTag = Conf.FIELD_PRICE_TAG_DEFAULT;
 		}
 
 		BigDecimal price = null;
-		if (cachedPriceTag_ != null && priceTag == cachedPriceTag_) {
+		if (cachedPriceTag_ != null && priceTag.equals(cachedPriceTag_)) {
 			price = cachedPrice_;
 		}
 		else
@@ -247,7 +252,7 @@ public class Item
 		{
 			for ( Item member : container )
 			{
-				if ( item.getId() == member.getId() ) {
+				if ( item.getId().equals( member.getId()) ) {
 					return true;
 				}
 			}
@@ -258,7 +263,7 @@ public class Item
 	static boolean equivalent( Item lhs, Item rhs )
 	{
 		if ( lhs != null && rhs != null ) {
-			return (lhs.getId() == rhs.getId());
+			return (lhs.getId().equals( rhs.getId() ));
 		}
 		return false;
 	}
