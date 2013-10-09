@@ -9,10 +9,9 @@
   Legend
   ------
   The 'product' entry defines all sellable goods. Products can 
-  be sold individually, or be part of a 'combo' item.
+  be simple, one-item elements or compisite (aka combo).
   
-  The 'category' entry defines the main menu visible on the
-  left-hand side of the Bitsy panel.
+  The 'category' describes major product groups (categories).
  
 ]]--
 json = require('json')
@@ -28,7 +27,7 @@ index = {
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- BEVERAGES
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Soda (free refills)', price= { unit= 2.19 }, tag= { 'beverage', 'soda' }, id= 'B1' },
+		{ name= 'Soda', price= { unit= 2.19 }, tag= { 'beverage', 'soda' }, id= 'B1' },
 		{ name= 'Orange Juice (small)', price= { unit= 2.19 }, tag= { 'beverage', 'juice' }, id= 'B2' },
 		{ name= 'Orange Juice (large)', price= { unit= 2.59 }, tag= { 'beverage', 'juice' }, id= 'B3' },
 		{ name= 'Tomato Juice (small)', price= { unit= 1.69 }, tag= { 'beverage', 'juice' }, id= 'B4' },

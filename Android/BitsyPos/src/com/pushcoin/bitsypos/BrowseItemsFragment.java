@@ -25,7 +25,7 @@ public class BrowseItemsFragment extends Fragment
 		dispatchable_ = ((IDispatcher)context).getDispachable();
 
 		// What category are we displaying? 
-    String categoryTag = getArguments().getString( Conf.FIELD_CATEGORY );
+		String categoryTag = getArguments().getString( Conf.FIELD_CATEGORY );
 
 		// Fetch items in a given category
 		items_ = AppDb.getInstance( context ).findItems( categoryTag, Conf.FIELD_PRICE_TAG_DEFAULT );

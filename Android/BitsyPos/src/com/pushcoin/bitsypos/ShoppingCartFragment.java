@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler;
 import android.app.Fragment;
+import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.AdapterView;
 import android.util.Log;
 import java.util.ArrayList;
 import java.math.BigDecimal;
@@ -92,6 +95,9 @@ public class ShoppingCartFragment
 		dismissList.setAutoHideDelay(Conf.CART_UNDO_HIDE_DELAY); 
 		dismissList.setRequireTouchBeforeDismiss(false);
 
+		// install click-event listener
+		cartItemList.setOnItemClickListener(new CartItemClickListener());
+
 		// Reset cart contents
 		onCartContentChanged();
 
@@ -127,6 +133,28 @@ public class ShoppingCartFragment
 		cartTotal_.setText( NumberFormat.getCurrencyInstance().format( cart.totalValue() ) );
 
 		adapter_.refreshView();
+	}
+
+	private class CartItemClickListener implements AdapterView.OnItemClickListener
+	{
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+		{
+			Log.v( Conf.TAG, "cart-item-clicked;position="+position+";id="+id );
+
+			// DialogFragment.show() will add the fragmentin a transaction, 
+			// but we  need to remove any currently shown dialog.
+			FragmentTransaction ft = getFragmentManager().beginTransaction();
+			Fragment prev = getFragmentManager().findFragmentByTag(Conf.DIALOG_EDIT_CART_ID);
+			if (prev != null) {
+				ft.remove(prev);
+			}
+			ft.addToBackStack(null);
+
+			// Create and show the dialog.
+			DialogFragment newFragment = EditCartItemFragment.newInstance(position);
+			newFragment.show(ft, Conf.DIALOG_EDIT_CART_ID);
+		}
 	}
 
 	private TextView cartTotal_;

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="horizontal" 
+	android:paddingTop="8dp"
+	android:paddingBottom="12dp"
+	android:paddingRight="6dp"
+	android:paddingLeft="6dp">
+
+	<TextView
+		android:id="@+id/edit_cart_item_row_sku"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:textSize="24dp"
+		/>
+
+	<TextView
+		android:id="@+id/edit_cart_item_row_desc"
+		android:layout_weight="4"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:textSize="24dp"
+		/>
+
+	<TextView
+		android:id="@+id/edit_cart_item_row_qty"
+		android:gravity="right"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:textSize="24dp"
+		/>
+
+	<TextView
+		android:id="@+id/edit_cart_item_row_price"
+		android:gravity="right"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:textColor="@color/android_holo_blue_light"
+		android:textSize="24dp"
+		/>
+
+</LinearLayout>

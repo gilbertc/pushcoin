@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:descendantFocusability="beforeDescendants"
+	android:focusableInTouchMode="true"
+	android:padding="20dp"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<!-- Slots container -->
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" >
+
+		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:text="Base Price:"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="24dp"
+			android:paddingRight="6dp"
+			android:textColor="@color/lightui_darkorange"
+			geekui:customTypeface="fonts/DejaVuSans.ttf" />
+
+		<EditText
+			android:hint="0.00"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="22dp"
+			android:textSize="24dp"
+			android:textColor="@color/lightui_darkorange" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:text="Total Price:"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="24dp"
+			android:paddingRight="6dp"
+			android:textColor="@color/lightui_darkorange"
+			geekui:customTypeface="fonts/DejaVuSans.ttf" />
+
+		<TextView
+			android:text="$3.99"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="24dp"
+			android:textColor="@color/android_holo_blue_light" />
+
+	</LinearLayout>
+
+	<EditText
+		android:hint="Enter special instructions"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="24dp"
+		android:layout_marginBottom="24dp"
+		android:textSize="24dp"
+		android:textColor="@color/lightui_darkorange" />
+
+	<ListView
+		android:id="@+id/edit_cart_item_view_list"
+		android:divider="@drawable/dotted"
+		android:dividerHeight="1px"
+		android:footerDividersEnabled="false"
+		android:headerDividersEnabled="false"
+		android:cacheColorHint="@android:color/transparent"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+
+</LinearLayout>

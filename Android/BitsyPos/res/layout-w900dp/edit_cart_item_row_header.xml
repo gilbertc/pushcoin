@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="horizontal" 
+	android:background="@drawable/slot_header_shape"
+	android:paddingTop="8dp"
+	android:paddingBottom="12dp"
+	android:paddingRight="6dp"
+	android:paddingLeft="6dp">
+
+	<TextView
+		android:text="SKU"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:textSize="24dp"
+		/>
+
+	<TextView
+		android:text="Name"
+		android:layout_weight="4"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:textSize="24dp"
+		/>
+
+	<TextView
+		android:text="Quantity"
+		android:gravity="right"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:textSize="24dp"
+		/>
+
+	<TextView
+		android:text="Upcharge"
+		android:gravity="right"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:textSize="24dp"
+		/>
+
+</LinearLayout>

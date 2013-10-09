@@ -7,6 +7,7 @@ public class Conf
 	static final String FIELD_PRICE_TAG_DEFAULT = "unit";
 
 	static final String TAG = "Bitsy"; // Log tag
+	static final String DIALOG_EDIT_CART_ID="edit_cart_dialog";
 
 	// Duration of time (ms) the user can undo removal of item from the cart. 
 	static final int CART_UNDO_HIDE_DELAY=3000;
@@ -135,4 +136,5 @@ public class Conf
 	static final String FIELD_PRICE = "price";
 	static final String FIELD_COMBO = "combo";
 	static final String FIELD_QUANTITY = "quantity";
+	static final String FIELD_CART_ITEM_POSITION = "cart_item_position";
 }
