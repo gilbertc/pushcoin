@@ -33,19 +33,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" >
 
-		<!-- Add Combo button -->
-		<Button
-			android:id="@+id/add_combo_item_to_cart" 
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content"
-			android:background="@drawable/btn_blue" 
-			style="@style/SlotItemsAddToCart" />
-
-		<View
-			android:layout_weight="1"
-			android:layout_width="0dp"
-			android:layout_height="match_parent" />
-
 		<LinearLayout
 			android:orientation="horizontal"
 			android:layout_width="wrap_content"
@@ -78,6 +65,19 @@
 				geekui:customTypeface="fonts/DejaVuSans-Oblique.ttf" />
 
 		</LinearLayout>
+
+		<View
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="match_parent" />
+
+		<!-- Add Combo button -->
+		<Button
+			android:id="@+id/add_combo_item_to_cart" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:background="@drawable/btn_blue" 
+			style="@style/SlotItemsAddToCart" />
 
 	</LinearLayout>
 

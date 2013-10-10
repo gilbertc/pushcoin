@@ -15,7 +15,7 @@ import java.text.NumberFormat;
 
 public class EditCartItemArrayAdapter extends BaseAdapter 
 {
-	public EditCartItemArrayAdapter(Context context, AbstractList<Cart.Entry> entries)
+	public EditCartItemArrayAdapter(Context context, Cart.Combo combo)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from(context);
@@ -27,12 +27,12 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 		qtyViewResourceId_ = R.id.edit_cart_item_row_qty;
 		priceViewResourceId_ = R.id.edit_cart_item_row_price;
 
-		entries_ = entries;
+		combo_ = combo;
 	}
 
 	public int getCount() 
 	{
-		return entries_.size();
+		return combo_.entries.size();
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 		}
 
 		// Bind the data efficiently with the holder.
-		Cart.Entry cartEntry = entries_.get( position );
+		Cart.Entry cartEntry = combo_.entries.get( position );
 		holder.sku.setText( cartEntry.sku );
 		holder.desc.setText( cartEntry.name );
 		holder.qty.setText( Integer.toString(cartEntry.qty) );
@@ -106,8 +106,8 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 		TextView price;
 	}
 
-	private LayoutInflater inflater_;
-	private AbstractList<Cart.Entry> entries_;
+	private final LayoutInflater inflater_;
+	private final Cart.Combo combo_;
 
 	// The resource ID for a layout file containing a layout to use when instantiating views.
 	final private int blockLayoutResourceId_;

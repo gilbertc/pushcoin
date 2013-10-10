@@ -48,43 +48,60 @@ public class EditCartItemFragment extends DialogFragment
 
 		// Obtain access to session manager, from which we get current cart
 		access_ = SessionManager.getInstance( context );
-		Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+		final Cart cart = (Cart) access_.session( Conf.SESSION_CART );
 
-		// Locate cart item we are modifying..
-		int cartItemId = getArguments().getInt( Conf.FIELD_CART_ITEM_POSITION );
-		Cart.Combo combo = cart.get( cartItemId );
+		// Locate cart item we are modifying and make a clone of it
+		cartItemId_ = getArguments().getInt( Conf.FIELD_CART_ITEM_POSITION );
+		combo_ = new Cart.Combo( cart.get( cartItemId_ ) );
 
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.edit_cart_item_view, container, false);
 
-		// Allow user to change the title
-		EditText comboName = (EditText) view.findViewById(R.id.edit_cart_item_view_name);
-		comboName.setText( combo.getName() );
+		// References to widgets...
+		comboName_ = (EditText) view.findViewById(R.id.edit_cart_item_view_name);
 
 		// Find the listview widget so we can set its adapter
 		ListView itemsListView = (ListView) view.findViewById(R.id.edit_cart_item_view_list);
 		itemsListView.addHeaderView( inflater.inflate(R.layout.edit_cart_item_row_header, null) );
 
-		EditCartItemArrayAdapter adapter = new EditCartItemArrayAdapter( context, combo.entries );
-		itemsListView.setAdapter( adapter );
+		listViewAdapter_ = new EditCartItemArrayAdapter( context, combo_ );
+		itemsListView.setAdapter( listViewAdapter_ );
 
 		// install click-event listener
-		//itemsListView.setOnItemClickListener(new ListSelection());
+		itemsListView.setOnItemClickListener(new EditCartItemListener());
+
+		// update view
+		onModelUpdated( true );
 
 		return view;
 	}
 
-	private class ListSelection implements OnItemClickListener
+	private void onModelUpdated( boolean init )
+	{
+		comboName_.setText( combo_.getName() );
+
+		// no need to re-update listview on startup
+		if (! init ) {
+			listViewAdapter_.notifyDataSetChanged();
+		}
+	}
+
+	private class EditCartItemListener implements OnItemClickListener
 	{
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 		{
-			Message m = dispatchable_.obtainMessage( MessageId.SHOPPING_ITEM_CLICKED, 0, 0, items_.get(position).getId() );
-			m.sendToTarget();
+			Log.v(Conf.TAG, "cart-item-edit="+position );
 		}
 	}
 
 	private SessionManager access_;
-	private Handler dispatchable_;
-	private ArrayList<Item> items_;
+
+	// Model
+	private int cartItemId_;
+	private Cart.Combo combo_;
+
+	// View widgets
+	EditText comboName_;
+	EditCartItemArrayAdapter listViewAdapter_;
 }

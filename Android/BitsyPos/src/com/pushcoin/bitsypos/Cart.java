@@ -16,6 +16,24 @@ public class Cart
 		String name;
 		int qty;
 		BigDecimal unitPrice;
+
+		// ctor
+		Entry(String sku, String name, int qty, BigDecimal unitPrice)
+		{
+			this.sku = sku;
+			this.name = name;
+			this.qty = qty;
+			this.unitPrice = unitPrice;
+		}
+
+		// copy ctor
+		Entry( Entry rhs )
+		{
+			sku = rhs.sku;
+			name = rhs.name;
+			qty = rhs.qty;
+			unitPrice = rhs.unitPrice;
+		}
 	}
 
 	public static class Combo
@@ -52,6 +70,25 @@ public class Cart
 		String getPrettyPrice() 
 		{
 			return NumberFormat.getCurrencyInstance().format( getPrice() );
+		}
+
+		// ctor
+		Combo()
+		{
+			note = "";
+			name = "";
+			basePrice = new BigDecimal(0);
+		}
+
+		// copy ctor
+		Combo( Combo rhs )
+		{
+			for (Entry e: rhs.entries) {
+				entries.add( new Entry( e ) );
+			}
+			note = rhs.note;
+			name = rhs.name;
+			basePrice = rhs.basePrice;
 		}
 	}
 	

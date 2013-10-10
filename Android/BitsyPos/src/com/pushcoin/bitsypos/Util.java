@@ -22,28 +22,26 @@ class Util
 
 			for (Slot slot: item.getSlots()) 
 			{
-				Cart.Entry entry = new Cart.Entry();
 				Item chosenItem = slot.getChosenItem();
-				entry.sku = chosenItem.getId();
-				entry.name = chosenItem.getName();
-				entry.qty = slot.getQuantity();
-
 				String slotPriceTag = slot.getPriceTag();
 				if (slotPriceTag == null) {
 					slotPriceTag = Conf.FIELD_PRICE_TAG_DEFAULT;
 				}
-				entry.unitPrice = chosenItem.getPrice( slotPriceTag );
+
+				Cart.Entry entry = new Cart.Entry(
+					chosenItem.getId(), 
+					chosenItem.getName(), 
+					slot.getQuantity(),
+					chosenItem.getPrice( slotPriceTag ));
 
 				combo.entries.add( entry );
 			}
 		}
 		else  // not a combo
 		{
-			Cart.Entry entry = new Cart.Entry();
-			entry.sku = item.getId();
-			entry.name = item.getName();
-			entry.qty = 1;
-			entry.unitPrice = item.getPrice( Conf.FIELD_PRICE_TAG_DEFAULT );
+			Cart.Entry entry = new Cart.Entry(
+				item.getId(), item.getName(), 1, item.getPrice( Conf.FIELD_PRICE_TAG_DEFAULT ));
+
 			combo.entries.add( entry );
 		}
 		return combo;
