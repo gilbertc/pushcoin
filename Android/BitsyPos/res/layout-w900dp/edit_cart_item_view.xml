@@ -8,10 +8,9 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
-	<!-- Slots container -->
 	<LinearLayout
 		android:orientation="horizontal"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content" >
 
 		<com.mobsandgeeks.ui.TypefaceTextView 
@@ -21,7 +20,7 @@
 			android:layout_marginRight="6dp"
 			android:textSize="24dp"
 			android:textColor="@color/lightui_darkorange"
-			geekui:customTypeface="fonts/DejaVuSans.ttf" />
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 		<EditText
 			android:id="@+id/edit_cart_item_view_baseprice" 
@@ -29,25 +28,23 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginRight="22dp"
-			android:textSize="24dp"
-			android:textColor="@color/lightui_darkorange" />
+			android:textSize="24dp" />
 
 		<com.mobsandgeeks.ui.TypefaceTextView 
-			android:text="Total Price:"
+			android:text="Combo Name:"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginRight="6dp"
 			android:textSize="24dp"
 			android:textColor="@color/lightui_darkorange"
-			geekui:customTypeface="fonts/DejaVuSans.ttf" />
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
-		<TextView
-			android:id="@+id/edit_cart_item_view_totalprice" 
-			android:text="$3.99"
+		<EditText
+			android:id="@+id/edit_cart_item_view_name" 
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="24dp"
-			android:textColor="@color/android_holo_blue_light" />
+			android:layout_marginRight="22dp"
+			android:textSize="24dp" />
 
 		<View
 			android:layout_weight="1"
@@ -74,16 +71,16 @@
 			android:paddingLeft="34dp"
 			android:paddingRight="34dp"
 			style="@style/ButtonWhiteLabel"
-			android:background="@drawable/btn_blue" />
+			android:background="@drawable/btn_green" />
 
 	</LinearLayout>
 
 	<EditText
 		android:hint="Enter special instructions"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
 		android:layout_marginTop="24dp"
 		android:layout_marginBottom="24dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
 		android:textSize="24dp"
 		android:textColor="@color/lightui_darkorange" />
 
@@ -91,10 +88,37 @@
 		android:id="@+id/edit_cart_item_view_list"
 		android:divider="@drawable/dotted"
 		android:dividerHeight="1px"
-		android:footerDividersEnabled="false"
 		android:headerDividersEnabled="false"
+		android:footerDividersEnabled="false"
 		android:cacheColorHint="@android:color/transparent"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+
+		<com.mobsandgeeks.ui.TypefaceTextView android:text="Combo Total:"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:textSize="18dp"
+			android:gravity="right"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColor="@color/lightui_darkgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView android:text="$3.99"
+			android:id="@+id/edit_cart_item_view_comboprice" 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="38dp"
+			android:paddingRight="6dp"
+			android:textColor="@color/android_holo_blue_bright"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+	</LinearLayout>
 
 </LinearLayout>

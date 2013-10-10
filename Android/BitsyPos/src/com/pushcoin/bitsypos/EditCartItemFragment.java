@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
 import android.content.Context;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,7 +38,7 @@ public class EditCartItemFragment extends DialogFragment
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo);
+		setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_NoActionBar_Fullscreen);
 	}
 
 	@Override
@@ -52,10 +53,13 @@ public class EditCartItemFragment extends DialogFragment
 		// Locate cart item we are modifying..
 		int cartItemId = getArguments().getInt( Conf.FIELD_CART_ITEM_POSITION );
 		Cart.Combo combo = cart.get( cartItemId );
-		getDialog().setTitle( combo.getName() );
 
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.edit_cart_item_view, container, false);
+
+		// Allow user to change the title
+		EditText comboName = (EditText) view.findViewById(R.id.edit_cart_item_view_name);
+		comboName.setText( combo.getName() );
 
 		// Find the listview widget so we can set its adapter
 		ListView itemsListView = (ListView) view.findViewById(R.id.edit_cart_item_view_list);
