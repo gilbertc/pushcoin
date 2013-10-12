@@ -12,9 +12,12 @@
 			android:largeScreens="true"
 			android:xlargeScreens="true"
 			/>
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+    <application 
+			android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen"
+			android:label="@string/app_name" 
+			android:icon="@drawable/ic_launcher">
+
 			<activity android:name="BitsyPosActivity"
-								android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
 								android:label="@string/app_name">
 					<intent-filter>
 							<action android:name="android.intent.action.MAIN" />

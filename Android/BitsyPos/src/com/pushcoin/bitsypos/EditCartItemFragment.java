@@ -38,7 +38,7 @@ public class EditCartItemFragment extends DialogFragment
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_NoActionBar_Fullscreen);
+		setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Dialog_NoActionBar);
 	}
 
 	@Override
@@ -62,37 +62,15 @@ public class EditCartItemFragment extends DialogFragment
 
 		// Find the listview widget so we can set its adapter
 		ListView itemsListView = (ListView) view.findViewById(R.id.edit_cart_item_view_list);
-		itemsListView.addHeaderView( inflater.inflate(R.layout.edit_cart_item_row_header, null) );
+		// itemsListView.addHeaderView( inflater.inflate(R.layout.edit_cart_item_row_header, null) );
 
 		listViewAdapter_ = new EditCartItemArrayAdapter( context, combo_ );
 		itemsListView.setAdapter( listViewAdapter_ );
 
-		// install click-event listener
-		itemsListView.setOnItemClickListener(new EditCartItemListener());
-
-		// update view
-		onModelUpdated( true );
-
-		return view;
-	}
-
-	private void onModelUpdated( boolean init )
-	{
+		// set initial name
 		comboName_.setText( combo_.getName() );
 
-		// no need to re-update listview on startup
-		if (! init ) {
-			listViewAdapter_.notifyDataSetChanged();
-		}
-	}
-
-	private class EditCartItemListener implements OnItemClickListener
-	{
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-		{
-			Log.v(Conf.TAG, "cart-item-edit="+position );
-		}
+		return view;
 	}
 
 	private SessionManager access_;

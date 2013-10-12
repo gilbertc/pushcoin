@@ -19,14 +19,6 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from(context);
-
-		// Resource IDs
-		blockLayoutResourceId_ = R.layout.edit_cart_item_row_readonly;
-		skuViewResourceId_ = R.id.edit_cart_item_row_sku;
-		descViewResourceId_ = R.id.edit_cart_item_row_desc;
-		qtyViewResourceId_ = R.id.edit_cart_item_row_qty;
-		priceViewResourceId_ = R.id.edit_cart_item_row_price;
-
 		combo_ = combo;
 	}
 
@@ -109,12 +101,10 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 	private final LayoutInflater inflater_;
 	private final Cart.Combo combo_;
 
-	// The resource ID for a layout file containing a layout to use when instantiating views.
-	final private int blockLayoutResourceId_;
-
 	// resource IDs
-	final private int skuViewResourceId_;
-	final private int descViewResourceId_;
-	final private int qtyViewResourceId_;
-	final private int priceViewResourceId_;
+	final private int blockLayoutResourceId_ = R.layout.edit_cart_item_row_changing;
+	final private int skuViewResourceId_ = R.id.edit_cart_item_row_sku;
+	final private int descViewResourceId_ = R.id.edit_cart_item_row_desc;
+	final private int qtyViewResourceId_ = R.id.edit_cart_item_row_qty;
+	final private int priceViewResourceId_ = R.id.edit_cart_item_row_price;
 }
