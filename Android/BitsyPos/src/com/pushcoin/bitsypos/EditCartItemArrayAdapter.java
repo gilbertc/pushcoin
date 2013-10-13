@@ -3,6 +3,7 @@ package com.pushcoin.bitsypos;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.EditText;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.graphics.BitmapFactory;
 import java.util.AbstractList;
 import java.util.List;
 import java.text.NumberFormat;
+import java.math.BigDecimal;
 
 public class EditCartItemArrayAdapter extends BaseAdapter 
 {
@@ -66,11 +68,11 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 			// Creates a ViewHolder and store references to the children views
 			// we want to bind data to.
 			holder = new ViewHolder();
-			holder.sku = (TextView) convertView.findViewById(skuViewResourceId_);
-			holder.desc = (TextView) convertView.findViewById(descViewResourceId_);
-			holder.qty = (TextView) convertView.findViewById(qtyViewResourceId_);
-			holder.price = (TextView) convertView.findViewById(priceViewResourceId_);
-
+			holder.sku = (EditText) convertView.findViewById(skuViewResourceId_);
+			holder.desc = (EditText) convertView.findViewById(descViewResourceId_);
+			holder.qty = (EditText) convertView.findViewById(qtyViewResourceId_);
+			holder.price = (EditText) convertView.findViewById(priceViewResourceId_);
+			
 			convertView.setTag(holder);
 		} 
 		else 
@@ -83,19 +85,54 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 		// Bind the data efficiently with the holder.
 		Cart.Entry cartEntry = combo_.entries.get( position );
 		holder.sku.setText( cartEntry.sku );
+		holder.sku.setId(position);
 		holder.desc.setText( cartEntry.name );
+		holder.desc.setId(position);
 		holder.qty.setText( Integer.toString(cartEntry.qty) );
-		holder.price.setText( NumberFormat.getCurrencyInstance().format( cartEntry.unitPrice ) );
+		holder.qty.setId(position);
+		holder.price.setText( cartEntry.unitPrice.toString() );
+		holder.price.setId(position);
+
+		// register change listener -- one for each member
+		// SKU
+		holder.sku.setOnFocusChangeListener( new View.OnFocusChangeListener()
+		{
+			public void onFocusChange(View v, boolean hasFocus) 
+			{
+				if (!hasFocus) {
+					combo_.entries.get( v.getId() ).sku = ((TextView) v).getText().toString();
+				}
+			}
+		});
+
+		// Price
+		holder.price.setOnFocusChangeListener( new View.OnFocusChangeListener()
+		{
+			public void onFocusChange(View v, boolean hasFocus) 
+			{
+				EditText field = (EditText) v;
+				Cart.Entry cartEntry = combo_.entries.get( v.getId() );
+				if (!hasFocus) 
+				{
+					// Editing finished. If empty, restore previous value.
+					if (field.getText().length() > 0) {
+						cartEntry.unitPrice = new BigDecimal( field.getText().toString() );
+					} else {
+						field.setText( cartEntry.unitPrice.toString() );
+					}
+				} 
+			}
+		});
 
 		return convertView;
 	}
 
 	private static class ViewHolder 
 	{
-		TextView sku;
-		TextView desc;
-		TextView qty;
-		TextView price;
+		EditText sku;
+		EditText desc;
+		EditText qty;
+		EditText price;
 	}
 
 	private final LayoutInflater inflater_;

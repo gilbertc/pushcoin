@@ -11,37 +11,53 @@
 
 	<EditText
 		android:id="@+id/edit_cart_item_row_sku"
-		android:layout_weight="1"
+		android:layout_weight="2"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:textSize="24dp"
+		android:inputType="textNoSuggestions|textVisiblePassword"
 		/>
 
 	<EditText
 		android:id="@+id/edit_cart_item_row_desc"
-		android:layout_weight="4"
+		android:layout_weight="8"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:textSize="24dp"
+		android:inputType="textShortMessage"
 		/>
 
 	<EditText
 		android:id="@+id/edit_cart_item_row_qty"
+		android:selectAllOnFocus="true"
 		android:gravity="right"
 		android:layout_weight="1"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:textSize="24dp"
+		android:inputType="number"
+		/>
+
+	<TextView
+		android:text="$"
+		android:id="@+id/edit_cart_item_row_currency"
+		android:layout_marginLeft="12dp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/android_holo_blue_light"
+		android:textSize="24dp"
 		/>
 
 	<EditText
 		android:id="@+id/edit_cart_item_row_price"
+		android:selectAllOnFocus="true"
 		android:gravity="right"
 		android:layout_weight="1"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:textColor="@color/android_holo_blue_light"
 		android:textSize="24dp"
+		android:inputType="numberDecimal"
 		/>
 
 </LinearLayout>
