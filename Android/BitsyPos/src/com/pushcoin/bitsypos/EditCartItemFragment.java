@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.view.View;
 import android.content.Context;
 import android.widget.EditText;
-import android.widget.GridView;
+import android.widget.Button;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -67,10 +67,33 @@ public class EditCartItemFragment extends DialogFragment
 		listViewAdapter_ = new EditCartItemArrayAdapter( context, combo_ );
 		itemsListView.setAdapter( listViewAdapter_ );
 
-		// set initial name
+		// Initial combo name.
 		comboName_.setText( combo_.getName() );
 
+		// Install Cancel handler
+		final Button closeBtn = (Button) view.findViewById( R.id.edit_cart_item_view_cancel_button );
+		closeBtn.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v) {
+				dismiss();
+			}
+		});
+
+		// Install Save handler
+		final Button saveBtn = (Button) view.findViewById( R.id.edit_cart_item_view_save_button );
+		saveBtn.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v) {
+				saveChanges();
+				dismiss();
+			}
+		});
+
 		return view;
+	}
+
+	private void saveChanges()
+	{
 	}
 
 	private SessionManager access_;
