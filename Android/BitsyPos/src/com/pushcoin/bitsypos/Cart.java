@@ -146,6 +146,28 @@ public class Cart
 		return item;
 	}
 
+	void replace( Combo item, int position )
+	{
+		Log.v(Conf.TAG, "cart-replace-item="+item.getName()+";pos="+position);
+		synchronized (lock_) 
+		{
+			if ( position < items_.size() ) {
+				items_.remove( position );
+			}
+
+			if ( position > items_.size() ) {
+				items_.add( item );
+			}
+			else {
+				items_.add(position, item);
+			}
+		}
+
+		// broadcast cart content has changed
+		Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
+		m.sendToTarget();
+	}
+
 	void clear()
 	{
 		boolean effective;

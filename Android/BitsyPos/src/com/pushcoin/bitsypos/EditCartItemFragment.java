@@ -9,15 +9,24 @@ import android.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.view.animation.Animation;
+import android.view.animation.AlphaAnimation;
 import android.content.Context;
+import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.database.DataSetObserver;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.math.BigDecimal;
 
-public class EditCartItemFragment extends DialogFragment 
+public class EditCartItemFragment extends DialogFragment
 {
 	/**
 		Create a new instance, providing cart item ID. 
@@ -55,23 +64,34 @@ public class EditCartItemFragment extends DialogFragment
 		combo_ = new Cart.Combo( cart.get( cartItemId_ ) );
 
 		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.edit_cart_item_view, container, false);
+		backgroundView_ = inflater.inflate(R.layout.edit_cart_item_view, container, false);
 
-		// References to widgets...
-		comboName_ = (EditText) view.findViewById(R.id.edit_cart_item_view_name);
+		// References to widgets with changing values
+		specialInstructions_ = (EditText) backgroundView_.findViewById(R.id.edit_cart_item_view_special_instructions);
+		comboName_ = (TextView) backgroundView_.findViewById(R.id.edit_cart_item_view_name);
+		basePrice_ = (EditText) backgroundView_.findViewById(R.id.edit_cart_item_view_baseprice);
+		totalPrice_ = (TextView) backgroundView_.findViewById(R.id.edit_cart_item_view_comboprice);
 
 		// Find the listview widget so we can set its adapter
-		ListView itemsListView = (ListView) view.findViewById(R.id.edit_cart_item_view_list);
-		// itemsListView.addHeaderView( inflater.inflate(R.layout.edit_cart_item_row_header, null) );
+		ListView itemsListView = (ListView) backgroundView_.findViewById(R.id.edit_cart_item_view_list);
+		itemsListView.addHeaderView( inflater.inflate(R.layout.edit_cart_item_row_header, null) );
 
-		listViewAdapter_ = new EditCartItemArrayAdapter( context, combo_ );
+		listViewAdapter_ = new EditCartItemArrayAdapter( 
+			context, 
+			new EditCartItemArrayAdapter.OnContentChanged() { 
+				public void onChanged() {
+					onComboModified(false);
+				}
+
+				// Flash background on error
+				public void onInputError() {
+					onBadInput();
+				}
+			}, combo_ );
 		itemsListView.setAdapter( listViewAdapter_ );
 
-		// Initial combo name.
-		comboName_.setText( combo_.getName() );
-
 		// Install Cancel handler
-		final Button closeBtn = (Button) view.findViewById( R.id.edit_cart_item_view_cancel_button );
+		final Button closeBtn = (Button) backgroundView_.findViewById( R.id.edit_cart_item_view_cancel_button );
 		closeBtn.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View v) {
@@ -80,20 +100,94 @@ public class EditCartItemFragment extends DialogFragment
 		});
 
 		// Install Save handler
-		final Button saveBtn = (Button) view.findViewById( R.id.edit_cart_item_view_save_button );
+		final Button saveBtn = (Button) backgroundView_.findViewById( R.id.edit_cart_item_view_save_button );
 		saveBtn.setOnClickListener(new View.OnClickListener()
 		{
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
+				// make sure changes in other edit-views are persisted on their 'lost focus'
+				totalPrice_.requestFocus();
 				saveChanges();
 				dismiss();
 			}
 		});
 
-		return view;
+		// Recalculate totals if base price changes
+		basePrice_.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+			public void onFocusChange(View v, boolean hasFocus)
+			{
+				EditText field = (EditText) v;
+				if (!hasFocus)
+				{
+					// Update only if changed
+					String newVal = field.getText().toString();
+					if ( !newVal.isEmpty() && !newVal.equals( combo_.basePrice.toString()) ) 
+					{
+						try
+						{
+							combo_.basePrice = new BigDecimal( newVal );
+							onComboModified(false);
+						} catch (NumberFormatException e) { 
+							onBadInput();
+						}
+					} 
+					field.setText( NumberFormat.getCurrencyInstance().format(combo_.basePrice) );
+				} 
+				else {
+					field.setText("");
+				}
+			}
+		});
+
+		// this prevents the field from regaining focus after it's edited
+		basePrice_.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+			{
+				if ( actionId == EditorInfo.IME_ACTION_DONE )
+				{
+					v.clearFocus();
+					onComboModified(false);
+				}
+				return false;
+			}
+		});
+
+		// Set initial values
+		onComboModified(true);
+
+		return backgroundView_;
 	}
 
+	// Recalculates totals, sets combo name, etc
+	private void onComboModified( boolean init )
+	{
+		comboName_.setText( combo_.getName() );
+		totalPrice_.setText( combo_.getPrettyPrice() );
+		if (init) {
+			basePrice_.setText( NumberFormat.getCurrencyInstance().format( combo_.basePrice ) );
+		}
+
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(totalPrice_.getWindowToken(), 0);
+		totalPrice_.requestFocus();
+	}
+
+	private void onBadInput()
+	{
+		Animation anim = new AlphaAnimation(0.0f, 1.0f);
+		anim.setDuration(50); 
+		anim.setStartOffset(20);
+		anim.setRepeatMode(Animation.REVERSE);
+		anim.setRepeatCount(1);
+		backgroundView_.startAnimation(anim);
+	}
+
+	// Persists combo changes in the cart.
 	private void saveChanges()
 	{
+		final Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+		cart.replace( combo_, cartItemId_ );
 	}
 
 	private SessionManager access_;
@@ -102,7 +196,13 @@ public class EditCartItemFragment extends DialogFragment
 	private int cartItemId_;
 	private Cart.Combo combo_;
 
+	// Main view
+	View backgroundView_;
+
 	// View widgets
-	EditText comboName_;
+	EditText specialInstructions_;
+	TextView comboName_;
+	EditText basePrice_;
+	TextView totalPrice_;
 	EditCartItemArrayAdapter listViewAdapter_;
 }

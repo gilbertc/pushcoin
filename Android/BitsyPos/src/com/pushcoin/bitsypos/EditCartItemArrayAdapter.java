@@ -8,6 +8,8 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import java.util.AbstractList;
@@ -15,12 +17,22 @@ import java.util.List;
 import java.text.NumberFormat;
 import java.math.BigDecimal;
 
-public class EditCartItemArrayAdapter extends BaseAdapter 
+public class EditCartItemArrayAdapter extends BaseAdapter
 {
-	public EditCartItemArrayAdapter(Context context, Cart.Combo combo)
+	// When we used DataSetObserver, we saw rendering problems, presumably because
+	// our EditText is embedded into a ListView. So, instead we now have own
+	// handler interface.
+	interface OnContentChanged
+	{
+		void onChanged();
+		void onInputError();
+	}
+
+	public EditCartItemArrayAdapter(Context context, OnContentChanged handler, Cart.Combo combo)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from(context);
+		handler_ = handler;
 		combo_ = combo;
 	}
 
@@ -90,7 +102,7 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 		holder.desc.setId(position);
 		holder.qty.setText( Integer.toString(cartEntry.qty) );
 		holder.qty.setId(position);
-		holder.price.setText( cartEntry.unitPrice.toString() );
+		holder.price.setText( NumberFormat.getCurrencyInstance().format( cartEntry.unitPrice ) );
 		holder.price.setId(position);
 
 		// register change listener -- one for each member
@@ -99,9 +111,84 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 		{
 			public void onFocusChange(View v, boolean hasFocus) 
 			{
-				if (!hasFocus) {
-					combo_.entries.get( v.getId() ).sku = ((TextView) v).getText().toString();
+				EditText field = (EditText) v;
+				Cart.Entry cartEntry = combo_.entries.get( v.getId() );
+
+				if (!hasFocus) 
+				{
+					// Update only if changed
+					String newVal = field.getText().toString();
+					if ( !newVal.equals( cartEntry.sku )) 
+					{
+						cartEntry.sku = newVal;
+						handler_.onChanged();
+					}
 				}
+			}
+		});
+
+		// Description
+		holder.desc.setOnFocusChangeListener( new View.OnFocusChangeListener()
+		{
+			public void onFocusChange(View v, boolean hasFocus) 
+			{
+				EditText field = (EditText) v;
+				Cart.Entry cartEntry = combo_.entries.get( v.getId() );
+
+				if (!hasFocus) 
+				{
+					// Update only if changed
+					String newVal = field.getText().toString();
+					if ( !newVal.equals( cartEntry.name )) 
+					{
+						cartEntry.name = newVal;
+						handler_.onChanged();
+					}
+				}
+			}
+		});
+
+		// Qty
+		holder.qty.setOnFocusChangeListener( new View.OnFocusChangeListener()
+		{
+			public void onFocusChange(View v, boolean hasFocus) 
+			{
+				EditText field = (EditText) v;
+				Cart.Entry cartEntry = combo_.entries.get( v.getId() );
+
+				if (!hasFocus) 
+				{
+					// Update only if changed
+					String newVal = field.getText().toString();
+					if ( !newVal.isEmpty() && !newVal.equals( Integer.toString(cartEntry.qty) )) 
+					{
+						try
+						{
+							cartEntry.qty = Integer.parseInt( newVal );
+							handler_.onChanged();
+						} catch (NumberFormatException e) { 
+							handler_.onInputError();
+						}
+					} 
+					field.setText( Integer.toString(cartEntry.qty) );
+				} 
+				else {
+					field.setText("");
+				}
+			}
+		});
+
+		// this prevents the field from regaining focus after it's edited
+		holder.qty.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+			{
+				if ( actionId == EditorInfo.IME_ACTION_DONE )
+				{
+					v.clearFocus();
+					handler_.onChanged();
+				}
+				return false;
 			}
 		});
 
@@ -114,13 +201,37 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 				Cart.Entry cartEntry = combo_.entries.get( v.getId() );
 				if (!hasFocus) 
 				{
-					// Editing finished. If empty, restore previous value.
-					if (field.getText().length() > 0) {
-						cartEntry.unitPrice = new BigDecimal( field.getText().toString() );
-					} else {
-						field.setText( cartEntry.unitPrice.toString() );
-					}
+					// Update only if changed
+					String newVal = field.getText().toString();
+					if (!newVal.isEmpty() && !newVal.equals( cartEntry.unitPrice.toString() )) 
+					{
+						try
+						{
+							cartEntry.unitPrice = new BigDecimal( newVal );
+							handler_.onChanged();
+						} catch (NumberFormatException e) { 
+							handler_.onInputError();
+						}
+					} 
+					field.setText( NumberFormat.getCurrencyInstance().format( cartEntry.unitPrice ) );
 				} 
+				else {
+					field.setText("");
+				}
+			}
+		});
+
+		// this prevents the field from regaining focus after it's edited
+		holder.price.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+			{
+				if ( actionId == EditorInfo.IME_ACTION_DONE )
+				{
+					v.clearFocus();
+					handler_.onChanged();
+				}
+				return false;
 			}
 		});
 
@@ -136,6 +247,7 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 	}
 
 	private final LayoutInflater inflater_;
+	private final OnContentChanged handler_;
 	private final Cart.Combo combo_;
 
 	// resource IDs

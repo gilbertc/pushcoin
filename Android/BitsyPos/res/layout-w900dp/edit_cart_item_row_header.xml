@@ -12,36 +12,34 @@
 
 	<TextView
 		android:text="SKU"
-		android:layout_weight="1"
+		android:layout_weight="3"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:textSize="24dp"
+		android:textSize="20dp"
 		/>
 
 	<TextView
 		android:text="Name"
-		android:layout_weight="4"
+		android:layout_weight="12"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:textSize="24dp"
+		android:textSize="20dp"
 		/>
 
 	<TextView
-		android:text="Quantity"
-		android:gravity="right"
+		android:text="Qty"
 		android:layout_weight="1"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:textSize="24dp"
+		android:textSize="20dp"
 		/>
 
 	<TextView
 		android:text="Upcharge"
-		android:gravity="right"
-		android:layout_weight="1"
+		android:layout_weight="2"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:textSize="24dp"
+		android:textSize="20dp"
 		/>
 
 </LinearLayout>
