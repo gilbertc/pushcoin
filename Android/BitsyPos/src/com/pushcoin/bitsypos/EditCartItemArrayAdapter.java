@@ -164,7 +164,13 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 					{
 						try
 						{
-							cartEntry.qty = Integer.parseInt( newVal );
+							int newQty = Integer.parseInt( newVal );
+							if (newQty < 1) {
+								combo_.entries.remove( v.getId() );
+							} 
+							else {
+								cartEntry.qty = newQty;
+							}
 							handler_.onChanged();
 						} catch (NumberFormatException e) { 
 							handler_.onInputError();

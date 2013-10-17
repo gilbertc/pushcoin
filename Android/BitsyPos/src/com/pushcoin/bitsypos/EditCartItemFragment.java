@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.database.DataSetObserver;
 import java.text.NumberFormat;
+import android.text.InputType;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 
@@ -106,9 +107,9 @@ public class EditCartItemFragment extends DialogFragment
 			public void onClick(View v)
 			{
 				// make sure changes in other edit-views are persisted on their 'lost focus'
-				totalPrice_.requestFocus();
+				backgroundView_.requestFocus();
 				saveChanges();
-				dismiss();
+				scheduleDismiss();
 			}
 		});
 
@@ -134,7 +135,7 @@ public class EditCartItemFragment extends DialogFragment
 					field.setText( NumberFormat.getCurrencyInstance().format(combo_.basePrice) );
 				} 
 				else {
-					field.setText("");
+					clearFieldShowKeyboard( field );
 				}
 			}
 		});
@@ -153,16 +154,66 @@ public class EditCartItemFragment extends DialogFragment
 			}
 		});
 
+		// Update special instructions
+		specialInstructions_.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+			public void onFocusChange(View v, boolean hasFocus)
+			{
+				EditText field = (EditText) v;
+				if (!hasFocus)
+				{
+					// Update only if changed
+					String newVal = field.getText().toString();
+					if ( !newVal.equals(combo_.note) ) 
+					{
+						combo_.note = newVal;
+						onComboModified(false);
+					} 
+				} 
+			}
+		});
+
+		// this prevents the field from regaining focus after it's edited
+		specialInstructions_.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+			{
+				if ( actionId == EditorInfo.IME_ACTION_DONE )
+				{
+					v.clearFocus();
+					onComboModified(false);
+				}
+				return false;
+			}
+		});
+
 		// Set initial values
 		onComboModified(true);
 
 		return backgroundView_;
 	}
 
+	public void clearFieldShowKeyboard(EditText v)
+	{
+		v.setText("");
+		v.requestFocus();
+		InputMethodManager manager= (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		manager.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+	}
+
+	private void scheduleDismiss()
+	{
+		queue_.postDelayed(new Runnable() {
+			public void run() {
+				dismiss();
+			}
+		}, 100);
+	}
+
 	// Recalculates totals, sets combo name, etc
 	private void onComboModified( boolean init )
 	{
 		comboName_.setText( combo_.getName() );
+		specialInstructions_.setText( combo_.note );
 		totalPrice_.setText( combo_.getPrettyPrice() );
 		if (init) {
 			basePrice_.setText( NumberFormat.getCurrencyInstance().format( combo_.basePrice ) );
@@ -190,6 +241,7 @@ public class EditCartItemFragment extends DialogFragment
 		cart.replace( combo_, cartItemId_ );
 	}
 
+	private android.os.Handler queue_ = new android.os.Handler();
 	private SessionManager access_;
 
 	// Model

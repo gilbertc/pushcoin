@@ -15,17 +15,12 @@ import java.util.ArrayList;
 
 public class CartEntryArrayAdapter extends BaseAdapter 
 {
-	public CartEntryArrayAdapter(Context context, int entryLayoutResourceId, int titleViewResourceId, int priceViewResourceId, Cart cart)
+	public CartEntryArrayAdapter(Context context, Cart cart)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from( context );
-		// Cart instance we are serving the view 
+		// Cart instance we are serving
 		cart_ = cart;
-
-		// Resource IDs of views for a row, icon and label
-		entryLayoutResourceId_ = entryLayoutResourceId;
-		titleViewResourceId_ = titleViewResourceId;
-		priceViewResourceId_ = priceViewResourceId;
 	}
 
 	public int getCount() 
@@ -86,13 +81,14 @@ public class CartEntryArrayAdapter extends BaseAdapter
 
 	private View inflateRow()
 	{
-		View view = inflater_.inflate(entryLayoutResourceId_, null);
+		View view = inflater_.inflate(R.layout.shopping_cart_row, null);
 		
 		// Creates a ViewHolder and store references to the children views
 		// we want to bind data to.
 		ViewHolder holder = new ViewHolder();
-		holder.title = (TextView) view.findViewById(titleViewResourceId_);
-		holder.price = (TextView) view.findViewById(priceViewResourceId_);
+		holder.title = (TextView) view.findViewById(R.id.shopping_cart_entry_title);
+		holder.price = (TextView) view.findViewById(R.id.shopping_cart_entry_price);
+		holder.note = (TextView) view.findViewById(R.id.shopping_cart_entry_note);
 		holder.convertViewVer = convertViewVer_;
 		view.setTag(holder);
 		return view;
@@ -128,12 +124,13 @@ public class CartEntryArrayAdapter extends BaseAdapter
 		{
 			label += ": ";
 			for (Cart.Entry entry: item.entries) {
-				label += "\n-" +entry.name;
+				label += "\n("+Integer.toString(entry.qty)+") "+entry.name;
 			}
 		}
 
 		holder.title.setText( label );
 		holder.price.setText( item.getPrettyPrice() );
+		holder.note.setText( item.note );
 
 		return convertView;
 	}
@@ -142,17 +139,11 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	{
 		TextView title;
 		TextView price;
+		TextView note;
 		int convertViewVer;
 	}
 
 	private LayoutInflater inflater_;
 	private Cart cart_;
 	private int convertViewVer_ = 0;
-
-	// The resource ID for a layout file containing a layout to use when instantiating views.
-	final private int entryLayoutResourceId_;
-
-	// Icon and label resource IDs
-	final private int titleViewResourceId_;
-	final private int priceViewResourceId_;
 }

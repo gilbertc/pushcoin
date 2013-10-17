@@ -34,7 +34,7 @@ public class ShoppingCartFragment
 
 		// Current cart
 		final Cart cart = (Cart) SessionManager.getInstance( ctx ).session( Conf.SESSION_CART );
-		adapter_ = new CartEntryArrayAdapter(ctx, R.layout.shopping_cart_row, R.id.shopping_cart_entry_title, R.id.shopping_cart_entry_price, cart);
+		adapter_ = new CartEntryArrayAdapter(ctx, cart);
 
 		// Inflate the layout for this fragment
 		View cartLayout = inflater.inflate(R.layout.shopping_cart, container, false);
