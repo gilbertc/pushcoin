@@ -44,10 +44,19 @@ public class ShoppingCartFragment
 
 		// Handle "start over" user request
 		Button startOver = (Button) cartLayout.findViewById(R.id.shopping_cart_startover_button);
-		startOver.setOnClickListener(new View.OnClickListener()
-		{
+		startOver.setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				cart.clear();
+			}
+		});
+
+		// Handle Add Open Item request
+		Button openItemBtn = (Button) cartLayout.findViewById(R.id.shopping_cart_open_item_button);
+		openItemBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onEditCartItem( Conf.CART_OPEN_ITEM_ID );
 			}
 		});
 
@@ -95,8 +104,13 @@ public class ShoppingCartFragment
 		dismissList.setAutoHideDelay(Conf.CART_UNDO_HIDE_DELAY); 
 		dismissList.setRequireTouchBeforeDismiss(false);
 
-		// install click-event listener
-		cartItemList.setOnItemClickListener(new CartItemClickListener());
+		// install cart-item listener
+		cartItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				onEditCartItem(position);
+			}
+		});
 
 		// Reset cart contents
 		onCartContentChanged();
@@ -116,7 +130,6 @@ public class ShoppingCartFragment
 		@Override
 		public void handleMessage(Message msg) 
 		{
-			Log.v(Conf.TAG, "place=cart-frag;event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
 			switch( msg.what )
 			{
 				case MessageId.CART_CONTENT_CHANGED:
@@ -135,26 +148,22 @@ public class ShoppingCartFragment
 		adapter_.refreshView();
 	}
 
-	private class CartItemClickListener implements AdapterView.OnItemClickListener
+	private void onEditCartItem(int position)
 	{
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-		{
-			Log.v( Conf.TAG, "cart-item-clicked;position="+position+";id="+id );
+		Log.v( Conf.TAG, "cart-item-clicked;position="+position );
 
-			// DialogFragment.show() will add the fragmentin a transaction, 
-			// but we  need to remove any currently shown dialog.
-			FragmentTransaction ft = getFragmentManager().beginTransaction();
-			Fragment prev = getFragmentManager().findFragmentByTag(Conf.DIALOG_EDIT_CART_ID);
-			if (prev != null) {
-				ft.remove(prev);
-			}
-			ft.addToBackStack(null);
-
-			// Create and show the dialog.
-			DialogFragment newFragment = EditCartItemFragment.newInstance(position);
-			newFragment.show(ft, Conf.DIALOG_EDIT_CART_ID);
+		// DialogFragment.show() will add the fragmentin a transaction, 
+		// but we  need to remove any currently shown dialog.
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag(Conf.DIALOG_EDIT_CART_ID);
+		if (prev != null) {
+			ft.remove(prev);
 		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		DialogFragment newFragment = EditCartItemFragment.newInstance(position);
+		newFragment.show(ft, Conf.DIALOG_EDIT_CART_ID);
 	}
 
 	private TextView cartTotal_;

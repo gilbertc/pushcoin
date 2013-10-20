@@ -8,9 +8,13 @@ public class Conf
 
 	static final String TAG = "Bitsy"; // Log tag
 	static final String DIALOG_EDIT_CART_ID="edit_cart_dialog";
+	static final String CART_ITEM_EMPTY_NAME = "";
+	static final String CART_ITEM_EMPTY_SKU = "";
+	static final int CART_OPEN_ITEM_ID = -1;
 
 	// Duration of time (ms) the user can undo removal of item from the cart. 
 	static final int CART_UNDO_HIDE_DELAY=3000;
+
 	/**
 		Session keys.
 	*/

@@ -47,9 +47,13 @@ public class Cart
 		{
 			assert ( !entries.isEmpty() );
 
-			if (entries.size() > 1) {
+			if ( entries.size() > 1 ) {
 				return name;
-			} else {
+			} 
+			else if ( entries.isEmpty() ) {
+				return Conf.CART_ITEM_EMPTY_NAME;
+			}
+			else {
 				return entries.get(0).name;
 			}
 		}
@@ -151,16 +155,13 @@ public class Cart
 		Log.v(Conf.TAG, "cart-replace-item="+item.getName()+";pos="+position);
 		synchronized (lock_) 
 		{
-			if ( position < items_.size() ) {
+			if (position < 0) {
+				position = items_.size();
+			} else {
 				items_.remove( position );
 			}
 
-			if ( position > items_.size() ) {
-				items_.add( item );
-			}
-			else {
-				items_.add(position, item);
-			}
+			items_.add(position, item);
 		}
 
 		// broadcast cart content has changed

@@ -56,13 +56,24 @@ public class EditCartItemFragment extends DialogFragment
 	{
 		Context context = getActivity();
 
+		cartItemId_ = getArguments().getInt( Conf.FIELD_CART_ITEM_POSITION );
+
 		// Obtain access to session manager, from which we get current cart
 		access_ = SessionManager.getInstance( context );
 		final Cart cart = (Cart) access_.session( Conf.SESSION_CART );
 
-		// Locate cart item we are modifying and make a clone of it
-		cartItemId_ = getArguments().getInt( Conf.FIELD_CART_ITEM_POSITION );
-		combo_ = new Cart.Combo( cart.get( cartItemId_ ) );
+		// Are we adding a new item or modifying existing one?
+		if ( cartItemId_ == Conf.CART_OPEN_ITEM_ID )
+		{
+			combo_ = new Cart.Combo();
+			combo_.entries.add( 
+				new Cart.Entry( Conf.CART_ITEM_EMPTY_SKU, Conf.CART_ITEM_EMPTY_NAME, 1, new BigDecimal(0) ) );
+		}
+		else 
+		{
+			// Locate cart item we are modifying and make a clone of it
+			combo_ = new Cart.Combo( cart.get( cartItemId_ ) );
+		}
 
 		// Inflate the layout for this fragment
 		backgroundView_ = inflater.inflate(R.layout.edit_cart_item_view, container, false);

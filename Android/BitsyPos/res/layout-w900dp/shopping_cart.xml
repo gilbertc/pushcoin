@@ -67,6 +67,14 @@
 
 	</LinearLayout>
 
+	<Button android:text="Add Open Item"
+		android:id="@+id/shopping_cart_open_item_button" 
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/btn_blue"
+		style="@style/ShoppingCartOpenItem"
+		android:layout_marginTop="7dp" />
+		
 	<LinearLayout
 		android:id="@+id/item_configuration_arena"
 		android:orientation="horizontal"

@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
@@ -75,15 +76,15 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 		// by ListView is null.
 		if (convertView == null) 
 		{
-			convertView = inflater_.inflate(blockLayoutResourceId_, null);
+			convertView = inflater_.inflate(R.layout.edit_cart_item_row_changing, null);
 
 			// Creates a ViewHolder and store references to the children views
 			// we want to bind data to.
 			holder = new ViewHolder();
-			holder.sku = (EditText) convertView.findViewById(skuViewResourceId_);
-			holder.desc = (EditText) convertView.findViewById(descViewResourceId_);
-			holder.qty = (EditText) convertView.findViewById(qtyViewResourceId_);
-			holder.price = (EditText) convertView.findViewById(priceViewResourceId_);
+			holder.sku = (EditText) convertView.findViewById(R.id.edit_cart_item_row_sku);
+			holder.desc = (EditText) convertView.findViewById(R.id.edit_cart_item_row_desc);
+			holder.qty = (EditText) convertView.findViewById(R.id.edit_cart_item_row_qty);
+			holder.price = (EditText) convertView.findViewById(R.id.edit_cart_item_row_price);
 			
 			convertView.setTag(holder);
 		} 
@@ -255,11 +256,4 @@ public class EditCartItemArrayAdapter extends BaseAdapter
 	private final LayoutInflater inflater_;
 	private final OnContentChanged handler_;
 	private final Cart.Combo combo_;
-
-	// resource IDs
-	final private int blockLayoutResourceId_ = R.layout.edit_cart_item_row_changing;
-	final private int skuViewResourceId_ = R.id.edit_cart_item_row_sku;
-	final private int descViewResourceId_ = R.id.edit_cart_item_row_desc;
-	final private int qtyViewResourceId_ = R.id.edit_cart_item_row_qty;
-	final private int priceViewResourceId_ = R.id.edit_cart_item_row_price;
 }

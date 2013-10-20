@@ -124,7 +124,7 @@ public class CartEntryArrayAdapter extends BaseAdapter
 		{
 			label += ": ";
 			for (Cart.Entry entry: item.entries) {
-				label += "\n("+Integer.toString(entry.qty)+") "+entry.name;
+				label += "\n"+Integer.toString(entry.qty)+"x "+entry.name;
 			}
 		}
 

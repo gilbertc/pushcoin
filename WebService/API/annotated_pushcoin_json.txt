@@ -1256,3 +1256,138 @@ any of the enumerated message types, depending on the outcome of processing.
 			sender_tip: string, optional
 		}
 	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/campaign/create-or-update/
+
+	Description:
+		Creates a new (sell) campaign.
+
+	Input:
+		{
+			# existing campaign identifier, if updating
+			id: string, optional
+
+			# campaign name
+			title: string
+
+			# short description
+			description: string
+
+			# asking price or donation amount
+			amount: { val: decimal, cur: string }
+
+			# when this campaign starts, immediately if not provided
+			# format YYYY-MM-DDThh:mm:ssTZD
+			# TZD = time zone designator: Z or +hh:mm or -hh:mm
+			# eg 2017-07-16T19:20:30+01:00, or see: www.w3.org/TR/NOTE-datetime
+			start: datetime, optional
+
+			# when this campaign expires, never if not provided
+			end: datetime, optional
+
+			# should incoming payment be automatically accepted or
+			# awaits merchant's approval
+			auto_accept_payment: boolean
+
+			# requested info about the counterparty, who may decline 
+			# and stop the transaction if you're too nosy
+			ask_counterparty: array-of
+				{ 
+					attr_id: string #(eg address, first-name, last-name, phone, email)
+					is_optional: boolean
+				}
+		}
+
+	Output: error |
+		{
+			msg: "campaign-create-reply"
+
+			# campaign identifier
+			id: string
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/campaign/view/
+
+	Description:
+		Show campaign details.
+
+	Input:
+		{
+			# campaign identifier
+			id: string
+		}
+
+	Output: error |
+		{
+			msg: "campaign-view-reply"
+
+			# campaign name
+			title: string
+
+			# short description
+			description: string
+
+			# asking price or donation amount
+			amount: { val: decimal, cur: string }
+
+			# when this campaign starts, immediately if not provided
+			# format YYYY-MM-DDThh:mm:ssTZD
+			# TZD = time zone designator: Z or +hh:mm or -hh:mm
+			# eg 2017-07-16T19:20:30+01:00, or see: www.w3.org/TR/NOTE-datetime
+			start: datetime, optional
+
+			# when this campaign expires, never if not provided
+			end: datetime, optional
+
+			# should incoming payment be automatically accepted or
+			# awaits merchant's approval
+			auto_accept_payment: boolean
+
+			# requested info about the counterparty, who may decline 
+			# and stop the transaction if you're too nosy
+			ask_counterparty: array-of
+				{ 
+					attr_id: string #(eg address, first-name, last-name, phone, email)
+					is_optional: boolean
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/campaign/list/
+
+	Description:
+		Lists all campaigns.
+
+	Input: <empty>
+
+	Output: error |
+		{
+			msg: "campaign-list-reply"
+
+			items: array-of
+				{
+					id: string
+					title: string
+
+					status: string # active, closed
+
+					# participation or sale count
+					hits: number
+				}
+		}
+
+#---------------------------------------------------------------------------#
+	Request: json/campaign/close/
+
+	Description:
+		Stops the campaign, further payments will be denied after this request.
+
+	Input:
+		{
+			# campaign identifier
+			id: string
+		}
+
+	Output: error | success
