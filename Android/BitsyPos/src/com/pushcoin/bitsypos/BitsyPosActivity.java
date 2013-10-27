@@ -27,6 +27,9 @@ public class BitsyPosActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shopping_main);
 
+		// Bootstrap our database
+		AppDb.newInstance( this );
+
 		// Session manager
 		access_ = SessionManager.getInstance( this );
 
@@ -110,10 +113,10 @@ public class BitsyPosActivity
 		Log.v( Conf.TAG, "add-or-configure-item;itemId="+itemId );
 
 		// Get the item
-		Item item = AppDb.getInstance( this ).getItemById( itemId, Conf.FIELD_PRICE_TAG_DEFAULT );
+		Item item = AppDb.getInstance().getItemWithId( itemId, Conf.FIELD_PRICE_TAG_DEFAULT );
 
 		// If our item is defined, we can add it to the cart
-		if ( item.isDefined( Conf.FIELD_PRICE_TAG_DEFAULT ) )
+		if ( item.isDefined() )
 		{
 			Cart cart = (Cart) access_.session( Conf.SESSION_CART );
 			cart.add( Util.toCartCombo( item ) );

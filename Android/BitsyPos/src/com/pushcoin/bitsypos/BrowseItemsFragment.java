@@ -12,7 +12,7 @@ import android.content.Context;
 import android.widget.GridView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import java.util.ArrayList;
+import java.util.List;
 
 public class BrowseItemsFragment extends Fragment 
 {
@@ -28,7 +28,7 @@ public class BrowseItemsFragment extends Fragment
 		String categoryTag = getArguments().getString( Conf.FIELD_CATEGORY );
 
 		// Fetch items in a given category
-		items_ = AppDb.getInstance( context ).findItems( categoryTag, Conf.FIELD_PRICE_TAG_DEFAULT );
+		items_ = AppDb.getInstance().findItemsWithTag( categoryTag, Conf.FIELD_PRICE_TAG_DEFAULT );
 
 		if ( items_.isEmpty() ) 
 		{
@@ -64,5 +64,5 @@ public class BrowseItemsFragment extends Fragment
 	}
 
 	private Handler dispatchable_;
-	private ArrayList<Item> items_;
+	private List<Item> items_;
 }

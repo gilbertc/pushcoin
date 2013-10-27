@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.database.sqlite.SQLiteQueryBuilder;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
+import java.util.Map;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.math.BigDecimal;
@@ -52,22 +54,20 @@ public class AppDb extends SQLiteAssetHelper
 	/**
 		Finds an item by ID
 	*/
-	public Item getItemById( String itemId, String priceTag ) 
+	public Item getItemWithId( String itemId, String priceTag ) 
 	{ 
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery( Conf.SQL_FETCH_ITEM_BY_ID, new String[]{ priceTag, itemId } );
+
 		try 
 		{
 			if ( !c.moveToFirst() ) {
-				throw new BitsyError( "Item not found with ID: " + itemId );
+				throw new BitsyError("No such item found: " + itemId);
 			}
 
-			// price can be null
-			String itemPriceTag = c.isNull(1) ? null : c.getString(1);
-			BigDecimal itemPrice = c.isNull(2) ? null : new BigDecimal( c.getString(2) );
-
-			return new Item(this, itemId, c.getString(0), itemPriceTag, itemPrice, c.getInt(3) );
-		} finally {
+			return createItemFromCursor( c );
+		} 
+		finally {
 			c.close();
 		}
 	}
@@ -75,51 +75,54 @@ public class AppDb extends SQLiteAssetHelper
 	/**
 		Get items matching a given tag.
 	*/
-	public ArrayList<Item> findItems( String itemTag, String priceTag ) 
+	public List<Item> findItemsWithTag( String itemTag, String priceTag ) 
 	{ 
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = db.rawQuery( Conf.SQL_FETCH_ITEMS_BY_TAG, new String[]{priceTag, itemTag} );
+		Cursor c = db.rawQuery( Conf.SQL_FETCH_ITEMS_BY_TAG, new String[]{ priceTag, itemTag } );
 
-		try 
-		{
-			ArrayList<Item> rs = new ArrayList<Item>();
-
-			if ( !c.moveToFirst() ) {
-				return rs;
-			}
-
-			do 
-			{
-				// price can be null
-				String itemPriceTag = c.isNull(2) ? null : c.getString(2);
-				BigDecimal itemPrice = c.isNull(3) ? null : new BigDecimal( c.getString(3) );
-
-				rs.add( new Item(this, c.getString(0), c.getString(1), itemPriceTag, itemPrice, c.getInt(4) ) );
-				Log.v(Conf.TAG, "find-items|tag="+itemTag+";item="+c.getString(0) + ";name="+c.getString(1) );
-			}
-			while (c.moveToNext());
-
-			return rs;
-		} finally {
+		try {
+			return createItemsFromCursor( c );
+		} 
+		finally {
 			c.close();
 		}
 	}
 
-	public static AppDb getInstance(Context ctx) 
+	/**
+		Constucts an approprate item instance (basic, combo or slot) 
+		from the provided DB cursor: item-id, name, price, children-count 
+		Cursor position is not changed when this function returns.
+	*/
+	Item createItemFromCursor( Cursor c )
 	{
-		/** 
-		 * Use the application context as suggested by CommonsWare.
-		 * this will ensure that you dont accidentally leak an Activitys
-		 * context (see this article for more information: 
-		 * http://developer.android.com/resources/articles/avoiding-memory-leaks.html)
-		 */
-		if (inst_ == null) {
-			inst_ = new AppDb(ctx.getApplicationContext());
-		}
-		return inst_;
+		String id = c.getString(1);
+		String name = c.getString(2);
+		BigDecimal price = new BigDecimal( c.getString(3) );
+		Map<String, String> properties = Util.splitProperties( c.getString(4) );
+		int children = c.getInt(5);
+
+		// return basic or combo item
+		return (children == 0) ?
+			new BasicItem( id, name, price, properties ) : 
+			new ComboItem( id, name, price, properties, children );
 	}
 
-	private void initSample()
+	List<Item> createItemsFromCursor( Cursor c )
+	{
+		ArrayList<Item> items = new ArrayList<Item>();
+
+		if ( c.moveToFirst() )
+		{
+			do {
+				items.add( createItemFromCursor( c ) );
+			} 
+			while ( c.moveToNext() );
+		}
+
+		return items;
+	}
+
+	private void initSample(Context ctx)
 	{
 		// Sample data found, begin import
 		SQLiteDatabase db = getReadableDatabase();
@@ -127,7 +130,7 @@ public class AppDb extends SQLiteAssetHelper
 		try
 		{
 			// load sample data
-			AssetManager assetManager = ctx_.getAssets();
+			AssetManager assetManager = ctx.getAssets();
 			InputStream input = assetManager.open(Conf.SAMPLE_DATA_FILE);
 			Log.i(Conf.TAG, "loading-sample-data|file="+Conf.SAMPLE_DATA_FILE);
 
@@ -179,10 +182,29 @@ public class AppDb extends SQLiteAssetHelper
 		return ret;
 	}
 
+	public static AppDb newInstance(Context ctx) 
+	{
+		if (inst_ == null) {
+			inst_ = new AppDb(ctx.getApplicationContext());
+		}
+		return inst_;
+	}
+
+	public static AppDb getInstance() 
+	{
+		if (inst_ == null) {
+			throw new BitsyError("Did you forget to call AppDb.newInstance in Activity?");
+		}
+		return inst_;
+	}
+
 	/**
-	 * Constructor should be private to prevent direct instantiation.
-	 * make call to static factory method "getInstance()" instead.
-	 */
+		Private constructor ensures that direct instatiateion isn't possible.
+
+		Code directly in Activity calls newInstance(..)
+		All non-activity code uses getInstance(), at which point this singleton
+		has to be already constructed.
+	*/
 	private AppDb(Context ctx) 
 	{
 		super(ctx, Conf.DATABASE_NAME, null, Conf.DATABASE_VERSION);
@@ -192,17 +214,13 @@ public class AppDb extends SQLiteAssetHelper
 		// to write to it
 		//super(context, DATABASE_NAME, context.getExternalFilesDir(null).getAbsolutePath(), null, DATABASE_VERSION);
 	
-		// Activity context
-		ctx_ = ctx;
-
 		// Compiled-statements cache
 		stmtCache_ = new TreeMap<String, SQLiteStatement>();
 
 		// Populate sample data
-		initSample();
+		initSample(ctx);
 	}
 
-	private Context ctx_;
-	private static AppDb inst_ = null;
-	TreeMap<String, SQLiteStatement> stmtCache_;
+	private static AppDb inst_;
+	private TreeMap<String, SQLiteStatement> stmtCache_;
 }

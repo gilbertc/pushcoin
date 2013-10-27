@@ -17,20 +17,18 @@ import android.widget.LinearLayout;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigureItemFragment extends Fragment 
 {
-	public ConfigureItemFragment( String backstackId, Item item )
-	{
-		assert item != null: "cannot configure a non-existing item";
-		item_ = item;
+	public ConfigureItemFragment( String backstackId, Item parent ) {
+		parent_ = parent;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		Context ctx = getActivity();
+		final Context ctx = getActivity();
 
 		// Session manager
 		access_ = SessionManager.getInstance( ctx );
@@ -43,41 +41,32 @@ public class ConfigureItemFragment extends Fragment
 
 		// Set combo name
 		final Button addToCartBtn = (Button) fragmentRootLayout.findViewById( R.id.add_combo_item_to_cart );
-		addToCartBtn.setText( "Add " + item_.getName() );
+		addToCartBtn.setText( "Add " + parent_.getName() );
 		// on click, add item to cart
 		addToCartBtn.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View v) {
 				Cart cart = (Cart) access_.session( Conf.SESSION_CART );
-				cart.add( Util.toCartCombo(item_) );
+				cart.add( Util.toCartCombo(parent_) );
 			}
 		});
 
 		// Create a list-view for each slot being configured
 		LinearLayout layoutSlots = (LinearLayout) fragmentRootLayout.findViewById( R.id.item_configuration_arena );
-		for ( final Slot slot : item_.getSlots() )
+		for ( final Item slot : parent_.getChildren() )
 		{
 			View slotLayout = inflater.inflate(R.layout.slot_items_view, layoutSlots, false);
+			final TextView title = (TextView) slotLayout.findViewById( R.id.slot_items_header );
+			ListView listview = (ListView) slotLayout.findViewById( R.id.slot_items_listview );
 
-			// set header to slot name
-			TextView title = (TextView) slotLayout.findViewById( R.id.slot_items_header );
+			// Slot header borrows name from its default item.
+			title.setText( slot.getName() );
 
-			// if slot has default item, auto-fill it
-			Item defaultItem = slot.getDefaultItem();
-			if (defaultItem != null && defaultItem.isDefined(slot.getPriceTag()))
-			{
-				title.setText( defaultItem.getName() );
+			if ( slot.isDefined() ) {
 				title.setTextColor(ctx.getResources().getColor(R.color.DarkBlue));
-				slot.setChosenItem( defaultItem );
-			}
-			else // no default item...
-			{
-				title.setText( slot.getName() );
 			}
 
 			// Fetch products which qualify as slot alternatives
-			ListView listview = (ListView) slotLayout.findViewById( R.id.slot_items_listview );
-			listview.setLongClickable(false);
 			listview.setAdapter(
 				new ArrayAdapter<Item>(
 					ctx, 
@@ -85,28 +74,37 @@ public class ConfigureItemFragment extends Fragment
 					R.id.configure_slot_listview_item_label, 
 					slot.getAlternatives()) );
 
+			listview.setLongClickable(false);
+
 			// on slot-item clicked
-			listview.setOnItemClickListener(new OnSlotItemClicked(ctx, addToCartBtn, item_, slot, title));
+			listview.setOnItemClickListener(new OnItemClickListener()
+				{
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+					{
+						Item slotItem = slot.getAlternatives().get( position );
+						Log.v(Conf.TAG, "slot-item-clicked|slot="+slot.getName()+";name="+slotItem.getName() );
+						// TODO: what if still not defined? this will throw...
+						// create another screen to configure, then go recursively until all configured
+						parent_ = parent_.replace( position, slotItem );
+						title.setText( slotItem.getName() );
+						title.setTextColor(ctx.getResources().getColor(R.color.DarkBlue));
+
+						// Re-evalute if all slots are configured and user can add item to cart.
+						enableAddToCart( parent_.isDefined() );
+					}
+				});
 
 			// add this slot to the layout
 			layoutSlots.addView( slotLayout );
 		}
 
 		// If all slots have defaults, user can add this item to the cart right away
-		if ( item_.isDefined(Conf.FIELD_PRICE_TAG_DEFAULT) )
-		{
-			addToCartBtn.setVisibility( View.VISIBLE );
-			addToCartBtn.setEnabled( true );
-		}
-		else 
-		{
-			addToCartBtn.setVisibility( View.INVISIBLE );
-			addToCartBtn.setEnabled( false );
-		}
+		enableAddToCart( parent_.isDefined() );
 
 		// Populate related items
 
-		relatedItems_ = item_.getRelatedItems(Conf.FIELD_PRICE_TAG_DEFAULT);
+		relatedItems_ = parent_.getRelatedItems();
 		if ( !relatedItems_.isEmpty() ) 
 		{
 			AutofitGridView relatedItemsView = (AutofitGridView) fragmentRootLayout.findViewById( R.id.configure_related_items );
@@ -120,7 +118,21 @@ public class ConfigureItemFragment extends Fragment
 					relatedItems_) );
 
 			// on related-item clicked
-			relatedItemsView.setOnItemClickListener(new OnRelatedItemClicked());
+			relatedItemsView.setOnItemClickListener(new OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+				{
+					Item item = relatedItems_.get(position);
+					Log.v(Conf.TAG, "related-item-clicked|name="+item.getName() );
+
+					// TODO: Add to cart if item isDefined, otherwise start another
+					// configure-item screen
+					Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+					cart.add( Util.toCartCombo(item) );
+				}
+			});
+
 			relatedItemsView.setLongClickable(false);
 			// Fit as many columns as possible
 			relatedItemsView.setColumnWidth( relatedItemsView.measureMaxChildWidth() );
@@ -129,65 +141,23 @@ public class ConfigureItemFragment extends Fragment
 		return fragmentRootLayout;
 	}
 
-	private class OnSlotItemClicked implements OnItemClickListener
+	private void enableAddToCart( boolean enabled )
 	{
-		public OnSlotItemClicked(Context ctx, Button addToCartBtn, Item parent, Slot slot, TextView titlePlaceholder)
+		if ( enabled )
 		{
-			ctx_ = ctx;
-			addToCartBtn_ = addToCartBtn;
-			item_ = parent;
-			slot_ = slot;
-			titlePlaceholder_ = titlePlaceholder;
+			addToCartBtn_.setVisibility( View.VISIBLE );
+			addToCartBtn_.setEnabled( true );
 		}
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+		else 
 		{
-			Item item = slot_.getItem(position);
-			Log.v(Conf.TAG, "slot-item-clicked|slot="+slot_.getName()+";name="+item.getName() );
-			// TODO: what if not defined? this will throw...
-			// create another screen and configure it
-			slot_.setChosenItem( item );
-			titlePlaceholder_.setText( item.getName() );
-			titlePlaceholder_.setTextColor(ctx_.getResources().getColor(R.color.DarkBlue));
-
-			// If all slots are configured, user can add this item to the cart
-			if ( item_.isDefined(Conf.FIELD_PRICE_TAG_DEFAULT) )
-			{
-				addToCartBtn_.setEnabled( true );
-				addToCartBtn_.setVisibility( View.VISIBLE );
-			}
-			else 
-			{
-				addToCartBtn_.setEnabled( false );
-				addToCartBtn_.setVisibility( View.INVISIBLE );
-			}
-
-		}
-		private final Context ctx_;
-		private final Button addToCartBtn_;
-		private final Item item_;
-		private final Slot slot_;
-		private final TextView titlePlaceholder_;
-	}
-
-	private class OnRelatedItemClicked implements OnItemClickListener
-	{
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-		{
-			Item item = relatedItems_.get(position);
-			Log.v(Conf.TAG, "related-item-clicked|name="+item.getName() );
-
-			// TODO: Add to cart if item isDefined, otherwise start another
-			// configure-item screen
-			Cart cart = (Cart) access_.session( Conf.SESSION_CART );
-			cart.add( Util.toCartCombo(item) );
+			addToCartBtn_.setVisibility( View.INVISIBLE );
+			addToCartBtn_.setEnabled( false );
 		}
 	}
 
+	private Button addToCartBtn_;
 	private SessionManager access_;
 	private Handler dispatchable_;
-	private final Item item_;
-	ArrayList<Item> relatedItems_;
+	private Item parent_;
+	private List<Item> relatedItems_;
 }

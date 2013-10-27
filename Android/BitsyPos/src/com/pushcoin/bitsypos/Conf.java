@@ -1,5 +1,13 @@
 package com.pushcoin.bitsypos;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Properties;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
+
 public class Conf 
 {
 	static final String DATABASE_NAME = "bitsypos";
@@ -11,6 +19,9 @@ public class Conf
 	static final String CART_ITEM_EMPTY_NAME = "";
 	static final String CART_ITEM_EMPTY_SKU = "";
 	static final int CART_OPEN_ITEM_ID = -1;
+	static final String PROPERTY_SEPARATOR = "\t";
+	static final String KEY_VALUE_SEPARATOR = ":";
+	static final BigDecimal ZERO_PRICE = new BigDecimal("0.00");
 
 	// Duration of time (ms) the user can undo removal of item from the cart. 
 	static final int CART_UNDO_HIDE_DELAY=3000;
@@ -35,8 +46,8 @@ public class Conf
 			itemID
 		
 		select 
+			item.item_id,
 			item.name,
-			price.price_tag,
 			price.value,
 			count(combo.slot_name) as slots
 		from item 
@@ -48,7 +59,7 @@ public class Conf
 		where item.item_id = 'GLS6'
 		group by item.item_id
 	*/
-	static final String SQL_FETCH_ITEM_BY_ID = "select item.name, price.price_tag, price.value, count(combo.slot_name) as slots from item left join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id where item.item_id = ? group by item.item_id";
+	static final String SQL_FETCH_ITEM_BY_ID = "select item.item_id, item.name, price.value, count(combo.slot_name) as slots from item left join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id where item.item_id = ? group by item.item_id";
 
 	/**
 		Fetch item(s) by tag.
@@ -106,7 +117,7 @@ public class Conf
 	*/
 	static final String SQL_FETCH_RELATED_ITEMS = "select item.item_id, item.name, price.price_tag, price.value, count(combo.slot_name) as slots from item join tagged_item tagged on item.item_id = tagged.item_id left join price on item.item_id = price.item_id and price.price_tag = ?  left join combo_item combo on combo.parent_item_id = item.item_id where tagged.tag_id in (select tag_id from related_item where item_id = ?) and item.item_id != ?  group by item.item_id order by item.name";
 
-	static final String SQL_GET_SLOTS = "select parent_item_id, slot_name, default_item_id, choice_item_tag, quantity, price_tag from combo_item where parent_item_id = ? order by slot_name";
+	static final String SQL_GET_CHILDREN = "select parent_item_id, slot_name, default_item_id, choice_item_tag, quantity, price_tag from combo_item where parent_item_id = ? order by slot_name";
 	static final String SQL_GET_MAIN_CATEGORIES = "select category_id, tag_id from category";
 	static final String SQL_GET_ITEM_PRICE = "select value from price where item_id = ?";
 
@@ -117,6 +128,7 @@ public class Conf
 	static final String STMT_ITEM_INSERT = "insert into item (item_id, name, image) values(?, ?, ?)";
 	static final String STMT_TAGGED_ITEM_INSERT = "insert into tagged_item ( tag_id, item_id ) values (?, ?)";
 	static final String STMT_RELATED_ITEM_INSERT = "insert into related_item ( item_id, tag_id ) values (?, ?)";
+	static final String STMT_ITEM_PROPERTY_INSERT = "insert into item_property ( item_id, name, value ) values (?, ?, ?)";
 	static final String STMT_PRICE_INSERT = "insert into price (item_id, price_tag, value) values (?, ?, ?)";
 	static final String STMT_COMBO_ITEM_INSERT= "insert into combo_item (parent_item_id, slot_name, default_item_id, choice_item_tag, quantity, price_tag) values (?, ?, ?, ?, ?, ?)";
 
@@ -141,4 +153,5 @@ public class Conf
 	static final String FIELD_COMBO = "combo";
 	static final String FIELD_QUANTITY = "quantity";
 	static final String FIELD_CART_ITEM_POSITION = "cart_item_position";
+	static final String FIELD_ITEM_PROPERTY = "property";
 }

@@ -45,7 +45,7 @@ public class CategoryListAdapter extends BaseAdapter
 	{
 		// Decode icon resource IDs to speed up drawing on scroll.
 		entries_ = new ArrayList<Entry>();
-		for ( Category cat : AppDb.getInstance(ctx_).getMainCategories() )
+		for ( Category cat : AppDb.getInstance().getMainCategories() )
 		{
 			Entry ce = new Entry();
 			ce.label = cat.category_id;

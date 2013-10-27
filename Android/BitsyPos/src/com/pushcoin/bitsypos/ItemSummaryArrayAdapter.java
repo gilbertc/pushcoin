@@ -9,12 +9,11 @@ import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import java.util.AbstractList;
 import java.util.List;
 
 public class ItemSummaryArrayAdapter extends BaseAdapter 
 {
-	public ItemSummaryArrayAdapter(Context context, int blockLayoutResourceId, AbstractList<Item> entries)
+	public ItemSummaryArrayAdapter(Context context, int blockLayoutResourceId, List<Item> entries)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from(context);
@@ -84,7 +83,7 @@ public class ItemSummaryArrayAdapter extends BaseAdapter
 		}
 
 		// Bind the data efficiently with the holder.
-		String priceOrCombo = entries_.get( position ).getPrettyPrice( Conf.FIELD_PRICE_TAG_DEFAULT );
+		String priceOrCombo = Util.displayPrice( entries_.get( position ).getPrice() );
 		holder.title.setText( entries_.get( position ).getName() );
 		holder.price.setText( priceOrCombo.isEmpty() ? "..." : priceOrCombo );
 
@@ -98,7 +97,7 @@ public class ItemSummaryArrayAdapter extends BaseAdapter
 	}
 
 	private LayoutInflater inflater_;
-	private AbstractList<Item> entries_;
+	private List<Item> entries_;
 
 	// The resource ID for a layout file containing a layout to use when instantiating views.
 	final private int blockLayoutResourceId_;

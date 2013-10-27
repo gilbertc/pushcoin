@@ -11,11 +11,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import java.util.Collection;
 import java.util.List;
-import java.util.ArrayList;
 
 public class RelatedItemListAdapter extends BaseAdapter 
 {
-	public RelatedItemListAdapter(Context context, int rowLayoutResourceId, int labelViewResourceId, int priceViewResourceId, ArrayList<Item> entries)
+	public RelatedItemListAdapter(Context context, int rowLayoutResourceId, int labelViewResourceId, int priceViewResourceId, List<Item> entries)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from(context);
@@ -87,7 +86,7 @@ public class RelatedItemListAdapter extends BaseAdapter
 
 		// Bind the data efficiently with the holder.
 		holder.label.setText( entries_.get( position ).getName() );
-		holder.price.setText( entries_.get( position ).getPrettyPrice(Conf.FIELD_PRICE_TAG_DEFAULT) );
+		holder.price.setText( Util.displayPrice( entries_.get( position ).getPrice() ) );
 
 		return convertView;
 	}
@@ -108,7 +107,7 @@ public class RelatedItemListAdapter extends BaseAdapter
 	}
 
 	private LayoutInflater inflater_;
-	private ArrayList<Item> entries_;
+	private List<Item> entries_;
 
 	// The resource ID for a layout file containing a layout to use when instantiating views.
 	final private int rowLayoutResourceId_;

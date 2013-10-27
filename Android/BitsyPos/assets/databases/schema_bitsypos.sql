@@ -64,3 +64,16 @@ CREATE TABLE category
   tag_id TEXT NOT NULL,
   PRIMARY KEY (category_id)
 );
+
+DROP TABLE IF EXISTS item_property;
+CREATE TABLE item_property
+(
+	-- base item
+  item_id TEXT NOT NULL,
+	-- property name
+  name TEXT NOT NULL,
+	-- property value
+  value TEXT NOT NULL,
+  PRIMARY KEY(item_id, name)
+);
+

@@ -1,280 +1,95 @@
 package com.pushcoin.bitsypos;
 
-import android.util.Log;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import java.util.ArrayList;
-import java.text.NumberFormat;
+import java.util.List;
+import java.util.Map;
 import java.math.BigDecimal;
 
 /**
-	Defines an Item, which represents a sellable good.
+	Defines an Item interface.
 
-	Axioms of an Item...
+	Items have these characteristics:
 
-	1. Every item which has at least one "slot" is a "combo-item". A slot 
-		determines quantity and the price-tag of the item within the slot. 
-		Arbitrary nesting of items is permitted and possible thanks to slots.
-
-	2. A fully defined combo-item has:
-		- all its slots featuring a single "defined" item
-
-		A "defined-item" can be added to the cart; it must have all of:
-			- an underlying product (ID), and
-			- a price,
-
-	3. The simplest form of an item does not have slots and must be "defined".
-
+	- Item is immutable and can be one of: basic, combo or a slot.
+	- If item has children, it is a combo-item.
+	- A slot-item is a placeholder for an item that needs to be filled with an 
+	  actual item, basic or combo.
+	- If item is not a slot item nor a combo item, it's a basic item.
+	- A 'defined item' refers to an item with a price (ie all slots are filled).
 */
-public class Item
+public interface Item
 {
-	public Item ( AppDb db, String itemId, String name, String priceTag, BigDecimal price, int slotCount )
-	{
-		db_ = db;
-		itemId_ = itemId;
-		name_ = name;
-		cachedPriceTag_ = priceTag;
-		cachedPrice_ = price;
-		slotCount_ = slotCount;
-	}
-
-	public String getName() {
-		return name_;
-	}
-
-	public String toString() {
-		return name_;
-	}
-
-	public String getId() {
-		return itemId_;
-	}
+	/**
+		Pretty-name of this item.
+	*/
+	String getName();
 
 	/**
-		Tells if this item is a "defined-item" (see description above).
+		Debugging assistance to show item name.
 	*/
-	boolean isDefined( String priceTag ) 
-	{
-		// Presence of a price means item is defined.
-		try { 
-			getPrice( priceTag );
-		} 
-		catch (BitsyError e) {
-			return false;
-		}
-		return true;
-	}
+	String toString();
 
 	/**
-		Returns price formatted according to currency precision.
+		Item unique ID (SKU, product ID, etc)
 	*/
-	String getPrettyPrice( String priceTag ) 
-	{
-		try {
-			return NumberFormat.getCurrencyInstance().format( getPrice( priceTag ) );
-		}
-		catch (BitsyError e) {
-			return "";
-		}
-	}
+	String getId();
 
 	/**
-		Returns price for item based on a given tag.
-
-		Pricing rules:
-			- If (combo) item defines a unit price, we use it as a base.
-			- Then, we add to the base by iterating over slots. 
-				We either use the slot's "price_tag", or the supplied-tag.
+		Return true if item can be priced.
 	*/
-	BigDecimal getPrice( String priceTag )
-	{
-		BigDecimal price = basePrice( priceTag );
-		Log.v(Conf.TAG, "fetching-price|item="+getId()+"("+getName()+");price_tag="+priceTag+";price="+price );
-
-		// Furthermore, if item has slots we need to iterate over.
-		// Note: If slot doesn't provide a "choice_tag" it must provide a 
-		// "default" and we use directly -- no choices shown for that slot.
-		if ( slotCount_ > 0 )
-		{
-			ArrayList<Slot> slots = getSlots();
-
-			if ( price == null ) {
-				price = new BigDecimal(0); 
-			}
-
-			for ( Slot slot : slots ) 
-			{
-				String slotPriceTag = slot.getPriceTag();
-				if (slotPriceTag == null) {
-					slotPriceTag = priceTag;
-				}
-
-				if (slot.getQuantity() < 1) {
-					throw new BitsyError("Slot '" + slot.getName() + "' of item '" + getName() + "' is missing quantity");
-				}
-
-				price = price.add( ( slot.getPrice( slotPriceTag ).multiply( new BigDecimal( slot.getQuantity() ) ) ) );
-			}
-		}
-
-		if ( price == null ) {
-			throw new BitsyError( "Item " + getName() + " is missing a '"+ priceTag + "' price");
-		}
-
-		return price;
-	}
+	boolean isDefined();
 
 	/**
-		Returns slots configured for this item.
+		Returns a total price for this item - base plus all children.
 	*/
-	ArrayList<Slot> getSlots() 
-	{
-		if (slotCount_ > 0 && slots_ == null)
-		{
-			slots_ = new ArrayList<Slot>();
-
-			Cursor c = db_.getReadableDatabase().rawQuery( Conf.SQL_GET_SLOTS, new String[]{itemId_} );
-
-			try 
-			{
-				if ( !c.moveToFirst() ) {
-					return slots_;
-				}
-
-				do 
-				{
-					// default slot item can be null or a choice tag can be null
-					// but not both!
-					String defaultItemId = c.isNull(2) ? null : c.getString(2);
-					String choiceItemTag = c.isNull(3) ? null : c.getString(3);
-
-					if (defaultItemId == null && choiceItemTag == null) {
-						throw new BitsyError("Slot '" + c.getString(0) + "' of item '" + getName() + "' is missing a default item and has no alternative choices");
-					}
-
-					int quantity = c.getInt(4);
-					if (quantity < 1) {
-						throw new BitsyError("Slot '" + c.getString(0) + "' of item '" + getName() + "' has zero item quantity");
-					}
-
-					// Slots may override 'unit' price
-					String slotPriceTag = c.isNull(5) ? Conf.FIELD_PRICE_TAG_DEFAULT : c.getString(5);
-
-					Slot slot = new Slot(db_, c.getString(0), c.getString(1), defaultItemId, choiceItemTag, quantity, slotPriceTag);
-					Log.v(Conf.TAG, "slot|parent="+itemId_+"("+getName()+");name="+slot.getName()+";default_item_id="+defaultItemId+";choice_item_tag="+choiceItemTag+";qty="+quantity+";price_tag="+slotPriceTag );
-					slots_.add( slot );
-				}
-				while (c.moveToNext());
-
-			} finally {
-				c.close();
-			}
-		}
-
-		return slots_;
-	}
+	BigDecimal getPrice();
 
 	/**
-		Returns true if item is a "combo item".
+		Base price, without children if any.
 	*/
+	BigDecimal basePrice();
 
-	boolean isCombo()
-	{
-		return (slotCount_ > 0);
-	}
+	/**
+		Returns items declared suitable replacements for this item.
+	*/
+	List<Item> getAlternatives();
 
 	/**
 		Returns related items.
 	*/
-	ArrayList<Item> getRelatedItems( String priceTag ) 
-	{
-		if (relatedItemsCache_ == null)
-		{
-			relatedItemsCache_ = new ArrayList<Item>();
+	List<Item> getRelatedItems();
 
-			Cursor c = db_.getReadableDatabase().rawQuery( Conf.SQL_FETCH_RELATED_ITEMS, new String[]{ priceTag, itemId_, itemId_ } );
-			try 
-			{
-				if ( !c.moveToFirst() ) 
-				{
-					Log.v( Conf.TAG, "empty-related-item|item_id="+itemId_ );
-					return relatedItemsCache_;
-				}
+	/**
+		Returns children of this item, or empty list.
+	*/
+	List<Item> getChildren();
 
-				do 
-				{
-					// price can be null
-					String itemPriceTag = c.isNull(2) ? null : c.getString(2);
-					BigDecimal itemPrice = c.isNull(3) ? null : new BigDecimal( c.getString(3) );
+	/**
+		Returns true if this item has children.
+	*/
+	boolean hasChildren();
 
-					relatedItemsCache_.add( new Item(db_, c.getString(0), c.getString(1), itemPriceTag, itemPrice, c.getInt(4) ) );
-					Log.v(Conf.TAG, "related-item|item_id="+c.getString(0) + ";name="+c.getString(1) );
-				}
-				while (c.moveToNext());
+	/**
+		Returns a new item with a child replaced at an index.
+	*/
+	Item replace(int index, Item item);
 
-			} finally {
-				c.close();
-			}
-		}
+	/**
+		Returns a new item with a child deleted.
+	*/
+	Item remove(int index);
 
-		return relatedItemsCache_;
-	}
+	/**
+		Returns a new item with a child appended.
+	*/
+	Item append(Item item);
 
-	public BigDecimal basePrice( String priceTag )
-	{
-		if (priceTag == null) {
-			priceTag = Conf.FIELD_PRICE_TAG_DEFAULT;
-		}
+	/**
+		Returns properties (key:value) associated with this item.
+	*/
+	Map<String, String> getProperties();
 
-		BigDecimal price = null;
-		if (cachedPriceTag_ != null && priceTag.equals(cachedPriceTag_)) {
-			price = cachedPrice_;
-		}
-		else
-		{
-			Cursor c = db_.getReadableDatabase().rawQuery( Conf.SQL_GET_ITEM_PRICE, new String[]{itemId_} );
-			try 
-			{
-				if ( c.moveToFirst() ) {
-					price = new BigDecimal( c.getString(0) );
-				}
-			} finally {
-				c.close();
-			}
-		}
-		return price;
-	}
-
-	static boolean exists( Item item, Iterable<Item> container )
-	{
-		if ( item != null && container != null ) 
-		{
-			for ( Item member : container )
-			{
-				if ( item.getId().equals( member.getId()) ) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	static boolean equivalent( Item lhs, Item rhs )
-	{
-		if ( lhs != null && rhs != null ) {
-			return (lhs.getId().equals( rhs.getId() ));
-		}
-		return false;
-	}
-
-	protected final AppDb db_;
-	private final String itemId_;
-	private final String name_;
-	private final String cachedPriceTag_;
-	private final BigDecimal cachedPrice_;
-	private final int slotCount_;
-
-	private ArrayList<Item> relatedItemsCache_ = null;
-	private ArrayList<Slot> slots_ = null;
+	/**
+		Returns a new item with provided properties.
+	*/
+	Item setProperties(	Map<String, String> properties );
 }

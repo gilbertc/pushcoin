@@ -117,6 +117,27 @@ public class JsonImporter
 		}
 	}
 
+	private ArrayList<Statement> genProperty(JSONObject product) throws JSONException
+	{
+		try 
+		{
+			String item_id = product.getString( Conf.FIELD_ITEM_ID );
+
+			ArrayList<Statement> rs = new ArrayList<Statement>();
+			JSONArray properties = product.optJSONArray( Conf.FIELD_ITEM_PROPERTY );
+
+			for (int i = 0; properties != null && i < properties.length(); ++i)
+			{
+				String[] args = new String[] { item_id, properties.getString( i ), "N" };
+				rs.add( new Statement( Conf.STMT_ITEM_PROPERTY_INSERT, args ) );
+			}
+			return rs;
+
+		} catch (JSONException e) {
+			throw new RuntimeException( product.toString() + ", item-modifier error: " + e.getMessage() );
+		}
+	}
+
 	private ArrayList<Statement> genPrice(JSONObject product) throws JSONException
 	{
 		try 
@@ -201,6 +222,8 @@ public class JsonImporter
 			rs.addAll( genPrice( product ) ); 
 			// related products
 			rs.addAll( genRelated( product ) ); 
+			// item properties
+			rs.addAll( genProperty( product ) ); 
 			// combo items need extra processing
 			rs.addAll( genCombo( product ) ); 
 		}

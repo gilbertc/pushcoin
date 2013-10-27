@@ -1,6 +1,10 @@
 package com.pushcoin.bitsypos;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import android.database.Cursor;
+import java.util.Map;
+import java.util.TreeMap;
 
 class Util
 {
@@ -9,30 +13,17 @@ class Util
 		Cart.Combo combo = new Cart.Combo();
 		combo.basePrice = new BigDecimal(0); 
 
-		if ( item.isCombo() ) 
+		if ( item.hasChildren() ) 
 		{
-			// Combo usually has a bundle name
+			// Combo name and price
 			combo.name = item.getName();
+			combo.basePrice =  item.basePrice();
 
-			// Combo may have base price in addition to its slot item prices
-			BigDecimal basePrice = item.basePrice( Conf.FIELD_PRICE_TAG_DEFAULT );
-			if ( basePrice != null ) {
-				combo.basePrice = basePrice;
-			}
-
-			for (Slot slot: item.getSlots()) 
+			for (Item child: item.getChildren()) 
 			{
-				Item chosenItem = slot.getChosenItem();
-				String slotPriceTag = slot.getPriceTag();
-				if (slotPriceTag == null) {
-					slotPriceTag = Conf.FIELD_PRICE_TAG_DEFAULT;
-				}
-
 				Cart.Entry entry = new Cart.Entry(
-					chosenItem.getId(), 
-					chosenItem.getName(), 
-					slot.getQuantity(),
-					chosenItem.getPrice( slotPriceTag ));
+					child.getId(), child.getName(), 1,
+					child.getPrice());
 
 				combo.entries.add( entry );
 			}
@@ -40,10 +31,63 @@ class Util
 		else  // not a combo
 		{
 			Cart.Entry entry = new Cart.Entry(
-				item.getId(), item.getName(), 1, item.getPrice( Conf.FIELD_PRICE_TAG_DEFAULT ));
+				item.getId(), item.getName(), 1, item.getPrice());
 
 			combo.entries.add( entry );
 		}
 		return combo;
+	}
+
+	static boolean exists( Item item, Iterable<Item> container )
+	{
+		if ( item != null && container != null ) 
+		{
+			for ( Item member : container )
+			{
+				if ( item.getId().equals( member.getId()) ) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	static boolean equivalent( Item lhs, Item rhs )
+	{
+		if ( lhs != null && rhs != null ) {
+			return (lhs.getId().equals( rhs.getId() ));
+		}
+		return false;
+	}
+
+	/**
+		Returns price formatted according to currency precision.
+	*/
+	static String displayPrice( BigDecimal price ) 
+	{
+		return NumberFormat.getCurrencyInstance().format( price );
+	}
+
+	static Map<String, String> splitProperties( String rawProps )
+	{
+		Map<String,String> properties = new TreeMap<String,String>();
+
+		// if empty string, get out right away
+		if ( rawProps == null || rawProps.isEmpty() ) {
+			return properties;
+		}
+
+		// properties look something like: kv=1;kv2=2;...kvN=N
+		String[] kvlist = rawProps.split( Conf.PROPERTY_SEPARATOR );
+
+		// for each discovered pair of key-value...
+		for (String rawKv: kvlist)
+		{
+			String[] kv = rawKv.split( Conf.KEY_VALUE_SEPARATOR );
+			if ( kv.length == 2 ) {
+				properties.put( kv[0], kv[1] );
+			}
+		}
+		return properties;
 	}
 }
