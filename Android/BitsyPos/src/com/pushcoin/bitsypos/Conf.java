@@ -3,6 +3,7 @@ package com.pushcoin.bitsypos;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Properties;
 import static java.util.Collections.unmodifiableList;
@@ -115,9 +116,9 @@ public class Conf
 		group by item.item_id
 		order by item.name
 	*/
-	static final String SQL_FETCH_RELATED_ITEMS = "select item.item_id, item.name, price.price_tag, price.value, count(combo.slot_name) as slots from item join tagged_item tagged on item.item_id = tagged.item_id left join price on item.item_id = price.item_id and price.price_tag = ?  left join combo_item combo on combo.parent_item_id = item.item_id where tagged.tag_id in (select tag_id from related_item where item_id = ?) and item.item_id != ?  group by item.item_id order by item.name";
+	static final String SQL_FETCH_RELATED_ITEMS = "select item.item_id, item.name, price.value, count(combo.slot_name) as slots from item join tagged_item tagged on item.item_id = tagged.item_id left join price on item.item_id = price.item_id and price.price_tag = ?  left join combo_item combo on combo.parent_item_id = item.item_id where tagged.tag_id in (select tag_id from related_item where item_id = ?) and item.item_id != ?  group by item.item_id order by item.name";
 
-	static final String SQL_GET_CHILDREN = "select parent_item_id, slot_name, default_item_id, choice_item_tag, quantity, price_tag from combo_item where parent_item_id = ? order by slot_name";
+	static final String SQL_GET_CHILDREN = "select parent_item_id, slot_name, choice_item_tag, default_item_id from combo_item where parent_item_id = ? order by slot_name";
 	static final String SQL_GET_MAIN_CATEGORIES = "select category_id, tag_id from category";
 	static final String SQL_GET_ITEM_PRICE = "select value from price where item_id = ?";
 
@@ -154,4 +155,36 @@ public class Conf
 	static final String FIELD_QUANTITY = "quantity";
 	static final String FIELD_CART_ITEM_POSITION = "cart_item_position";
 	static final String FIELD_ITEM_PROPERTY = "property";
+	static final String FIELD_ITEM_CHILDREN = "children";
+
+	/**
+		Maps item-fields within a DB cursor.
+	*/
+	static final Map<String, Integer> ITEM_IN_CURSOR_T0;
+	static 
+	{
+		Map<String, Integer> tmpITEM_IN_CURSOR_T0 = new HashMap<String, Integer>();
+
+		tmpITEM_IN_CURSOR_T0.put(FIELD_ITEM_ID, 0);
+		tmpITEM_IN_CURSOR_T0.put(FIELD_NAME, 1);
+		tmpITEM_IN_CURSOR_T0.put(FIELD_PRICE, 2);
+		tmpITEM_IN_CURSOR_T0.put(FIELD_ITEM_PROPERTY, 3);
+		tmpITEM_IN_CURSOR_T0.put(FIELD_ITEM_CHILDREN, 4);
+
+		ITEM_IN_CURSOR_T0 = unmodifiableMap( tmpITEM_IN_CURSOR_T0 );
+	}
+
+	static final Map<String, Integer> ITEM_IN_CURSOR_T1;
+	static 
+	{
+		Map<String, Integer> tmpITEM_IN_CURSOR_T1 = new HashMap<String, Integer>();
+
+		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_ID, 5);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_NAME, 6);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_PRICE, 7);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_PROPERTY, 8);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_CHILDREN, 9);
+
+		ITEM_IN_CURSOR_T1 = unmodifiableMap( tmpITEM_IN_CURSOR_T1 );
+	}
 }

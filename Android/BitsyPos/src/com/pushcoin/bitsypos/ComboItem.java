@@ -101,15 +101,16 @@ public class ComboItem implements Item
 	{
 		if (childCount_ > 0 && children_ == null)
 		{
-			AppDb db = AppDb.getInstance();
+			final AppDb db = AppDb.getInstance();
 			Cursor c = db.getReadableDatabase().rawQuery( Conf.SQL_GET_CHILDREN, new String[]{comboId_} );
 
-			try {
-				children_ = db.createItemsFromCursor( c );
-			} 
-			finally {
-				c.close();
-			}
+			children_ = 
+				db.createItemsFromCursor( c, new AppDb.ItemFromCursorAdapter() {
+					@Override
+					public Item make( Cursor lc ) {
+						return db.createSlotFromCursor(lc);
+					}
+				});
 		}
 
 		return children_;

@@ -64,8 +64,7 @@ public class AppDb extends SQLiteAssetHelper
 			if ( !c.moveToFirst() ) {
 				throw new BitsyError("No such item found: " + itemId);
 			}
-
-			return createItemFromCursor( c );
+			return createItemFromCursor(c, Conf.ITEM_IN_CURSOR_T0);
 		} 
 		finally {
 			c.close();
@@ -80,46 +79,88 @@ public class AppDb extends SQLiteAssetHelper
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery( Conf.SQL_FETCH_ITEMS_BY_TAG, new String[]{ priceTag, itemTag } );
 
-		try {
-			return createItemsFromCursor( c );
-		} 
-		finally {
-			c.close();
-		}
+		return createItemsFromCursor( c, new ItemFromCursorAdapter()
+			{
+				@Override
+				public Item make( Cursor c ) {
+					return createItemFromCursor(c, Conf.ITEM_IN_CURSOR_T0);
+				}
+			});
 	}
 
 	/**
-		Constucts an approprate item instance (basic, combo or slot) 
-		from the provided DB cursor: item-id, name, price, children-count 
+		Factory-interface for creating items from a cursor.
+	*/
+	interface ItemFromCursorAdapter {
+		Item make( Cursor c );	
+	}
+
+	List<Item> createItemsFromCursor( Cursor c, ItemFromCursorAdapter factory )
+	{
+		List<Item> items = new ArrayList<Item>();
+
+		try 
+		{
+			if ( c.moveToFirst() )
+			{
+				do {
+					items.add( factory.make( c ) );
+				} 
+				while ( c.moveToNext() );
+			}
+		}
+		finally {
+			c.close();
+		}
+		return items;
+	}
+
+	/**
+		Constucts an approprate item instance (basic or combo)
+		from the provided DB cursor: item-id, name, price, children-count.
+
 		Cursor position is not changed when this function returns.
 	*/
-	Item createItemFromCursor( Cursor c )
+	public Item createItemFromCursor( Cursor c, Map<String, Integer> field)
 	{
-		String id = c.getString(1);
-		String name = c.getString(2);
-		BigDecimal price = new BigDecimal( c.getString(3) );
-		Map<String, String> properties = Util.splitProperties( c.getString(4) );
-		int children = c.getInt(5);
+		String id = c.getString( field.get(Conf.FIELD_ITEM_ID) );
+		String name = c.getString( field.get(Conf.FIELD_NAME) );
+		BigDecimal price = new BigDecimal( c.getString( field.get(Conf.FIELD_PRICE) ) );
+		Map<String, String> properties = Util.splitProperties( c.getString( field.get(Conf.FIELD_ITEM_PROPERTY) ) );
+		int children = c.getInt( field.get(Conf.FIELD_ITEM_CHILDREN) );
 
-		// return basic or combo item
+		// return basic combo item
 		return (children == 0) ?
 			new BasicItem( id, name, price, properties ) : 
 			new ComboItem( id, name, price, properties, children );
 	}
 
-	List<Item> createItemsFromCursor( Cursor c )
-	{
-		ArrayList<Item> items = new ArrayList<Item>();
+	/**
+		Constucts a slot from the provided DB cursor: 
+		parent, slot-name, default_item_id, choice_item_tag, price_tag
 
-		if ( c.moveToFirst() )
-		{
-			do {
-				items.add( createItemFromCursor( c ) );
-			} 
-			while ( c.moveToNext() );
+		Cursor position is not changed when this function returns.
+	*/
+	public Item createSlotFromCursor( Cursor c )
+	{
+		String parentItemId = c.getString(1);
+		String slotName = c.getString(2);
+		String slotPriceTag = c.getString(3);
+		String choiceItemTag = c.getString(4);
+		String defaultItemId = c.getString(5);
+
+		// If default item present, create it too
+		Item defaultItem = null;
+		if ( defaultItemId != null ) {
+			defaultItem = createItemFromCursor(c, Conf.ITEM_IN_CURSOR_T1);
 		}
 
-		return items;
+		// if there are no choices, we return default item
+		if (choiceItemTag == null) {
+			return defaultItem;
+		} else {
+			return new SlotItem( parentItemId, slotName, slotPriceTag, choiceItemTag, defaultItem );
+		}
 	}
 
 	private void initSample(Context ctx)

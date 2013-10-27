@@ -22,15 +22,18 @@ public class ItemHelper
 		// don't go to DB if already tried
 		if (relatedItems_ == null)
 		{
-			AppDb db = AppDb.getInstance();
+			final AppDb db = AppDb.getInstance();
 			Cursor c = db.getReadableDatabase().
 				rawQuery( Conf.SQL_FETCH_RELATED_ITEMS, 
 					new String[]{ priceTag, itemId, itemId } );
-			try {
-				relatedItems_ = db.createItemsFromCursor(c);
-			} finally {
-				c.close();
-			}
+
+			relatedItems_ = db.createItemsFromCursor( c, new AppDb.ItemFromCursorAdapter()
+				{
+					@Override
+					public Item make( Cursor c ) {
+						return db.createItemFromCursor(c, Conf.ITEM_IN_CURSOR_T0);
+					}
+				});
 		}
 
 		return relatedItems_;
