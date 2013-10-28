@@ -25,10 +25,11 @@ public class BitsyPosActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.shopping_main);
 
-		// Bootstrap our database
+		// Bootstrap database before creating fragments
 		AppDb.newInstance( this );
+
+		setContentView(R.layout.shopping_main);
 
 		// Session manager
 		access_ = SessionManager.getInstance( this );
