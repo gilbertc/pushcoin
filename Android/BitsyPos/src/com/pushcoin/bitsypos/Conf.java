@@ -213,11 +213,11 @@ public class Conf
 	{
 		Map<String, Integer> tmpITEM_IN_CURSOR_T1 = new HashMap<String, Integer>();
 
-		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_ID, 5);
-		tmpITEM_IN_CURSOR_T1.put(FIELD_NAME, 6);
-		tmpITEM_IN_CURSOR_T1.put(FIELD_PRICE, 7);
-		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_PROPERTY, 8);
-		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_CHILDREN, 9);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_ID, 4);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_NAME, 5);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_PRICE, 6);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_PROPERTY, 7);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_CHILDREN, 8);
 
 		ITEM_IN_CURSOR_T1 = unmodifiableMap( tmpITEM_IN_CURSOR_T1 );
 	}

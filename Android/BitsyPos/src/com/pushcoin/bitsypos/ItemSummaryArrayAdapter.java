@@ -83,9 +83,9 @@ public class ItemSummaryArrayAdapter extends BaseAdapter
 		}
 
 		// Bind the data efficiently with the holder.
-		String priceOrCombo = Util.displayPrice( entries_.get( position ).getPrice() );
-		holder.title.setText( entries_.get( position ).getName() );
-		holder.price.setText( priceOrCombo.isEmpty() ? "..." : priceOrCombo );
+		Item item = entries_.get( position );
+		holder.title.setText( item.getName() );
+		holder.price.setText( item.isDefined() ? Util.displayPrice( item.getPrice() ) : "..." );
 
 		return convertView;
 	}

@@ -143,11 +143,11 @@ public class AppDb extends SQLiteAssetHelper
 	*/
 	public Item createSlotFromCursor( Cursor c )
 	{
-		String parentItemId = c.getString(1);
-		String slotName = c.getString(2);
-		String slotPriceTag = c.getString(3);
-		String choiceItemTag = c.getString(4);
-		String defaultItemId = c.getString(5);
+		String parentItemId = c.getString(0);
+		String slotName = c.getString(1);
+		String slotPriceTag = c.getString(2);
+		String choiceItemTag = c.getString(3);
+		String defaultItemId = c.getString(4);
 
 		// If default item present, create it too
 		Item defaultItem = null;
