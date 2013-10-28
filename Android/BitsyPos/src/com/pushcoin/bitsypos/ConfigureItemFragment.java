@@ -40,10 +40,10 @@ public class ConfigureItemFragment extends Fragment
 		View fragmentRootLayout = inflater.inflate(R.layout.configure_item_view, container, false);
 
 		// Set combo name
-		final Button addToCartBtn = (Button) fragmentRootLayout.findViewById( R.id.add_combo_item_to_cart );
-		addToCartBtn.setText( "Add " + parent_.getName() );
+		addToCartBtn_ = (Button) fragmentRootLayout.findViewById( R.id.add_combo_item_to_cart );
+		addToCartBtn_.setText( "Add " + parent_.getName() );
 		// on click, add item to cart
-		addToCartBtn.setOnClickListener(new View.OnClickListener()
+		addToCartBtn_.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View v) {
 				Cart cart = (Cart) access_.session( Conf.SESSION_CART );
