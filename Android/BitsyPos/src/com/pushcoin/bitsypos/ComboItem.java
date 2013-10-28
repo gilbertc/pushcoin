@@ -21,19 +21,19 @@ public class ComboItem implements Item
 {
 	public ComboItem ( String comboId, String comboName, BigDecimal basePrice, Map<String, String> properties, int childCount )
 	{
-		comboId_ = (comboId == null) ? "" : comboId;
-		comboName_ = (comboName == null) ? "" : comboName;
-		basePrice_ = (basePrice == null) ? Conf.ZERO_PRICE : basePrice;
-		properties_ = unmodifiableMap( (properties == null) ? ItemHelper.ZERO_PROPS : properties );
+		comboId_ = comboId;
+		comboName_ = comboName;
+		basePrice_ = basePrice;
+		properties_ = unmodifiableMap( properties );
 		childCount_ = childCount;
 	}
 
 	public ComboItem ( String comboId, String comboName, BigDecimal basePrice, Map<String, String> properties, List<Item> children )
 	{
-		comboId_ = (comboId == null) ? "" : comboId;
-		comboName_ = (comboName == null) ? "" : comboName;
-		basePrice_ = (basePrice == null) ? Conf.ZERO_PRICE : basePrice;
-		properties_ = unmodifiableMap( (properties == null) ? ItemHelper.ZERO_PROPS : properties );
+		comboId_ = comboId;
+		comboName_ = comboName;
+		basePrice_ = basePrice;
+		properties_ = unmodifiableMap( properties );
 		childCount_ = children.size();
 		children_ = unmodifiableList( children );
 	}

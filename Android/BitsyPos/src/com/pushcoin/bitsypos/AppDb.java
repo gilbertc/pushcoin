@@ -151,12 +151,12 @@ public class AppDb extends SQLiteAssetHelper
 
 		// If default item present, create it too
 		Item defaultItem = null;
-		if ( defaultItemId != null ) {
+		if ( !defaultItemId.isEmpty() ) {
 			defaultItem = createItemFromCursor(c, Conf.ITEM_IN_CURSOR_T1);
 		}
 
 		// if there are no choices, we return default item
-		if (choiceItemTag == null) {
+		if ( choiceItemTag.isEmpty() ) {
 			return defaultItem;
 		} else {
 			return new SlotItem( parentItemId, slotName, slotPriceTag, choiceItemTag, defaultItem );

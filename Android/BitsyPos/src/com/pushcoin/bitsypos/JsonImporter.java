@@ -273,7 +273,8 @@ public class JsonImporter
 			for ( Statement stmt: imp.generateDbStatements() ) 
 			{
 				String sql = stmt.sql.replace("?", "'%s'");
-				System.out.println( String.format(sql, (Object[])stmt.args) + ";" );
+				String prettyStmt = String.format(sql, (Object[])stmt.args) + ";";
+				System.out.println( prettyStmt.replace("'null'", "null") );
 			}
 		}
 		catch (Exception e) {
