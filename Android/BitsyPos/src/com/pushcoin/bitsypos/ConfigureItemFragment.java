@@ -53,8 +53,11 @@ public class ConfigureItemFragment extends Fragment
 
 		// Create a list-view for each slot being configured
 		LinearLayout layoutSlots = (LinearLayout) fragmentRootLayout.findViewById( R.id.item_configuration_arena );
-		for ( final Item slot : parent_.getChildren() )
+
+		List<Item> children = parent_.getChildren();
+		for ( int i = 0; i < children.size(); ++i )
 		{
+			final Item slot = children.get(i); 
 			View slotLayout = inflater.inflate(R.layout.slot_items_view, layoutSlots, false);
 			final TextView title = (TextView) slotLayout.findViewById( R.id.slot_items_header );
 			ListView listview = (ListView) slotLayout.findViewById( R.id.slot_items_listview );
@@ -77,16 +80,17 @@ public class ConfigureItemFragment extends Fragment
 			listview.setLongClickable(false);
 
 			// on slot-item clicked
+			final int slotIndx = i; 
 			listview.setOnItemClickListener(new OnItemClickListener()
 				{
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 					{
 						Item slotItem = slot.getAlternatives().get( position );
-						Log.v(Conf.TAG, "slot-item-clicked|slot="+slot.getName()+";name="+slotItem.getName() );
+						Log.v(Conf.TAG, "slot-item-clicked|slot="+slot.getName()+";name="+slotItem.getName()+";position="+position );
 						// TODO: what if still not defined? this will throw...
 						// create another screen to configure, then go recursively until all configured
-						parent_ = parent_.replace( position, slotItem );
+						parent_ = parent_.replace( slotIndx, slotItem );
 						title.setText( slotItem.getName() );
 						title.setTextColor(ctx.getResources().getColor(R.color.DarkBlue));
 
