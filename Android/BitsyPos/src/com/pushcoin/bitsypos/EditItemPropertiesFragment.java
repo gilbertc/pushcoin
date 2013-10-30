@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.app.Fragment;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -31,9 +32,18 @@ import java.math.BigDecimal;
 public class EditItemPropertiesFragment extends DialogFragment
 {
 	/**
+		Activity hosting this fragment must implement this 
+		event-handler interface.
+	*/
+	public interface OnDismissed
+	{
+		void onEditItemPropertiesDone( Item item );
+	}
+
+	/**
 		Create a new instance, providing item ID. 
 	*/
-	static EditItemPropertiesFragment newInstance(Item item)
+	static EditItemPropertiesFragment newInstance( Item item )
 	{
 		EditItemPropertiesFragment f = new EditItemPropertiesFragment();
 
@@ -45,11 +55,25 @@ public class EditItemPropertiesFragment extends DialogFragment
 		return f;
 	}
 
+	/**
+		Registers a handler for events coming from this fragment.
+	*/
+	@Override
+	public void onAttach(Activity activity)
+	{
+		super.onAttach(activity);
+		try {
+			callback_ = (OnDismissed) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement OnDismissed");
+		}
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Dialog_NoActionBar);
+		setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Dialog_NoActionBar_MinWidth);
 	}
 
 	@Override
@@ -65,8 +89,19 @@ public class EditItemPropertiesFragment extends DialogFragment
 		// Inflate the layout for this fragment
 		backgroundView_ = inflater.inflate(R.layout.edit_item_properties_view, container, false);
 
+		// Derive name for this property editor from the item
+		TextView title = (TextView) backgroundView_.findViewById(R.id.edit_item_properties_view_name);
+		title.setText( "Customize " + item_.getName() );
+
 		// Find the listview widget so we can set its adapter
-		// GridView propertiesListView = (ListView) backgroundView_.findViewById(R.id.edit_item_properties_view_list);
+		AutofitGridView propertiesListView = (AutofitGridView) backgroundView_.findViewById(R.id.edit_item_properties_view_list);
+
+		EditItemPropertiesAdapter adapter =		
+			new EditItemPropertiesAdapter( context, item_.getProperties() );
+		propertiesListView.setAdapter( adapter );
+
+		// Uncomment to fit as many columns as we can
+		// propertiesListView.setColumnWidth( propertiesListView.measureMaxChildWidth() );
 
 		// Install Done handler
 		final Button doneBtn = (Button) backgroundView_.findViewById( R.id.edit_item_properties_view_done_button );
@@ -74,7 +109,7 @@ public class EditItemPropertiesFragment extends DialogFragment
 		{
 			public void onClick(View v)
 			{
-				saveChanges();
+				callback_.onEditItemPropertiesDone( item_ );
 				dismiss();
 			}
 		});
@@ -82,13 +117,8 @@ public class EditItemPropertiesFragment extends DialogFragment
 		return backgroundView_;
 	}
 
-	// Persists combo changes in the cart.
-	private void saveChanges()
-	{
-		final Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
-	}
-
 	private SessionManager session_;
+	private OnDismissed callback_;
 	private Item item_;
 
 	// Main view

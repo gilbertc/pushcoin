@@ -19,7 +19,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="32dp"
-			android:textColor="@color/lightui_lightgray"
+			android:textColor="@color/android_holo_blue_light"
 			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 		<View
@@ -43,11 +43,13 @@
 
 	<com.pushcoin.bitsypos.AutofitGridView 
 		android:id="@+id/edit_item_properties_view_list"
-		android:layout_width="match_parent" 
+		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
+		android:layout_marginTop="32dp"
+		android:layout_marginBottom="32dp"
 		android:cacheColorHint="@android:color/transparent"
 		android:numColumns="auto_fit"
-		android:verticalSpacing="10dp"
+		android:verticalSpacing="30dp"
 		android:horizontalSpacing="10dp"
 		android:stretchMode="columnWidth"
 		android:gravity="left"

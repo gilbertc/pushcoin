@@ -9,24 +9,34 @@ import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import java.util.List;
+import android.widget.CheckBox;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Collections;
 
-public class ItemSummaryArrayAdapter extends BaseAdapter 
+public class EditItemPropertiesAdapter extends BaseAdapter 
 {
-	public ItemSummaryArrayAdapter(Context context, int blockLayoutResourceId, List<Item> entries)
+	public EditItemPropertiesAdapter(Context context, Map<String,String> properties)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from(context);
 
-		// Resource IDs of views for a row, icon and label
-		blockLayoutResourceId_ = blockLayoutResourceId;
-
-		entries_ = entries;
+		// Use ordered-container for easy mapping of grid-row with data
+		properties_ = new ArrayList<Map.Entry<String,String>>( properties.entrySet() );
+		// Sort properties alphabetically
+		Collections.sort( properties_, new Comparator<Map.Entry<String,String>>()
+			{
+				@Override
+				public int compare(Map.Entry<String,String> lhs, Map.Entry<String,String> rhs) {
+					return lhs.getKey().compareTo(rhs.getKey());
+				}
+			});
 	}
 
 	public int getCount() 
 	{
-		return entries_.size();
+		return properties_.size();
 	}
 
 	/**
@@ -63,14 +73,12 @@ public class ItemSummaryArrayAdapter extends BaseAdapter
 		// by ListView is null.
 		if (convertView == null) 
 		{
-			convertView = inflater_.inflate(blockLayoutResourceId_, null);
+			convertView = inflater_.inflate(R.layout.edit_item_properties_cell, null);
 
 			// Creates a ViewHolder and store references to the children views
 			// we want to bind data to.
 			holder = new ViewHolder();
-			holder.title = (TextView) convertView.findViewById(R.id.item_summary_title);
-			holder.price = (TextView) convertView.findViewById(R.id.item_summary_price);
-
+			holder.property = (CheckBox) convertView.findViewById(R.id.edit_item_property_editor);
 			convertView.setTag(holder);
 		} 
 		else 
@@ -81,22 +89,18 @@ public class ItemSummaryArrayAdapter extends BaseAdapter
 		}
 
 		// Bind the data efficiently with the holder.
-		Item item = entries_.get( position );
-		holder.title.setText( item.getName() );
-		holder.price.setText( item.isDefined() ? Util.displayPrice( item.getPrice() ) : "..." );
+		Map.Entry<String,String> property = properties_.get( position );
+		holder.property.setText( property.getKey() );
+		holder.property.setChecked( property.getValue().equals( Conf.PROPERTY_BOOL_TRUE ) );
 
 		return convertView;
 	}
 
 	private static class ViewHolder 
 	{
-		TextView title;
-		TextView price;
+		CheckBox property;
 	}
 
 	private LayoutInflater inflater_;
-	private List<Item> entries_;
-
-	// The resource ID for a layout file containing a layout to use when instantiating views.
-	final private int blockLayoutResourceId_;
+	private ArrayList<Map.Entry<String,String>> properties_;
 }

@@ -19,7 +19,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class BitsyPosActivity 
-	extends Activity implements IDispatcher
+	extends Activity implements IDispatcher, EditItemPropertiesFragment.OnDismissed
 {
 	/** Called when the activity is first created. */
 	@Override
@@ -155,6 +155,13 @@ public class BitsyPosActivity
 			Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
 			cart.add( Util.toCartCombo( item ) );
 		}
+	}
+
+	@Override
+	public void onEditItemPropertiesDone( Item item )
+	{
+		Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
+		cart.add( Util.toCartCombo( item ) );
 	}
 
 	private SessionManager session_;

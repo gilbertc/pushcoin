@@ -14,7 +14,8 @@ public class Conf
 	static final String DATABASE_NAME = "bitsypos";
 	static final int DATABASE_VERSION = 1;
 	static final String FIELD_PRICE_TAG_DEFAULT = "unit";
-
+	static final String PROPERTY_BOOL_TRUE = "Y";
+	static final String PROPERTY_BOOL_FALSE = "N";
 	static final String TAG = "Bitsy"; // Log tag
 	static final String DIALOG_EDIT_CART="edit_cart_dialog";
 	static final String DIALOG_EDIT_ITEM_PROPERTIES="edit_item_properties_dialog";
@@ -24,6 +25,7 @@ public class Conf
 	static final String PROPERTY_SEPARATOR = ":";
 	static final String KEY_VALUE_SEPARATOR = "=";
 	static final BigDecimal ZERO_PRICE = new BigDecimal("0.00");
+	static final int MAX_COLS_IN_ITEM_PROPERTY_EDITOR = 5;
 
 	// Duration of time (ms) the user can undo removal of item from the cart. 
 	static final int CART_UNDO_HIDE_DELAY=3000;
