@@ -65,10 +65,23 @@ public class EditItemPropertiesFragment extends DialogFragment
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);
-		try {
-			callback_ = (OnDismissed) activity;
+		try
+		{
+			// if we are nested or terget was set specificially, we use that
+			// otherwise we relay to the activity
+			Fragment target;
+			if ( (target = getParentFragment()) != null ) {
+				callback_ = (OnDismissed) target;
+			}
+			else if ( (target = getTargetFragment()) != null ) {
+				callback_ = (OnDismissed) target;
+			} else {
+				// oh well, activity must take it
+				callback_ = (OnDismissed) activity;
+			}
+			
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement OnDismissed");
+			throw new ClassCastException("Target must implement OnDismissed");
 		}
 	}
 
@@ -85,9 +98,6 @@ public class EditItemPropertiesFragment extends DialogFragment
 		Context context = getActivity();
 
 		final Item item = getArguments().getParcelable( Conf.FIELD_ITEM );
-
-		// Obtain access to session manager, from which we get current cart
-		session_ = SessionManager.getInstance( context );
 
 		// Inflate the layout for this fragment
 		backgroundView_ = inflater.inflate(R.layout.edit_item_properties_view, container, false);
@@ -122,7 +132,6 @@ public class EditItemPropertiesFragment extends DialogFragment
 		return backgroundView_;
 	}
 
-	private SessionManager session_;
 	private OnDismissed callback_;
 	private EditItemPropertiesAdapter adapter_;
 

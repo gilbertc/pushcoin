@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.content.Context;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
@@ -19,7 +21,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import java.util.List;
 
-public class ConfigureItemFragment extends Fragment 
+public class ConfigureItemFragment
+	extends Fragment implements EditItemPropertiesFragment.OnDismissed
 {
 	public ConfigureItemFragment( String backstackId, Item parent ) {
 		parent_ = parent;
@@ -86,16 +89,32 @@ public class ConfigureItemFragment extends Fragment
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 					{
-						Item slotItem = slot.getAlternatives().get( position );
-						Log.v(Conf.TAG, "slot-item-clicked|slot="+slot.getName()+";name="+slotItem.getName()+";position="+position );
-						// TODO: what if still not defined? this will throw, so create 
-						// another configure-screen - go recursively until all levels are defined
-						parent_ = parent_.replace( slotIndx, slotItem );
-						title.setText( slotItem.getName() );
-						title.setTextColor(ctx.getResources().getColor(R.color.DarkBlue));
+						Item chosenItem = slot.getAlternatives().get( position );
+						Log.v(Conf.TAG, "slot-item-clicked|slot="+slot.getName()+";name="+chosenItem.getName()+";position="+position );
+						curSlotIndx_ = slotIndx;
+						curSlotTitle_ = title;
 
-						// Re-evalute if all slots are configured and user can add item to cart.
-						enableAddToCart( parent_.isDefined() );
+						// User can change item properties before adding it to slot
+						if ( chosenItem.hasProperties() ) 
+						{
+							// DialogFragment.show() will add the fragmentin a transaction, 
+							// but we  need to remove any currently shown dialog.
+							FragmentTransaction ft = getFragmentManager().beginTransaction();
+							Fragment prev = getFragmentManager().findFragmentByTag( Conf.DIALOG_EDIT_ITEM_PROPERTIES );
+							if (prev != null) {
+								ft.remove(prev);
+							}
+							ft.addToBackStack(null);
+
+							// Create and show the dialog.
+							DialogFragment newFragment = EditItemPropertiesFragment.newInstance( chosenItem );
+							// Set fragment as the recipient of events
+							newFragment.setTargetFragment( ConfigureItemFragment.this, 0 );
+							newFragment.show(ft, Conf.DIALOG_EDIT_ITEM_PROPERTIES);
+						}
+						else {
+							putItemInSlot( chosenItem );
+						}
 					}
 				});
 
@@ -145,6 +164,23 @@ public class ConfigureItemFragment extends Fragment
 		return fragmentRootLayout;
 	}
 
+	private void putItemInSlot( Item chosenItem )
+	{
+		if (curSlotTitle_ == null) {
+			Log.e(Conf.TAG, "Cannot modify slot"); return;
+		}
+		// TODO: what if still not defined? this will throw, so create 
+		// another configure-screen - go recursively until all levels are defined
+		parent_ = parent_.replace( curSlotIndx_, chosenItem );
+		curSlotTitle_.setText( chosenItem.getName() );
+		curSlotTitle_.setTextColor( getActivity().getResources().getColor(R.color.DarkBlue) );
+		// restore defaults
+		curSlotIndx_ = 0; curSlotTitle_ = null;
+
+		// Re-evalute if all slots are configured and user can add item to cart.
+		enableAddToCart( parent_.isDefined() );
+	}
+
 	private void enableAddToCart( boolean enabled )
 	{
 		if ( enabled )
@@ -159,9 +195,17 @@ public class ConfigureItemFragment extends Fragment
 		}
 	}
 
+	@Override
+	public void onEditItemPropertiesDone( Item chosenItem ) {
+		putItemInSlot( chosenItem );
+	}
+
 	private Button addToCartBtn_;
 	private SessionManager session_;
 	private Handler dispatchable_;
 	private Item parent_;
 	private List<Item> relatedItems_;
+
+	private int curSlotIndx_ = 0;
+	private TextView curSlotTitle_ = null;
 }
