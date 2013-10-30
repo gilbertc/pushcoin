@@ -32,7 +32,7 @@ public class SessionManager
 	/**
 		Looks up an item in currently used session.
 	*/
-	public Object session(String key) {
+	public Object get(String key) {
 		return session_.get( key );	
 	}
 
@@ -52,7 +52,7 @@ public class SessionManager
 		Session session = new Session();
 
 		// Put cart in session.
-		session.put( Conf.SESSION_CART, new Cart(ctx_) );
+		session.put( Conf.SESSION_KEY_CART, new Cart(ctx_) );
 
 		return session;
 	}

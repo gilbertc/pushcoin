@@ -1,8 +1,7 @@
 package com.pushcoin.bitsypos;
 
-import android.util.Log;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -161,6 +160,15 @@ public class SlotItem implements Item
 	}
 
 	@Override
+	public boolean hasProperties()
+	{
+		if (chosenItem_ == null)
+			throw new BitsyError("No properties: undefined slot");
+
+		return chosenItem_.hasProperties();
+	}
+
+	@Override
 	public Map<String, String> getProperties()
 	{
 		if (chosenItem_ == null)
@@ -186,4 +194,47 @@ public class SlotItem implements Item
 	// Holds item-alternatives fetched from DB, but only after 
 	// somebody asks for.
 	private List<Item> alternatives_;
+
+	/**
+		Parcelable support below this point.
+
+		Make sure to update code below when you add/remove 
+		any class-member variables.
+	*/
+	private SlotItem( Parcel in )
+	{
+		parentItemId_ = in.readString();
+		slotName_ = in.readString();
+		slotPriceTag_ = in.readString();
+		choiceItemTag_ = in.readString();
+		chosenItem_ = in.readParcelable(null);
+		alternatives_ = null;
+	}
+
+	@Override
+	public void writeToParcel( Parcel out, int flags )
+	{
+		out.writeString( parentItemId_ );
+		out.writeString( slotName_ );
+		out.writeString( slotPriceTag_ );
+		out.writeString( choiceItemTag_ );
+		out.writeParcelable( chosenItem_, flags );
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	public static final Parcelable.Creator<SlotItem> CREATOR = 
+		new Parcelable.Creator<SlotItem>()
+		{
+			public SlotItem createFromParcel( Parcel in ) {
+				return new SlotItem( in );
+			}
+
+			public SlotItem[] newArray( int size ) {
+				return new SlotItem[size];
+			}
+		};
 }

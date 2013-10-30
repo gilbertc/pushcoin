@@ -1,10 +1,11 @@
 package com.pushcoin.bitsypos;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import android.database.Cursor;
+import android.os.Parcel;
 import java.util.Map;
 import java.util.TreeMap;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 class Util
 {
@@ -89,5 +90,33 @@ class Util
 			}
 		}
 		return properties;
+	}
+
+	/**
+		Writes Item properties to a Parcel.
+	*/
+	static void writePropertiesToParcel( Parcel out, Map<String, String> map )
+	{
+		out.writeInt( map.size() );
+		for( String key : map.keySet() )
+		{
+			out.writeString( key );
+			out.writeString( map.get(key) );
+		}
+	}
+
+	/**
+		Reads Item properties, from a Parcel.
+	*/
+	static Map<String, String> readPropertiesFromParcel( Parcel in, Map<String, String> map )
+	{
+		int size = in.readInt();
+		for(int i = 0; i < size; i++)
+		{
+			String key = in.readString();
+			String value = in.readString();
+			map.put( key, value );
+		}
+		return map;
 	}
 }

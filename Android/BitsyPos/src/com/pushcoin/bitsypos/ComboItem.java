@@ -1,11 +1,12 @@
 package com.pushcoin.bitsypos;
 
-import android.util.Log;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import static java.util.Arrays.asList;
@@ -151,17 +152,16 @@ public class ComboItem implements Item
 		return new ComboItem(comboId_, comboName_, basePrice_, properties_, newChildren);
 	}
 
-	/**
-		Returns properties (key:value) associated with this item.
-	*/
+	@Override
+	public boolean hasProperties() {
+		return !properties_.isEmpty();
+	}
+
 	@Override
 	public Map<String, String> getProperties() {
 		return properties_;
 	}
 
-	/**
-		Returns a new item with this set of properties.
-	*/
 	@Override
 	public Item setProperties( Map<String, String> properties ) 
 	{
@@ -183,4 +183,52 @@ public class ComboItem implements Item
 
 	private List<Item> children_ = null;
 	private final ItemHelper help_ = new ItemHelper();
+
+	/**
+		Parcelable support below this point.
+
+		Make sure to update code below when you add/remove 
+		any class-member variables.
+	*/
+	private ComboItem( Parcel in )
+	{
+		comboId_ = in.readString();
+		comboName_ = in.readString();
+		basePrice_ = new BigDecimal( in.readString() );
+		properties_ = Util.readPropertiesFromParcel( in, new TreeMap<String,String>() );
+		childCount_ = in.readInt();
+		if (childCount_ > 0) {
+			in.readList( new ArrayList<Item>(), null );
+		}
+	}
+
+	@Override
+	public void writeToParcel( Parcel out, int flags )
+	{
+		out.writeString( comboId_ );
+		out.writeString( comboName_ );
+		out.writeString( basePrice_.toString() );
+		Util.writePropertiesToParcel( out, properties_ );
+		out.writeInt( childCount_ );
+		if (childCount_ > 0) {
+			out.writeList( children_ );
+		}
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	public static final Parcelable.Creator<ComboItem> CREATOR = 
+		new Parcelable.Creator<ComboItem>()
+		{
+			public ComboItem createFromParcel( Parcel in ) {
+				return new ComboItem( in );
+			}
+
+			public ComboItem[] newArray( int size ) {
+				return new ComboItem[size];
+			}
+		};
 }

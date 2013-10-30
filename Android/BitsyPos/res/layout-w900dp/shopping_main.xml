@@ -13,7 +13,7 @@
 	<FrameLayout
 		android:id="@+id/hz_center_pane"
 		android:paddingLeft="2dp"
-		android:layout_weight="8"
+		android:layout_weight="9"
 		android:layout_width="0dp"
 		android:layout_height="match_parent" />
 

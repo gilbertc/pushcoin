@@ -16,7 +16,8 @@ public class Conf
 	static final String FIELD_PRICE_TAG_DEFAULT = "unit";
 
 	static final String TAG = "Bitsy"; // Log tag
-	static final String DIALOG_EDIT_CART_ID="edit_cart_dialog";
+	static final String DIALOG_EDIT_CART="edit_cart_dialog";
+	static final String DIALOG_EDIT_ITEM_PROPERTIES="edit_item_properties_dialog";
 	static final String CART_ITEM_EMPTY_NAME = "";
 	static final String CART_ITEM_EMPTY_SKU = "";
 	static final int CART_OPEN_ITEM_ID = -1;
@@ -30,7 +31,7 @@ public class Conf
 	/**
 		Session keys.
 	*/
-	static final String SESSION_CART = "cart";
+	static final String SESSION_KEY_CART = "cart";
 
 	/** 
 		Database queries.  
@@ -190,6 +191,7 @@ public class Conf
 	static final String FIELD_CART_ITEM_POSITION = "cart_item_position";
 	static final String FIELD_ITEM_PROPERTY = "property";
 	static final String FIELD_ITEM_CHILDREN = "children";
+	static final String FIELD_ITEM = "item";
 
 	/**
 		Maps item-fields within a DB cursor.

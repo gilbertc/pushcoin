@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler;
@@ -32,7 +33,7 @@ public class BitsyPosActivity
 		setContentView(R.layout.shopping_main);
 
 		// Session manager
-		access_ = SessionManager.getInstance( this );
+		session_ = SessionManager.getInstance( this );
 
 		// Store message dispatcher for the cart fragment
 		FragmentManager fragmentManager = getFragmentManager();
@@ -108,7 +109,7 @@ public class BitsyPosActivity
 			.commit();
 	}
 
-	/** User clicks on item. */
+	/** User clicks on an item from the browse-list. */
 	private void onShoppingItemClicked(String itemId)
 	{
 		Log.v( Conf.TAG, "add-or-configure-item;itemId="+itemId );
@@ -116,11 +117,9 @@ public class BitsyPosActivity
 		// Get the item
 		Item item = AppDb.getInstance().getItemWithId( itemId, Conf.FIELD_PRICE_TAG_DEFAULT );
 
-		// If our item is defined, we can add it to the cart
-		if ( item.isDefined() )
-		{
-			Cart cart = (Cart) access_.session( Conf.SESSION_CART );
-			cart.add( Util.toCartCombo( item ) );
+		// To add item to the cart, it must be defined
+		if ( item.isDefined() ) {
+			addItemToCart( item );
 		}
 		else // or, we need to configure the item first
 		{
@@ -132,6 +131,32 @@ public class BitsyPosActivity
 		}
 	}
 
-	private SessionManager access_;
+	/** Adds item to cart, with option to set its properties. */
+	private void addItemToCart( Item item )
+	{
+		// User can change item properties before adding it to cart
+		if ( item.hasProperties() ) 
+		{
+			// DialogFragment.show() will add the fragmentin a transaction, 
+			// but we  need to remove any currently shown dialog.
+			FragmentTransaction ft = getFragmentManager().beginTransaction();
+			Fragment prev = getFragmentManager().findFragmentByTag( Conf.DIALOG_EDIT_ITEM_PROPERTIES );
+			if (prev != null) {
+				ft.remove(prev);
+			}
+			ft.addToBackStack(null);
+
+			// Create and show the dialog.
+			DialogFragment newFragment = EditItemPropertiesFragment.newInstance(item);
+			newFragment.show(ft, Conf.DIALOG_EDIT_ITEM_PROPERTIES);
+		}
+		else
+		{
+			Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
+			cart.add( Util.toCartCombo( item ) );
+		}
+	}
+
+	private SessionManager session_;
 	private Handler cartFragmentHandler_;
 }

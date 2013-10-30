@@ -3,6 +3,7 @@ package com.pushcoin.bitsypos;
 import java.util.List;
 import java.util.Map;
 import java.math.BigDecimal;
+import android.os.Parcelable;
 
 /**
 	Defines an Item interface.
@@ -16,7 +17,7 @@ import java.math.BigDecimal;
 	- If item is not a slot item nor a combo item, it's a basic item.
 	- A 'defined item' refers to an item with a price (ie all slots are filled).
 */
-public interface Item
+public interface Item extends Parcelable
 {
 	/**
 		Pretty-name of this item.
@@ -82,6 +83,11 @@ public interface Item
 		Returns a new item with a child appended.
 	*/
 	Item append(Item item);
+
+	/**
+		Returns true if item holds any properties.
+	*/
+	boolean hasProperties();
 
 	/**
 		Returns properties (key:value) associated with this item.

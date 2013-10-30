@@ -31,7 +31,7 @@ public class ConfigureItemFragment extends Fragment
 		final Context ctx = getActivity();
 
 		// Session manager
-		access_ = SessionManager.getInstance( ctx );
+		session_ = SessionManager.getInstance( ctx );
 
 		// Store activity's dispacher
 		dispatchable_ = ((IDispatcher)ctx).getDispachable();
@@ -46,7 +46,7 @@ public class ConfigureItemFragment extends Fragment
 		addToCartBtn_.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View v) {
-				Cart cart = (Cart) access_.session( Conf.SESSION_CART );
+				Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
 				cart.add( Util.toCartCombo(parent_) );
 			}
 		});
@@ -88,8 +88,8 @@ public class ConfigureItemFragment extends Fragment
 					{
 						Item slotItem = slot.getAlternatives().get( position );
 						Log.v(Conf.TAG, "slot-item-clicked|slot="+slot.getName()+";name="+slotItem.getName()+";position="+position );
-						// TODO: what if still not defined? this will throw...
-						// create another screen to configure, then go recursively until all configured
+						// TODO: what if still not defined? this will throw, so create 
+						// another configure-screen - go recursively until all levels are defined
 						parent_ = parent_.replace( slotIndx, slotItem );
 						title.setText( slotItem.getName() );
 						title.setTextColor(ctx.getResources().getColor(R.color.DarkBlue));
@@ -123,19 +123,19 @@ public class ConfigureItemFragment extends Fragment
 
 			// on related-item clicked
 			relatedItemsView.setOnItemClickListener(new OnItemClickListener()
-			{
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 				{
-					Item item = relatedItems_.get(position);
-					Log.v(Conf.TAG, "related-item-clicked|name="+item.getName() );
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+					{
+						Item item = relatedItems_.get(position);
+						Log.v(Conf.TAG, "related-item-clicked|name="+item.getName() );
 
-					// TODO: Add to cart if item isDefined, otherwise start another
-					// configure-item screen
-					Cart cart = (Cart) access_.session( Conf.SESSION_CART );
-					cart.add( Util.toCartCombo(item) );
-				}
-			});
+						// TODO: Add to cart if item isDefined, otherwise start another
+						// configure-item screen
+						Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
+						cart.add( Util.toCartCombo(item) );
+					}
+				});
 
 			relatedItemsView.setLongClickable(false);
 			// Fit as many columns as possible
@@ -160,7 +160,7 @@ public class ConfigureItemFragment extends Fragment
 	}
 
 	private Button addToCartBtn_;
-	private SessionManager access_;
+	private SessionManager session_;
 	private Handler dispatchable_;
 	private Item parent_;
 	private List<Item> relatedItems_;

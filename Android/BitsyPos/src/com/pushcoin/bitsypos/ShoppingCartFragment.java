@@ -33,7 +33,7 @@ public class ShoppingCartFragment
 		Context ctx = getActivity();
 
 		// Current cart
-		final Cart cart = (Cart) SessionManager.getInstance( ctx ).session( Conf.SESSION_CART );
+		final Cart cart = (Cart) SessionManager.getInstance( ctx ).get( Conf.SESSION_KEY_CART );
 		adapter_ = new CartEntryArrayAdapter(ctx, cart);
 
 		// Inflate the layout for this fragment
@@ -155,7 +155,7 @@ public class ShoppingCartFragment
 		// DialogFragment.show() will add the fragmentin a transaction, 
 		// but we  need to remove any currently shown dialog.
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag(Conf.DIALOG_EDIT_CART_ID);
+		Fragment prev = getFragmentManager().findFragmentByTag(Conf.DIALOG_EDIT_CART);
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -163,7 +163,7 @@ public class ShoppingCartFragment
 
 		// Create and show the dialog.
 		DialogFragment newFragment = EditCartItemFragment.newInstance(position);
-		newFragment.show(ft, Conf.DIALOG_EDIT_CART_ID);
+		newFragment.show(ft, Conf.DIALOG_EDIT_CART);
 	}
 
 	private TextView cartTotal_;

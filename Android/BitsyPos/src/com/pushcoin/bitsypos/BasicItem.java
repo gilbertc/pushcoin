@@ -1,9 +1,8 @@
 package com.pushcoin.bitsypos;
 
-import android.util.Log;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import java.util.ArrayList;
+import android.os.Parcel;
+import android.os.Parcelable;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
 import java.math.BigDecimal;
@@ -98,17 +97,16 @@ public class BasicItem implements Item
 		return new ComboItem( "", "", Conf.ZERO_PRICE, help_.ZERO_PROPS, asList(this, item) );
 	}
 
-	/**
-		Returns properties (key:value) associated with this item.
-	*/
+	@Override
+	public boolean hasProperties() {
+		return !properties_.isEmpty();
+	}
+
 	@Override
 	public Map<String, String> getProperties() {
 		return properties_;
 	}
 
-	/**
-		Returns a new item with this set of properties.
-	*/
 	@Override
 	public Item setProperties( Map<String, String> properties ) {
 		return new BasicItem( itemId_, name_, price_, properties);
@@ -119,6 +117,45 @@ public class BasicItem implements Item
 	private final BigDecimal price_;
 	private final Map<String, String> properties_;
 
-	private List<Item> relatedItems_ = null;
 	private final ItemHelper help_ = new ItemHelper();
+
+	/**
+		Parcelable support below this point.
+
+		Make sure to update code below when you add/remove 
+		any class-member variables.
+	*/
+	private BasicItem( Parcel in )
+	{
+		itemId_ = in.readString();
+		name_ = in.readString();
+		price_ = new BigDecimal( in.readString() );
+		properties_ = Util.readPropertiesFromParcel( in, new TreeMap<String,String>() );
+	}
+
+	@Override
+	public void writeToParcel( Parcel out, int flags )
+	{
+		out.writeString( itemId_ );
+		out.writeString( name_ );
+		out.writeString( price_.toString() );
+		Util.writePropertiesToParcel( out, properties_ );
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	public static final Parcelable.Creator<BasicItem> CREATOR = 
+		new Parcelable.Creator<BasicItem>()
+		{
+			public BasicItem createFromParcel( Parcel in ) {
+				return new BasicItem( in );
+			}
+
+			public BasicItem[] newArray( int size ) {
+				return new BasicItem[size];
+			}
+		};
 }

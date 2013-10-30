@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:descendantFocusability="beforeDescendants"
+	android:focusableInTouchMode="true"
+	android:padding="20dp"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+
+		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:id="@+id/edit_item_properties_view_name" 
+			android:layout_marginRight="12dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="32dp"
+			android:textColor="@color/lightui_lightgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+		<View
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="1dp" />
+
+		<Button
+			android:id="@+id/edit_item_properties_view_done_button" 
+			android:text="Done"
+			android:textSize="28dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="34dp"
+			android:paddingRight="34dp"
+			style="@style/ButtonWhiteLabel"
+			android:background="@drawable/btn_green" />
+
+	</LinearLayout>
+
+	<com.pushcoin.bitsypos.AutofitGridView 
+		android:id="@+id/edit_item_properties_view_list"
+		android:layout_width="match_parent" 
+		android:layout_height="wrap_content"
+		android:cacheColorHint="@android:color/transparent"
+		android:numColumns="auto_fit"
+		android:verticalSpacing="10dp"
+		android:horizontalSpacing="10dp"
+		android:stretchMode="columnWidth"
+		android:gravity="left"
+		android:drawSelectorOnTop="false" />
+
+</LinearLayout>
