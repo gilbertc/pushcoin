@@ -27,6 +27,9 @@ import android.database.DataSetObserver;
 import java.text.NumberFormat;
 import android.text.InputType;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.math.BigDecimal;
 
 public class EditItemPropertiesFragment extends DialogFragment
@@ -81,7 +84,7 @@ public class EditItemPropertiesFragment extends DialogFragment
 	{
 		Context context = getActivity();
 
-		item_ = getArguments().getParcelable( Conf.FIELD_ITEM );
+		final Item item = getArguments().getParcelable( Conf.FIELD_ITEM );
 
 		// Obtain access to session manager, from which we get current cart
 		session_ = SessionManager.getInstance( context );
@@ -91,14 +94,13 @@ public class EditItemPropertiesFragment extends DialogFragment
 
 		// Derive name for this property editor from the item
 		TextView title = (TextView) backgroundView_.findViewById(R.id.edit_item_properties_view_name);
-		title.setText( "Customize " + item_.getName() );
+		title.setText( "Customize " + item.getName() );
 
 		// Find the listview widget so we can set its adapter
 		AutofitGridView propertiesListView = (AutofitGridView) backgroundView_.findViewById(R.id.edit_item_properties_view_list);
 
-		EditItemPropertiesAdapter adapter =		
-			new EditItemPropertiesAdapter( context, item_.getProperties() );
-		propertiesListView.setAdapter( adapter );
+		adapter_ = new EditItemPropertiesAdapter( context, item.getProperties() );
+		propertiesListView.setAdapter( adapter_ );
 
 		// Uncomment to fit as many columns as we can
 		// propertiesListView.setColumnWidth( propertiesListView.measureMaxChildWidth() );
@@ -106,20 +108,23 @@ public class EditItemPropertiesFragment extends DialogFragment
 		// Install Done handler
 		final Button doneBtn = (Button) backgroundView_.findViewById( R.id.edit_item_properties_view_done_button );
 		doneBtn.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View v)
 			{
-				callback_.onEditItemPropertiesDone( item_ );
-				dismiss();
-			}
-		});
+				public void onClick(View v)
+				{
+					List<Map.Entry<String,String>> list = adapter_.getProperties();
+					Map<String,String> properties = new TreeMap<String,String>();
+					for (Map.Entry<String,String> i : list) properties.put(i.getKey(),i.getValue());
+					callback_.onEditItemPropertiesDone( item.setProperties( properties ) );
+					dismiss();
+				}
+			});
 
 		return backgroundView_;
 	}
 
 	private SessionManager session_;
 	private OnDismissed callback_;
-	private Item item_;
+	private EditItemPropertiesAdapter adapter_;
 
 	// Main view
 	View backgroundView_;

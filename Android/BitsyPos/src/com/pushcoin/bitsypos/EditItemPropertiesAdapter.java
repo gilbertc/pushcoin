@@ -10,10 +10,14 @@ import android.view.LayoutInflater;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import java.util.Map;
+import java.util.List;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Collections;
+import static java.util.Collections.unmodifiableList;
 
 public class EditItemPropertiesAdapter extends BaseAdapter 
 {
@@ -62,7 +66,7 @@ public class EditItemPropertiesAdapter extends BaseAdapter
 	/**
 	 * Make a view to hold each row.
 	 */
-	public View getView(int position, View convertView, ViewGroup parent) 
+	public View getView(final int position, View convertView, ViewGroup parent) 
 	{
 		// A ViewHolder keeps references to children views to avoid unneccessary calls
 		// to findViewById() on each row.
@@ -75,10 +79,21 @@ public class EditItemPropertiesAdapter extends BaseAdapter
 		{
 			convertView = inflater_.inflate(R.layout.edit_item_properties_cell, null);
 
-			// Creates a ViewHolder and store references to the children views
+			// Creates a ViewHolder to store references to the children views
 			// we want to bind data to.
 			holder = new ViewHolder();
 			holder.property = (CheckBox) convertView.findViewById(R.id.edit_item_property_editor);
+			holder.property.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+				{
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+					{
+						Map.Entry<String,String> entry = properties_.get(position);
+						properties_.set( position, 
+							new AbstractMap.SimpleImmutableEntry<String,String>(
+								entry.getKey(), isChecked ? Conf.PROPERTY_BOOL_TRUE : Conf.PROPERTY_BOOL_FALSE) );
+					}
+				});
+
 			convertView.setTag(holder);
 		} 
 		else 
@@ -94,6 +109,10 @@ public class EditItemPropertiesAdapter extends BaseAdapter
 		holder.property.setChecked( property.getValue().equals( Conf.PROPERTY_BOOL_TRUE ) );
 
 		return convertView;
+	}
+
+	public List<Map.Entry<String,String>> getProperties() {
+		return unmodifiableList( properties_ );
 	}
 
 	private static class ViewHolder 

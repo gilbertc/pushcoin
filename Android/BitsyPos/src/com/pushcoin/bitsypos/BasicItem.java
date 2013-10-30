@@ -26,13 +26,29 @@ public class BasicItem implements Item
 	}
 
 	@Override
-	public String getName() {
-		return name_;
+	public String getName()
+	{
+		if ( !hasProperties() ) {
+			return name_;
+		} 
+		else // show name with properties
+		{
+			StringBuilder name = new StringBuilder(name_);
+			for ( Map.Entry<String, String> entry: getProperties().entrySet() )
+			{
+				if ( entry.getValue().equals( Conf.PROPERTY_BOOL_TRUE ) )
+				{
+					name.append( " " );
+					name.append( entry.getKey() );
+				}
+			}
+			return name.toString();
+		}
 	}
 
 	@Override
 	public String toString() {
-		return name_;
+		return getName();
 	}
 
 	@Override
