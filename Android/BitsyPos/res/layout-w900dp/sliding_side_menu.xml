@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:background="@drawable/backrepeat_light"
+	android:layout_width="wrap_content"
+	android:layout_height="match_parent" >
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:text="Table #1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="32dp"
+		android:paddingLeft="10dp"
+		android:paddingTop="20dp"
+		android:textColor="@color/lightui_darkestgray"
+		geekui:customTypeface="fonts/TT0467M.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:text="Table #2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="32dp"
+		android:paddingLeft="10dp"
+		android:paddingTop="20dp"
+		android:textColor="@color/lightui_darkestgray"
+		geekui:customTypeface="fonts/TT0467M.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:text="Table #3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="32dp"
+		android:paddingLeft="10dp"
+		android:paddingTop="20dp"
+		android:textColor="@color/lightui_darkestgray"
+		geekui:customTypeface="fonts/TT0467M.ttf" />
+
+</LinearLayout>

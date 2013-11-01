@@ -17,6 +17,7 @@ import android.widget.GridView;
 import android.content.Context;
 import android.util.Log;
 import java.util.ArrayList;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class BitsyPosActivity 
 	extends Activity implements IDispatcher, EditItemPropertiesFragment.OnDismissed
@@ -38,6 +39,17 @@ public class BitsyPosActivity
 		// Store message dispatcher for the cart fragment
 		FragmentManager fragmentManager = getFragmentManager();
 		cartFragmentHandler_ = ((IDispatcher)fragmentManager.findFragmentById(R.id.shopping_cart_frag)).getDispachable();
+
+		// configure the SlidingMenu
+		SlidingMenu menu = new SlidingMenu(this);
+		menu.setMode(SlidingMenu.LEFT);
+		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		menu.setShadowWidthRes(R.dimen.shadow_width);
+		menu.setShadowDrawable(R.drawable.sliding_menu_shadow);
+		menu.setBehindWidthRes(R.dimen.slidingmenu_offset);
+		menu.setFadeDegree(0.35f);
+		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+		menu.setMenu(R.layout.sliding_side_menu);
 
 		// Don't let device go to sleep.
 		// TODO: Let user change this behavior in Settings

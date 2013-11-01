@@ -8,7 +8,12 @@
 		android:angle="270"/> 
 
 	<corners 
+		android:topRightRadius="10dp"/>
+
+	<!--
+	<corners 
 		android:topLeftRadius="10dp" 
 		android:topRightRadius="10dp"/>
+	-->
 
 </shape>

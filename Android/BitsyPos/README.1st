@@ -2,7 +2,7 @@ Project created with
 ====================
 
 android create project \
-	--target 2 \
+	--target 19 \
 	--name BitsyPOS --path . \
 	--activity BitsyPosActivity \
 	--package com.pushcoin.bitsypos
