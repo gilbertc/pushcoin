@@ -19,6 +19,7 @@ public class Conf
 	static final String TAG = "Bitsy"; // Log tag
 	static final String DIALOG_EDIT_CART="edit_cart_dialog";
 	static final String DIALOG_EDIT_ITEM_PROPERTIES="edit_item_properties_dialog";
+	static final String DIALOG_CONFIRM_CLEAR_CART="confirm_clear_cart_dialog";
 	static final String CART_ITEM_EMPTY_NAME = "";
 	static final String CART_ITEM_EMPTY_SKU = "";
 	static final int CART_OPEN_ITEM_ID = -1;

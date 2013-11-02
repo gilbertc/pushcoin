@@ -22,10 +22,24 @@ import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
-public class ShoppingCartFragment 
-	extends Fragment implements IDispatcher
+public class ShoppingCartFragment extends Fragment
 {
 	CartEntryArrayAdapter adapter_;
+
+	@Override
+	public void onCreate( Bundle savedInstanceState )
+	{
+		super.onCreate(savedInstanceState);
+		// Register self with the hub and start receiving events.
+		EventHub.getInstance().register( handler_, "ShoppingCartFragment" );
+	}
+
+	@Override
+	public void onPause()
+	{
+		// Remove self from the event hub.
+		EventHub.getInstance().unregister( handler_ );
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
@@ -33,7 +47,7 @@ public class ShoppingCartFragment
 		Context ctx = getActivity();
 
 		// Current cart
-		final Cart cart = (Cart) SessionManager.getInstance( ctx ).get( Conf.SESSION_KEY_CART );
+		final Cart cart = (Cart) SessionManager.getInstance().get( Conf.SESSION_KEY_CART );
 		adapter_ = new CartEntryArrayAdapter(ctx, cart);
 
 		// Inflate the layout for this fragment
@@ -47,7 +61,8 @@ public class ShoppingCartFragment
 		startOver.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				cart.clear();
+				// Confirm user really wants to clear the cart
+				ClearCartDialogFragment.showDialog( getFragmentManager() );
 			}
 		});
 
@@ -118,13 +133,6 @@ public class ShoppingCartFragment
 		return cartLayout;
 	}
 
-	/** Used by fragments to access our dispatcher. */
-	@Override
-	public Handler getDispachable() 
-	{
-		return handler_;
-	}
-	
 	/** Dispatch events */
 	private Handler handler_ = new Handler() {
 		@Override

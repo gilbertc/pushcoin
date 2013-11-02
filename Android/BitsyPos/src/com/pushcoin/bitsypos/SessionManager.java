@@ -8,16 +8,18 @@ public class SessionManager
 	public static class Session extends TreeMap<String, Object>
 	{ }
 
-	public static SessionManager getInstance(Context ctx) 
+	public static SessionManager newInstance(Context ctx) 
 	{
-		/** 
-		 * Use the application context as suggested by CommonsWare.
-		 * this will ensure that you dont accidentally leak an Activitys
-		 * context (see this article for more information: 
-		 * http://developer.android.com/resources/articles/avoiding-memory-leaks.html)
-		 */
 		if (inst_ == null) {
-			inst_ = new SessionManager(ctx);
+			inst_ = new SessionManager();
+		}
+		return inst_;
+	}
+
+	public static SessionManager getInstance() 
+	{
+		if (inst_ == null) {
+			throw new BitsyError("Did you forget to call SessionManager.newInstance in Activity?");
 		}
 		return inst_;
 	}
@@ -52,7 +54,7 @@ public class SessionManager
 		Session session = new Session();
 
 		// Put cart in session.
-		session.put( Conf.SESSION_KEY_CART, new Cart(ctx_) );
+		session.put( Conf.SESSION_KEY_CART, new Cart() );
 
 		return session;
 	}
@@ -61,16 +63,12 @@ public class SessionManager
 	 * Constructor should be private to prevent direct instantiation.
 	 * make call to static factory method "getInstance()" instead.
 	 */
-	private SessionManager(Context ctx) 
+	private SessionManager()
 	{
-		// Activity context
-		ctx_ = ctx;
-
 		global_ = createAppSession();
 		session_ = createInteractiveSession();
 	}
 
-	private Context ctx_;
 	private static SessionManager inst_ = null;
 
 	Session global_;

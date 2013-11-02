@@ -2,6 +2,10 @@
 <resources>
 
 	<string name="app_name">BitsyPos</string>
+	<string name="confirm_clear_cart">Erase everything from the cart?</string>
+
+	<string name="clearcart">Yes, Erase All</string>
+	<string name="cancel">Cancel</string>
 
 	<!-- Swipe to remove styles -->
 	<string name="undo">Undo</string>

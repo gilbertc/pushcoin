@@ -96,11 +96,6 @@ public class Cart
 		}
 	}
 	
-	public Cart( Context context ) 
-	{
-		parentContext_ = ((IDispatcher)context).getDispachable();
-	}
-
 	void add( Combo item )
 	{
 		Log.v(Conf.TAG, "cart-append-item="+item.getName() );
@@ -109,8 +104,7 @@ public class Cart
 		}
 
 		// broadcast cart content has changed
-		Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
-		m.sendToTarget();
+		EventHub.post( MessageId.CART_CONTENT_CHANGED );
 	}
 
 	void insert( Combo item, int position )
@@ -125,10 +119,7 @@ public class Cart
 				items_.add(position, item);
 			}
 		}
-
-		// broadcast cart content has changed
-		Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
-		m.sendToTarget();
+		EventHub.post( MessageId.CART_CONTENT_CHANGED );
 	}
 
 	Combo remove( int position )
@@ -143,9 +134,7 @@ public class Cart
 		if (item != null) 
 		{
 			Log.v(Conf.TAG, "cart-remove-item="+item.getName()+";at-pos="+position);
-			// broadcast cart content has changed
-			Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
-			m.sendToTarget();
+			EventHub.post( MessageId.CART_CONTENT_CHANGED );
 		}
 		return item;
 	}
@@ -163,10 +152,7 @@ public class Cart
 
 			items_.add(position, item);
 		}
-
-		// broadcast cart content has changed
-		Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
-		m.sendToTarget();
+		EventHub.post( MessageId.CART_CONTENT_CHANGED );
 	}
 
 	void clear()
@@ -178,11 +164,8 @@ public class Cart
 			items_.clear();
 		}
 
-		if (effective) 
-		{
-			// broadcast cart content has changed
-			Message m = parentContext_.obtainMessage(MessageId.CART_CONTENT_CHANGED, 0, 0);
-			m.sendToTarget();
+		if (effective) {
+			EventHub.post( MessageId.CART_CONTENT_CHANGED );
 		}
 	}
 

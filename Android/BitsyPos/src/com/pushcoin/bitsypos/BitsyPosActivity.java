@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class BitsyPosActivity 
-	extends Activity implements IDispatcher, EditItemPropertiesFragment.OnDismissed
+	extends Activity implements EditItemPropertiesFragment.OnDismissed
 {
 	/** Called when the activity is first created. */
 	@Override
@@ -28,17 +28,17 @@ public class BitsyPosActivity
 	{
 		super.onCreate(savedInstanceState);
 
+		// Register self with the hub and start receiving events
+		EventHub.newInstance( this ).register( handler_, "BitsyPosActivity" );
+
 		// Bootstrap database before creating fragments
 		AppDb.newInstance( this );
 
-		setContentView(R.layout.shopping_main);
-
 		// Session manager
-		session_ = SessionManager.getInstance( this );
+		session_ = SessionManager.newInstance( this );
 
-		// Store message dispatcher for the cart fragment
-		FragmentManager fragmentManager = getFragmentManager();
-		cartFragmentHandler_ = ((IDispatcher)fragmentManager.findFragmentById(R.id.shopping_cart_frag)).getDispachable();
+		// set this activity UI layout
+		setContentView(R.layout.shopping_main);
 
 		// configure the SlidingMenu
 		SlidingMenu menu = new SlidingMenu(this);
@@ -56,19 +56,19 @@ public class BitsyPosActivity
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
-	/** Used by fragments to access our dispatcher. */
 	@Override
-	public Handler getDispachable() 
+	public void onPause()
 	{
-		return handler_;
+		// Remove self from the event hub.
+		EventHub.getInstance().unregister( handler_ );
 	}
-	
+
 	/** Dispatch events. */
 	private Handler handler_ = new Handler() {
 		@Override
 		public void handleMessage(Message msg) 
 		{
-			Log.v(Conf.TAG, "place=activity;event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
+			Log.v(Conf.TAG, "BitsyPosActivity|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
 			switch( msg.what )
 			{
 				case MessageId.SHOPPING_CATEGORY_CLICKED:
@@ -77,11 +77,6 @@ public class BitsyPosActivity
 
 				case MessageId.SHOPPING_ITEM_CLICKED:
 					onShoppingItemClicked( (String) msg.obj );
-				break;
-
-				case MessageId.CART_CONTENT_CHANGED:
-					// Forward cart-modified message.
-					cartFragmentHandler_.sendMessage( Message.obtain(msg) );
 				break;
 			}
 		}
@@ -177,5 +172,4 @@ public class BitsyPosActivity
 	}
 
 	private SessionManager session_;
-	private Handler cartFragmentHandler_;
 }

@@ -59,8 +59,7 @@ public class EditCartItemFragment extends DialogFragment
 		cartItemId_ = getArguments().getInt( Conf.FIELD_CART_ITEM_POSITION );
 
 		// Obtain access to session manager, from which we get current cart
-		session_ = SessionManager.getInstance( context );
-		final Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
+		Cart cart = (Cart) SessionManager.getInstance().get( Conf.SESSION_KEY_CART );
 
 		// Are we adding a new item or modifying existing one?
 		if ( cartItemId_ == Conf.CART_OPEN_ITEM_ID )
@@ -248,12 +247,11 @@ public class EditCartItemFragment extends DialogFragment
 	// Persists combo changes in the cart.
 	private void saveChanges()
 	{
-		final Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
+		Cart cart = (Cart) SessionManager.getInstance().get( Conf.SESSION_KEY_CART );
 		cart.replace( combo_, cartItemId_ );
 	}
 
 	private android.os.Handler queue_ = new android.os.Handler();
-	private SessionManager session_;
 
 	// Model
 	private int cartItemId_;

@@ -11,7 +11,6 @@ import android.view.View;
 import android.content.Context;
 import android.widget.GridView;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import java.util.List;
 
 public class BrowseItemsFragment extends Fragment 
@@ -20,9 +19,6 @@ public class BrowseItemsFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		Context context = getActivity();
-
-		// Store activity's dispacher
-		dispatchable_ = ((IDispatcher)context).getDispachable();
 
 		// What category are we displaying? 
 		String categoryTag = getArguments().getString( Conf.FIELD_CATEGORY );
@@ -45,7 +41,13 @@ public class BrowseItemsFragment extends Fragment
 		view.setAdapter( adapter );
 
 		// install click-event listener
-		view.setOnItemClickListener(new ListSelection());
+		view.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					EventHub.post( MessageId.SHOPPING_ITEM_CLICKED, items_.get(position).getId() );
+				}
+			});
 
 		// Fit as many columns as possible
 		view.setColumnWidth( view.measureMaxChildWidth() );
@@ -53,16 +55,5 @@ public class BrowseItemsFragment extends Fragment
 		return view;
 	}
 
-	private class ListSelection implements OnItemClickListener
-	{
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-		{
-			Message m = dispatchable_.obtainMessage( MessageId.SHOPPING_ITEM_CLICKED, 0, 0, items_.get(position).getId() );
-			m.sendToTarget();
-		}
-	}
-
-	private Handler dispatchable_;
 	private List<Item> items_;
 }
