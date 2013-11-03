@@ -5,5 +5,6 @@
     <string name="title_activity_charge">Charge</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="url_pushcoin_prod">https://api.pushcoin.com/pcos/</string>
+    <string name="url_pushcoin_test">https://api.aggati.com/pcos/</string>
 </resources>

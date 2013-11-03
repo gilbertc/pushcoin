@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.pushcoin.core.interfaces.Actions;
+import com.pushcoin.core.interfaces.Results;
 import com.pushcoin.core.utils.Logger;
 
 import android.app.Activity;
@@ -45,7 +46,6 @@ public class IntentIntegrator {
 		this.buttonYes = DEFAULT_YES;
 		this.buttonNo = DEFAULT_NO;
 		this.targetApplications = TARGET_ALL_KNOWN;
-
 	}
 
 	public String getTitle() {
@@ -138,8 +138,8 @@ public class IntentIntegrator {
 		return invoke(Actions.ACTION_SETTINGS, null);
 	}
 
-	protected void startActivityForResult(Intent intent, int code) {
-		activity.startActivityForResult(intent, code);
+	protected void startActivityForResult(Intent intent, int requestCode) {
+		activity.startActivityForResult(intent, requestCode);
 	}
 
 	private String findTargetAppPackage(Intent intent) {
@@ -189,10 +189,10 @@ public class IntentIntegrator {
 	public static IntentResult parseActivityResult(int requestCode,
 			int resultCode, Intent intent) {
 		if (requestCode == REQUEST_CODE) {
-			if (resultCode == Activity.RESULT_OK) {
-				return new IntentResult(true);
+			if (resultCode == Results.OK.getValue()) {
+				return new IntentResult(intent);
 			}
-			return new IntentResult(false);
+			return new IntentResult();
 		}
 		return null;
 	}

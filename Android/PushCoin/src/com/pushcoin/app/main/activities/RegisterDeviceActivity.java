@@ -2,8 +2,11 @@ package com.pushcoin.app.main.activities;
 
 import com.pushcoin.app.main.R;
 import com.pushcoin.core.net.PcosServer;
+import com.pushcoin.core.security.KeyStore;
 import com.pushcoin.core.utils.Logger;
+import com.pushcoin.pcos.BlockWriter;
 import com.pushcoin.pcos.DocumentWriter;
+import com.pushcoin.pcos.InputBlock;
 import com.pushcoin.pcos.InputDocument;
 
 import android.animation.Animator;
@@ -36,7 +39,7 @@ public class RegisterDeviceActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_register_device);
-		
+
 		registrationCode = "";
 		registrationCodeView = (EditText) findViewById(R.id.registration_code);
 		registrationCodeView.setText(registrationCode);
@@ -65,6 +68,9 @@ public class RegisterDeviceActivity extends Activity {
 		if (server != null) {
 			return;
 		}
+
+		KeyStore keyStore = KeyStore.getInstance(this);
+		keyStore.createNewKeys(this);
 
 		// Reset errors.
 		registrationCodeView.setError(null);
@@ -97,9 +103,14 @@ public class RegisterDeviceActivity extends Activity {
 			showProgress(true);
 
 			try {
-				DocumentWriter writer = new DocumentWriter("TEST");
+				DocumentWriter writer = new DocumentWriter("Register");
+				BlockWriter bo = new BlockWriter("Bo");
+				bo.writeString(registrationCode);
+				bo.writeByteStr(keyStore.getPublicKey().getEncoded());
+				writer.addBlock(bo);
+
 				server = new PcosServer();
-				server.postAsync(PcosServer.getDefaultUrl(), writer,
+				server.postAsync(getString(R.string.url_pushcoin_test), writer,
 						new RegistrationResponseListener(server));
 			} catch (Exception ex) {
 				registrationCodeView.setError(ex.getMessage());
@@ -159,16 +170,51 @@ public class RegisterDeviceActivity extends Activity {
 		}
 
 		@Override
-		public void onResponse(Object tag, InputDocument res) {
+		public void onResponse(Object tag, InputDocument doc) {
+			boolean ok = false;
+			KeyStore keyStore = KeyStore.getInstance();
+			if (keyStore != null) {
+				try {
+					if (doc.getDocumentName().contains("RegisterAck")) {
+						InputBlock bo = doc.getBlock("Bo");
+						if (bo != null) {
+							keyStore.setMAT(RegisterDeviceActivity.this,
+									bo.readByteStr(0));
+							ok = true;
+						}
+					} else {
+						log.e("unexpected message received: "
+								+ doc.getDocumentName());
+					}
+				} catch (Exception ex) {
+					log.e("exception on register ack");
+					registrationCodeView.setError(ex.getMessage());
+					registrationCodeView.requestFocus();
+					ok = false;
+				}
+			}
+
 			showProgress(false);
 			server = null;
-			finish();
+
+			if (ok)
+				finish();
+			else if (keyStore != null)
+				keyStore.reset(RegisterDeviceActivity.this);
 		}
 
 		@Override
 		public void onError(Object tag, Exception ex) {
+
+			KeyStore keyStore = KeyStore.getInstance();
+			if (keyStore != null)
+				keyStore.reset(RegisterDeviceActivity.this);
+
 			showProgress(false);
 			server = null;
+
+			log.e("register ack exception", ex);
+
 			registrationCodeView.setError(ex.getMessage());
 			registrationCodeView.requestFocus();
 		}

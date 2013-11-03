@@ -27,6 +27,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
+import android.R;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -35,6 +36,7 @@ import android.os.AsyncTask;
 import com.pushcoin.core.exceptions.ServerException;
 import com.pushcoin.core.security.SSLSocketFactory;
 import com.pushcoin.core.utils.Logger;
+import com.pushcoin.core.utils.Stringifier;
 
 public class Server {
 	private static Logger log = Logger.getLogger(Server.class);
@@ -53,10 +55,6 @@ public class Server {
 		}
 	}
 
-	public static String getDefaultUrl() {
-		return "";
-	}
-	
 	public static boolean isNetworkAvailable(Context ctxt) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) ctxt
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -159,6 +157,8 @@ public class Server {
 
 	private PostResult post(PostParams params) throws ServerException {
 
+		if (params.data!= null)
+			log.d("Sending: " + Stringifier.toString(params.data));
 		try {
 			KeyStore trustStore;
 			trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -205,7 +205,11 @@ public class Server {
 
 			response.getEntity().writeTo(bao);
 
-			return new PostResult(params, bao.toByteArray());
+			byte[] res = bao.toByteArray();
+			
+			log.d("Receiving: " + Stringifier.toString(res));
+			
+			return new PostResult(params, res);
 
 		} catch (KeyStoreException e) {
 			log.e("KeyStoreException", e);
