@@ -75,22 +75,13 @@ public class PushCoinService extends Service implements PaymentListener {
 		log.d(intent.getAction());
 		if (intent.getAction() == ACTION_START) {
 			Bundle bundle = intent.getExtras();
-			if (bundle != null)
-				start(bundle);
-			else
-				log.d("bundle null");
+			start(bundle);
 		} else if (intent.getAction() == ACTION_STOP) {
 			Bundle bundle = intent.getExtras();
-			if (bundle != null)
-				stop(bundle);
-			else
-				log.d("bundle null");
+			stop(bundle);
 		} else if (intent.getAction() == ACTION_DISPLAY) {
 			Bundle bundle = intent.getExtras();
-			if (bundle != null)
-				display(bundle);
-			else
-				log.d("bundle null");
+			display(bundle);
 		} else {
 			log.d("not supported action: " + intent.getAction());
 		}
@@ -99,12 +90,16 @@ public class PushCoinService extends Service implements PaymentListener {
 	private void start(Bundle bundle) {
 		log.d("start");
 
-		try {
-			this.messenger = (Messenger) bundle.get(KEY_MESSENGER);
-			this.amount = bundle.getString(KEY_AMOUNT);
-			this.deviceManager.enable(this);
-		} catch (Exception ex) {
-			log.e("start", ex);
+		if (bundle == null) {
+			log.e("bundle null");
+		} else {
+			try {
+				this.messenger = (Messenger) bundle.get(KEY_MESSENGER);
+				this.amount = bundle.getString(KEY_AMOUNT);
+				this.deviceManager.enable(this);
+			} catch (Exception ex) {
+				log.e("start", ex);
+			}
 		}
 	}
 
@@ -117,9 +112,10 @@ public class PushCoinService extends Service implements PaymentListener {
 
 	private void display(Bundle bundle) {
 		log.d("display");
+
 		try {
-			DisplayParcel displayParcel = (DisplayParcel) bundle
-					.getSerializable(KEY_DISPLAYPARCEL);
+			DisplayParcel displayParcel = bundle != null ? (DisplayParcel) bundle
+					.getSerializable(KEY_DISPLAYPARCEL) : null;
 			this.deviceManager.display(displayParcel);
 		} catch (Exception ex) {
 			log.e("display", ex);

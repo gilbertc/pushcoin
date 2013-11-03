@@ -2,7 +2,7 @@
 
     <string name="title_activity_register_device">New Device Registration</string>
 
-    <!-- Strings related to login -->
+    <!-- Strings related to registration -->
     <string name="prompt_registration_code">Registration Code</string>
     <string name="action_register"><b>Register</b></string>
     <string name="registration_progress_registering">Registering...</string>

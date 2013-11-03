@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.pushcoin.core.interfaces.Actions;
 import com.pushcoin.core.utils.Logger;
 
 import android.app.Activity;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Bundle;
 
 public class IntentIntegrator {
 
@@ -106,38 +108,34 @@ public class IntentIntegrator {
 		this.targetApplications = Collections.singleton(targetApplication);
 	}
 
-	public AlertDialog bootstrap() {
+	public AlertDialog invoke(String action, Bundle bundle) {
+		Intent intent = new Intent(PC_PACKAGE + action);
+		intent.addCategory(Intent.CATEGORY_DEFAULT);
+		if (bundle != null) {
+			intent.putExtras(bundle);
+		}
 
-		Intent bootstrap = new Intent(PC_PACKAGE + ".BOOTSTRAP");
-		bootstrap.addCategory(Intent.CATEGORY_DEFAULT);
-		bootstrap.putExtra("App", "TestApp");
-
-		String targetAppPackage = findTargetAppPackage(bootstrap);
+		String targetAppPackage = findTargetAppPackage(intent);
 		if (targetAppPackage == null) {
 			return showDownloadDialog();
 		}
-		bootstrap.setPackage(targetAppPackage);
-		bootstrap.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		bootstrap.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(bootstrap, REQUEST_CODE);
+		intent.setPackage(targetAppPackage);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQUEST_CODE);
 		return null;
 	}
-	
-	public AlertDialog charge() {
 
-		Intent bootstrap = new Intent(PC_PACKAGE + ".CHARGE");
-		bootstrap.addCategory(Intent.CATEGORY_DEFAULT);
-		bootstrap.putExtra("App", "TestApp");
+	public AlertDialog bootstrap() {
+		return invoke(Actions.ACTION_BOOTSTRAP, null);
+	}
 
-		String targetAppPackage = findTargetAppPackage(bootstrap);
-		if (targetAppPackage == null) {
-			return showDownloadDialog();
-		}
-		bootstrap.setPackage(targetAppPackage);
-		bootstrap.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		bootstrap.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(bootstrap, REQUEST_CODE);
-		return null;
+	public AlertDialog charge(Bundle bundle) {
+		return invoke(Actions.ACTION_CHARGE, bundle);
+	}
+
+	public AlertDialog settings() {
+		return invoke(Actions.ACTION_SETTINGS, null);
 	}
 
 	protected void startActivityForResult(Intent intent, int code) {

@@ -2,6 +2,7 @@ package com.pushcoin.app.main.activities;
 
 import com.pushcoin.app.main.R;
 import com.pushcoin.core.net.PcosServer;
+import com.pushcoin.core.utils.Logger;
 import com.pushcoin.pcos.DocumentWriter;
 import com.pushcoin.pcos.InputDocument;
 
@@ -18,10 +19,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class RegisterDeviceActivity extends Activity {
+	private static Logger log = Logger.getLogger(RegisterDeviceActivity.class);
 
 	private PcosServer server = null;
 
-	// Values for email and password at the time of the login attempt.
 	private String registrationCode;
 
 	// UI references.
@@ -35,8 +36,7 @@ public class RegisterDeviceActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_register_device);
-
-		// Set up the login form.
+		
 		registrationCode = "";
 		registrationCodeView = (EditText) findViewById(R.id.registration_code);
 		registrationCodeView.setText(registrationCode);
@@ -61,11 +61,6 @@ public class RegisterDeviceActivity extends Activity {
 		return true;
 	}
 
-	/**
-	 * Attempts to sign in or register the account specified by the login form.
-	 * If there are form errors (invalid email, missing fields, etc.), the
-	 * errors are presented and no actual login attempt is made.
-	 */
 	public void attemptRegistration() {
 		if (server != null) {
 			return;
@@ -80,7 +75,7 @@ public class RegisterDeviceActivity extends Activity {
 		boolean cancel = false;
 		View focusView = null;
 
-		// Check for a valid password.
+		// Check for a valid registrationCode.
 		if (TextUtils.isEmpty(registrationCode)) {
 			registrationCodeView
 					.setError(getString(R.string.error_field_required));
@@ -94,12 +89,9 @@ public class RegisterDeviceActivity extends Activity {
 		}
 
 		if (cancel) {
-			// There was an error; don't attempt login and focus the first
-			// form field with an error.
 			focusView.requestFocus();
 		} else {
-			// Show a progress spinner, and kick off a background task to
-			// perform the user login attempt.
+			// Show a progress spinner, and kick off a background task
 			registrationStatusMessageView
 					.setText(R.string.registration_progress_registering);
 			showProgress(true);
