@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.content.Intent;
 
+import com.pushcoin.app.integrator.IntentIntegrator;
 import com.pushcoin.core.data.DisplayParcel;
 import com.pushcoin.core.services.PushCoinService;
 
@@ -120,6 +121,13 @@ public class TestAppActivity extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		IntentIntegrator integrator = new IntentIntegrator(this);
+		integrator.bootstrap();
 	}
 
 }

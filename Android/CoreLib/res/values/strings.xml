@@ -4,6 +4,8 @@
     <string name="app_name">ACTIVITY_ENTRY_NAME</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Hello World</string>
+    <string name="url_pushcoin_prod">https://api.pushcoin.com/pcos</string>
+    <string name="url_pushcoin_test">https://api.aggati.com/pcos</string>
 
 </resources>

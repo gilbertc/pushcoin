@@ -7,23 +7,28 @@ public class Logger {
 	}
 	
 	public Logger(Class<?> c) {
-		this.tagName = c.getSimpleName();
+		this.className = c.getSimpleName();
+		this.tagName = "[pushcoin] " + this.className; // Use to grep in logcat
+	}
+	
+	private String getMessage(String message) {
+		return message;
 	}
 
 	public void d(String message) {
-		Log.d(tagName, message);
+		Log.d(tagName, getMessage(message));
 	}
 	
 	public void d(String message, Throwable t) {
-		Log.d(tagName, message, t);
+		Log.d(tagName, getMessage(message), t);
 	}
 
 	public void e(String message) {
-		Log.e(tagName, message);
+		Log.d(tagName, getMessage(message));
 	}
 
 	public void e(String message, Throwable t) {
-		Log.e(tagName, message, t);
+		Log.e(tagName, getMessage(message), t);
 	}
 
 	public void i(String message) {
@@ -31,7 +36,7 @@ public class Logger {
 	}
 	
 	public void i(String message, Throwable t) {
-		Log.i(tagName, message, t);
+		Log.i(tagName, getMessage(message), t);
 	}
 	
 	public void v(String message) {
@@ -39,7 +44,7 @@ public class Logger {
 	}
 	
 	public void v(String message, Throwable t) {
-		Log.v(tagName, message, t);
+		Log.v(tagName, getMessage(message), t);
 	}
 
 	public void w(String message) {
@@ -47,8 +52,9 @@ public class Logger {
 	}
 	
 	public void w(String message, Throwable t) {
-		Log.w(tagName, message, t);
+		Log.w(tagName, getMessage(message), t);
 	}
 
 	private String tagName;
+	private String className;
 }

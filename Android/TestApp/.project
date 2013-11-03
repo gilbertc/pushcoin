@@ -3,6 +3,8 @@
 	<name>TestAppActivity</name>
 	<comment></comment>
 	<projects>
+		<project>CoreLib</project>
+		<project>PushCoin</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
