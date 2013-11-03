@@ -20,7 +20,7 @@
 			android:gravity="top"
 			android:paddingTop="6dp"
 			android:paddingBottom="12dp"
-			android:textSize="26dp"
+			android:textSize="26sp"
 			android:textColor="@color/lightui_lightgray"
 			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
@@ -28,7 +28,7 @@
 			android:id="@+id/item_summary_price"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="20dp"
+			android:textSize="20sp"
 			android:textColor="@color/android_holo_blue_light"
 			android:textStyle="bold"
 			geekui:customTypeface="fonts/DejaVuSans.ttf" />

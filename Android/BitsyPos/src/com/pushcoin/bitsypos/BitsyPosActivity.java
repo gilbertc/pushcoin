@@ -17,6 +17,7 @@ import android.widget.GridView;
 import android.content.Context;
 import android.util.Log;
 import java.util.ArrayList;
+import java.lang.ref.WeakReference;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class BitsyPosActivity 
@@ -26,10 +27,10 @@ public class BitsyPosActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate( savedInstanceState );
 
-		// Register self with the hub and start receiving events
-		EventHub.newInstance( this ).register( handler_, "BitsyPosActivity" );
+		// Handler where we dispatch events.
+		handler_ = new IncomingHandler( this );
 
 		// Bootstrap database before creating fragments
 		AppDb.newInstance( this );
@@ -56,44 +57,21 @@ public class BitsyPosActivity
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
+	/** Called when the activity resumes. */
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		// Register self with the hub and start receiving events
+		EventHub.newInstance( this ).register( handler_, "BitsyPosActivity" );
+	}
+
 	@Override
 	public void onPause()
 	{
+		super.onPause();
 		// Remove self from the event hub.
 		EventHub.getInstance().unregister( handler_ );
-	}
-
-	/** Dispatch events. */
-	private Handler handler_ = new Handler() {
-		@Override
-		public void handleMessage(Message msg) 
-		{
-			Log.v(Conf.TAG, "BitsyPosActivity|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
-			switch( msg.what )
-			{
-				case MessageId.SHOPPING_CATEGORY_CLICKED:
-					onShoppingCategoryClicked( (String) msg.obj );
-				break;
-
-				case MessageId.SHOPPING_ITEM_CLICKED:
-					onShoppingItemClicked( (String) msg.obj );
-				break;
-			}
-		}
-	};
-
-	public static void printViewHierarchy(ViewGroup $vg, String $prefix)
-	{
-		for (int i = 0; i < $vg.getChildCount(); i++)
-		{
-			View v = $vg.getChildAt(i);
-			String desc = String.format("%s|[%d/%d] %s ID:0x%x", $prefix, i, $vg.getChildCount()-1, v.getClass().getSimpleName(), v.getId());
-			Log.v(Conf.TAG, desc);
-
-			if (v instanceof ViewGroup) {
-				printViewHierarchy((ViewGroup)v, desc);
-			}
-		}
 	}
 
 	/** User clicks on category item. */
@@ -171,5 +149,42 @@ public class BitsyPosActivity
 		cart.add( Util.toCartCombo( item ) );
 	}
 
+	private Handler handler_;
 	private SessionManager session_;
+
+	/**
+		Static handler keeps lint happy about (temporary?) memory leaks if queued 
+		messages refer to the Activity (our event consumer), which now cannot
+		be collected.
+	*/
+	static class IncomingHandler extends Handler
+	{
+		private final WeakReference<BitsyPosActivity> ref_; 
+
+		IncomingHandler(BitsyPosActivity ref) {
+			ref_ = new WeakReference<BitsyPosActivity>(ref);
+		}
+
+		/** Dispatch events. */
+		@Override
+		public void handleMessage(Message msg)
+		{
+			BitsyPosActivity ref = ref_.get();
+			if (ref != null)
+			{
+				Log.v(Conf.TAG, "BitsyPosActivity|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
+				switch( msg.what )
+				{
+					case MessageId.SHOPPING_CATEGORY_CLICKED:
+						ref.onShoppingCategoryClicked( (String) msg.obj );
+					break;
+
+					case MessageId.SHOPPING_ITEM_CLICKED:
+						ref.onShoppingItemClicked( (String) msg.obj );
+					break;
+				}
+			}
+		}
+	}
 }
+

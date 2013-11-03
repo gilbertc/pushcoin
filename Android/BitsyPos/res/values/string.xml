@@ -2,14 +2,35 @@
 <resources>
 
 	<string name="app_name">BitsyPos</string>
-	<string name="confirm_clear_cart">Erase everything from the cart?</string>
-
-	<string name="clearcart">Yes, Erase All</string>
-	<string name="cancel">Cancel</string>
 
 	<!-- Swipe to remove styles -->
 	<string name="undo">Undo</string>
 	<string name="undoall">Undo All</string>
+
+	<!-- UI texts -->
+	<string name="cancel">Cancel</string>
+	<string name="save">Save</string>
+	<string name="done">Done</string>
+	<string name="confirm_clear_cart">Erase all items from the cart?</string>
+	<string name="clearcart">Yes, Erase All</string>
+	<string name="frequently_together">Frequently bought together&#8230;</string>
+	<string name="sku">SKU</string>
+	<string name="name">Name</string>
+	<string name="qty">Qty</string>
+	<string name="price">Price</string>
+
+	<string name="special_instructions">Special instructions</string>
+	<string name="base_price">Base Price:</string>
+	<string name="combo_total">Combo Total:</string>
+	<string name="total">Total:</string>
+	<string name="tab_name">Tab Name</string>
+	<string name="server_name">Server Name</string>
+	<string name="start_over">Start&#10;Over</string>
+	<string name="print_cart">Print&#10;Cart</string>
+	<string name="queue_order">Queue&#10;Order</string>
+	<string name="open_item">Open&#10;Item</string>
+	<string name="checkout">Checkout &#187;</string>
+	<string name="bell_symbol">9</string>
 
 </resources>
 

@@ -10,13 +10,12 @@
 	android:paddingLeft="6dp"
 	android:background="@drawable/configure_item_slot_row_selector">
 
-	<TextView
+	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/configure_slot_listview_item_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="18dp"
-		android:textColor="#000000"
-		geekui:customTypeface="fonts/DejaVuSans-ExtraLight.ttf"
-		/>
+		android:textSize="20sp"
+		android:textColor="@color/black"
+		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 </LinearLayout>

@@ -21,22 +21,34 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.lang.ref.WeakReference;
 
 public class ShoppingCartFragment extends Fragment
 {
 	CartEntryArrayAdapter adapter_;
 
+	/** Called when the fragment is first created. */
 	@Override
-	public void onCreate( Bundle savedInstanceState )
+	public void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
-		// Register self with the hub and start receiving events.
+		super.onCreate( savedInstanceState );
+		// Handler where we dispatch events.
+		handler_ = new IncomingHandler( this );
+	}
+
+	/** Called when the activity resumes. */
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		// Register self with the hub and start receiving events
 		EventHub.getInstance().register( handler_, "ShoppingCartFragment" );
 	}
 
 	@Override
 	public void onPause()
 	{
+		super.onPause();
 		// Remove self from the event hub.
 		EventHub.getInstance().unregister( handler_ );
 	}
@@ -133,20 +145,6 @@ public class ShoppingCartFragment extends Fragment
 		return cartLayout;
 	}
 
-	/** Dispatch events */
-	private Handler handler_ = new Handler() {
-		@Override
-		public void handleMessage(Message msg) 
-		{
-			switch( msg.what )
-			{
-				case MessageId.CART_CONTENT_CHANGED:
-					onCartContentChanged();
-				break;
-			}
-		}
-	};
-
 	private void onCartContentChanged()
 	{
 		// Update cart total
@@ -175,4 +173,35 @@ public class ShoppingCartFragment extends Fragment
 	}
 
 	private TextView cartTotal_;
+	private Handler handler_;
+
+	/**
+		Static handler keeps lint happy about (temporary?) memory leaks if queued 
+		messages refer to the Activity (our event consumer), which now cannot
+		be collected.
+	*/
+	static class IncomingHandler extends Handler
+	{
+		private final WeakReference<ShoppingCartFragment> ref_; 
+
+		IncomingHandler(ShoppingCartFragment ref) {
+			ref_ = new WeakReference<ShoppingCartFragment>(ref);
+		}
+
+		/** Dispatch events. */
+		@Override
+		public void handleMessage(Message msg)
+		{
+			ShoppingCartFragment ref = ref_.get();
+			if (ref != null)
+			{
+				Log.v(Conf.TAG, "ShoppingCartFragment|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
+				switch( msg.what )
+				{
+					case MessageId.CART_CONTENT_CHANGED:
+						ref.onCartContentChanged();
+				}
+			}
+		}
+	}
 }

@@ -20,8 +20,8 @@
 			android:gravity="top"
 			android:paddingTop="6dp"
 			android:paddingBottom="12dp"
-			android:textSize="20dp"
-			android:textColor="@color/win8_lime"
+			android:textSize="20sp"
+			android:textColor="@color/lightui_mediumgray"
 			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 		<com.mobsandgeeks.ui.TypefaceTextView
@@ -29,7 +29,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:gravity="center"
-			android:textSize="14dp"
+			android:textSize="14sp"
 			android:textColor="@color/android_holo_blue_light"
 			geekui:customTypeface="fonts/DejaVuSans.ttf" />
 

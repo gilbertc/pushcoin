@@ -8,25 +8,18 @@
 	android:layout_height="match_parent" >
 
 	<!-- Slots container -->
-	<LinearLayout
-		android:orientation="horizontal"
+	<HorizontalScrollView
 		android:layout_weight="3"
 		android:layout_width="wrap_content"
 		android:layout_height="0dp" >
 
-		<HorizontalScrollView
+		<LinearLayout
+			android:id="@+id/item_configuration_arena"
+			android:orientation="horizontal"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" >
+			android:layout_height="match_parent" />
 
-			<LinearLayout
-				android:id="@+id/item_configuration_arena"
-				android:orientation="horizontal"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent" />
-
-		</HorizontalScrollView>
-
-	</LinearLayout>
+	</HorizontalScrollView>
 
 	<LinearLayout
 		android:orientation="horizontal"
@@ -43,11 +36,11 @@
 
 			<!-- Popular Together -->
 			<com.mobsandgeeks.ui.TypefaceTextView 
-				android:text="9"
+				android:text="@string/bell_symbol"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:gravity="center"
-				android:textSize="30dp"
+				android:textSize="30sp"
 				android:paddingRight="8dp"
 				android:includeFontPadding="false"
 				android:textColor="@color/lightui_darkorange"
@@ -55,11 +48,11 @@
 
 			<!-- Popular Together -->
 			<com.mobsandgeeks.ui.TypefaceTextView 
-				android:text="Frequently bought together&#8230;"
+				android:text="@string/frequently_together"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:gravity="center"
-				android:textSize="16dp"
+				android:textSize="16sp"
 				android:paddingBottom="0dp"
 				android:textColor="@color/lightui_darkorange"
 				geekui:customTypeface="fonts/DejaVuSans-Oblique.ttf" />
