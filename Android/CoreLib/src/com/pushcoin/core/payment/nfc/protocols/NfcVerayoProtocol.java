@@ -41,8 +41,7 @@ public class NfcVerayoProtocol extends NfcProtocol {
 		this.timer = new Stopwatch();
 	}
 
-	private Response doChallenge(Challenge challenge)
-			throws IOException {
+	private Response doChallenge(Challenge challenge) throws IOException {
 
 		Response response = new Response(256);
 
@@ -86,8 +85,8 @@ public class NfcVerayoProtocol extends NfcProtocol {
 		try {
 			ret.writeByteStr(tech.getSourceId());
 			ret.writeByteStr(challenge.getAppSeed());
-			ret.writeBytes(challenge.getKeyID());
-			
+			ret.writeBytes(challenge.getKeyId());
+
 			Response response = doChallenge(challenge);
 			ret.writeByteStr(response.response);
 			ret.writeUint(response.elapsed);

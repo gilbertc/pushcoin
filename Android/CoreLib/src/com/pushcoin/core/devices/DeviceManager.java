@@ -50,7 +50,7 @@ public class DeviceManager {
 	private Queue<PendingPermissionRequest> pendingRequests = new ArrayDeque<PendingPermissionRequest>();
 
 	public DeviceManager(Context context, UsbManager usbManager) {
-		log.d("***********NEW DEVICEMANAGER!!!***********");
+		log.d("creating device manager");
 		this.usbManager = usbManager;
 		this.devices = new SparseArray<IDevice>();
 

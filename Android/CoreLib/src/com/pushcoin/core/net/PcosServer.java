@@ -1,20 +1,48 @@
 package com.pushcoin.core.net;
 
+import com.pushcoin.core.interfaces.Messages;
 import com.pushcoin.pcos.DocumentReader;
+import com.pushcoin.pcos.InputBlock;
 import com.pushcoin.pcos.InputDocument;
 import com.pushcoin.pcos.OutputDocument;
+import com.pushcoin.pcos.PcosError;
 
 public class PcosServer extends Server {
 
 	public abstract class PcosResponseListener extends Server.ResponseListener {
 
-		public abstract void onResponse(Object tag, InputDocument res);
+		public void onErrorResponse(Object tag, byte[] trxId, long ec,
+				String reason) {
+		}
+
+		public void onSuccessResponse(Object tag, byte[] refData, byte[] trxId) {
+		}
+
+		public void onResponse(Object tag, InputDocument res) throws PcosError {
+
+		}
 
 		@Override
-		public final void onResponse(Object tag, byte[] res) {
-
+		public final void onResponse(Object tag, byte[] data) {
 			try {
-				this.onResponse(tag, new DocumentReader(res));
+				DocumentReader res = new DocumentReader(data);
+				if (res.getDocumentName().contains(Messages.MSG_ERROR)) {
+					InputBlock bo = res.getBlock("Bo");
+					byte[] trxId = bo.readByteStr(0);
+					long ec = bo.readUint();
+					String reason = bo.readString(0);
+
+					onErrorResponse(tag, trxId, ec, reason);
+				} else if (res.getDocumentName().contains(Messages.MSG_SUCCESS)) {
+					InputBlock bo = res.getBlock("Bo");
+					byte[] refData = bo.readByteStr(0);
+					byte[] trxId = bo.readByteStr(0);
+
+					onSuccessResponse(tag, refData, trxId);
+				} else {
+					this.onResponse(tag, res);
+				}
+
 			} catch (Exception ex) {
 				this.onError(tag, ex);
 			}

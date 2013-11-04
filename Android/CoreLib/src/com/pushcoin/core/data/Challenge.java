@@ -3,20 +3,36 @@ package com.pushcoin.core.data;
 import java.util.Date;
 
 public class Challenge {
-	public byte[] getKeyID() {
-		return null;
+	
+	private TransactionKey key;
+	private byte[] appSeed;
+	private byte[] challenge;
+	
+	public Challenge(TransactionKey key, byte[] appSeed, byte[] challenge)
+	{
+		this.key = key;
+		this.appSeed = appSeed;
+		this.challenge = challenge;
 	}
-
-	public byte[] getAppSeed() {
-		return null;
-
+	
+	public byte[] getKeyId()
+	{ 
+		return this.key.keyId;
 	}
-
-	public byte[] getChallenege() {
-		return null;
+	
+	public byte[] getAppSeed()
+	{
+		return this.appSeed;
 	}
-
-	public Date getUtc_etime() {
-		return new Date();
+	
+	public byte[] getChallenege()
+	{
+		return this.challenge;
 	}
+	
+	public Date getExpire()
+	{
+		return this.key.expire;
+	}
+	
 }

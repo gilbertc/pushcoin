@@ -1,7 +1,10 @@
 package com.pushcoin.core.services;
 
+import java.util.Date;
+
 import com.pushcoin.core.data.Challenge;
 import com.pushcoin.core.data.DisplayParcel;
+import com.pushcoin.core.data.TransactionKey;
 import com.pushcoin.core.devices.DeviceManager;
 import com.pushcoin.core.payment.IPayment;
 import com.pushcoin.core.payment.PaymentListener;
@@ -16,8 +19,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 
-public class PushCoinService extends Service implements PaymentListener {
-	private static Logger log = Logger.getLogger(PushCoinService.class);
+public class PaymentService extends Service implements PaymentListener {
+	private static Logger log = Logger.getLogger(PaymentService.class);
 
 	public static final String ACTION_START = "com.pushcoin.core.intent.actions.START";
 	public static final String ACTION_STOP = "com.pushcoin.core.intent.actions.STOP";
@@ -33,7 +36,7 @@ public class PushCoinService extends Service implements PaymentListener {
 	private Messenger messenger;
 	private int startId = -1;
 
-	public PushCoinService() {
+	public PaymentService() {
 		log.d("constructor");
 	}
 
@@ -123,12 +126,19 @@ public class PushCoinService extends Service implements PaymentListener {
 	}
 
 	private Challenge getChallenge() {
+		TransactionKey[] keys = TransactionKey.getKeys();
+
+		Date now = new Date();
+		for (TransactionKey key : keys) {
+			if (key.expire.after(now))
+				return key.getChallenge();
+		}
 		return null;
 	}
 
 	@Override
 	public void onPaymentDiscovered(IPayment tech) {
-		byte[] blob;
+		byte[] blob = null;
 
 		try {
 			tech.connect();
@@ -143,6 +153,8 @@ public class PushCoinService extends Service implements PaymentListener {
 
 		Message msg = Message.obtain();
 		msg.what = MSGID_COMPLETE;
+		msg.obj = blob;
+
 		try {
 			this.messenger.send(msg);
 		} catch (Exception e) {

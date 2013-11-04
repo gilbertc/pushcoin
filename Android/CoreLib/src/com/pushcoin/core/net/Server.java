@@ -29,11 +29,13 @@ import org.apache.http.protocol.HTTP;
 
 import android.R;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 import com.pushcoin.core.exceptions.ServerException;
+import com.pushcoin.core.interfaces.Preferences;
 import com.pushcoin.core.security.SSLSocketFactory;
 import com.pushcoin.core.utils.Logger;
 import com.pushcoin.core.utils.Stringifier;
@@ -63,10 +65,19 @@ public class Server {
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
+	public static String getDefaultUrl(Context ctxt) {
+		SharedPreferences prefs = ctxt.getSharedPreferences(Preferences.NAME,
+				Context.MODE_PRIVATE);
+		return prefs.getString(Preferences.NAME + Preferences.PREF_URL, "");
+	}
+
 	public abstract class ResponseListener {
 		public abstract void onError(Object tag, Exception ex);
 
 		public abstract void onResponse(Object tag, byte[] res);
+
+		public void onFinished(Object tag) {
+		}
 	}
 
 	public void postAsync(String url, byte[] data, ResponseListener listener) {
@@ -151,13 +162,15 @@ public class Server {
 					params.listener.onResponse(params.tag, result.data);
 				else
 					params.listener.onError(params.tag, result.ex);
+
+				params.listener.onFinished(params.tag);
 			}
 		}
 	}
 
 	private PostResult post(PostParams params) throws ServerException {
 
-		if (params.data!= null)
+		if (params.data != null)
 			log.d("Sending: " + Stringifier.toString(params.data));
 		try {
 			KeyStore trustStore;
@@ -206,9 +219,9 @@ public class Server {
 			response.getEntity().writeTo(bao);
 
 			byte[] res = bao.toByteArray();
-			
+
 			log.d("Receiving: " + Stringifier.toString(res));
-			
+
 			return new PostResult(params, res);
 
 		} catch (KeyStoreException e) {

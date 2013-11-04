@@ -32,7 +32,7 @@ public class TestAppActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
-				bundle.putInt(Keys.KEY_PAYMENT_VALUE, 29);
+				bundle.putLong(Keys.KEY_PAYMENT_VALUE, 29);
 				bundle.putInt(Keys.KEY_PAYMENT_SCALE, -1);
 				integrator.charge(bundle);
 			}

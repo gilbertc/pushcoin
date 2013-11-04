@@ -10,13 +10,13 @@ import com.pushcoin.core.services.TransactionKeyService;
 
 public class TransactionKeyAlarm implements WakefulIntentService.AlarmListener {
 
-	int nextAlarmInMillis;
+	long nextAlarmInMillis;
 
 	public TransactionKeyAlarm() {
 
 	}
 
-	public TransactionKeyAlarm(int nextAlarmInMillis) {
+	public TransactionKeyAlarm(long nextAlarmInMillis) {
 		this.nextAlarmInMillis = nextAlarmInMillis;
 	}
 

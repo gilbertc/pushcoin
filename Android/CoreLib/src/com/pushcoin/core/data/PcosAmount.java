@@ -9,41 +9,53 @@ import com.pushcoin.pcos.PcosError;
 
 public class PcosAmount {
 
-	static public boolean Optional = true;
-	static private DecimalFormat moneyFormatwithSign = new DecimalFormat("$###0.00");
-	static private DecimalFormat moneyFormatwithSign2 = new DecimalFormat("###0.00");
+	public static boolean OPTIONAL = true;
+
+	private static DecimalFormat FMT_WITH_SIGN = new DecimalFormat("$###0.00");
+	private static DecimalFormat FMT_NO_SIGN = new DecimalFormat("###0.00");
 
 	private boolean optional = false;
-	private long Value;
-	private int Scale;
-	
-	public PcosAmount(BigDecimal amount, boolean opt)
-	{
+	private long value;
+	private int scale;
+
+	public PcosAmount(long value, int scale) {
+		this(value, scale, !OPTIONAL);
+	}
+
+	public PcosAmount(long value, int scale, boolean optional) {
+		this.optional = optional;
+		this.value = value;
+		this.scale = scale;
+	}
+
+	public PcosAmount(BigDecimal amount, boolean opt) {
 		optional = opt;
-		String strAmt = moneyFormatwithSign2.format(amount.doubleValue()).replace(".","");
-		Value = Long.parseLong(strAmt);
-		Scale = -2;
+		String strAmt = FMT_NO_SIGN.format(amount.doubleValue()).replace(".",
+				"");
+		value = Long.parseLong(strAmt);
+		scale = -2;
 	}
-	public PcosAmount(BigDecimal amount) { this(amount, false); }
-	
-	public PcosAmount(InputBlock ib) throws PcosError
-	{		
-		Value = ib.readLong();
-		Scale = ib.readInt();	}
-	
-	public void Write(OutputBlock writer) throws PcosError, Exception
-	{
-		if(optional)
+
+	public PcosAmount(BigDecimal amount) {
+		this(amount, !OPTIONAL);
+	}
+
+	public PcosAmount(InputBlock ib) throws PcosError {
+		value = ib.readLong();
+		scale = ib.readInt();
+	}
+
+	public void write(OutputBlock writer) throws PcosError {
+		if (optional)
 			writer.writeBool(true);
-		writer.writeLong(Value);
-		writer.writeInt(Scale);
+		writer.writeLong(value);
+		writer.writeInt(scale);
 	}
-	
+
 	@Override
-	public String toString()
-	{
-		BigDecimal Amount = new BigDecimal(Value * Math.pow(10, Scale));
-		return moneyFormatwithSign.format(Amount.doubleValue());
+	public String toString() {
+		BigDecimal Amount = new BigDecimal(value * Math.pow(10, scale));
+		return FMT_WITH_SIGN.format(Amount.doubleValue());
 	}
-	
+
 }

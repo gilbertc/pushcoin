@@ -1,5 +1,8 @@
 package com.pushcoin.app.main.activities;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+
 import com.pushcoin.app.main.R;
 import com.pushcoin.core.net.PcosServer;
 import com.pushcoin.core.security.KeyStore;
@@ -109,9 +112,13 @@ public class RegisterDeviceActivity extends Activity {
 				bo.writeByteStr(keyStore.getPublicKey().getEncoded());
 				writer.addBlock(bo);
 
+				String url = PcosServer.getDefaultUrl(this);
+				if (url.isEmpty())
+					throw new UnknownHostException();
+
 				server = new PcosServer();
-				server.postAsync(getString(R.string.url_pushcoin_test), writer,
-						new RegistrationResponseListener(server));
+				server.postAsync(url, writer, new RegistrationResponseListener(
+						server));
 			} catch (Exception ex) {
 				registrationCodeView.setError(ex.getMessage());
 				registrationCodeView.requestFocus();
@@ -170,6 +177,14 @@ public class RegisterDeviceActivity extends Activity {
 		}
 
 		@Override
+		public void onErrorResponse(Object tag, byte[] trxId, long ec,
+				String reason) {
+			log.e("server returned error: " + reason);
+			registrationCodeView.setError(reason);
+			registrationCodeView.requestFocus();
+		}
+
+		@Override
 		public void onResponse(Object tag, InputDocument doc) {
 			boolean ok = false;
 			KeyStore keyStore = KeyStore.getInstance();
@@ -194,9 +209,6 @@ public class RegisterDeviceActivity extends Activity {
 				}
 			}
 
-			showProgress(false);
-			server = null;
-
 			if (ok)
 				finish();
 			else if (keyStore != null)
@@ -210,13 +222,16 @@ public class RegisterDeviceActivity extends Activity {
 			if (keyStore != null)
 				keyStore.reset(RegisterDeviceActivity.this);
 
-			showProgress(false);
-			server = null;
-
 			log.e("register ack exception", ex);
 
 			registrationCodeView.setError(ex.getMessage());
 			registrationCodeView.requestFocus();
+		}
+
+		@Override
+		public void onFinished(Object tag) {
+			showProgress(false);
+			server = null;
 		}
 
 	}
