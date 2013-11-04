@@ -108,10 +108,9 @@ public class BitsyPosActivity
 		}
 		else // or, we need to configure the item first
 		{
-			ConfigureItemFragment configureItem = new ConfigureItemFragment("uuid", item);
-
 			getFragmentManager().beginTransaction()
-				.replace( R.id.hz_center_pane, configureItem, FragmentTag.CONFIGURE_ITEM )
+				.replace( R.id.hz_center_pane, 
+					ConfigureItemFragment.newInstance( item ), FragmentTag.CONFIGURE_ITEM )
 				.commit();
 		}
 	}

@@ -24,14 +24,29 @@ import java.util.List;
 public class ConfigureItemFragment
 	extends Fragment implements EditItemPropertiesFragment.OnDismissed
 {
-	public ConfigureItemFragment( String backstackId, Item parent ) {
-		parent_ = parent;
+
+	/**
+		Create a new instance, providing item.
+	*/
+	static ConfigureItemFragment newInstance( Item item )
+	{
+		ConfigureItemFragment f = new ConfigureItemFragment();
+
+		// Supply item we are configuring
+		Bundle args = new Bundle();
+		args.putParcelable(Conf.FIELD_ITEM, item);
+		f.setArguments(args);
+
+		return f;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		final Context ctx = getActivity();
+
+		// Unpack item to configure
+		parent_ = getArguments().getParcelable( Conf.FIELD_ITEM );
 
 		// Inflate the layout for this fragment
 		View fragmentRootLayout = inflater.inflate(R.layout.configure_item_view, container, false);
