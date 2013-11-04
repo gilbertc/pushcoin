@@ -8,11 +8,8 @@
 	<string name="undoall">Undo All</string>
 
 	<!-- UI texts -->
-	<string name="cancel">Cancel</string>
-	<string name="save">Save</string>
 	<string name="done">Done</string>
 	<string name="confirm_clear_cart">Erase all items from the cart?</string>
-	<string name="clearcart">Yes, Erase All</string>
 	<string name="frequently_together">Frequently bought together&#8230;</string>
 	<string name="sku">SKU</string>
 	<string name="name">Name</string>

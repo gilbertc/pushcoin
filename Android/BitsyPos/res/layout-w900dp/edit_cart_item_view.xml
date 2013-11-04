@@ -29,7 +29,7 @@
 
 		<Button
 			android:id="@+id/edit_cart_item_view_cancel_button" 
-			android:text="@string/cancel"
+			android:text="@android:string/cancel"
 			android:textSize="28sp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
 
 		<Button
 			android:id="@+id/edit_cart_item_view_save_button" 
-			android:text="@string/save"
+			android:text="@android:string/ok"
 			android:textSize="28sp"
 			android:textStyle="bold"
 			android:layout_width="wrap_content"
