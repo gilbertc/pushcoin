@@ -1,3 +1,0 @@
-<WakefulIntentService
-  listener="com.pushcoin.core.alarms.TransactionKeyAlarm"
-/>

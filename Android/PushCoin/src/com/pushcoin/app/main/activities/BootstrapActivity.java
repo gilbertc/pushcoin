@@ -8,9 +8,9 @@ import android.content.SharedPreferences.Editor;
 import android.widget.Toast;
 
 import com.pushcoin.app.main.R;
+import com.pushcoin.app.main.services.TransactionKeyService;
 import com.pushcoin.core.interfaces.Preferences;
 import com.pushcoin.core.security.KeyStore;
-import com.pushcoin.core.services.TransactionKeyService;
 import com.pushcoin.core.utils.Logger;
 
 public class BootstrapActivity extends Activity {

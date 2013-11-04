@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 import java.util.Date;
 
 import com.pushcoin.app.main.R;
+import com.pushcoin.app.main.services.PaymentService;
 import com.pushcoin.core.data.DisplayParcel;
 import com.pushcoin.core.data.PcosAmount;
 import com.pushcoin.core.exceptions.MATUnavailableException;
@@ -12,7 +13,6 @@ import com.pushcoin.core.interfaces.Keys;
 import com.pushcoin.core.interfaces.Results;
 import com.pushcoin.core.net.PcosServer;
 import com.pushcoin.core.security.KeyStore;
-import com.pushcoin.core.services.PaymentService;
 import com.pushcoin.core.utils.Logger;
 import com.pushcoin.pcos.BlockWriter;
 import com.pushcoin.pcos.DocumentWriter;

@@ -1,4 +1,4 @@
-package com.pushcoin.core.receivers;
+package com.pushcoin.app.main.receivers;
 
 import com.pushcoin.core.devices.DeviceManager;
 import com.pushcoin.core.utils.Logger;

@@ -1,4 +1,4 @@
-package com.pushcoin.core.services;
+package com.pushcoin.app.main.services;
 
 import java.util.Date;
 
@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
-import com.pushcoin.core.alarms.TransactionKeyAlarm;
+import com.pushcoin.app.main.alarms.TransactionKeyAlarm;
 import com.pushcoin.core.data.TransactionKey;
 import com.pushcoin.core.net.PcosServer;
 import com.pushcoin.core.security.KeyStore;

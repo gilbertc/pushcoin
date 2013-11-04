@@ -1,4 +1,4 @@
-package com.pushcoin.core.services;
+package com.pushcoin.app.main.services;
 
 import java.util.Date;
 
