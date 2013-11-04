@@ -25,6 +25,7 @@ public class TestAppActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		this.integrator = new IntentIntegrator(this);
+		integrator.bootstrap();
 
 		this.btnStart = (Button) this.findViewById(R.id.btnStart);
 
@@ -62,7 +63,6 @@ public class TestAppActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		// integrator.bootstrap();
 	}
 
 	@Override
