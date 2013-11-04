@@ -78,7 +78,7 @@ public class ConfigureItemFragment
 			title.setText( slot.getName() );
 
 			if ( slot.isDefined() ) {
-				title.setTextColor(ctx.getResources().getColor(R.color.DarkBlue));
+				title.setTextColor(ctx.getResources().getColor(R.color.android_holo_blue_dark));
 			}
 
 			// Fetch products which qualify as slot alternatives
@@ -182,7 +182,7 @@ public class ConfigureItemFragment
 		// another configure-screen - go recursively until all levels are defined
 		parent_ = parent_.replace( curSlotIndx_, chosenItem );
 		curSlotTitle_.setText( chosenItem.getName() );
-		curSlotTitle_.setTextColor( getActivity().getResources().getColor(R.color.DarkBlue) );
+		curSlotTitle_.setTextColor( getActivity().getResources().getColor(R.color.android_holo_blue_dark) );
 		// restore defaults
 		curSlotIndx_ = 0; curSlotTitle_ = null;
 

@@ -7,15 +7,14 @@
 	android:paddingTop="8dp"
 	android:paddingBottom="12dp"
 	android:paddingRight="6dp"
-	android:paddingLeft="6dp"
-	android:background="@drawable/configure_item_slot_row_selector">
+	android:paddingLeft="6dp">
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/configure_slot_listview_item_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textSize="20sp"
-		android:textColor="@color/black"
+		android:textColor="@android:color/black"
 		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 </LinearLayout>
