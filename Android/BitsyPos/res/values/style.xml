@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+	<style name="BitsyDarkTheme" parent="android:Theme.Holo.NoActionBar.Fullscreen">
+		<item name="android:windowContentOverlay">@null</item>
+		<item name="android:windowBackground">@null</item>
+	</style>
+
 	<!-- Swipe to remove styles -->
 	<style name="fade_animation">
 		<item name="@android:windowEnterAnimation">@anim/popup_show</item>
