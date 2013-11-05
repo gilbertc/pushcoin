@@ -19,10 +19,8 @@ public class ClearCartDialogFragment extends DialogFragment
 		builder.setMessage(R.string.confirm_clear_cart)
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
 				{
-					public void onClick(DialogInterface dialog, int id) 
-					{
-						Cart cart = (Cart) SessionManager.getInstance().get( Conf.SESSION_KEY_CART );
-						cart.clear();
+					public void onClick(DialogInterface dialog, int id) {
+						CartManager.getInstance().getActiveCart().clear();
 					}
 				})
 			.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()

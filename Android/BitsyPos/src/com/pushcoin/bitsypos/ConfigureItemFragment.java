@@ -58,8 +58,7 @@ public class ConfigureItemFragment
 		addToCartBtn_.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View v) {
-				Cart cart = (Cart) SessionManager.getInstance().get( Conf.SESSION_KEY_CART );
-				cart.add( Util.toCartCombo(parent_) );
+				CartManager.getInstance().getActiveCart().add( Util.toCartCombo(parent_) );
 			}
 		});
 
@@ -160,8 +159,7 @@ public class ConfigureItemFragment
 
 						// TODO: Add to cart if item isDefined, otherwise start another
 						// configure-item screen
-						Cart cart = (Cart) SessionManager.getInstance().get( Conf.SESSION_KEY_CART );
-						cart.add( Util.toCartCombo(item) );
+						CartManager.getInstance().getActiveCart().add( Util.toCartCombo(item) );
 					}
 				});
 

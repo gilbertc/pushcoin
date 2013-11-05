@@ -36,7 +36,7 @@ public class BitsyPosActivity
 		AppDb.newInstance( this );
 
 		// Session manager
-		session_ = SessionManager.newInstance( this );
+		carts_ = CartManager.newInstance( this );
 
 		// set this activity UI layout
 		setContentView(R.layout.shopping_main);
@@ -134,22 +134,18 @@ public class BitsyPosActivity
 			DialogFragment newFragment = EditItemPropertiesFragment.newInstance(item);
 			newFragment.show(ft, Conf.DIALOG_EDIT_ITEM_PROPERTIES);
 		}
-		else
-		{
-			Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
-			cart.add( Util.toCartCombo( item ) );
+		else {
+			carts_.getActiveCart().add( Util.toCartCombo( item ) );
 		}
 	}
 
 	@Override
-	public void onEditItemPropertiesDone( Item item )
-	{
-		Cart cart = (Cart) session_.get( Conf.SESSION_KEY_CART );
-		cart.add( Util.toCartCombo( item ) );
+	public void onEditItemPropertiesDone( Item item ) {
+		carts_.getActiveCart().add( Util.toCartCombo( item ) );
 	}
 
 	private Handler handler_;
-	private SessionManager session_;
+	private CartManager carts_;
 
 	/**
 		Static handler keeps lint happy about (temporary?) memory leaks if queued 

@@ -59,7 +59,7 @@ public class ShoppingCartFragment extends Fragment
 		Context ctx = getActivity();
 
 		// Current cart
-		final Cart cart = (Cart) SessionManager.getInstance().get( Conf.SESSION_KEY_CART );
+		final Cart cart = CartManager.getInstance().getActiveCart();
 		adapter_ = new CartEntryArrayAdapter(ctx, cart);
 
 		// Inflate the layout for this fragment

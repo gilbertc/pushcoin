@@ -31,11 +31,6 @@ public class Conf
 	// Duration of time (ms) the user can undo removal of item from the cart. 
 	static final int CART_UNDO_HIDE_DELAY=3000;
 
-	/**
-		Session keys.
-	*/
-	static final String SESSION_KEY_CART = "cart";
-
 	/** 
 		Database queries.  
 
