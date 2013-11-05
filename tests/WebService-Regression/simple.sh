@@ -1,4 +1,4 @@
-CMD="curl -c cookie.txt -b cookie.txt -k -X POST https://beta.minta.com"
+CMD="curl -c cookie.txt -b cookie.txt -k -X POST https://beta.aggati.com"
 
 # echo -e "\n\n*** Sign-up ***"
 $CMD/json/account/initiate-signup/ -d '{ "email": "sl+test1@pushcoin.com" }'

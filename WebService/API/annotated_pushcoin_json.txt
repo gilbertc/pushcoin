@@ -1391,3 +1391,33 @@ any of the enumerated message types, depending on the outcome of processing.
 		}
 
 	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/contact/guest-question/
+
+	Description:
+		Sends PushCoin a request for more information.
+
+	Input:
+		{
+			sender_name: string
+			contact_info: string
+			message_body: string
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#
+	Request: json/contact/member-question/
+
+	Description:
+		Sends PushCoin a request for help.
+
+	Input:
+		{
+			message_body: string
+		}
+
+	Output: error | success
+
+#---------------------------------------------------------------------------#

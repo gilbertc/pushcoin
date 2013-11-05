@@ -26,7 +26,6 @@ public class CategoryListAdapter extends BaseAdapter
 
 	public CategoryListAdapter(Context context, int rowLayoutResourceId, int labelViewResourceId)
 	{
-		ctx_ = context;
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from(context);
 
@@ -134,7 +133,6 @@ public class CategoryListAdapter extends BaseAdapter
 		TextView label;
 	}
 
-	private Context ctx_;
 	private LayoutInflater inflater_;
 	private List<Entry> entries_;
 
