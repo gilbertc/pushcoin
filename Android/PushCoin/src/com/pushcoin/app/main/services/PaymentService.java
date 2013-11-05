@@ -22,9 +22,9 @@ import android.os.Messenger;
 public class PaymentService extends Service implements PaymentListener {
 	private static Logger log = Logger.getLogger(PaymentService.class);
 
-	public static final String ACTION_START = "com.pushcoin.core.intent.actions.START";
-	public static final String ACTION_STOP = "com.pushcoin.core.intent.actions.STOP";
-	public static final String ACTION_DISPLAY = "com.pushcoin.core.intent.actions.DISPLAY";
+	public static final String ACTION_START = "com.pushcoin.app.main.services.PaymentService.START";
+	public static final String ACTION_STOP = "com.pushcoin.app.main.services.PaymentService.STOP";
+	public static final String ACTION_DISPLAY = "com.pushcoin.app.main.services.PaymentService.DISPLAY";
 	public static final String KEY_AMOUNT = "Amount";
 	public static final String KEY_DISPLAYPARCEL = "DisplayParcel";
 	public static final String KEY_MESSENGER = "Messenger";
@@ -128,11 +128,14 @@ public class PaymentService extends Service implements PaymentListener {
 	private Challenge getChallenge() {
 		TransactionKey[] keys = TransactionKey.getKeys();
 
-		Date now = new Date();
-		for (TransactionKey key : keys) {
-			if (key.expire.after(now))
-				return key.getChallenge();
+		if (keys != null) {
+			Date now = new Date();
+			for (TransactionKey key : keys) {
+				if (key.expire.after(now))
+					return key.getChallenge();
+			}
 		}
+		log.e("no transaction keys");
 		return null;
 	}
 

@@ -33,6 +33,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import com.pushcoin.core.exceptions.ServerException;
 import com.pushcoin.core.interfaces.Preferences;
@@ -65,10 +66,14 @@ public class Server {
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
-	public static String getDefaultUrl(Context ctxt) {
-		SharedPreferences prefs = ctxt.getSharedPreferences(Preferences.NAME,
-				Context.MODE_PRIVATE);
-		return prefs.getString(Preferences.NAME + Preferences.PREF_URL, "");
+	private static String defaultUrl = "";
+
+	public static void setDefaultUrl(String url) {
+		defaultUrl = url;
+	}
+
+	public static String getDefaultUrl() {
+		return defaultUrl;
 	}
 
 	public abstract class ResponseListener {

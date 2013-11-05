@@ -19,7 +19,6 @@ public class PcosServer extends Server {
 		}
 
 		public void onResponse(Object tag, InputDocument res) throws PcosError {
-
 		}
 
 		@Override

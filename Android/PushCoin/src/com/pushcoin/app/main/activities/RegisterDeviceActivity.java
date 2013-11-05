@@ -112,7 +112,7 @@ public class RegisterDeviceActivity extends Activity {
 				bo.writeByteStr(keyStore.getPublicKey().getEncoded());
 				writer.addBlock(bo);
 
-				String url = PcosServer.getDefaultUrl(this);
+				String url = PcosServer.getDefaultUrl();
 				if (url.isEmpty())
 					throw new UnknownHostException();
 

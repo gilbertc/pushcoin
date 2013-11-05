@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.pushcoin.app.main.R;
 import com.pushcoin.app.main.services.TransactionKeyService;
 import com.pushcoin.core.interfaces.Preferences;
+import com.pushcoin.core.net.Server;
 import com.pushcoin.core.security.KeyStore;
 import com.pushcoin.core.utils.Logger;
 
@@ -20,13 +21,20 @@ public class BootstrapActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		
+
 		SharedPreferences prefs = getSharedPreferences(Preferences.NAME,
 				Context.MODE_PRIVATE);
-		Editor editor = prefs.edit();
-		editor.putString(Preferences.NAME + Preferences.PREF_URL, getString(R.string.url_pushcoin_test));
-		editor.commit();
-		
+
+		if (!prefs.contains(Preferences.PREF_URL)) {
+			Editor editor = prefs.edit();
+			editor.putString(Preferences.PREF_URL,
+					getString(R.string.url_pushcoin_prod));
+			editor.commit();
+		}
+
+		Server.setDefaultUrl(prefs.getString(Preferences.PREF_URL,
+				getString(R.string.url_pushcoin_prod)));
+
 		KeyStore keyStore = KeyStore.getInstance(this);
 		if (!keyStore.hasMAT()) {
 			log.d("cannot find mat");
@@ -34,7 +42,7 @@ public class BootstrapActivity extends Activity {
 			startActivity(myIntent);
 
 		} else {
-			TransactionKeyService.scheduleAlarms(this, 5000, false);
+			TransactionKeyService.scheduleAlarms(this, 0, false);
 			Toast.makeText(this, "Transaction Key Service Active",
 					Toast.LENGTH_LONG).show();
 

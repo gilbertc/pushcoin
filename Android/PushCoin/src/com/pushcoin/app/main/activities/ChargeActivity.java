@@ -153,7 +153,7 @@ public class ChargeActivity extends Activity {
 		if (intent.getAction().endsWith(Actions.ACTION_CHARGE)) {
 
 			try {
-				String url = PcosServer.getDefaultUrl(this);
+				String url = PcosServer.getDefaultUrl();
 				if (url.isEmpty())
 					throw new UnknownHostException();
 

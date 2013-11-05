@@ -43,7 +43,7 @@ public class TransactionKeyService extends WakefulIntentService {
 			return;
 		}
 
-		String url = PcosServer.getDefaultUrl(this);
+		String url = PcosServer.getDefaultUrl();
 		if (url.isEmpty()) {
 			log.e("cannot fetch keys - invalid url");
 			return;
@@ -79,6 +79,7 @@ public class TransactionKeyService extends WakefulIntentService {
 		public void onErrorResponse(Object tag, byte[] trxId, long ec,
 				String reason) {
 			log.e("server returned error: " + reason);
+			TransactionKey.setKeys(null);
 			TransactionKeyService.scheduleAlarms(TransactionKeyService.this,
 					RETRY_INTERVAL, false);
 		}
