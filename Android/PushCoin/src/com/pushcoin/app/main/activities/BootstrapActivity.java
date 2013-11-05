@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.pushcoin.app.main.R;
 import com.pushcoin.app.main.services.TransactionKeyService;
+import com.pushcoin.core.interfaces.Actions;
 import com.pushcoin.core.interfaces.Preferences;
 import com.pushcoin.core.net.Server;
 import com.pushcoin.core.security.KeyStore;
@@ -39,22 +40,24 @@ public class BootstrapActivity extends Activity {
 		if (!keyStore.hasMAT()) {
 			log.d("cannot find mat");
 			Intent myIntent = new Intent(this, RegisterDeviceActivity.class);
-			startActivity(myIntent);
+			startActivityForResult(myIntent, 0);
 
 		} else {
 			TransactionKeyService.scheduleAlarms(this, 0, false);
 			Toast.makeText(this, "Transaction Key Service Active",
 					Toast.LENGTH_LONG).show();
 
-			if (getIntent().getAction().compareTo(ACTION_MAIN) == 0) {
+			if (getIntent().getAction() == null
+					|| !getIntent().getAction().endsWith(
+							Actions.ACTION_BOOTSTRAP)) {
 				log.d("launched by user");
 
 				/* launched by user */
 				Intent myIntent = new Intent(this, SettingsActivity.class);
 				startActivity(myIntent);
 			}
+			finish();
 		}
-		finish();
 
 	}
 }

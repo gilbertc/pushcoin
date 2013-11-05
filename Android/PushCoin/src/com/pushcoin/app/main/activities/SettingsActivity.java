@@ -1,11 +1,15 @@
 package com.pushcoin.app.main.activities;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -13,6 +17,8 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.List;
@@ -34,6 +40,7 @@ public class SettingsActivity extends PreferenceActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		getPreferenceManager().setSharedPreferencesName(Preferences.NAME);
 		getPreferenceManager().setSharedPreferencesMode(MODE_PRIVATE);
 	}
@@ -48,6 +55,58 @@ public class SettingsActivity extends PreferenceActivity implements
 		setupSimplePreferencesScreen();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getMenuInflater().inflate(R.menu.settings, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.action_reset_device:
+			showResetDeviceDialog();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private AlertDialog showResetDeviceDialog() {
+		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+		dialog.setTitle("Reset Device");
+		dialog.setMessage("Your device will be unlinked with your account. Are you sure?");
+		dialog.setPositiveButton("Yes, reset",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						KeyStore keyStore = KeyStore
+								.getInstance(SettingsActivity.this);
+						if (keyStore != null)
+							keyStore.reset(SettingsActivity.this);
+
+						Toast.makeText(SettingsActivity.this,
+								"Device reset completed", Toast.LENGTH_LONG)
+								.show();
+
+						Intent myIntent = new Intent(SettingsActivity.this,
+								BootstrapActivity.class);
+						startActivity(myIntent);
+						SettingsActivity.this.finish();
+					}
+				});
+		dialog.setNegativeButton("No, go back",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+					}
+				});
+		return dialog.show();
+	}
+
 	@SuppressWarnings("deprecation")
 	private void setupSimplePreferencesScreen() {
 		if (!isSimplePreferences(this)) {
@@ -55,7 +114,8 @@ public class SettingsActivity extends PreferenceActivity implements
 		}
 		addPreferencesFromResource(R.xml.pref_general);
 
-		bindPreferenceSummaryToValue(getPreferenceManager(), findPreference(Preferences.PREF_URL));
+		bindPreferenceSummaryToValue(getPreferenceManager(),
+				findPreference(Preferences.PREF_URL));
 	}
 
 	@Override
@@ -101,12 +161,14 @@ public class SettingsActivity extends PreferenceActivity implements
 		}
 	};
 
-	private static void bindPreferenceSummaryToValue(PreferenceManager preferenceManager, Preference preference) {
+	private static void bindPreferenceSummaryToValue(
+			PreferenceManager preferenceManager, Preference preference) {
 		// Set the listener to watch for value changes.
 		preference
 				.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
-		String value = preferenceManager.getSharedPreferences().getString(preference.getKey(), "");
+		String value = preferenceManager.getSharedPreferences().getString(
+				preference.getKey(), "");
 
 		log.i("binding " + preference.getKey() + " value: " + value);
 
@@ -123,18 +185,19 @@ public class SettingsActivity extends PreferenceActivity implements
 			getPreferenceManager().setSharedPreferencesName(Preferences.NAME);
 			getPreferenceManager().setSharedPreferencesMode(MODE_PRIVATE);
 			addPreferencesFromResource(R.xml.pref_general);
-			bindPreferenceSummaryToValue(getPreferenceManager(), findPreference(Preferences.PREF_URL));
+			bindPreferenceSummaryToValue(getPreferenceManager(),
+					findPreference(Preferences.PREF_URL));
 		}
 	}
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-
-		String value = sharedPreferences.getString(key, "");
-		log.d("preference changed: " + key + " check: " + value);
-
+		
 		if (key.equals(Preferences.PREF_URL)) {
+			String value = sharedPreferences.getString(key, "");
+			log.d("preference changed: " + key + " check: " + value);
+
 			Server.setDefaultUrl(value);
 			KeyStore keyStore = KeyStore.getInstance(this);
 			if (keyStore.hasMAT()) {

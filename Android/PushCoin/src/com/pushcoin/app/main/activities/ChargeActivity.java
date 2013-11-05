@@ -193,7 +193,7 @@ public class ChargeActivity extends Activity {
 	private OutputDocument createPaymentRequest(Bundle bundle, byte[] pta)
 			throws PcosError, MATUnavailableException {
 
-		KeyStore keyStore = KeyStore.getInstance();
+		KeyStore keyStore = KeyStore.getInstance(this);
 		if (keyStore == null || !keyStore.hasMAT())
 			throw new MATUnavailableException();
 
@@ -298,8 +298,8 @@ public class ChargeActivity extends Activity {
 
 		@Override
 		public void onResponse(Object tag, InputDocument doc) {
-			KeyStore keyStore = KeyStore.getInstance();
-			if (keyStore != null) {
+			KeyStore keyStore = KeyStore.getInstance(ChargeActivity.this);
+			if (keyStore != null && keyStore.hasMAT()) {
 				try {
 					if (doc.getDocumentName().contains("PaymentAck")) {
 						onPaymentSuccess();

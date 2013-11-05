@@ -16,10 +16,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -62,9 +64,23 @@ public class RegisterDeviceActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.register_device, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.action_settings:
+			Intent myIntent = new Intent(this, SettingsActivity.class);
+			startActivity(myIntent);
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	public void attemptRegistration() {
@@ -218,7 +234,8 @@ public class RegisterDeviceActivity extends Activity {
 		@Override
 		public void onError(Object tag, Exception ex) {
 
-			KeyStore keyStore = KeyStore.getInstance();
+			KeyStore keyStore = KeyStore
+					.getInstance(RegisterDeviceActivity.this);
 			if (keyStore != null)
 				keyStore.reset(RegisterDeviceActivity.this);
 
