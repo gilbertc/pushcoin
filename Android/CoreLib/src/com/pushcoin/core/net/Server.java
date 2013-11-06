@@ -27,16 +27,12 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import android.R;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 
 import com.pushcoin.core.exceptions.ServerException;
-import com.pushcoin.core.interfaces.Preferences;
 import com.pushcoin.core.security.SSLSocketFactory;
 import com.pushcoin.core.utils.Logger;
 import com.pushcoin.core.utils.Stringifier;

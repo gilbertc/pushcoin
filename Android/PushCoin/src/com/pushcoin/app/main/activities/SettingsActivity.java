@@ -2,14 +2,12 @@ package com.pushcoin.app.main.activities;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -45,6 +43,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		getPreferenceManager().setSharedPreferencesMode(MODE_PRIVATE);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);

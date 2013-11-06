@@ -1,6 +1,5 @@
 package com.pushcoin.app.main.activities;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 
 import com.pushcoin.app.main.R;
