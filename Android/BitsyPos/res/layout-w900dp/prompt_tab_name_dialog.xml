@@ -15,7 +15,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:focusable="true"
-		android:inputType="textShortMessage"
+		android:inputType="textVisiblePassword"
 		android:focusableInTouchMode="true"
 		android:textSize="32sp"
 		android:textColor="@color/lightui_lightgray" />
