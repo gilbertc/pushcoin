@@ -10,7 +10,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.pushcoin.app.integrator.IntentIntegrator;
-import com.pushcoin.core.interfaces.Keys;
+import com.pushcoin.interfaces.Keys;
+import com.pushcoin.interfaces.data.ChargeParams;
+import com.pushcoin.interfaces.data.Result;
+
 import com.pushcoin.core.utils.Logger;
 
 public class TestAppActivity extends Activity {
@@ -25,17 +28,17 @@ public class TestAppActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		this.integrator = new IntentIntegrator(this);
-		integrator.bootstrap();
 
 		this.btnStart = (Button) this.findViewById(R.id.btnStart);
 
 		this.btnStart.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Bundle bundle = new Bundle();
-				bundle.putLong(Keys.KEY_PAYMENT_VALUE, 29);
-				bundle.putInt(Keys.KEY_PAYMENT_SCALE, -1);
-				integrator.charge(bundle);
+				ChargeParams params = new ChargeParams();
+				params.payment.value = 29;
+				params.payment.scale = -1;
+
+				integrator.charge(params);
 			}
 		});
 	}
@@ -63,11 +66,29 @@ public class TestAppActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
+		integrator.bootstrap();
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		log.i("Result = " + resultCode);
+
+		if (intent != null && intent.getExtras().containsKey(Keys.KEY_RESULT)) {
+			Result res = (Result) intent.getParcelableExtra(Keys.KEY_RESULT);
+			switch (res.type) {
+			case Result.TYPE_BOOTSTRAP:
+				log.i("Bootstrap Result: " + res.result + " (" + res.reason
+						+ ")");
+				break;
+			case Result.TYPE_CHARGE:
+				log.i("Charge Result: " + res.result + " (" + res.reason + ")");
+				break;
+			case Result.TYPE_REGISTER:
+				log.i("Register Result: " + res.result + " (" + res.reason
+						+ ")");
+				break;
+			}
+		}
 	}
 
 }

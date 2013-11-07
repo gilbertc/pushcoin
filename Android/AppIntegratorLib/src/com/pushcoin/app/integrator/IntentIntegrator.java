@@ -5,9 +5,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.pushcoin.core.interfaces.Actions;
-import com.pushcoin.core.interfaces.Results;
-import com.pushcoin.core.utils.Logger;
+import com.pushcoin.interfaces.data.ChargeParams;
+import com.pushcoin.interfaces.data.Result;
+import com.pushcoin.interfaces.Actions;
+import com.pushcoin.interfaces.Keys;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,11 +18,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 
 public class IntentIntegrator {
-
-	private static Logger log = Logger.getLogger(IntentIntegrator.class);
 
 	public static final int REQUEST_CODE = 0x0000a088; // Only use bottom 16
 														// bits
@@ -108,12 +108,11 @@ public class IntentIntegrator {
 		this.targetApplications = Collections.singleton(targetApplication);
 	}
 
-	public AlertDialog invoke(String action, Bundle bundle) {
+	public AlertDialog invoke(String action, Parcelable p) {
 		Intent intent = new Intent(PC_PACKAGE + action);
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
-		if (bundle != null) {
-			intent.putExtras(bundle);
-		}
+		if (p != null)
+			intent.putExtra(Keys.KEY_PARAMS, p);
 
 		String targetAppPackage = findTargetAppPackage(intent);
 		if (targetAppPackage == null) {
@@ -130,8 +129,8 @@ public class IntentIntegrator {
 		return invoke(Actions.ACTION_BOOTSTRAP, null);
 	}
 
-	public AlertDialog charge(Bundle bundle) {
-		return invoke(Actions.ACTION_CHARGE, bundle);
+	public AlertDialog charge(ChargeParams params) {
+		return invoke(Actions.ACTION_CHARGE, params);
 	}
 
 	public AlertDialog settings() {
@@ -149,7 +148,6 @@ public class IntentIntegrator {
 		if (availableApps != null) {
 			for (ResolveInfo availableApp : availableApps) {
 				String packageName = availableApp.activityInfo.packageName;
-				log.d(packageName);
 				if (targetApplications.contains(packageName)) {
 					return packageName;
 				}
@@ -173,7 +171,8 @@ public class IntentIntegrator {
 							activity.startActivity(intent);
 						} catch (ActivityNotFoundException anfe) {
 							// Hmm, market is not installed
-							log.w("Android Market is not installed; cannot install PushCoin");
+							Log.w("IntentIntegrator",
+									"Android Market is not installed; cannot install PushCoin");
 						}
 					}
 				});
@@ -189,7 +188,7 @@ public class IntentIntegrator {
 	public static IntentResult parseActivityResult(int requestCode,
 			int resultCode, Intent intent) {
 		if (requestCode == REQUEST_CODE) {
-			if (resultCode == Results.OK.getValue()) {
+			if (resultCode == Result.RESULT_OK) {
 				return new IntentResult(intent);
 			}
 			return new IntentResult();

@@ -9,8 +9,10 @@ import android.widget.Toast;
 
 import com.pushcoin.app.main.R;
 import com.pushcoin.app.main.services.TransactionKeyService;
-import com.pushcoin.core.interfaces.Actions;
-import com.pushcoin.core.interfaces.Preferences;
+import com.pushcoin.interfaces.Actions;
+import com.pushcoin.interfaces.Keys;
+import com.pushcoin.interfaces.data.Result;
+import com.pushcoin.core.data.Preferences;
 import com.pushcoin.core.net.Server;
 import com.pushcoin.core.security.KeyStore;
 import com.pushcoin.core.utils.Logger;
@@ -36,28 +38,50 @@ public class BootstrapActivity extends Activity {
 		Server.setDefaultUrl(prefs.getString(Preferences.PREF_URL,
 				getString(R.string.url_pushcoin_prod)));
 
-		KeyStore keyStore = KeyStore.getInstance(this);
-		if (!keyStore.hasMAT()) {
-			log.d("cannot find mat");
-			Intent myIntent = new Intent(this, RegisterDeviceActivity.class);
-			startActivityForResult(myIntent, 0);
+		if (getIntent().getAction() == null
+				|| !getIntent().getAction().endsWith(Actions.ACTION_BOOTSTRAP)) {
+			log.d("launched by user");
 
-		} else {
-			TransactionKeyService.scheduleAlarms(this, 0, false);
-			Toast.makeText(this, "Transaction Key Service Active",
-					Toast.LENGTH_LONG).show();
+			KeyStore keyStore = KeyStore.getInstance(this);
+			if (!keyStore.hasMAT()) {
+				log.d("cannot find mat");
+				Intent myIntent = new Intent(this, RegisterDeviceActivity.class);
+				startActivity(myIntent);
 
-			if (getIntent().getAction() == null
-					|| !getIntent().getAction().endsWith(
-							Actions.ACTION_BOOTSTRAP)) {
-				log.d("launched by user");
+			} else {
+				TransactionKeyService.scheduleAlarms(this, 0, false);
+				Toast.makeText(this, "Transaction Key Service Active",
+						Toast.LENGTH_LONG).show();
 
-				/* launched by user */
 				Intent myIntent = new Intent(this, SettingsActivity.class);
 				startActivity(myIntent);
 			}
-			finish();
-		}
+		} else {
+			log.d("launched by app");
+			KeyStore keyStore = KeyStore.getInstance(this);
+			if (!keyStore.hasMAT()) {
+				log.d("cannot find mat");
+				Intent myIntent = new Intent(this, RegisterDeviceActivity.class);
+				startActivityForResult(myIntent, 0);
+			} else {
+				TransactionKeyService.scheduleAlarms(this, 0, false);
+				Toast.makeText(this, "Transaction Key Service Active",
+						Toast.LENGTH_LONG).show();
 
+				Intent returnIntent = new Intent();
+				Result result = new Result();
+				result.type = Result.TYPE_BOOTSTRAP;
+				returnIntent.putExtra(Keys.KEY_RESULT, result);
+				setResult(Result.RESULT_OK, returnIntent);
+				finish();
+			}
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		log.i("Result = " + resultCode);
+		setResult(resultCode, intent);
+		finish();
 	}
 }

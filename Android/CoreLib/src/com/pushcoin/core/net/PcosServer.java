@@ -1,6 +1,6 @@
 package com.pushcoin.core.net;
 
-import com.pushcoin.core.interfaces.Messages;
+import com.pushcoin.core.data.Messages;
 import com.pushcoin.pcos.DocumentReader;
 import com.pushcoin.pcos.InputBlock;
 import com.pushcoin.pcos.InputDocument;

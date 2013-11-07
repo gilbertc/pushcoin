@@ -1,4 +1,4 @@
-package com.pushcoin.core.interfaces;
+package com.pushcoin.core.data;
 
 public class Preferences {
 	public static final String NAME = "com.pushcoin.core";

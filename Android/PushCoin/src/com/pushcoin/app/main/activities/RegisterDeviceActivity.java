@@ -6,6 +6,8 @@ import com.pushcoin.app.main.R;
 import com.pushcoin.core.net.PcosServer;
 import com.pushcoin.core.security.KeyStore;
 import com.pushcoin.core.utils.Logger;
+import com.pushcoin.interfaces.Keys;
+import com.pushcoin.interfaces.data.Result;
 import com.pushcoin.pcos.BlockWriter;
 import com.pushcoin.pcos.DocumentWriter;
 import com.pushcoin.pcos.InputBlock;
@@ -224,9 +226,14 @@ public class RegisterDeviceActivity extends Activity {
 				}
 			}
 
-			if (ok)
+			if (ok) {
+				Intent returnIntent = new Intent();
+				Result result = new Result();
+				result.type = Result.TYPE_REGISTER;
+				returnIntent.putExtra(Keys.KEY_RESULT, result);
+				setResult(Result.RESULT_OK, returnIntent);
 				finish();
-			else if (keyStore != null)
+			} else if (keyStore != null)
 				keyStore.reset(RegisterDeviceActivity.this);
 		}
 

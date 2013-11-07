@@ -23,7 +23,7 @@ import java.util.List;
 
 import com.pushcoin.app.main.R;
 import com.pushcoin.app.main.services.TransactionKeyService;
-import com.pushcoin.core.interfaces.Preferences;
+import com.pushcoin.core.data.Preferences;
 import com.pushcoin.core.net.Server;
 import com.pushcoin.core.security.KeyStore;
 import com.pushcoin.core.utils.Logger;

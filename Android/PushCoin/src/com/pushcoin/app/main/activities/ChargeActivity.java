@@ -1,6 +1,7 @@
 package com.pushcoin.app.main.activities;
 
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import com.pushcoin.app.main.R;
@@ -8,9 +9,6 @@ import com.pushcoin.app.main.services.PaymentService;
 import com.pushcoin.core.data.DisplayParcel;
 import com.pushcoin.core.data.PcosAmount;
 import com.pushcoin.core.exceptions.MATUnavailableException;
-import com.pushcoin.core.interfaces.Actions;
-import com.pushcoin.core.interfaces.Keys;
-import com.pushcoin.core.interfaces.Results;
 import com.pushcoin.core.net.PcosServer;
 import com.pushcoin.core.security.KeyStore;
 import com.pushcoin.core.utils.Logger;
@@ -21,11 +19,17 @@ import com.pushcoin.pcos.OutputBlock;
 import com.pushcoin.pcos.OutputDocument;
 import com.pushcoin.pcos.PcosError;
 
+import com.pushcoin.interfaces.Actions;
+import com.pushcoin.interfaces.Keys;
+import com.pushcoin.interfaces.data.ChargeParams;
+import com.pushcoin.interfaces.data.Result;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.Parcelable;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -84,7 +88,14 @@ public class ChargeActivity extends Activity {
 
 	private void cancelCharge() {
 		stop();
-		setResult(Results.CANCELED.getValue());
+
+		Intent returnIntent = new Intent();
+		Result result = new Result();
+		result.reason = "User Cancelled";
+		result.type = Result.TYPE_CHARGE;
+		result.result = Result.RESULT_CANCELED;
+		returnIntent.putExtra(Keys.KEY_RESULT, result);
+		setResult(Result.RESULT_CANCELED, returnIntent);
 		finish();
 	}
 
@@ -127,20 +138,53 @@ public class ChargeActivity extends Activity {
 	}
 
 	private void startIntent(Intent intent) {
-		if (intent.getAction().endsWith(Actions.ACTION_CHARGE)) {
-			long value = intent.getLongExtra(Keys.KEY_PAYMENT_VALUE, 0);
-			int scale = intent.getIntExtra(Keys.KEY_PAYMENT_SCALE, 0);
 
-			double amount = value * Math.pow(10, scale);
-			if (amount > 0) {
-				log.d("Charging " + value + " * 10^" + scale);
-				chargingMessageView.setText("Charging " + value + " * 10^"
-						+ scale);
-				start(amount);
-				return;
+		Result result = new Result();
+		result.type = Result.TYPE_CHARGE;
+		if (intent.getAction().endsWith(Actions.ACTION_CHARGE)) {
+
+			if (!intent.getExtras().containsKey(Keys.KEY_PARAMS)) {
+				result.reason = "No Params defined";
+				result.result = Result.RESULT_ERROR;
+			} else {
+				ChargeParams params = (ChargeParams) intent
+						.getParcelableExtra(Keys.KEY_PARAMS);
+
+				double amount = params.payment.value
+						* Math.pow(10, params.payment.scale);
+				if (amount > 0) {
+					log.d("Charging " + params.payment.value + " * 10^"
+							+ params.payment.scale);
+					chargingMessageView.setText("Charging "
+							+ params.payment.value + " * 10^"
+							+ params.payment.scale);
+
+					display(new DisplayParcel(
+							new String[] {
+									">>> Tap Now <<<",
+									"Amount "
+											+ new DecimalFormat("$###0.00")
+													.format(amount) },
+							DisplayParcel.TextAlignment.CENTER));
+
+					start(amount);
+					return;
+				} else {
+					result.reason = "Payment too low";
+					result.result = Result.RESULT_ERROR;
+				}
 			}
+		} else {
+			result.reason = "Invalid Action";
+			result.result = Result.RESULT_ERROR;
 		}
-		setResult(Results.ERROR.getValue());
+
+		display(new DisplayParcel(result.reason));
+
+		Intent returnIntent = new Intent();
+		returnIntent.putExtra(Keys.KEY_RESULT, result);
+		setResult(Result.RESULT_ERROR, returnIntent);
+
 		finish();
 	}
 
@@ -157,8 +201,8 @@ public class ChargeActivity extends Activity {
 				if (url.isEmpty())
 					throw new UnknownHostException();
 
-				OutputDocument doc = createPaymentRequest(intent.getExtras(),
-						pta);
+				OutputDocument doc = createPaymentRequest(
+						intent.getParcelableExtra(Keys.KEY_PARAMS), pta);
 
 				PcosServer server = new PcosServer();
 				server.postAsync(url, doc, new PaymentResponseListener(server));
@@ -177,7 +221,13 @@ public class ChargeActivity extends Activity {
 		Toast.makeText(ChargeActivity.this, reason, Toast.LENGTH_LONG).show();
 		display(new DisplayParcel(reason));
 
-		ChargeActivity.this.setResult(Results.ERROR.getValue());
+		Intent returnIntent = new Intent();
+		Result result = new Result();
+		result.reason = reason;
+		result.type = Result.TYPE_CHARGE;
+		result.result = Result.RESULT_ERROR;
+		returnIntent.putExtra(Keys.KEY_RESULT, result);
+		ChargeActivity.this.setResult(Result.RESULT_ERROR, returnIntent);
 		finish();
 	}
 
@@ -186,16 +236,22 @@ public class ChargeActivity extends Activity {
 				.show();
 		display(new DisplayParcel("Thank You"));
 
-		ChargeActivity.this.setResult(Results.OK.getValue());
+		Intent returnIntent = new Intent();
+		Result result = new Result();
+		result.type = Result.TYPE_CHARGE;
+		returnIntent.putExtra(Keys.KEY_RESULT, result);
+		ChargeActivity.this.setResult(Result.RESULT_OK, returnIntent);
 		finish();
 	}
 
-	private OutputDocument createPaymentRequest(Bundle bundle, byte[] pta)
+	private OutputDocument createPaymentRequest(Parcelable p, byte[] pta)
 			throws PcosError, MATUnavailableException {
 
 		KeyStore keyStore = KeyStore.getInstance(this);
 		if (keyStore == null || !keyStore.hasMAT())
 			throw new MATUnavailableException();
+
+		ChargeParams params = (ChargeParams) p;
 
 		OutputDocument doc;
 		doc = new DocumentWriter("PaymentReq");
@@ -206,61 +262,55 @@ public class ChargeActivity extends Activity {
 		r1.writeByteStr(keyStore.getMAT());
 
 		// Ref Data
-		r1.writeString(bundle.getString(Keys.KEY_REF_DATA, ""));
+		r1.writeString(params.refData);
 
 		// Creation Time
 		r1.writeUlong(new Date().getTime());
 
 		// Total
-		new PcosAmount(bundle.getLong(Keys.KEY_PAYMENT_VALUE, 0),
-				bundle.getInt(Keys.KEY_PAYMENT_SCALE, 0)).write(r1);
+		new PcosAmount(params.payment.value, params.payment.scale).write(r1);
 
-		log.i("submitting: " + bundle.getLong(Keys.KEY_PAYMENT_VALUE, 0) + " "
-				+ bundle.getInt(Keys.KEY_PAYMENT_SCALE, 0));
+		log.i("submitting: " + params.payment.value + " "
+				+ params.payment.scale);
 
 		// Tax (optional)
-		if (bundle.containsKey(Keys.KEY_TAX_VALUE)
-				&& bundle.containsKey(Keys.KEY_TAX_SCALE)) {
+		if (params.tax != null) {
 
-			new PcosAmount(bundle.getLong(Keys.KEY_TAX_VALUE, 0),
-					bundle.getInt(Keys.KEY_TAX_SCALE, 0), PcosAmount.OPTIONAL)
-					.write(r1);
+			new PcosAmount(params.tax.value, params.tax.scale,
+					PcosAmount.OPTIONAL).write(r1);
 
 		} else {
 			r1.writeBool(false);
 		}
 
 		// Tips (optional)
-		if (bundle.containsKey(Keys.KEY_TIPS_VALUE)
-				&& bundle.containsKey(Keys.KEY_TIPS_SCALE)) {
+		if (params.tips != null) {
 
-			new PcosAmount(bundle.getLong(Keys.KEY_TIPS_VALUE, 0),
-					bundle.getInt(Keys.KEY_TIPS_SCALE, 0), PcosAmount.OPTIONAL)
-					.write(r1);
+			new PcosAmount(params.tips.value, params.tips.scale,
+					PcosAmount.OPTIONAL).write(r1);
 
 		} else {
 			r1.writeBool(false);
 		}
 
-		// Passcode
-		r1.writeString(bundle.getString(Keys.KEY_PASSCODE, ""));
+		// PassCode
+		r1.writeString(params.passcode);
 
 		// Currency
-		r1.writeString(bundle.getString(Keys.KEY_CURRENCY, "USD"));
+		r1.writeString(params.currency);
 
 		// Invoice
-		r1.writeString(bundle.getString(Keys.KEY_INVOICE, ""));
+		r1.writeString(params.invoice);
 
 		// Note
-		r1.writeString(bundle.getString(Keys.KEY_NOTE, ""));
+		r1.writeString(params.note);
 
 		// GPS (optional)
-		if (bundle.containsKey(Keys.KEY_GEOLOCATION_LAT)
-				&& bundle.containsKey(Keys.KEY_GEOLOCATION_LONG)) {
+		if (params.geoLocation != null) {
 
 			r1.writeBool(true);
-			r1.writeDouble(bundle.getDouble(Keys.KEY_GEOLOCATION_LAT));
-			r1.writeDouble(bundle.getDouble(Keys.KEY_GEOLOCATION_LONG));
+			r1.writeDouble(params.geoLocation.latitude);
+			r1.writeDouble(params.geoLocation.longitude);
 
 		} else {
 			r1.writeBool(false);
@@ -321,7 +371,7 @@ public class ChargeActivity extends Activity {
 		@Override
 		public void onError(Object tag, Exception ex) {
 			log.e("payment req exception", ex);
-			onPaymentError(ex.getMessage());
+			onPaymentError("Error: " + ex.getMessage());
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.pushcoin.core.interfaces;
+package com.pushcoin.interfaces;
 
 public class Actions {
 	public static final String ACTION_CHARGE = ".CHARGE";
