@@ -104,7 +104,7 @@ public class Cart
 		}
 
 		// broadcast cart content has changed
-		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+		EventHub.post( MessageId.CART_CHANGED );
 	}
 
 	void insert( Combo item, int position )
@@ -119,7 +119,7 @@ public class Cart
 				items_.add(position, item);
 			}
 		}
-		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+		EventHub.post( MessageId.CART_CHANGED );
 	}
 
 	Combo remove( int position )
@@ -134,7 +134,7 @@ public class Cart
 		if (item != null) 
 		{
 			Log.v(Conf.TAG, "cart-remove-item="+item.getName()+";at-pos="+position);
-			EventHub.post( MessageId.CART_CONTENT_CHANGED );
+			EventHub.post( MessageId.CART_CHANGED );
 		}
 		return item;
 	}
@@ -152,7 +152,7 @@ public class Cart
 
 			items_.add(position, item);
 		}
-		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+		EventHub.post( MessageId.CART_CHANGED );
 	}
 
 	void clear()
@@ -165,7 +165,7 @@ public class Cart
 		}
 
 		if (effective) {
-			EventHub.post( MessageId.CART_CONTENT_CHANGED );
+			EventHub.post( MessageId.CART_CHANGED );
 		}
 	}
 

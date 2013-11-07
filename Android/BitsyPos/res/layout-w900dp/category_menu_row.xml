@@ -12,7 +12,7 @@
 	android:orientation="horizontal">
 
 	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/shopping_category_menu_icon"
+		android:id="@+id/category_menu_icon"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:textColor="@color/android_holo_blue_light"
@@ -26,7 +26,7 @@
 		android:shadowRadius="0.8"/>
 
 	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/shopping_category_menu_label"
+		android:id="@+id/category_menu_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textColor="@color/lightui_mediumgray"

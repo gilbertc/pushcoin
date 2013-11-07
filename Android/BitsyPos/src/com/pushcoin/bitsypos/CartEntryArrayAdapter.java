@@ -15,17 +15,15 @@ import java.util.ArrayList;
 
 public class CartEntryArrayAdapter extends BaseAdapter 
 {
-	public CartEntryArrayAdapter(Context context, Cart cart)
+	public CartEntryArrayAdapter(Context context)
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from( context );
-		// Cart instance we are serving
-		cart_ = cart;
 	}
 
 	public int getCount() 
 	{
-		return cart_.size();
+		return CartManager.getInstance().getActiveCart().size();
 	}
 
 	/**
@@ -46,27 +44,6 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	public long getItemId(int position) 
 	{
 		return position;
-	}
-
-	public void remove(int position)
-	{
-		if ( cart_.remove(position) != null ) 
-		{
-			refreshView();
-		}
-	};
-
-	public void insert(Cart.Combo item, int position)
-	{
-		cart_.insert( item, position );
-		refreshView();
-	};
-
-	/**
-		Underlaying cart.
-	*/
-	public Cart getCart() {
-		return cart_;
 	}
 
 	/**
@@ -114,7 +91,7 @@ public class CartEntryArrayAdapter extends BaseAdapter
 		// A ViewHolder keeps references to children views to avoid unneccessary calls
 		// to findViewById() on each row.
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		Cart.Combo item = cart_.get( position );
+		Cart.Combo item = CartManager.getInstance().getActiveCart().get( position );
 
 		// Bind the row-data with the holder.
 		String label = item.getName();
@@ -144,6 +121,5 @@ public class CartEntryArrayAdapter extends BaseAdapter
 	}
 
 	private LayoutInflater inflater_;
-	private Cart cart_;
 	private int convertViewVer_ = 0;
 }

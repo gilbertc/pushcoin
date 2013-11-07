@@ -1,5 +1,8 @@
 CMD="curl -c cookie.txt -b cookie.txt -k -X POST https://beta.aggati.com"
 
+echo -e "\n\n*** General inquiry ***"
+$CMD/json/contact/guest-question/ -d '{ "sender_name": "John", "contact_info":"sl@pushcoin", "message_body":"hey!" }'
+
 # echo -e "\n\n*** Sign-up ***"
 $CMD/json/account/initiate-signup/ -d '{ "email": "sl+test1@pushcoin.com" }'
 $CMD/json/account/validate-registration-code/ -d '{ "account_id": "RYRKAYC7AP" }'
@@ -30,6 +33,7 @@ $CMD/json/account/summary/ -d ''
 echo -e "\n\n*** Balance ***"
 $CMD/json/account/balance/ -d ''
 echo -e "\n\n*** PIN threshold ***"
+
 $CMD/json/account/get-pin-threshold/ -d ''
 $CMD/json/account/set-pin-threshold/ -d '{ "cumulative": 15.00}'
 $CMD/json/account/get-pin-threshold/ -d ''

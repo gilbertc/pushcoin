@@ -45,7 +45,7 @@ public class BrowseItemsFragment extends Fragment
 			{
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					EventHub.post( MessageId.SHOPPING_ITEM_CLICKED, items_.get(position).getId() );
+					EventHub.post( MessageId.ITEM_CLICKED, items_.get(position).getId() );
 				}
 			});
 

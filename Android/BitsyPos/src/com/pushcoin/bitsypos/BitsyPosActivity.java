@@ -19,15 +19,19 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.lang.ref.WeakReference;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 
 public class BitsyPosActivity 
-	extends Activity implements EditItemPropertiesFragment.OnDismissed
+	extends SlidingActivity implements EditItemPropertiesFragment.OnDismissed
 {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate( savedInstanceState );
+
+		// Create the event pump
+		EventHub.newInstance( this );
 
 		// Handler where we dispatch events.
 		handler_ = new IncomingHandler( this );
@@ -38,19 +42,19 @@ public class BitsyPosActivity
 		// Session manager
 		carts_ = CartManager.newInstance( this );
 
-		// set this activity UI layout
-		setContentView(R.layout.shopping_main);
+		// Set this activity UI layout
+		setContentView(R.layout.main_layout);
+		// Layout for the behind-menu
+		setBehindContentView(R.layout.tab_menu_fragment);
 
 		// configure the SlidingMenu
-		SlidingMenu menu = new SlidingMenu(this);
+		SlidingMenu menu = getSlidingMenu();
 		menu.setMode(SlidingMenu.LEFT);
 		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 		menu.setShadowWidthRes(R.dimen.shadow_width);
 		menu.setShadowDrawable(R.drawable.sliding_menu_shadow);
 		menu.setBehindWidthRes(R.dimen.slidingmenu_offset);
 		menu.setFadeDegree(0.35f);
-		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-		menu.setMenu(R.layout.sliding_side_menu);
 
 		// Don't let device go to sleep.
 		// TODO: Let user change this behavior in Settings
@@ -63,7 +67,7 @@ public class BitsyPosActivity
 	{
 		super.onResume();
 		// Register self with the hub and start receiving events
-		EventHub.newInstance( this ).register( handler_, "BitsyPosActivity" );
+		EventHub.getInstance().register( handler_, "BitsyPosActivity" );
 	}
 
 	@Override
@@ -121,7 +125,7 @@ public class BitsyPosActivity
 		// User can change item properties before adding it to cart
 		if ( item.hasProperties() ) 
 		{
-			// DialogFragment.show() will add the fragmentin a transaction, 
+			// DialogFragment.show() will add the fragment in a transaction, 
 			// but we  need to remove any currently shown dialog.
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			Fragment prev = getFragmentManager().findFragmentByTag( Conf.DIALOG_EDIT_ITEM_PROPERTIES );
@@ -170,12 +174,16 @@ public class BitsyPosActivity
 				Log.v(Conf.TAG, "BitsyPosActivity|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
 				switch( msg.what )
 				{
-					case MessageId.SHOPPING_CATEGORY_CLICKED:
+					case MessageId.CATEGORY_CLICKED:
 						ref.onShoppingCategoryClicked( (String) msg.obj );
 					break;
 
-					case MessageId.SHOPPING_ITEM_CLICKED:
+					case MessageId.ITEM_CLICKED:
 						ref.onShoppingItemClicked( (String) msg.obj );
+					break;
+
+					case MessageId.ACTIVE_TAB_CHANGED:
+						ref.getSlidingMenu().toggle();
 					break;
 				}
 			}

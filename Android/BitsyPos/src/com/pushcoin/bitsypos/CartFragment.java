@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.lang.ref.WeakReference;
 
-public class ShoppingCartFragment extends Fragment
+public class CartFragment extends Fragment
 {
 	CartEntryArrayAdapter adapter_;
 
@@ -42,7 +42,7 @@ public class ShoppingCartFragment extends Fragment
 	{
 		super.onResume();
 		// Register self with the hub and start receiving events
-		EventHub.getInstance().register( handler_, "ShoppingCartFragment" );
+		EventHub.getInstance().register( handler_, "CartFragment" );
 	}
 
 	@Override
@@ -58,15 +58,16 @@ public class ShoppingCartFragment extends Fragment
 	{
 		Context ctx = getActivity();
 
-		// Current cart
-		final Cart cart = CartManager.getInstance().getActiveCart();
-		adapter_ = new CartEntryArrayAdapter(ctx, cart);
+		// Cart adapter
+		adapter_ = new CartEntryArrayAdapter(ctx);
 
 		// Inflate the layout for this fragment
 		View cartLayout = inflater.inflate(R.layout.shopping_cart, container, false);
 
 		// Cache cart-total text view
 		cartTotal_ = (TextView) cartLayout.findViewById(R.id.shopping_cart_total);
+		// Tab name
+		tabName_ = (TextView) cartLayout.findViewById(R.id.shopping_cart_tab_name);
 
 		// Handle "start over" user request
 		Button startOver = (Button) cartLayout.findViewById(R.id.shopping_cart_startover_button);
@@ -96,7 +97,7 @@ public class ShoppingCartFragment extends Fragment
 			new SwipeDismissList.OnDismissCallback() {
 				public SwipeDismissList.Undoable onDismiss(AbsListView listView, final int position) 
 				{
-					final Cart cart = (Cart) adapter_.getCart();
+					final Cart cart = CartManager.getInstance().getActiveCart();
 
 					Log.v(Conf.TAG, "place=cart-dismiss;position="+position );
 					// Get the item from the cart (before it's deleted)
@@ -104,23 +105,22 @@ public class ShoppingCartFragment extends Fragment
 					{
 						final Cart.Combo deletedItem = cart.get(position);
 
-						// Delete from cart
-						adapter_.remove(position);
+						if ( cart.remove(position) != null ) {
+						}
 
 						// Return an Undoable implementing every method
-						return new SwipeDismissList.Undoable() {
-
+						return new SwipeDismissList.Undoable()
+							{
 								// Method is called when user undoes this deletion
 								public void undo() {
-										// Reinsert item to list
-										adapter_.insert(deletedItem, position);
+									cart.insert( deletedItem, position );
 								}
 
 								// Return an undo message for that item
 								public String getTitle() {
-										return deletedItem.getName() + " removed";
+									return deletedItem.getName() + " removed";
 								}
-						};
+							};
 					}
 					return null;
 				}
@@ -148,8 +148,10 @@ public class ShoppingCartFragment extends Fragment
 	private void onCartContentChanged()
 	{
 		// Update cart total
-		final Cart cart = (Cart) adapter_.getCart();
+		Cart cart = CartManager.getInstance().getActiveCart();
 		cartTotal_.setText( NumberFormat.getCurrencyInstance().format( cart.totalValue() ) );
+		// cart name might have changed too -- on tab change
+		tabName_.setText( CartManager.getInstance().getActiveEntry().name );
 
 		adapter_.refreshView();
 	}
@@ -173,6 +175,7 @@ public class ShoppingCartFragment extends Fragment
 	}
 
 	private TextView cartTotal_;
+	private TextView tabName_;
 	private Handler handler_;
 
 	/**
@@ -182,24 +185,25 @@ public class ShoppingCartFragment extends Fragment
 	*/
 	static class IncomingHandler extends Handler
 	{
-		private final WeakReference<ShoppingCartFragment> ref_; 
+		private final WeakReference<CartFragment> ref_; 
 
-		IncomingHandler(ShoppingCartFragment ref) {
-			ref_ = new WeakReference<ShoppingCartFragment>(ref);
+		IncomingHandler(CartFragment ref) {
+			ref_ = new WeakReference<CartFragment>(ref);
 		}
 
 		/** Dispatch events. */
 		@Override
 		public void handleMessage(Message msg)
 		{
-			ShoppingCartFragment ref = ref_.get();
+			CartFragment ref = ref_.get();
 			if (ref != null)
 			{
-				Log.v(Conf.TAG, "ShoppingCartFragment|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
+				Log.v(Conf.TAG, "CartFragment|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
 				switch( msg.what )
 				{
-					case MessageId.CART_CONTENT_CHANGED:
+					case MessageId.CART_CHANGED:
 						ref.onCartContentChanged();
+					break;
 				}
 			}
 		}

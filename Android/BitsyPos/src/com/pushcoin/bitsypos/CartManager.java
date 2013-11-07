@@ -4,6 +4,7 @@ import android.content.Context;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import android.util.Log;
 
 public class CartManager
 {
@@ -73,12 +74,16 @@ public class CartManager
 	*/
 	public Entry createEntry(String name, boolean active)
 	{
+		Log.v( Conf.TAG, "creating-new-cart|name="+name+";active="+active );
 		// If the new entry is active, we de-activate an existing entry
 		if ( active ) {
 			clearActive();
 		}
 		Entry entry = Entry.newInstance( name, new Cart(), active ); 
 		carts_.add( entry );
+		if ( active ) {
+			EventHub.post( MessageId.CART_CHANGED );
+		}
 		return entry;
 	}
 
@@ -108,6 +113,8 @@ public class CartManager
 		// Find new entry and set as active
 		Entry entry = carts_.get( position );
 		entry.active = true;
+		EventHub.post( MessageId.CART_CHANGED );
+		Log.v( Conf.TAG, "switching-active-cart|name="+entry.name );
 		return entry;
 	}
 
@@ -153,6 +160,6 @@ public class CartManager
 
 	private CartList carts_;
 	private static CartManager inst_ = null;
-	private static final SimpleDateFormat defaultNameMaker_ = new SimpleDateFormat("K:m a");
+	private static final SimpleDateFormat defaultNameMaker_ = new SimpleDateFormat("hh:mm aaa");
 
 }

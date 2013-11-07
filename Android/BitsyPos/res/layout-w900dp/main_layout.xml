@@ -6,8 +6,8 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
-	<fragment android:name="com.pushcoin.bitsypos.ShoppingCategoryMenuFragment"
-		android:id="@+id/shopping_category_frag"
+	<fragment android:name="com.pushcoin.bitsypos.CategoryMenuFragment"
+		android:id="@+id/category_menu_fragment"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent" />
 
@@ -18,8 +18,8 @@
 		android:layout_width="0dp"
 		android:layout_height="match_parent" />
 
-	<fragment android:name="com.pushcoin.bitsypos.ShoppingCartFragment"
-		android:id="@+id/shopping_cart_frag"
+	<fragment android:name="com.pushcoin.bitsypos.CartFragment"
+		android:id="@+id/cart_fragment"
 		android:layout_weight="3"
 		android:layout_width="0dp"
 		android:layout_height="match_parent" />
