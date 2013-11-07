@@ -34,7 +34,7 @@ public class CartManager
 	public static CartManager newInstance(Context ctx) 
 	{
 		if (inst_ == null) {
-			inst_ = new CartManager();
+			inst_ = new CartManager(ctx);
 		}
 		return inst_;
 	}
@@ -64,7 +64,7 @@ public class CartManager
 
 		// If there is no active, create a new one
 		if (entry == null) {
-			entry = createEntry( defaultNameMaker_.format( new Date() ), true );
+			entry = createEntry( defaultCartName_, true );
 		}
 		return entry;
 	}
@@ -153,13 +153,13 @@ public class CartManager
 	/**
 	 * Constructor is private to prevent direct instantiation.
 	 */
-	private CartManager()
+	private CartManager(Context ctx)
 	{
+		defaultCartName_ = ctx.getResources().getString(R.string.default_tab_name);
 		carts_ = new CartList();
 	}
 
-	private CartList carts_;
+	private final String defaultCartName_;
+	private final CartList carts_;
 	private static CartManager inst_ = null;
-	private static final SimpleDateFormat defaultNameMaker_ = new SimpleDateFormat("hh:mm aaa");
-
 }
