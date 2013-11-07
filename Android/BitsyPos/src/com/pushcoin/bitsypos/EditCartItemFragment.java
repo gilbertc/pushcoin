@@ -18,13 +18,8 @@ import android.content.Context;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Button;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.database.DataSetObserver;
 import java.text.NumberFormat;
-import android.text.InputType;
-import java.util.ArrayList;
 import java.math.BigDecimal;
 
 public class EditCartItemFragment extends DialogFragment

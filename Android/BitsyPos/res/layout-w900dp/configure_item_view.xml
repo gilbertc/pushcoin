@@ -26,39 +26,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" >
 
-		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="wrap_content"
-			android:background="@drawable/rounded_label_shape"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:layout_height="match_parent">
-
-			<!-- Popular Together -->
-			<com.mobsandgeeks.ui.TypefaceTextView 
-				android:text="@string/bell_symbol"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:gravity="center"
-				android:textSize="30sp"
-				android:paddingRight="8dp"
-				android:includeFontPadding="false"
-				android:textColor="@color/lightui_darkorange"
-				geekui:customTypeface="fonts/modernpics.otf" />
-
-			<!-- Popular Together -->
-			<com.mobsandgeeks.ui.TypefaceTextView 
-				android:text="@string/frequently_together"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:gravity="center"
-				android:textSize="16sp"
-				android:paddingBottom="0dp"
-				android:textColor="@color/lightui_darkorange"
-				geekui:customTypeface="fonts/DejaVuSans-Oblique.ttf" />
-
-		</LinearLayout>
-
 		<View
 			android:layout_weight="1"
 			android:layout_width="0dp"

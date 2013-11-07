@@ -10,12 +10,12 @@
 	<!-- UI texts -->
 	<string name="done">Done</string>
 	<string name="confirm_clear_cart">Erase all items from the cart?</string>
-	<string name="frequently_together">Frequently bought together&#8230;</string>
 	<string name="sku">SKU</string>
 	<string name="name">Name</string>
 	<string name="qty">Qty</string>
 	<string name="price">Price</string>
 
+	<string name="tab">Tab: </string>
 	<string name="prompt_tab_name">Enter Tab Name</string>
 	<string name="special_instructions">Special instructions</string>
 	<string name="base_price">Base Price:</string>
@@ -28,7 +28,6 @@
 	<string name="open_item">Open&#10;Item</string>
 	<string name="new_tab">New Tab</string>
 	<string name="checkout">Checkout &#187;</string>
-	<string name="bell_symbol">9</string>
 
 </resources>
 

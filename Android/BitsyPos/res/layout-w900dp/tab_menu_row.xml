@@ -8,7 +8,6 @@
 	android:paddingLeft="6dp"
 	android:paddingTop="16dp"
 	android:paddingBottom="16dp"
-	android:background="@color/lightui_lightgray"
 	android:orientation="horizontal">
 
 	<com.mobsandgeeks.ui.TypefaceTextView

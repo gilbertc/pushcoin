@@ -9,6 +9,7 @@
 		android:startColor="#20bfb26b" />
 
 	<corners 
+		android:topLeftRadius="10dp"
 		android:topRightRadius="10dp"
 		android:bottomLeftRadius="10dp"
 		android:bottomRightRadius="10dp"/>

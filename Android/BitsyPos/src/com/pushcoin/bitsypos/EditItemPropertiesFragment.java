@@ -2,7 +2,6 @@ package com.pushcoin.bitsypos;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.app.Fragment;
 import android.app.Activity;
@@ -10,27 +9,13 @@ import android.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.view.animation.Animation;
-import android.view.animation.AlphaAnimation;
 import android.content.Context;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Button;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.GridView;
-import android.database.DataSetObserver;
-import java.text.NumberFormat;
-import android.text.InputType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.math.BigDecimal;
 
 public class EditItemPropertiesFragment extends DialogFragment
 {
