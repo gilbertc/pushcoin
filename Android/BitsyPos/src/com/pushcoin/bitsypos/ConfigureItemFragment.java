@@ -156,10 +156,8 @@ public class ConfigureItemFragment
 					{
 						Item item = relatedItems_.get(position);
 						Log.v(Conf.TAG, "related-item-clicked|name="+item.getName() );
-
-						// TODO: Add to cart if item isDefined, otherwise start another
-						// configure-item screen
-						CartManager.getInstance().getActiveCart().add( Util.toCartCombo(item) );
+						EventHub.post( MessageId.ITEM_CLICKED, item.getId() );
+						//CartManager.getInstance().getActiveCart().add( Util.toCartCombo(item) );
 					}
 				});
 
