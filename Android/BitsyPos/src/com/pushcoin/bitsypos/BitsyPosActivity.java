@@ -182,7 +182,7 @@ public class BitsyPosActivity
 						ref.onShoppingItemClicked( (String) msg.obj );
 					break;
 
-					case MessageId.ACTIVE_TAB_CHANGED:
+					case MessageId.CART_POOL_CHANGED:
 						ref.getSlidingMenu().toggle();
 					break;
 				}

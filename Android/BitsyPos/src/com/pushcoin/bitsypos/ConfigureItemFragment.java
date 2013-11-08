@@ -157,7 +157,6 @@ public class ConfigureItemFragment
 						Item item = relatedItems_.get(position);
 						Log.v(Conf.TAG, "related-item-clicked|name="+item.getName() );
 						EventHub.post( MessageId.ITEM_CLICKED, item.getId() );
-						//CartManager.getInstance().getActiveCart().add( Util.toCartCombo(item) );
 					}
 				});
 

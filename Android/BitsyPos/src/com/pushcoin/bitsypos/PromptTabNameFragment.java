@@ -37,7 +37,6 @@ public class PromptTabNameFragment extends DialogFragment
 				{
 					String newTabName = tabName.getText().toString().trim();
 					CartManager.getInstance().createEntry( newTabName, true );
-					EventHub.post( MessageId.ACTIVE_TAB_CHANGED );
 					dismiss();
 				}
 			});

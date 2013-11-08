@@ -201,7 +201,8 @@ public class CartFragment extends Fragment
 				Log.v(Conf.TAG, "CartFragment|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
 				switch( msg.what )
 				{
-					case MessageId.CART_CHANGED:
+					case MessageId.CART_POOL_CHANGED:
+					case MessageId.CART_CONTENT_CHANGED:
 						ref.onCartContentChanged();
 					break;
 				}

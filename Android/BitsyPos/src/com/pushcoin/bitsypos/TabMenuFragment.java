@@ -13,9 +13,36 @@ import android.widget.ListView;
 import android.widget.AdapterView;
 import android.util.Log;
 import java.util.ArrayList;
+import java.lang.ref.WeakReference;
 
 public class TabMenuFragment extends Fragment 
 {
+	/** Called when the fragment is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate( savedInstanceState );
+		// Handler where we dispatch events.
+		handler_ = new IncomingHandler( this );
+	}
+
+	/** Called when the activity resumes. */
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		// Register self with the hub and start receiving events
+		EventHub.getInstance().register( handler_, "TabMenuFragment" );
+	}
+
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		// Remove self from the event hub.
+		EventHub.getInstance().unregister( handler_ );
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
@@ -24,16 +51,14 @@ public class TabMenuFragment extends Fragment
 
 		// Find the tab-listview, set adapter and listener
 		ListView menu = (ListView)layout.findViewById( R.id.tab_menu_listview );
-		final TabMenuAdapter model = new TabMenuAdapter( getActivity() );
-		menu.setAdapter(model);
+		adapter_ = new TabMenuAdapter( getActivity() );
+		menu.setAdapter(adapter_);
 		// Active cart switcher
 		menu.setOnItemClickListener(new AdapterView.OnItemClickListener()
 			{
 				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-				{
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					CartManager.Entry entry = CartManager.getInstance().setActiveEntry( position );
-					EventHub.post( MessageId.ACTIVE_TAB_CHANGED );
 				}
 			});
 
@@ -49,5 +74,44 @@ public class TabMenuFragment extends Fragment
 			});
 
 		return layout;
+	}
+
+	private void onCartPoolChanged()
+	{
+		adapter_.notifyDataSetChanged();
+	}
+
+	private TabMenuAdapter adapter_;
+	private Handler handler_;
+
+	/**
+		Static handler keeps lint happy about (temporary?) memory leaks if queued 
+		messages refer to the Activity (our event consumer), which now cannot
+		be collected.
+	*/
+	static class IncomingHandler extends Handler
+	{
+		private final WeakReference<TabMenuFragment> ref_; 
+
+		IncomingHandler(TabMenuFragment ref) {
+			ref_ = new WeakReference<TabMenuFragment>(ref);
+		}
+
+		/** Dispatch events. */
+		@Override
+		public void handleMessage(Message msg)
+		{
+			TabMenuFragment ref = ref_.get();
+			if (ref != null)
+			{
+				Log.v(Conf.TAG, "TabMenuFragment|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
+				switch( msg.what )
+				{
+					case MessageId.CART_POOL_CHANGED:
+						ref.onCartPoolChanged();
+					break;
+				}
+			}
+		}
 	}
 }

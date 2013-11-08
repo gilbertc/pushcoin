@@ -81,17 +81,17 @@ public class CartManager
 		}
 		Entry entry = Entry.newInstance( name, new Cart(), active ); 
 		carts_.add( entry );
-		if ( active ) {
-			EventHub.post( MessageId.CART_CHANGED );
-		}
+		EventHub.post( MessageId.CART_POOL_CHANGED );
 		return entry;
 	}
 
 	/**
 		Removes entry at position.
 	*/
-	public void removeEntry(int position) {
+	public void removeEntry(int position)
+	{
 		Entry entry = carts_.remove( position );
+		EventHub.post( MessageId.CART_POOL_CHANGED );
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class CartManager
 		// Find new entry and set as active
 		Entry entry = carts_.get( position );
 		entry.active = true;
-		EventHub.post( MessageId.CART_CHANGED );
+		EventHub.post( MessageId.CART_POOL_CHANGED );
 		Log.v( Conf.TAG, "switching-active-cart|name="+entry.name );
 		return entry;
 	}
