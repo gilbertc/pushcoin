@@ -16,23 +16,14 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package com.pushcoin.pcos;
+package com.pushcoin.lib.pcos;
 
-public interface InputBlock 
+public class ProtocolTag 
 {
-	// Parsers for primitives
-	boolean readBool() throws PcosError;
-	byte readByte() throws PcosError;
-	byte[] readBytes(long size) throws PcosError;
-	byte[] readByteStr(long maxlen) throws PcosError;
-	int readInt() throws PcosError;
-	long readUint() throws PcosError;
-	long readLong() throws PcosError;
-	long readUlong() throws PcosError;
-	double readDouble() throws PcosError;
-	String readString(long maxlen) throws PcosError;
-
-	int readingPosition();
-	String name();
-	int size();
+	public static final int MAX_MESSAGE_ID_LEN = 128;
+	public static final int MAX_BLOCK_ID_LENGTH = 64;
+	public static final byte[] PROTOCOL_MAGIC = new byte[]{'P','C','O','S'};
+	public static final int PROTOCOL_MAGIC_LEN = 4;
+	public static final byte PROTOCOL_FLAGS = 0x0;
+	public static final String PROTOCOL_CHARSET = "UTF-8";
 }

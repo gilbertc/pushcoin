@@ -16,14 +16,24 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package com.pushcoin.pcos;
+package com.pushcoin.lib.pcos;
 
-public class ProtocolTag 
-{
-	public static final int MAX_MESSAGE_ID_LEN = 128;
-	public static final int MAX_BLOCK_ID_LENGTH = 64;
-	public static final byte[] PROTOCOL_MAGIC = new byte[]{'P','C','O','S'};
-	public static final int PROTOCOL_MAGIC_LEN = 4;
-	public static final byte PROTOCOL_FLAGS = 0x0;
-	public static final String PROTOCOL_CHARSET = "UTF-8";
+public enum PcosErrorCode {
+	/**
+	 * Error code constants.
+	 */
+	ERR_INTERNAL_ERROR(100),
+	ERR_MALFORMED_MESSAGE(101), 
+	ERR_INCOMPATIBLE_REQUEST(102),
+	ERR_BAD_MAGIC(102),
+	ERR_ARG_OUT_OF_RANGE(103),
+	ERR_BLOCK_NOT_FOUND(104),
+	ERR_BAD_CHAR_ENCODING(105);
+	
+	public int code;
+	
+	private PcosErrorCode(int code)
+	{
+		this.code = code;
+	}
 }

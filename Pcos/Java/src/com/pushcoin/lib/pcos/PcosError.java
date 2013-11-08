@@ -16,23 +16,23 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package com.pushcoin.pcos;
+package com.pushcoin.lib.pcos;
 
-public interface OutputBlock 
+public class PcosError extends Exception 
 {
-	// Parsers for primitives
-	void writeBool( boolean b ) throws PcosError;
-	void writeByte( int v ) throws PcosError;
-	void writeBytes( byte[] v ) throws PcosError;
-	void writeByteStr( byte[] v ) throws PcosError;
-	void writeInt(int val) throws PcosError; 
-	void writeUint(long val) throws PcosError;
-	void writeLong( long v) throws PcosError;
-	void writeUlong( long v ) throws PcosError;
-	void writeDouble( double v ) throws PcosError;
-	void writeString( String s ) throws PcosError;
+	/**
+	 * Exception type thrown from PCOS functions when parsing or writing data.
+	 */
+	private static final long serialVersionUID = 1L;
+	private final int code_;
+	
+	public PcosError(PcosErrorCode ercode, String reason)
+	{
+		super(reason);
+		code_ = ercode.code;
+	}
 
-	String name();
-	int size();
-	byte[] toBytes() throws PcosError;
+	int getCode() {
+		return code_;
+	}
 }

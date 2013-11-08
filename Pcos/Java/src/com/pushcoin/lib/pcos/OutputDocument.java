@@ -16,23 +16,11 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package com.pushcoin.pcos;
+package com.pushcoin.lib.pcos;
 
-public class PcosError extends Exception 
+public interface OutputDocument 
 {
-	/**
-	 * Exception type thrown from PCOS functions when parsing or writing data.
-	 */
-	private static final long serialVersionUID = 1L;
-	private final int code_;
-	
-	public PcosError(PcosErrorCode ercode, String reason)
-	{
-		super(reason);
-		code_ = ercode.code;
-	}
-
-	int getCode() {
-		return code_;
-	}
+	String getDocumentName();
+	void addBlock(OutputBlock b) throws PcosError;
+	byte[] toBytes() throws PcosError;
 }

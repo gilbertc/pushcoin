@@ -16,15 +16,23 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package com.pushcoin.pcos;
+package com.pushcoin.lib.pcos;
 
-import java.util.Map;
-
-public interface InputDocument 
+public interface InputBlock 
 {
-	String getMagic();
-	String getDocumentName();
-	long getBlockCount();
-	Map<String, InputBlock> getBlocks();
-	InputBlock getBlock(String name) throws PcosError;
+	// Parsers for primitives
+	boolean readBool() throws PcosError;
+	byte readByte() throws PcosError;
+	byte[] readBytes(long size) throws PcosError;
+	byte[] readByteStr(long maxlen) throws PcosError;
+	int readInt() throws PcosError;
+	long readUint() throws PcosError;
+	long readLong() throws PcosError;
+	long readUlong() throws PcosError;
+	double readDouble() throws PcosError;
+	String readString(long maxlen) throws PcosError;
+
+	int readingPosition();
+	String name();
+	int size();
 }

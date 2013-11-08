@@ -16,24 +16,23 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-package com.pushcoin.pcos;
+package com.pushcoin.lib.pcos;
 
-public enum PcosErrorCode {
-	/**
-	 * Error code constants.
-	 */
-	ERR_INTERNAL_ERROR(100),
-	ERR_MALFORMED_MESSAGE(101), 
-	ERR_INCOMPATIBLE_REQUEST(102),
-	ERR_BAD_MAGIC(102),
-	ERR_ARG_OUT_OF_RANGE(103),
-	ERR_BLOCK_NOT_FOUND(104),
-	ERR_BAD_CHAR_ENCODING(105);
-	
-	public int code;
-	
-	private PcosErrorCode(int code)
-	{
-		this.code = code;
-	}
+public interface OutputBlock 
+{
+	// Parsers for primitives
+	void writeBool( boolean b ) throws PcosError;
+	void writeByte( int v ) throws PcosError;
+	void writeBytes( byte[] v ) throws PcosError;
+	void writeByteStr( byte[] v ) throws PcosError;
+	void writeInt(int val) throws PcosError; 
+	void writeUint(long val) throws PcosError;
+	void writeLong( long v) throws PcosError;
+	void writeUlong( long v ) throws PcosError;
+	void writeDouble( double v ) throws PcosError;
+	void writeString( String s ) throws PcosError;
+
+	String name();
+	int size();
+	byte[] toBytes() throws PcosError;
 }
