@@ -16,11 +16,11 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-import com.pushcoin.pcos.lib.*;
+import com.pushcoin.lib.pcos.*;
 import java.util.Map.Entry;
 import java.util.Arrays;
 
-public final class TestDriver 
+public final class TestPcos
 {
 	static final byte[] rawbytes = {0xa, 0x2, (byte) 0xff};
 	static final String varstr = "variable string";
@@ -109,7 +109,7 @@ public final class TestDriver
 		catch (PcosError e) 
 		{
 			e.printStackTrace();
-			System.err.println( "PCOS error: " + e.reason );
+			System.err.println( "PCOS error: " + e.getMessage() );
 		}
 		catch (Exception e)
 		{

@@ -18,7 +18,7 @@
 
 import com.pushcoin.lib.binascii.Binascii;
 
-public final class TestDriver 
+public final class TestBinascii
 {
 	static final byte[] rawbytes = {0xa, 0x2, (byte) 0xff};
 	static final String varstr = "variable string";
