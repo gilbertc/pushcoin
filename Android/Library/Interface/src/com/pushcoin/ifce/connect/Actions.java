@@ -1,4 +1,4 @@
-package com.pushcoin.interfaces;
+package com.pushcoin.ifce.connect;
 
 public class Actions {
 	public static final String ACTION_CHARGE = ".CHARGE";

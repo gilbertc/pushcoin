@@ -1,4 +1,4 @@
-package com.pushcoin.interfaces.data;
+package com.pushcoin.ifce.connect.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
