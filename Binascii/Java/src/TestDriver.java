@@ -16,7 +16,7 @@
 //
 // __author__  = '''Slawomir Lisznianski <sl@pushcoin.com>'''
 
-import com.pushcoin.Binascii;
+import com.pushcoin.lib.binascii.Binascii;
 
 public final class TestDriver 
 {
