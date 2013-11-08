@@ -1,0 +1,18 @@
+<resources>
+
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_header_general">General</string>
+    <string name="pref_title_enable_offline_mode">Enable Offline Mode</string>
+    <string name="pref_description_enable_offline_mode">Store new payments and process them when Internet is accessible</string>
+    <string name="pref_title_server_connection">Server Connection</string>
+
+    <string-array name="pref_server_connection_titles">
+        <item>Production</item>
+        <item>Testing</item>
+    </string-array>
+    <string-array name="pref_server_connection_values">
+        <item>@string/url_pushcoin_prod</item>
+        <item>@string/url_pushcoin_test</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,273 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0DD7EB8017CED2A600F9CE3B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DD7EB7F17CED2A600F9CE3B /* Foundation.framework */; };
+		0DD7EB8F17CED56800F9CE3B /* BlockReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7EB8D17CED56800F9CE3B /* BlockReader.cpp */; };
+		0DD7EB9A17CEE72100F9CE3B /* BlockWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7EB9817CEE72000F9CE3B /* BlockWriter.cpp */; };
+		0DD7EB9D17CEEFDB00F9CE3B /* DocumentReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7EB9B17CEEFDB00F9CE3B /* DocumentReader.cpp */; };
+		0DD7EBA317CEFF8D00F9CE3B /* DocumentWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0DD7EBA117CEFF8D00F9CE3B /* DocumentWriter.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0DD7EB7A17CED2A600F9CE3B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0D8B597617D257F60096E907 /* pcos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pcos.h; sourceTree = "<group>"; };
+		0DD7EB7C17CED2A600F9CE3B /* libpcos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpcos.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DD7EB7F17CED2A600F9CE3B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0DD7EB8317CED2A600F9CE3B /* pcos-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pcos-Prefix.pch"; sourceTree = "<group>"; };
+		0DD7EB8D17CED56800F9CE3B /* BlockReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlockReader.cpp; sourceTree = "<group>"; };
+		0DD7EB8E17CED56800F9CE3B /* BlockReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockReader.h; sourceTree = "<group>"; };
+		0DD7EB9017CED5EE00F9CE3B /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		0DD7EB9817CEE72000F9CE3B /* BlockWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlockWriter.cpp; sourceTree = "<group>"; };
+		0DD7EB9917CEE72000F9CE3B /* BlockWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockWriter.h; sourceTree = "<group>"; };
+		0DD7EB9B17CEEFDB00F9CE3B /* DocumentReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DocumentReader.cpp; sourceTree = "<group>"; };
+		0DD7EB9C17CEEFDB00F9CE3B /* DocumentReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentReader.h; sourceTree = "<group>"; };
+		0DD7EB9F17CEFEA200F9CE3B /* Exceptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Exceptions.h; sourceTree = "<group>"; };
+		0DD7EBA117CEFF8D00F9CE3B /* DocumentWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DocumentWriter.cpp; sourceTree = "<group>"; };
+		0DD7EBA217CEFF8D00F9CE3B /* DocumentWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentWriter.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0DD7EB7917CED2A600F9CE3B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DD7EB8017CED2A600F9CE3B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0DD7EB7317CED2A600F9CE3B = {
+			isa = PBXGroup;
+			children = (
+				0DD7EB8117CED2A600F9CE3B /* pcos */,
+				0DD7EB7E17CED2A600F9CE3B /* Frameworks */,
+				0DD7EB7D17CED2A600F9CE3B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0DD7EB7D17CED2A600F9CE3B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0DD7EB7C17CED2A600F9CE3B /* libpcos.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0DD7EB7E17CED2A600F9CE3B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0DD7EB7F17CED2A600F9CE3B /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0DD7EB8117CED2A600F9CE3B /* pcos */ = {
+			isa = PBXGroup;
+			children = (
+				0DD7EB8D17CED56800F9CE3B /* BlockReader.cpp */,
+				0DD7EB8E17CED56800F9CE3B /* BlockReader.h */,
+				0DD7EB9817CEE72000F9CE3B /* BlockWriter.cpp */,
+				0DD7EB9917CEE72000F9CE3B /* BlockWriter.h */,
+				0DD7EB9017CED5EE00F9CE3B /* Common.h */,
+				0DD7EB9B17CEEFDB00F9CE3B /* DocumentReader.cpp */,
+				0DD7EB9C17CEEFDB00F9CE3B /* DocumentReader.h */,
+				0DD7EBA117CEFF8D00F9CE3B /* DocumentWriter.cpp */,
+				0DD7EBA217CEFF8D00F9CE3B /* DocumentWriter.h */,
+				0DD7EB9F17CEFEA200F9CE3B /* Exceptions.h */,
+				0D8B597617D257F60096E907 /* pcos.h */,
+				0DD7EB8217CED2A600F9CE3B /* Supporting Files */,
+			);
+			path = pcos;
+			sourceTree = "<group>";
+		};
+		0DD7EB8217CED2A600F9CE3B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0DD7EB8317CED2A600F9CE3B /* pcos-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0DD7EB7B17CED2A600F9CE3B /* pcos */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0DD7EB8A17CED2A600F9CE3B /* Build configuration list for PBXNativeTarget "pcos" */;
+			buildPhases = (
+				0DD7EB7817CED2A600F9CE3B /* Sources */,
+				0DD7EB7917CED2A600F9CE3B /* Frameworks */,
+				0DD7EB7A17CED2A600F9CE3B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pcos;
+			productName = pcos;
+			productReference = 0DD7EB7C17CED2A600F9CE3B /* libpcos.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0DD7EB7417CED2A600F9CE3B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = PushCoin;
+			};
+			buildConfigurationList = 0DD7EB7717CED2A600F9CE3B /* Build configuration list for PBXProject "pcos" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0DD7EB7317CED2A600F9CE3B;
+			productRefGroup = 0DD7EB7D17CED2A600F9CE3B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0DD7EB7B17CED2A600F9CE3B /* pcos */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0DD7EB7817CED2A600F9CE3B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DD7EB8F17CED56800F9CE3B /* BlockReader.cpp in Sources */,
+				0DD7EB9A17CEE72100F9CE3B /* BlockWriter.cpp in Sources */,
+				0DD7EB9D17CEEFDB00F9CE3B /* DocumentReader.cpp in Sources */,
+				0DD7EBA317CEFF8D00F9CE3B /* DocumentWriter.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0DD7EB8817CED2A600F9CE3B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0DD7EB8917CED2A600F9CE3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0DD7EB8B17CED2A600F9CE3B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/pcos.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "pcos/pcos-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0DD7EB8C17CED2A600F9CE3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/pcos.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "pcos/pcos-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0DD7EB7717CED2A600F9CE3B /* Build configuration list for PBXProject "pcos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0DD7EB8817CED2A600F9CE3B /* Debug */,
+				0DD7EB8917CED2A600F9CE3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0DD7EB8A17CED2A600F9CE3B /* Build configuration list for PBXNativeTarget "pcos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0DD7EB8B17CED2A600F9CE3B /* Debug */,
+				0DD7EB8C17CED2A600F9CE3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0DD7EB7417CED2A600F9CE3B /* Project object */;
+}
