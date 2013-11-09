@@ -1,14 +1,14 @@
-package com.pushcoin.app.integrator;
+package com.pushcoin.lib.integrator;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.pushcoin.interfaces.data.ChargeParams;
-import com.pushcoin.interfaces.data.Result;
-import com.pushcoin.interfaces.Actions;
-import com.pushcoin.interfaces.Keys;
+import com.pushcoin.ifce.connect.data.ChargeParams;
+import com.pushcoin.ifce.connect.data.Result;
+import com.pushcoin.ifce.connect.Actions;
+import com.pushcoin.ifce.connect.Keys;
 
 import android.app.Activity;
 import android.app.AlertDialog;

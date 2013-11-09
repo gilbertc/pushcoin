@@ -1,4 +1,4 @@
-package com.pushcoin.app.integrator;
+package com.pushcoin.lib.integrator;
 
 import android.app.Fragment;
 import android.content.Intent;
