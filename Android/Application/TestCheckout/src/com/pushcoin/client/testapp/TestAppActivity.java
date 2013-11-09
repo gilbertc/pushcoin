@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.pushcoin.app.integrator.IntentIntegrator;
-import com.pushcoin.interfaces.Keys;
-import com.pushcoin.interfaces.data.ChargeParams;
-import com.pushcoin.interfaces.data.Result;
+import com.pushcoin.lib.integrator.IntentIntegrator;
+import com.pushcoin.ifce.connect.Keys;
+import com.pushcoin.ifce.connect.data.ChargeParams;
+import com.pushcoin.ifce.connect.data.Result;
 
-import com.pushcoin.core.utils.Logger;
+import com.pushcoin.lib.core.utils.Logger;
 
 public class TestAppActivity extends Activity {
 	private static Logger log = Logger.getLogger(TestAppActivity.class);
