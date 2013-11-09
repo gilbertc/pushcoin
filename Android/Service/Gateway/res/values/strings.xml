@@ -3,8 +3,8 @@
     <string name="app_name">PCoin Gtwy</string>
 
 		<!-- Default values -->
-		<string name="url_pushcoin_prod">https://api.pushcoin.com</string>
-		<string name="url_pushcoin_test">https://api.aggati.com</string>
+		<string name="url_pushcoin_prod">https://api.pushcoin.com/pcos/</string>
+		<string name="url_pushcoin_test">https://api.aggati.com/pcos/</string>
 		
 		<!-- Menu items -->
 		<string name="action_settings">Settings</string>
