@@ -42,7 +42,7 @@
 	</LinearLayout>
 
 	<!-- Shows "Popular Together" Items -->
-	<com.pushcoin.bitsypos.AutofitGridView 
+	<com.pushcoin.app.bitsypos.AutofitGridView 
 		android:id="@+id/configure_related_items"
 		android:layout_weight="2"
 		android:layout_width="wrap_content" 

@@ -24,12 +24,8 @@ import android.util.Log;
 public class IntentIntegrator {
 
 	public static final int REQUEST_CODE = 0x0000a088; // Only use bottom 16 bits
-	public static final String DEFAULT_TITLE = "Install PushCoin?";
-	public static final String DEFAULT_MESSAGE = "This application requires PushCoin. Would you like to install it?";
-	public static final String DEFAULT_YES = "Yes";
-	public static final String DEFAULT_NO = "No";
-	public static final String PC_PACKAGE = "com.pushcoin.app.main";
-	public static final Collection<String> TARGET_ALL_KNOWN = list(PC_PACKAGE);
+	public static final String PUSHCOIN_GATEWAY_PACKAGE_NAME = "com.pushcoin.srv.gateway";
+	public static final Collection<String> TARGET_ALL_KNOWN = list(PUSHCOIN_GATEWAY_PACKAGE_NAME);
 
 	private final Activity activity;
 	private String title;
@@ -40,10 +36,10 @@ public class IntentIntegrator {
 
 	public IntentIntegrator(Activity activity) {
 		this.activity = activity;
-		this.title = DEFAULT_TITLE;
-		this.message = DEFAULT_MESSAGE;
-		this.buttonYes = DEFAULT_YES;
-		this.buttonNo = DEFAULT_NO;
+		this.title = activity.getString(R.string.default_install_service_title);
+		this.message = activity.getString(R.string.default_install_service_prompt);
+		this.buttonYes = activity.getString(R.string.default_yes);
+		this.buttonNo = activity.getString(R.string.default_no);
 		this.targetApplications = TARGET_ALL_KNOWN;
 	}
 
@@ -108,7 +104,7 @@ public class IntentIntegrator {
 	}
 
 	public AlertDialog invoke(String action, Parcelable p) {
-		Intent intent = new Intent(PC_PACKAGE + action);
+		Intent intent = new Intent(PUSHCOIN_GATEWAY_PACKAGE_NAME + action);
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
 		if (p != null)
 			intent.putExtra(Keys.KEY_PARAMS, p);
@@ -164,14 +160,13 @@ public class IntentIntegrator {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
 						Uri uri = Uri
-								.parse("market://details?id=" + PC_PACKAGE);
+								.parse("market://details?id=" + PUSHCOIN_GATEWAY_PACKAGE_NAME);
 						Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 						try {
 							activity.startActivity(intent);
 						} catch (ActivityNotFoundException anfe) {
 							// Hmm, market is not installed
-							Log.w("IntentIntegrator",
-									"Android Market is not installed; cannot install PushCoin");
+							Log.w("IntentIntegrator", "Android Market is not installed; cannot install PushCoin");
 						}
 					}
 				});

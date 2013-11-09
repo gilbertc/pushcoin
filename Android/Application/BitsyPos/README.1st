@@ -5,7 +5,7 @@ android create project \
 	--target 19 \
 	--name BitsyPOS --path . \
 	--activity BitsyPosActivity \
-	--package com.pushcoin.bitsypos
+	--package com.pushcoin.app.bitsypos
 
 
 Third-party dependencies
@@ -24,4 +24,4 @@ Third-party dependencies
 To Test JSON import
 ===================
 
-lua < conf/breakfast_menu.txt | java -classpath /home/sl/src/JSON-java:bin/classes com.pushcoin.bitsypos.JsonImporter
+lua < conf/breakfast_menu.txt | java -classpath /home/sl/src/JSON-java:bin/classes com.pushcoin.app.bitsypos.JsonImporter

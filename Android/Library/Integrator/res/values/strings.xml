@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ACTIVITY_ENTRY_NAME</string>
+    <string name="default_install_service_title">Install PushCoin Service?</string>
+    <string name="default_install_service_prompt">This application uses PushCoin. Shall I install it for you?</string>
+    <string name="default_yes">Yes</string>
+    <string name="default_no">No</string>
 </resources>
