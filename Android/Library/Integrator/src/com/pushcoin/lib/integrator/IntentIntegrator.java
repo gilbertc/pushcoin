@@ -23,8 +23,7 @@ import android.util.Log;
 
 public class IntentIntegrator {
 
-	public static final int REQUEST_CODE = 0x0000a088; // Only use bottom 16
-														// bits
+	public static final int REQUEST_CODE = 0x0000a088; // Only use bottom 16 bits
 	public static final String DEFAULT_TITLE = "Install PushCoin?";
 	public static final String DEFAULT_MESSAGE = "This application requires PushCoin. Would you like to install it?";
 	public static final String DEFAULT_YES = "Yes";

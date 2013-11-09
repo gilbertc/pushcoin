@@ -16,15 +16,16 @@ import com.pushcoin.ifce.connect.data.Result;
 
 import com.pushcoin.lib.core.utils.Logger;
 
-public class TestAppActivity extends Activity {
-	private static Logger log = Logger.getLogger(TestAppActivity.class);
+public class TestCheckout extends Activity {
+	private static Logger log = Logger.getLogger(TestCheckout.class);
 
 	private IntentIntegrator integrator;
 	private Button btnStart;
 
 	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		this.integrator = new IntentIntegrator(this);
