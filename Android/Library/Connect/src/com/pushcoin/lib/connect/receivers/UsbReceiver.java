@@ -1,7 +1,7 @@
-package com.pushcoin.app.main.receivers;
+package com.pushcoin.lib.connect.receivers;
 
-import com.pushcoin.core.devices.DeviceManager;
-import com.pushcoin.core.utils.Logger;
+import com.pushcoin.lib.core.devices.DeviceManager;
+import com.pushcoin.lib.core.utils.Logger;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -1,11 +1,11 @@
 package com.pushcoin.lib.core.net;
 
 import com.pushcoin.lib.core.data.Messages;
-import com.pushcoin.pcos.DocumentReader;
-import com.pushcoin.pcos.InputBlock;
-import com.pushcoin.pcos.InputDocument;
-import com.pushcoin.pcos.OutputDocument;
-import com.pushcoin.pcos.PcosError;
+import com.pushcoin.lib.pcos.DocumentReader;
+import com.pushcoin.lib.pcos.InputBlock;
+import com.pushcoin.lib.pcos.InputDocument;
+import com.pushcoin.lib.pcos.OutputDocument;
+import com.pushcoin.lib.pcos.PcosError;
 
 public class PcosServer extends Server {
 

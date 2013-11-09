@@ -1,4 +1,4 @@
-package com.pushcoin.app.main.activities;
+package com.pushcoin.lib.connect.activities;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -21,12 +21,12 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import com.pushcoin.app.main.R;
-import com.pushcoin.app.main.services.TransactionKeyService;
-import com.pushcoin.core.data.Preferences;
-import com.pushcoin.core.net.Server;
-import com.pushcoin.core.security.KeyStore;
-import com.pushcoin.core.utils.Logger;
+import com.pushcoin.lib.connect.R;
+import com.pushcoin.lib.connect.services.TransactionKeyService;
+import com.pushcoin.lib.core.data.Preferences;
+import com.pushcoin.lib.core.net.Server;
+import com.pushcoin.lib.core.security.KeyStore;
+import com.pushcoin.lib.core.utils.Logger;
 
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
@@ -62,14 +62,15 @@ public class SettingsActivity extends PreferenceActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.action_reset_device:
+		if ( item.getItemId() == R.id.action_reset_device )
+		{
 			showResetDeviceDialog();
 			return true;
-
-		default:
+		}
+		else {
 			return super.onOptionsItemSelected(item);
 		}
 	}

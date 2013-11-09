@@ -2,7 +2,7 @@ package com.pushcoin.lib.core.payment.nfc.protocols;
 
 import java.io.IOException;
 
-import com.pushcoin.pcos.OutputBlock;
+import com.pushcoin.lib.pcos.OutputBlock;
 
 import com.pushcoin.lib.core.data.Challenge;
 

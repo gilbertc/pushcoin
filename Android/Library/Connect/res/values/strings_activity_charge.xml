@@ -4,6 +4,6 @@
 
     <string name="prompt_charging">Charging</string>
     <string name="action_cancel"><b>Cancel</b></string>
-    <string name="progress_charging">Charging...</string>
+    <string name="progress_charging">Charging&#8230;</string>
 
 </resources>

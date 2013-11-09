@@ -8,13 +8,13 @@ import com.pushcoin.lib.core.payment.nfc.protocols.NfcProtocol;
 import com.pushcoin.lib.core.payment.nfc.protocols.NfcVerayoProtocol;
 import com.pushcoin.lib.core.utils.Logger;
 
-import com.pushcoin.pcos.DocumentReader;
-import com.pushcoin.pcos.DocumentWriter;
-import com.pushcoin.pcos.InputBlock;
-import com.pushcoin.pcos.InputDocument;
-import com.pushcoin.pcos.OutputDocument;
-import com.pushcoin.pcos.PcosError;
-import com.pushcoin.pcos.ProtocolTag;
+import com.pushcoin.lib.pcos.DocumentReader;
+import com.pushcoin.lib.pcos.DocumentWriter;
+import com.pushcoin.lib.pcos.InputBlock;
+import com.pushcoin.lib.pcos.InputDocument;
+import com.pushcoin.lib.pcos.OutputDocument;
+import com.pushcoin.lib.pcos.PcosError;
+import com.pushcoin.lib.pcos.ProtocolTag;
 
 import com.pushcoin.lib.core.data.Challenge;
 import com.pushcoin.lib.core.exceptions.InvalidProtocolException;

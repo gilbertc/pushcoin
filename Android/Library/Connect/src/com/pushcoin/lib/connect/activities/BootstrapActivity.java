@@ -1,4 +1,4 @@
-package com.pushcoin.app.main.activities;
+package com.pushcoin.lib.connect.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,15 +7,15 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.widget.Toast;
 
-import com.pushcoin.app.main.R;
-import com.pushcoin.app.main.services.TransactionKeyService;
-import com.pushcoin.interfaces.Actions;
-import com.pushcoin.interfaces.Keys;
-import com.pushcoin.interfaces.data.Result;
-import com.pushcoin.core.data.Preferences;
-import com.pushcoin.core.net.Server;
-import com.pushcoin.core.security.KeyStore;
-import com.pushcoin.core.utils.Logger;
+import com.pushcoin.lib.connect.R;
+import com.pushcoin.lib.connect.services.TransactionKeyService;
+import com.pushcoin.ifce.connect.Actions;
+import com.pushcoin.ifce.connect.Keys;
+import com.pushcoin.ifce.connect.data.Result;
+import com.pushcoin.lib.core.data.Preferences;
+import com.pushcoin.lib.core.net.Server;
+import com.pushcoin.lib.core.security.KeyStore;
+import com.pushcoin.lib.core.utils.Logger;
 
 public class BootstrapActivity extends Activity {
 	public static final String ACTION_MAIN = "android.intent.action.MAIN";

@@ -5,11 +5,11 @@ import java.io.IOException;
 
 import com.pushcoin.lib.core.data.Challenge;
 import com.pushcoin.lib.core.utils.Logger;
-import com.pushcoin.pcos.BlockWriter;
-import com.pushcoin.pcos.InputBlock;
-import com.pushcoin.pcos.InputDocument;
-import com.pushcoin.pcos.OutputBlock;
-import com.pushcoin.pcos.PcosError;
+import com.pushcoin.lib.pcos.BlockWriter;
+import com.pushcoin.lib.pcos.InputBlock;
+import com.pushcoin.lib.pcos.InputDocument;
+import com.pushcoin.lib.pcos.OutputBlock;
+import com.pushcoin.lib.pcos.PcosError;
 
 public class NfcPayload {
 	private static Logger log = Logger.getLogger(NfcPayload.class);

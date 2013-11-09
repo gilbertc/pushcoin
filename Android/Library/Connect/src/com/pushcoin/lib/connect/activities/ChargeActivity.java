@@ -1,28 +1,28 @@
-package com.pushcoin.app.main.activities;
+package com.pushcoin.lib.connect.activities;
 
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.Date;
 
-import com.pushcoin.app.main.R;
-import com.pushcoin.app.main.services.PaymentService;
-import com.pushcoin.core.data.DisplayParcel;
-import com.pushcoin.core.data.PcosAmount;
-import com.pushcoin.core.exceptions.MATUnavailableException;
-import com.pushcoin.core.net.PcosServer;
-import com.pushcoin.core.security.KeyStore;
-import com.pushcoin.core.utils.Logger;
-import com.pushcoin.pcos.BlockWriter;
-import com.pushcoin.pcos.DocumentWriter;
-import com.pushcoin.pcos.InputDocument;
-import com.pushcoin.pcos.OutputBlock;
-import com.pushcoin.pcos.OutputDocument;
-import com.pushcoin.pcos.PcosError;
+import com.pushcoin.lib.connect.R;
+import com.pushcoin.lib.connect.services.PaymentService;
+import com.pushcoin.lib.core.data.DisplayParcel;
+import com.pushcoin.lib.core.data.PcosAmount;
+import com.pushcoin.lib.core.exceptions.MATUnavailableException;
+import com.pushcoin.lib.core.net.PcosServer;
+import com.pushcoin.lib.core.security.KeyStore;
+import com.pushcoin.lib.core.utils.Logger;
+import com.pushcoin.lib.pcos.BlockWriter;
+import com.pushcoin.lib.pcos.DocumentWriter;
+import com.pushcoin.lib.pcos.InputDocument;
+import com.pushcoin.lib.pcos.OutputBlock;
+import com.pushcoin.lib.pcos.OutputDocument;
+import com.pushcoin.lib.pcos.PcosError;
 
-import com.pushcoin.interfaces.Actions;
-import com.pushcoin.interfaces.Keys;
-import com.pushcoin.interfaces.data.ChargeParams;
-import com.pushcoin.interfaces.data.Result;
+import com.pushcoin.ifce.connect.Actions;
+import com.pushcoin.ifce.connect.Keys;
+import com.pushcoin.ifce.connect.data.ChargeParams;
+import com.pushcoin.ifce.connect.data.Result;
 
 import android.os.Build;
 import android.os.Bundle;

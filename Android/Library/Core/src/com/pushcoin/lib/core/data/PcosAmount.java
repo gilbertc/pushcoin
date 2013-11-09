@@ -3,9 +3,9 @@ package com.pushcoin.lib.core.data;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
-import com.pushcoin.pcos.InputBlock;
-import com.pushcoin.pcos.OutputBlock;
-import com.pushcoin.pcos.PcosError;
+import com.pushcoin.lib.pcos.InputBlock;
+import com.pushcoin.lib.pcos.OutputBlock;
+import com.pushcoin.lib.pcos.PcosError;
 
 public class PcosAmount {
 

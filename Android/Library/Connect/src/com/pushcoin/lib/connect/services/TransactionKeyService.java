@@ -1,4 +1,4 @@
-package com.pushcoin.app.main.services;
+package com.pushcoin.lib.connect.services;
 
 import java.util.Date;
 
@@ -6,15 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
-import com.pushcoin.app.main.alarms.TransactionKeyAlarm;
-import com.pushcoin.core.data.TransactionKey;
-import com.pushcoin.core.net.PcosServer;
-import com.pushcoin.core.security.KeyStore;
-import com.pushcoin.core.utils.Logger;
-import com.pushcoin.pcos.BlockWriter;
-import com.pushcoin.pcos.DocumentWriter;
-import com.pushcoin.pcos.InputBlock;
-import com.pushcoin.pcos.InputDocument;
+import com.pushcoin.lib.connect.alarms.TransactionKeyAlarm;
+import com.pushcoin.lib.core.data.TransactionKey;
+import com.pushcoin.lib.core.net.PcosServer;
+import com.pushcoin.lib.core.security.KeyStore;
+import com.pushcoin.lib.core.utils.Logger;
+import com.pushcoin.lib.pcos.BlockWriter;
+import com.pushcoin.lib.pcos.DocumentWriter;
+import com.pushcoin.lib.pcos.InputBlock;
+import com.pushcoin.lib.pcos.InputDocument;
 
 public class TransactionKeyService extends WakefulIntentService {
 

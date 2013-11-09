@@ -1,14 +1,14 @@
-package com.pushcoin.app.main.services;
+package com.pushcoin.lib.connect.services;
 
 import java.util.Date;
 
-import com.pushcoin.core.data.Challenge;
-import com.pushcoin.core.data.DisplayParcel;
-import com.pushcoin.core.data.TransactionKey;
-import com.pushcoin.core.devices.DeviceManager;
-import com.pushcoin.core.payment.IPayment;
-import com.pushcoin.core.payment.PaymentListener;
-import com.pushcoin.core.utils.Logger;
+import com.pushcoin.lib.core.data.Challenge;
+import com.pushcoin.lib.core.data.DisplayParcel;
+import com.pushcoin.lib.core.data.TransactionKey;
+import com.pushcoin.lib.core.devices.DeviceManager;
+import com.pushcoin.lib.core.payment.IPayment;
+import com.pushcoin.lib.core.payment.PaymentListener;
+import com.pushcoin.lib.core.utils.Logger;
 
 import android.app.Service;
 import android.content.Context;
@@ -22,9 +22,9 @@ import android.os.Messenger;
 public class PaymentService extends Service implements PaymentListener {
 	private static Logger log = Logger.getLogger(PaymentService.class);
 
-	public static final String ACTION_START = "com.pushcoin.app.main.services.PaymentService.START";
-	public static final String ACTION_STOP = "com.pushcoin.app.main.services.PaymentService.STOP";
-	public static final String ACTION_DISPLAY = "com.pushcoin.app.main.services.PaymentService.DISPLAY";
+	public static final String ACTION_START = "com.pushcoin.lib.connect.services.PaymentService.START";
+	public static final String ACTION_STOP = "com.pushcoin.lib.connect.services.PaymentService.STOP";
+	public static final String ACTION_DISPLAY = "com.pushcoin.lib.connect.services.PaymentService.DISPLAY";
 	public static final String KEY_AMOUNT = "Amount";
 	public static final String KEY_DISPLAYPARCEL = "DisplayParcel";
 	public static final String KEY_MESSENGER = "Messenger";

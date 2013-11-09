@@ -2,14 +2,14 @@
 <project name="imported">
 	<!-- compilation options -->
 	<property name="java.encoding" value="UTF-8" />
-	<property name="java.target" value="1.5" />
-	<property name="java.source" value="1.5" />
+	<property name="java.target" value="1.6" />
+	<property name="java.source" value="1.6" />
 	<property name="java.compilerargs" value="" />
 	<property name="java.compiler.classpath" value="" />
 
 	<property name="out.dir" value="bin" />
 	<property name="out.classes.absolute.dir" location="${out.dir}/classes" />
-	<target name="-compile" depends="-pre-build, -build-setup, -code-gen, -pre-compile">
+	<target name="-pre-compile" depends="-pre-build, -build-setup, -code-gen">
 		<javac encoding="${java.encoding}"
 					source="${java.source}" target="${java.target}"
 					srcdir="${additional_source}" destdir="${out.classes.absolute.dir}"

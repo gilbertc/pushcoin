@@ -6,9 +6,9 @@ import com.pushcoin.lib.core.payment.nfc.NfcPayment;
 import com.pushcoin.lib.core.utils.Logger;
 import com.pushcoin.lib.core.utils.Stopwatch;
 import com.pushcoin.lib.core.data.Challenge;
-import com.pushcoin.pcos.BlockWriter;
-import com.pushcoin.pcos.OutputBlock;
-import com.pushcoin.pcos.PcosError;
+import com.pushcoin.lib.pcos.BlockWriter;
+import com.pushcoin.lib.pcos.OutputBlock;
+import com.pushcoin.lib.pcos.PcosError;
 
 //segment tag_verayo_m1hw_50pf /* implied from protocol */
 //{

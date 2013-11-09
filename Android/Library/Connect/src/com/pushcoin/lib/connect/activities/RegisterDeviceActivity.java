@@ -1,17 +1,17 @@
-package com.pushcoin.app.main.activities;
+package com.pushcoin.lib.connect.activities;
 
 import java.net.UnknownHostException;
 
-import com.pushcoin.app.main.R;
-import com.pushcoin.core.net.PcosServer;
-import com.pushcoin.core.security.KeyStore;
-import com.pushcoin.core.utils.Logger;
-import com.pushcoin.interfaces.Keys;
-import com.pushcoin.interfaces.data.Result;
-import com.pushcoin.pcos.BlockWriter;
-import com.pushcoin.pcos.DocumentWriter;
-import com.pushcoin.pcos.InputBlock;
-import com.pushcoin.pcos.InputDocument;
+import com.pushcoin.lib.connect.R;
+import com.pushcoin.lib.core.net.PcosServer;
+import com.pushcoin.lib.core.security.KeyStore;
+import com.pushcoin.lib.core.utils.Logger;
+import com.pushcoin.ifce.connect.Keys;
+import com.pushcoin.ifce.connect.data.Result;
+import com.pushcoin.lib.pcos.BlockWriter;
+import com.pushcoin.lib.pcos.DocumentWriter;
+import com.pushcoin.lib.pcos.InputBlock;
+import com.pushcoin.lib.pcos.InputDocument;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -71,15 +71,16 @@ public class RegisterDeviceActivity extends Activity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.action_settings:
+		if (item.getItemId() == R.id.action_settings )
+		{
 			Intent myIntent = new Intent(this, SettingsActivity.class);
 			startActivity(myIntent);
 			return true;
-
-		default:
+		}
+		else {
 			return super.onOptionsItemSelected(item);
 		}
 	}
