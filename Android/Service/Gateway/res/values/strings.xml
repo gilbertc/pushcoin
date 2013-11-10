@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Gateway PCoin</string>
+	<string name="app_name">Via PushCoin</string>
 
 	<!-- Default values -->
 	<string name="url_pushcoin_prod">https://api.pushcoin.com/pcos/</string>
