@@ -50,8 +50,7 @@ public class BootstrapActivity extends Activity {
 
 			} else {
 				TransactionKeyService.scheduleAlarms(this, 0, false);
-				Toast.makeText(this, "Transaction Key Service Active",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.transaction_key_obtained), Toast.LENGTH_LONG).show();
 
 				Intent myIntent = new Intent(this, SettingsActivity.class);
 				startActivity(myIntent);
@@ -65,8 +64,7 @@ public class BootstrapActivity extends Activity {
 				startActivityForResult(myIntent, 0);
 			} else {
 				TransactionKeyService.scheduleAlarms(this, 0, false);
-				Toast.makeText(this, "Transaction Key Service Active",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.transaction_key_obtained), Toast.LENGTH_LONG).show();
 
 				Intent returnIntent = new Intent();
 				Result result = new Result();

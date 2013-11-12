@@ -16,8 +16,9 @@
 	<string name="dialog_reset_device_yes">Yes, Disconnect</string>
 	<string name="dialog_reset_device_no">No, Stay Connected</string>
 	<string name="dialog_reset_device_toast">Device disconnected</string>
+	<string name="transaction_key_obtained">PushCoin Service Ready</string>
 
 	<!-- Got Mat -->
-	<string name="settings_have_mat">PushCoin service configured</string>
+	<string name="settings_have_mat">PushCoin Service Configured</string>
 
 </resources>
