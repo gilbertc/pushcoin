@@ -6,22 +6,20 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
-	<fragment android:name="com.pushcoin.app.bitsypos.CategoryMenuFragment"
-		android:id="@+id/category_menu_fragment"
+	<FrameLayout
+		android:id="@+id/hz_left_pane"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent" />
 
 	<FrameLayout
 		android:id="@+id/hz_center_pane"
-		android:paddingLeft="2dp"
-		android:layout_weight="9"
+		android:layout_weight="1"
 		android:layout_width="0dp"
 		android:layout_height="match_parent" />
 
 	<fragment android:name="com.pushcoin.app.bitsypos.CartFragment"
 		android:id="@+id/cart_fragment"
-		android:layout_weight="3"
-		android:layout_width="0dp"
+		android:layout_width="280dp"
 		android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -22,10 +22,10 @@
 	<string name="combo_total">Combo Total:</string>
 	<string name="total">Total:</string>
 	<string name="server_name">Server Name</string>
-	<string name="start_over">Start&#10;Over</string>
-	<string name="print_cart">Print&#10;Cart</string>
-	<string name="queue_order">Queue&#10;Order</string>
-	<string name="open_item">Open&#10;Item</string>
+	<string name="start_over">Start\nOver</string>
+	<string name="print_cart">Print\nCart</string>
+	<string name="queue_order">Queue\nOrder</string>
+	<string name="open_item">Open\nItem</string>
 	<string name="new_tab">New Tab</string>
 	<string name="default_tab_name">Main</string>
 	<string name="checkout">Checkout &#187;</string>

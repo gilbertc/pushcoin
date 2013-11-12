@@ -28,6 +28,7 @@ public class Conf
 	static final String KEY_VALUE_SEPARATOR = "=";
 	static final BigDecimal ZERO_PRICE = new BigDecimal("0.00");
 	static final int MAX_COLS_IN_ITEM_PROPERTY_EDITOR = 5;
+	static final List<Item> EMPTY_ITEM_LIST = unmodifiableList( new ArrayList<Item>() );
 
 	// Duration of time (ms) the user can undo removal of item from the cart. 
 	static final int CART_UNDO_HIDE_DELAY=3000;

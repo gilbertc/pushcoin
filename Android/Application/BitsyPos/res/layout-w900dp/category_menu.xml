@@ -3,11 +3,8 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:background="@drawable/category_menu_shape"
-	android:layout_marginTop="4dp"
-	android:layout_marginRight="7dp"
-	android:layout_marginBottom="20dp"
 	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
+	android:layout_height="match_parent"
 	android:orientation="vertical">
 
 	<com.mobsandgeeks.ui.TypefaceTextView
