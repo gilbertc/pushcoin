@@ -1,6 +1,5 @@
 package com.pushcoin.srv.gateway.activities;
 
-import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.Date;
 
@@ -8,12 +7,14 @@ import com.pushcoin.srv.gateway.R;
 import com.pushcoin.srv.gateway.services.PaymentService;
 import com.pushcoin.lib.core.data.DisplayParcel;
 import com.pushcoin.lib.core.data.PcosAmount;
+import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.exceptions.MATUnavailableException;
 import com.pushcoin.lib.core.net.PcosServer;
 import com.pushcoin.lib.core.security.KeyStore;
 import com.pushcoin.lib.core.utils.Logger;
 import com.pushcoin.lib.pcos.BlockWriter;
 import com.pushcoin.lib.pcos.DocumentWriter;
+import com.pushcoin.lib.pcos.InputBlock;
 import com.pushcoin.lib.pcos.InputDocument;
 import com.pushcoin.lib.pcos.OutputBlock;
 import com.pushcoin.lib.pcos.OutputDocument;
@@ -192,20 +193,22 @@ public class ChargeActivity extends Activity {
 	private void onPaymentReady(byte[] pta) {
 		display(new DisplayParcel("Submitting..."));
 		log.i("submitting payment");
-
+		
 		Intent intent = getIntent();
 		if (intent.getAction().endsWith(Actions.ACTION_CHARGE)) {
 
 			try {
-				String url = PcosServer.getDefaultUrl();
-				if (url.isEmpty())
-					throw new UnknownHostException();
-
-				OutputDocument doc = createPaymentRequest(
-						intent.getParcelableExtra(Keys.KEY_PARAMS), pta);
-
 				PcosServer server = new PcosServer();
-				server.postAsync(url, doc, new PaymentResponseListener(server));
+				if (Preferences.isDemoMode(this, false)) {
+					OutputDocument doc = createSuccessResult();
+					server.stageAsync(doc, new PaymentResponseListener(server));
+				} else {
+					String url = PcosServer.getDefaultUrl();
+					OutputDocument doc = createPaymentRequest(
+							intent.getParcelableExtra(Keys.KEY_PARAMS), pta);
+					server.postAsync(url, doc, new PaymentResponseListener(
+							server));
+				}
 
 			} catch (Exception ex) {
 				log.e("exception when submitting payment", ex);
@@ -231,17 +234,46 @@ public class ChargeActivity extends Activity {
 		finish();
 	}
 
-	private void onPaymentSuccess() {
+	private void onPaymentSuccess(byte[] refData, String trxId,
+			boolean isAmountExact, PcosAmount balance, Date utc) {
 		Toast.makeText(ChargeActivity.this, "Thank You", Toast.LENGTH_LONG)
 				.show();
 		display(new DisplayParcel("Thank You"));
 
+		// TODO: return information
 		Intent returnIntent = new Intent();
 		Result result = new Result();
 		result.type = Result.TYPE_CHARGE;
 		returnIntent.putExtra(Keys.KEY_RESULT, result);
+
 		ChargeActivity.this.setResult(Result.RESULT_OK, returnIntent);
 		finish();
+	}
+
+	private OutputDocument createSuccessResult() throws PcosError,
+			MATUnavailableException {
+		OutputDocument doc;
+		doc = new DocumentWriter("PaymentAck");
+		OutputBlock bo = new BlockWriter("Bo");
+
+		// ref data
+		bo.writeByteStr(new byte[] { 1, 2, 3, 4 });
+
+		// transaction id
+		bo.writeString("trx-demo");
+
+		// is amount exact
+		bo.writeBool(true);
+
+		// balance
+		PcosAmount amt = new PcosAmount(100, 10);
+		amt.write(bo);
+
+		// utc balance time
+		bo.writeUlong(new Date().getTime() / 1000);
+
+		doc.addBlock(bo);
+		return doc;
 	}
 
 	private OutputDocument createPaymentRequest(Parcelable p, byte[] pta)
@@ -349,10 +381,20 @@ public class ChargeActivity extends Activity {
 		@Override
 		public void onResponse(Object tag, InputDocument doc) {
 			KeyStore keyStore = KeyStore.getInstance(ChargeActivity.this);
-			if (keyStore != null && keyStore.hasMAT()) {
+			if ((keyStore != null && keyStore.hasMAT()) || Preferences.isDemoMode(ChargeActivity.this, false)) {
 				try {
 					if (doc.getDocumentName().contains("PaymentAck")) {
-						onPaymentSuccess();
+
+						InputBlock bo = doc.getBlock("Bo");
+
+						byte[] refData = bo.readByteStr(0);
+						String trxId = bo.readString(0);
+						boolean isAmountExact = bo.readBool();
+						PcosAmount balance = new PcosAmount(bo);
+						Date utc = new Date(bo.readUlong());
+
+						onPaymentSuccess(refData, trxId, isAmountExact,
+								balance, utc);
 						return;
 					} else {
 						log.e("unexpected message received: "
@@ -381,6 +423,8 @@ public class ChargeActivity extends Activity {
 			case PaymentService.MSGID_COMPLETE:
 				onPaymentReady((byte[]) message.obj);
 				break;
+			case PaymentService.MSGID_ERROR:
+				onPaymentError(((Exception) message.obj).getMessage());
 			}
 		};
 	};

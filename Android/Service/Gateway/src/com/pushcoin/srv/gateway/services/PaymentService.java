@@ -3,7 +3,10 @@ package com.pushcoin.srv.gateway.services;
 import java.util.Date;
 
 import com.pushcoin.lib.core.data.Challenge;
+import com.pushcoin.lib.core.data.DemoChallenge;
 import com.pushcoin.lib.core.data.DisplayParcel;
+import com.pushcoin.lib.core.data.IChallenge;
+import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.data.TransactionKey;
 import com.pushcoin.lib.core.devices.DeviceManager;
 import com.pushcoin.lib.core.payment.IPayment;
@@ -30,6 +33,7 @@ public class PaymentService extends Service implements PaymentListener {
 	public static final String KEY_MESSENGER = "Messenger";
 
 	public static final int MSGID_COMPLETE = 1;
+	public static final int MSGID_ERROR = -1;
 
 	private DeviceManager deviceManager;
 	private String amount;
@@ -125,7 +129,12 @@ public class PaymentService extends Service implements PaymentListener {
 		}
 	}
 
-	private Challenge getChallenge() {
+	private IChallenge getChallenge() {
+
+		if (Preferences.isDemoMode(this, false)) {
+			return new DemoChallenge();
+		}
+
 		TransactionKey[] keys = TransactionKey.getKeys();
 
 		if (keys != null) {
@@ -141,22 +150,21 @@ public class PaymentService extends Service implements PaymentListener {
 
 	@Override
 	public void onPaymentDiscovered(IPayment tech) {
-		byte[] blob = null;
+		Message msg = Message.obtain();
 
 		try {
 			tech.connect();
 
-			blob = tech.getMessage(getChallenge());
+			msg.what = MSGID_COMPLETE;
+			msg.obj = tech.getMessage(getChallenge());
 
 			tech.close();
 
 		} catch (Exception e) {
-			log.d("Service", e);
+			log.d("Service Error", e);
+			msg.what = MSGID_ERROR;
+			msg.obj = e;
 		}
-
-		Message msg = Message.obtain();
-		msg.what = MSGID_COMPLETE;
-		msg.obj = blob;
 
 		try {
 			this.messenger.send(msg);

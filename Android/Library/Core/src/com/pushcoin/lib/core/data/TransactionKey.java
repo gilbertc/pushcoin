@@ -17,7 +17,7 @@ public class TransactionKey {
 	public Date expire;
 	public byte[] key;
 	
-	public Challenge getChallenge()
+	public IChallenge getChallenge()
 	{
 	    try
 	    {

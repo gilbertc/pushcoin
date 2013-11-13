@@ -3,7 +3,7 @@ package com.pushcoin.lib.core.payment.nfc;
 import java.io.IOException;
 
 
-import com.pushcoin.lib.core.data.Challenge;
+import com.pushcoin.lib.core.data.IChallenge;
 import com.pushcoin.lib.core.utils.Logger;
 import com.pushcoin.lib.pcos.BlockWriter;
 import com.pushcoin.lib.pcos.InputBlock;
@@ -26,7 +26,7 @@ public class NfcPayload {
 		deviceId = blk.readString(20);
 	}
 	
-	public OutputBlock buildPcosBlock(Challenge challenge) throws IOException
+	public OutputBlock buildPcosBlock(IChallenge challenge) throws IOException
 	{
 		OutputBlock ret = new BlockWriter("P1");
 		try {

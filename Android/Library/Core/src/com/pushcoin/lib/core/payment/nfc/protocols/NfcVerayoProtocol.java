@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.pushcoin.lib.core.payment.nfc.NfcPayment;
 import com.pushcoin.lib.core.utils.Logger;
 import com.pushcoin.lib.core.utils.Stopwatch;
-import com.pushcoin.lib.core.data.Challenge;
+import com.pushcoin.lib.core.data.IChallenge;
 import com.pushcoin.lib.pcos.BlockWriter;
 import com.pushcoin.lib.pcos.OutputBlock;
 import com.pushcoin.lib.pcos.PcosError;
@@ -41,7 +41,7 @@ public class NfcVerayoProtocol extends NfcProtocol {
 		this.timer = new Stopwatch();
 	}
 
-	private Response doChallenge(Challenge challenge) throws IOException {
+	private Response doChallenge(IChallenge challenge) throws IOException {
 
 		Response response = new Response(256);
 
@@ -79,7 +79,7 @@ public class NfcVerayoProtocol extends NfcProtocol {
 		return response;
 	}
 
-	public OutputBlock buildPcosBlock(Challenge challenge) throws IOException {
+	public OutputBlock buildPcosBlock(IChallenge challenge) throws IOException {
 
 		OutputBlock ret = new BlockWriter("M1");
 		try {

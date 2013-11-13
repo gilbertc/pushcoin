@@ -4,6 +4,8 @@
     <string name="pref_header_general">General</string>
     <string name="pref_title_enable_offline_mode">Enable Offline Mode</string>
     <string name="pref_description_enable_offline_mode">Store new payments and process them when Internet is accessible</string>
+    <string name="pref_title_enable_demo_mode">Enable Demo Mode</string>
+    <string name="pref_description_enable_demo_mode">Demo PushCoin without connection to server</string>
     <string name="pref_title_server_connection">Server Connection</string>
 
     <string-array name="pref_server_connection_titles">

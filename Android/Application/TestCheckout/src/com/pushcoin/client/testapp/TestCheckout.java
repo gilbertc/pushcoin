@@ -67,6 +67,7 @@ public class TestCheckout extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
+		log.i("Bootstrapping");
 		integrator.bootstrap();
 	}
 

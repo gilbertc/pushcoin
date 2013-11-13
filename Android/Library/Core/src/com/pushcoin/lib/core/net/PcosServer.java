@@ -71,5 +71,29 @@ public class PcosServer extends Server {
 			listener.onError(tag, ex);
 		}
 	}
+	
+	public InputDocument stage(OutputDocument doc) throws Exception {
+		return this.stage(null, doc);
+	}
+
+	public InputDocument stage(Object tag, OutputDocument doc)
+			throws Exception {
+		return new DocumentReader(stage(tag, doc.toBytes()));
+	}
+
+	public void stageAsync(OutputDocument doc,
+			PcosResponseListener listener) {
+		this.stageAsync(null, doc, listener);
+	}
+
+	public void stageAsync(Object tag, OutputDocument doc,
+			PcosResponseListener listener) {
+
+		try {
+			this.stageAsync(tag, doc.toBytes(), listener);
+		} catch (Exception ex) {
+			listener.onError(tag, ex);
+		}
+	}
 
 }

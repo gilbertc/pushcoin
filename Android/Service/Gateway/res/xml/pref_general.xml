@@ -5,7 +5,13 @@
         android:key="com.pushcoin.lib.core.PREF_OFFLINE"
         android:summary="@string/pref_description_enable_offline_mode"
         android:title="@string/pref_title_enable_offline_mode" />
-
+    
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="com.pushcoin.lib.core.PREF_DEMO"
+        android:summary="@string/pref_description_enable_demo_mode"
+        android:title="@string/pref_title_enable_demo_mode" />
+    
     <ListPreference
         android:defaultValue="@string/url_pushcoin_prod"
         android:entries="@array/pref_server_connection_titles"

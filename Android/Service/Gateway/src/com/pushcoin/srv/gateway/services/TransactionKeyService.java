@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.pushcoin.srv.gateway.alarms.TransactionKeyAlarm;
+import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.data.TransactionKey;
 import com.pushcoin.lib.core.net.PcosServer;
 import com.pushcoin.lib.core.security.KeyStore;
@@ -43,12 +44,12 @@ public class TransactionKeyService extends WakefulIntentService {
 			return;
 		}
 
-		String url = PcosServer.getDefaultUrl();
-		if (url.isEmpty()) {
-			log.e("cannot fetch keys - invalid url");
+		if (Preferences.isDemoMode(this, false)){
+			log.d("fetch skipped because demo mode");
 			return;
 		}
 
+		String url = PcosServer.getDefaultUrl();
 		KeyStore keyStore = KeyStore.getInstance(this);
 		if (keyStore.hasMAT()) {
 

@@ -2,7 +2,7 @@ package com.pushcoin.lib.core.payment.magnetic;
 
 import java.io.IOException;
 
-import com.pushcoin.lib.core.data.Challenge;
+import com.pushcoin.lib.core.data.IChallenge;
 import com.pushcoin.lib.core.payment.IPayment;
 import com.pushcoin.lib.core.utils.Logger;
 
@@ -20,7 +20,7 @@ public class MagneticPayment implements IPayment {
 	}
 
 	@Override
-	public byte[] getMessage(Challenge challenge) throws Exception {
+	public byte[] getMessage(IChallenge challenge) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
