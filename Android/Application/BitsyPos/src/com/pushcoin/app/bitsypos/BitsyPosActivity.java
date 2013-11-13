@@ -125,6 +125,19 @@ public class BitsyPosActivity
 		}
 	}
 
+	/** User clicks Checkout */
+	private void onCheckoutClicked()
+	{
+		FragmentManager mgr = getFragmentManager();
+		Fragment categoryMenuFrag = mgr.findFragmentByTag( FragmentTag.CATEGORY_MENU_FRAG );
+
+		// Hide menu, replace browser with checkout view
+		getFragmentManager().beginTransaction()
+			.hide( categoryMenuFrag )
+			.replace( R.id.hz_center_pane, new CheckoutFragment(), FragmentTag.CHECKOUT_FRAG )
+			.commit();
+	}
+
 	/** Adds item to cart, with option to set its properties. */
 	private void addItemToCart( Item item )
 	{
@@ -186,6 +199,10 @@ public class BitsyPosActivity
 
 					case MessageId.ITEM_CLICKED:
 						ref.onShoppingItemClicked( (String) msg.obj );
+					break;
+
+					case MessageId.CHECKOUT_CLICKED:
+						ref.onCheckoutClicked();
 					break;
 
 					case MessageId.CART_POOL_CHANGED:

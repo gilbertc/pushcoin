@@ -88,6 +88,15 @@ public class CartFragment extends Fragment
 			}
 		});
 
+		// Handle Checkout
+		Button checkoutBtn = (Button) cartLayout.findViewById(R.id.shopping_cart_checkout_button);
+		checkoutBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				EventHub.post( MessageId.CHECKOUT_CLICKED );
+			}
+		});
+
 		ListView cartItemList = (ListView) cartLayout.findViewById(R.id.shopping_cart_list);
 		// Keep in focus
 		cartItemList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
