@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/customer_search_layout_root" 
+	android:orientation="vertical"
+	android:focusable="true" 
+	android:focusableInTouchMode="true"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<!-- Search Bar -->
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/roundborder"
+		android:gravity="center"
+		android:orientation="horizontal" >
+
+		<EditText
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:background="@drawable/noborder"
+			android:hint="@string/customer_search_hint"
+			android:padding="8dp"
+			android:textSize="24sp"
+			android:textColor="@color/lightui_darkestgray"
+			android:singleLine="true" />
+
+		<ImageView
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:padding="5dp"
+			android:src="@android:drawable/ic_menu_search" />
+
+	</LinearLayout>
+
+	<ListView
+		android:id="@+id/customer_search_list"
+		android:divider="@drawable/dotted"
+		android:dividerHeight="1px"
+		android:footerDividersEnabled="false"
+		android:headerDividersEnabled="false"
+		android:cacheColorHint="@android:color/transparent"
+		android:paddingTop="12dp"
+		android:paddingLeft="1dp"
+		android:paddingRight="1dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+
+</LinearLayout>

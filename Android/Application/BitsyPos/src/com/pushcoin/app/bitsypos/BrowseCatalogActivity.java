@@ -15,13 +15,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import java.util.ArrayList;
 import java.lang.ref.WeakReference;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 
-public class BitsyPosActivity 
+public class BrowseCatalogActivity 
 	extends SlidingActivity implements EditItemPropertiesFragment.OnDismissed
 {
 	/** Called when the activity is first created. */
@@ -43,7 +44,7 @@ public class BitsyPosActivity
 		carts_ = CartManager.newInstance( this );
 
 		// Set this activity UI layout
-		setContentView(R.layout.main_layout);
+		setContentView(R.layout.browse_catalog_layout);
 		// Layout for the behind-menu
 		setBehindContentView(R.layout.tab_menu_fragment);
 
@@ -67,7 +68,7 @@ public class BitsyPosActivity
 	{
 		super.onResume();
 		// Register self with the hub and start receiving events
-		EventHub.getInstance().register( handler_, "BitsyPosActivity" );
+		EventHub.getInstance().register( handler_, "BrowseCatalogActivity" );
 
 		// Display category menu, item browser.
 		getFragmentManager().beginTransaction()
@@ -125,17 +126,11 @@ public class BitsyPosActivity
 		}
 	}
 
-	/** User clicks Checkout */
+	/** User clicks Checkout -- kick of new activity */
 	private void onCheckoutClicked()
 	{
-		FragmentManager mgr = getFragmentManager();
-		Fragment categoryMenuFrag = mgr.findFragmentByTag( FragmentTag.CATEGORY_MENU_FRAG );
-
-		// Hide menu, replace browser with checkout view
-		getFragmentManager().beginTransaction()
-			.hide( categoryMenuFrag )
-			.replace( R.id.hz_center_pane, new CheckoutFragment(), FragmentTag.CHECKOUT_FRAG )
-			.commit();
+		Intent intent = new Intent(this, CheckoutActivity.class);
+		startActivity( intent );
 	}
 
 	/** Adds item to cart, with option to set its properties. */
@@ -177,20 +172,19 @@ public class BitsyPosActivity
 	*/
 	static class IncomingHandler extends Handler
 	{
-		private final WeakReference<BitsyPosActivity> ref_; 
+		private final WeakReference<BrowseCatalogActivity> ref_; 
 
-		IncomingHandler(BitsyPosActivity ref) {
-			ref_ = new WeakReference<BitsyPosActivity>(ref);
+		IncomingHandler(BrowseCatalogActivity ref) {
+			ref_ = new WeakReference<BrowseCatalogActivity>(ref);
 		}
 
 		/** Dispatch events. */
 		@Override
 		public void handleMessage(Message msg)
 		{
-			BitsyPosActivity ref = ref_.get();
+			BrowseCatalogActivity ref = ref_.get();
 			if (ref != null)
 			{
-				Log.v(Conf.TAG, "BitsyPosActivity|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
 				switch( msg.what )
 				{
 					case MessageId.CATEGORY_CLICKED:

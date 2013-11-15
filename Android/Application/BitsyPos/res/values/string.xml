@@ -2,6 +2,8 @@
 <resources>
 
 	<string name="app_name">BitsyPos</string>
+	<string name="checkout_activity_label">Checkout</string>
+	<string name="customer_search_hint">Find a customer&#8230;</string>
 
 	<!-- Swipe to remove styles -->
 	<string name="undo">Undo</string>
@@ -21,6 +23,9 @@
 	<string name="base_price">Base Price:</string>
 	<string name="combo_total">Combo Total:</string>
 	<string name="total">Total:</string>
+	<string name="charge_amount">Charge Amount:</string>
+	<string name="due_amount">Amount Due:</string>
+	<string name="discount">Discount:</string>
 	<string name="server_name">Server Name</string>
 	<string name="start_over">Start\nOver</string>
 	<string name="print_cart">Print\nCart</string>
@@ -29,5 +34,9 @@
 	<string name="new_tab">New Tab</string>
 	<string name="default_tab_name">Main</string>
 	<string name="checkout">Checkout &#187;</string>
+	<string name="cash_or_check">Cash or\nCheck</string>
+	<string name="read_card">Read\nCard</string>
+	<string name="enter_card">Enter\nCard</string>
+
 </resources>
 

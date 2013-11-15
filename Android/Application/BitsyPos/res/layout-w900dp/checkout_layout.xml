@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@drawable/backrepeat_dark"
+	android:baselineAligned="false"
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<fragment android:name="com.pushcoin.app.bitsypos.CustomerSearchFragment"
+		android:id="@+id/customer_search_fragment"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="match_parent" />
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="match_parent" >
+
+		<fragment android:name="com.pushcoin.app.bitsypos.CustomerDetailsFragment"
+			android:id="@+id/customer_details_fragment"
+			android:layout_weight="1"
+			android:layout_width="match_parent"
+			android:layout_height="0dp" />
+
+		<fragment android:name="com.pushcoin.app.bitsypos.TransactionMonitorFragment"
+			android:id="@+id/transaction_monitor_fragment"
+			android:layout_weight="1"
+			android:layout_width="match_parent"
+			android:layout_height="0dp" />
+
+	</LinearLayout>
+
+	<fragment android:name="com.pushcoin.app.bitsypos.CheckoutCartFragment"
+		android:id="@+id/checkout_cart_fragment"
+		android:layout_width="280dp"
+		android:layout_height="match_parent" />
+
+</LinearLayout>

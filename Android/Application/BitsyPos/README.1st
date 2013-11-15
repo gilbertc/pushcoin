@@ -4,7 +4,7 @@ Project created with
 android create project \
 	--target 19 \
 	--name BitsyPOS --path . \
-	--activity BitsyPosActivity \
+	--activity StartPosActivity \
 	--package com.pushcoin.app.bitsypos
 
 

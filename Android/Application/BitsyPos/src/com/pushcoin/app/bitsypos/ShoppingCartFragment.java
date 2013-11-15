@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.lang.ref.WeakReference;
 
-public class CartFragment extends Fragment
+public class ShoppingCartFragment extends Fragment
 {
 	CartEntryArrayAdapter adapter_;
 
@@ -42,7 +42,7 @@ public class CartFragment extends Fragment
 	{
 		super.onResume();
 		// Register self with the hub and start receiving events
-		EventHub.getInstance().register( handler_, "CartFragment" );
+		EventHub.getInstance().register( handler_, "ShoppingCartFragment" );
 	}
 
 	@Override
@@ -194,20 +194,20 @@ public class CartFragment extends Fragment
 	*/
 	static class IncomingHandler extends Handler
 	{
-		private final WeakReference<CartFragment> ref_; 
+		private final WeakReference<ShoppingCartFragment> ref_; 
 
-		IncomingHandler(CartFragment ref) {
-			ref_ = new WeakReference<CartFragment>(ref);
+		IncomingHandler(ShoppingCartFragment ref) {
+			ref_ = new WeakReference<ShoppingCartFragment>(ref);
 		}
 
 		/** Dispatch events. */
 		@Override
 		public void handleMessage(Message msg)
 		{
-			CartFragment ref = ref_.get();
+			ShoppingCartFragment ref = ref_.get();
 			if (ref != null)
 			{
-				Log.v(Conf.TAG, "CartFragment|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
+				Log.v(Conf.TAG, "ShoppingCartFragment|event="+msg.what + ";arg1="+msg.arg1 + ";arg2="+msg.arg2 );
 				switch( msg.what )
 				{
 					case MessageId.CART_POOL_CHANGED:
