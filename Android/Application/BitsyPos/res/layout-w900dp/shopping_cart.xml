@@ -12,29 +12,57 @@
 		android:layout_width="wrap_content"
 		android:layout_height="0dp" >
 
-		<!-- Window Name -->
+		<!-- Cart Total Label -->
+		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:id="@+id/shopping_cart_total_label"
+			android:text="@string/total"
+			android:layout_alignParentLeft="true"
+			android:layout_alignBaseline="@+id/shopping_cart_tab_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="18sp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColor="@color/lightui_mediumgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+		<!-- Cart Total -->
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/shopping_cart_total"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignBaseline="@+id/shopping_cart_tab_name"
+			android:layout_toRightOf="@+id/shopping_cart_total_label"
+			android:textSize="28sp"
+			android:paddingRight="10dp"
+			android:textColor="@color/android_holo_blue_bright"
+			geekui:customTypeface="fonts/TT0467M.ttf" />
+
+		<!-- Tab Label -->
+		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:text="@string/tab"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignBaseline="@+id/shopping_cart_tab_name"
+			android:layout_toLeftOf="@+id/shopping_cart_tab_name"
+			android:textSize="18sp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColor="@color/lightui_mediumgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+		<!-- Tab Name -->
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/shopping_cart_tab_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
 			android:layout_alignParentTop="true"
 			android:layout_alignParentRight="true"
 			android:textSize="28sp"
 			android:paddingRight="10dp"
 			android:textColor="@color/lightui_mediumgray"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
-
-		<com.mobsandgeeks.ui.TypefaceTextView 
-			android:text="@string/tab"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="18sp"
-			android:layout_alignBottom="@id/shopping_cart_tab_name"
-			android:layout_toLeftOf="@id/shopping_cart_tab_name"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:textColor="@color/lightui_mediumgray"
-			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 		<ListView
 			android:id="@+id/shopping_cart_list"
@@ -47,40 +75,8 @@
 			android:paddingLeft="1dp"
 			android:paddingRight="1dp"
 			android:layout_below="@id/shopping_cart_tab_name"
-			android:layout_above="@+id/shopping_cart_total_line"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
-
-		<LinearLayout
-			android:id="@id/shopping_cart_total_line"
-			android:orientation="horizontal"
-			android:layout_alignParentBottom="true"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content" >
-
-			<com.mobsandgeeks.ui.TypefaceTextView 
-				android:text="@string/total"
-				android:id="@+id/shopping_cart_total_label"
-				android:layout_weight="1"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:textSize="18sp"
-				android:gravity="right"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:textColor="@color/lightui_darkgray"
-				geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
-
-			<com.mobsandgeeks.ui.TypefaceTextView
-				android:id="@+id/shopping_cart_total"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textSize="38sp"
-				android:paddingRight="6dp"
-				android:textColor="@color/android_holo_blue_bright"
-				geekui:customTypeface="fonts/TT0467M.ttf" />
-
-		</LinearLayout>
 
 	</RelativeLayout>
 

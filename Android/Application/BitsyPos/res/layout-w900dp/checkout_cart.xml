@@ -12,11 +12,53 @@
 		android:layout_width="wrap_content"
 		android:layout_height="0dp" >
 
-		<!-- Window Name -->
+		<!-- Cart Total Label -->
+		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:id="@+id/checkout_cart_total_label"
+			android:text="@string/total"
+			android:layout_alignParentLeft="true"
+			android:layout_alignBaseline="@+id/checkout_cart_tab_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="18sp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColor="@color/lightui_mediumgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+		<!-- Cart Total -->
 		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/checkout_cart_total"
+			android:text="$12.01"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignBaseline="@+id/checkout_cart_tab_name"
+			android:layout_toRightOf="@+id/checkout_cart_total_label"
+			android:textSize="28sp"
+			android:paddingRight="10dp"
+			android:textColor="@color/android_holo_blue_bright"
+			geekui:customTypeface="fonts/TT0467M.ttf" />
+
+		<!-- Tab Label -->
+		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:text="@string/tab"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignBaseline="@+id/checkout_cart_tab_name"
+			android:layout_toLeftOf="@+id/checkout_cart_tab_name"
+			android:textSize="18sp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColor="@color/lightui_mediumgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+		<!-- Tab Name -->
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:text="MAIN"
 			android:id="@+id/checkout_cart_tab_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
 			android:layout_alignParentTop="true"
 			android:layout_alignParentRight="true"
 			android:textSize="28sp"
@@ -24,18 +66,7 @@
 			android:textColor="@color/lightui_mediumgray"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
 
-		<com.mobsandgeeks.ui.TypefaceTextView 
-			android:text="@string/tab"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="18sp"
-			android:layout_alignBottom="@id/checkout_cart_tab_name"
-			android:layout_toLeftOf="@id/checkout_cart_tab_name"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:textColor="@color/lightui_mediumgray"
-			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
-
+		<!-- Shopping Cart Contents -->
 		<ListView
 			android:id="@+id/checkout_cart_list"
 			android:divider="@drawable/dotted"
@@ -47,40 +78,13 @@
 			android:paddingLeft="1dp"
 			android:paddingRight="1dp"
 			android:layout_below="@id/checkout_cart_tab_name"
-			android:layout_above="@+id/checkout_cart_due_amount"
+			android:layout_above="@+id/checkout_cart_charge_amount_label"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
 
-		<!-- Due Amount Label -->
-		<com.mobsandgeeks.ui.TypefaceTextView 
-			android:text="@string/due_amount"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-			android:layout_alignBaseline="@id/checkout_cart_due_amount"
-			android:layout_alignLeft="@id/checkout_cart_due_amount"
-			android:textSize="18sp"
-			android:gravity="right"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:textColor="@color/lightui_darkgray"
-			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
-
-		<!-- Due Amount -->
-		<com.mobsandgeeks.ui.TypefaceTextView
-			android:id="@id/checkout_cart_due_amount"
-			android:text="$0.00"
-			android:layout_alignParentRight="true"
-			android:layout_above="@+id/checkout_cart_charge_amount"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="38sp"
-			android:paddingRight="6dp"
-			android:textColor="@color/android_holo_blue_bright"
-			geekui:customTypeface="fonts/TT0467M.ttf" />
-
 		<!-- Charge Amount Label -->
 		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:id="@+id/checkout_cart_charge_amount_label"
 			android:text="@string/charge_amount"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -102,23 +106,50 @@
 			android:gravity="right"
 			android:imeOptions="actionDone"
 			android:inputType="numberDecimal"
-			android:layout_above="@+id/checkout_cart_discount"
+			android:layout_above="@+id/checkout_cart_due_amount"
 			android:layout_alignParentRight="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="38sp"
 			android:paddingRight="6dp"
-			android:textColor="@color/android_holo_blue_bright"
+			android:textColor="@color/android_holo_red_bright"
+			geekui:customTypeface="fonts/TT0467M.ttf" />
+
+		<!-- Due Amount Label -->
+		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:text="@string/due_amount"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_alignBaseline="@id/checkout_cart_due_amount"
+			android:textSize="18sp"
+			android:gravity="right"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColor="@color/lightui_darkgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+		<!-- Due Amount -->
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@id/checkout_cart_due_amount"
+			android:text="$0.00"
+			android:layout_alignParentRight="true"
+			android:layout_above="@+id/checkout_cart_discount"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="38sp"
+			android:paddingRight="6dp"
+			android:textColor="@color/lightui_darkgray"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
 
 		<!-- Discount Value Label -->
 		<com.mobsandgeeks.ui.TypefaceTextView 
+			android:id="@+id/checkout_cart_dicount_label"
 			android:text="@string/discount"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentLeft="true"
 			android:layout_alignBaseline="@+id/checkout_cart_discount"
-			android:layout_alignLeft="@+id/checkout_cart_dicount_pct"
 			android:textSize="18sp"
 			android:gravity="right"
 			android:paddingLeft="10dp"
@@ -132,11 +163,11 @@
 			android:text="10%"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_toLeftOf="@+id/checkout_cart_discount"
 			android:layout_alignBaseline="@+id/checkout_cart_discount"
+			android:layout_toLeftOf="@+id/checkout_cart_discount"
 			android:textSize="28sp"
 			android:paddingRight="10dp"
-			android:textColor="@color/android_holo_green_light"
+			android:textColor="@color/lightui_darkgray"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
 
 		<!-- Discount Value -->
@@ -151,10 +182,9 @@
 			android:layout_above="@+id/checkout_cart_discount_bar"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="10dp"
 			android:textSize="28sp"
 			android:paddingRight="6dp"
-			android:textColor="@color/android_holo_green_light"
+			android:textColor="@color/lightui_darkgray"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
 
 		<!-- Discount Bar -->
@@ -165,7 +195,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-				android:layout_marginBottom="40dp"
+				android:layout_marginBottom="35dp"
 				android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:visibility="visible" >

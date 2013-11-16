@@ -17,7 +17,7 @@
 		android:paddingRight="10dp"
 		android:textColor="#b0000000"
 		android:background="@drawable/category_menu_header_shape"
-		geekui:customTypeface="fonts/DancingScript-Regular.otf" />
+		geekui:customTypeface="fonts/TT0467M.ttf" />
 
 	<!-- header drop shadow -->
 	<View

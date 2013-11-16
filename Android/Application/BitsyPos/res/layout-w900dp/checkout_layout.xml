@@ -8,21 +8,22 @@
 
 	<fragment android:name="com.pushcoin.app.bitsypos.CustomerSearchFragment"
 		android:id="@+id/customer_search_fragment"
-		android:layout_weight="1"
+		android:layout_weight="4"
 		android:layout_width="0dp"
 		android:layout_height="match_parent" />
 
 	<LinearLayout
 		android:orientation="vertical"
-		android:layout_weight="1"
+		android:layout_marginRight="6dp"
+		android:layout_marginLeft="6dp"
+		android:layout_weight="5"
 		android:layout_width="0dp"
 		android:layout_height="match_parent" >
 
 		<fragment android:name="com.pushcoin.app.bitsypos.CustomerDetailsFragment"
 			android:id="@+id/customer_details_fragment"
-			android:layout_weight="1"
 			android:layout_width="match_parent"
-			android:layout_height="0dp" />
+			android:layout_height="wrap_content" />
 
 		<fragment android:name="com.pushcoin.app.bitsypos.TransactionMonitorFragment"
 			android:id="@+id/transaction_monitor_fragment"
@@ -34,7 +35,7 @@
 
 	<fragment android:name="com.pushcoin.app.bitsypos.CheckoutCartFragment"
 		android:id="@+id/checkout_cart_fragment"
-		android:layout_width="280dp"
+		android:layout_width="300dp"
 		android:layout_height="match_parent" />
 
 </LinearLayout>

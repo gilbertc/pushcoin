@@ -15,6 +15,8 @@
 	<color name="android_holo_blue_bright">#00ddff</color>
 	<color name="android_holo_blue_dark">#00008b</color>
 	<color name="android_holo_green_light">#33b57d</color>
+	<color name="android_holo_red_bright">#ff3000</color>
+	<color name="android_holo_yellow_bright">#ffe600</color>
 
 	<!-- Light UI -->
 	<color name="lightui_lightgray">#dddddd</color>

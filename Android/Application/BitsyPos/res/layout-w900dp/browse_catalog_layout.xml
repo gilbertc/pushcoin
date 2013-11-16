@@ -19,7 +19,7 @@
 
 	<fragment android:name="com.pushcoin.app.bitsypos.ShoppingCartFragment"
 		android:id="@+id/cart_fragment"
-		android:layout_width="280dp"
+		android:layout_width="300dp"
 		android:layout_height="match_parent" />
 
 </LinearLayout>
