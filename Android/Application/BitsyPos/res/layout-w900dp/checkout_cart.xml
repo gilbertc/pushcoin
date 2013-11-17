@@ -36,7 +36,7 @@
 			android:layout_toRightOf="@+id/checkout_cart_total_label"
 			android:textSize="28sp"
 			android:paddingRight="10dp"
-			android:textColor="@color/android_holo_blue_bright"
+			android:textColor="@color/android_holo_yellow_bright"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
 
 		<!-- Tab Label -->
@@ -195,10 +195,9 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-				android:layout_marginBottom="35dp"
+				android:layout_marginBottom="27dp"
 				android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:visibility="visible" >
+        android:orientation="vertical">
 
         <SeekBar
             android:id="@+id/volume_bar"
@@ -276,7 +275,7 @@
 
 		<Button android:text="@string/read_card"
 			android:id="@+id/checkout_cart_read_card_button" 
-			android:background="@drawable/btn_purple"
+			android:background="@drawable/btn_blue"
 			android:layout_marginRight="2dp"
 			style="@style/ShoppingCartAction" />
 
@@ -291,6 +290,28 @@
 			android:background="@drawable/btn_red"
 			style="@style/ShoppingCartAction" />
 
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_marginTop="2dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+
+		<Button android:text="@string/print_receipt"
+			android:id="@+id/checkout_cart_print_button" 
+			android:background="@drawable/btn_purple"
+			android:layout_height="match_parent"
+			android:layout_marginRight="2dp"
+			style="@style/ShoppingCartAction" />
+
+		<Button android:text="@string/complete" 
+			android:layout_weight="2"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:id="@+id/checkout_cart_checkout_button" 
+			android:background="@drawable/btn_green"
+			style="@style/ShoppingCartCheckout" />
 
 	</LinearLayout>
 

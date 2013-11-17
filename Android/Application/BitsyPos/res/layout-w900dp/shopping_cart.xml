@@ -35,7 +35,7 @@
 			android:layout_toRightOf="@+id/shopping_cart_total_label"
 			android:textSize="28sp"
 			android:paddingRight="10dp"
-			android:textColor="@color/android_holo_blue_bright"
+			android:textColor="@color/android_holo_yellow_bright"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
 
 		<!-- Tab Label -->
@@ -92,9 +92,9 @@
 			android:layout_marginRight="2dp"
 			style="@style/ShoppingCartAction" />
 
-		<Button android:text="@string/print_cart"
-			android:id="@+id/shopping_cart_print_button" 
-			android:background="@drawable/btn_purple"
+		<Button android:text="@string/open_item"
+			android:id="@+id/shopping_cart_open_item_button" 
+			android:background="@drawable/btn_blue"
 			android:layout_marginRight="2dp"
 			style="@style/ShoppingCartAction" />
 
@@ -111,13 +111,13 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" >
 
-		<Button android:text="@string/open_item"
-			android:id="@+id/shopping_cart_open_item_button" 
-			android:background="@drawable/btn_blue"
+		<Button android:text="@string/print_receipt"
+			android:id="@+id/shopping_cart_print_button" 
+			android:background="@drawable/btn_purple"
 			android:layout_height="match_parent"
-			style="@style/ShoppingCartAction"
-			android:layout_marginRight="2dp" />
-		
+			android:layout_marginRight="2dp"
+			style="@style/ShoppingCartAction" />
+
 		<Button android:text="@string/checkout" 
 			android:layout_weight="2"
 			android:layout_width="0dp"

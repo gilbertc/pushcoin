@@ -16,6 +16,8 @@ bin/
 gen/
 gen_ui_main.py
 gen_ui_settings.py
+Android/Application/BitsyPos/assets/databases/bitsypos
+Android/Application/BitsyPos/assets/databases/example.json
 
 # Local configuration file (sdk path, etc)
 local.properties

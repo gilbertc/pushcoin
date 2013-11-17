@@ -35,15 +35,12 @@
 	</LinearLayout>
 
 	<ListView
-		android:id="@+id/customer_search_list"
-		android:divider="@drawable/dotted"
-		android:dividerHeight="1px"
+		android:id="@+id/customer_list"
+		android:dividerHeight="3dp"
+		android:divider="@android:color/transparent"
 		android:footerDividersEnabled="false"
 		android:headerDividersEnabled="false"
 		android:cacheColorHint="@android:color/transparent"
-		android:paddingTop="12dp"
-		android:paddingLeft="1dp"
-		android:paddingRight="1dp"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 

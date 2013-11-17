@@ -25,18 +25,21 @@
 	<string name="total">Total:</string>
 	<string name="charge_amount">Charge Amount:</string>
 	<string name="due_amount">Amount Due:</string>
+	<string name="balance">Balance:</string>
 	<string name="discount">Discount:</string>
 	<string name="server_name">Server Name</string>
 	<string name="start_over">Start\nOver</string>
-	<string name="print_cart">Print\nCart</string>
+	<string name="print_receipt">Print\nReceipt</string>
 	<string name="queue_order">Queue\nOrder</string>
 	<string name="open_item">Open\nItem</string>
 	<string name="new_tab">New Tab</string>
 	<string name="default_tab_name">Main</string>
 	<string name="checkout">Checkout &#187;</string>
+	<string name="complete">Finished</string>
 	<string name="cash_or_check">Cash or\nCheck</string>
 	<string name="read_card">Read\nCard</string>
 	<string name="enter_card">Enter\nCard</string>
+	<string name="btn_charge">Charge</string>
 
 </resources>
 

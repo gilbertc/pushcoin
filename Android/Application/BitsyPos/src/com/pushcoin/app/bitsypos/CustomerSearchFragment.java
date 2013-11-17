@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.AdapterView;
-import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerSearchFragment extends Fragment 
 {
@@ -23,23 +23,30 @@ public class CustomerSearchFragment extends Fragment
 		// causing keyboard to popup 
 		layout.requestFocus();
 
-		/*
-		ListView menu = (ListView)layout.findViewById( R.id.category_menu );
+		ListView show_matches = (ListView)layout.findViewById( R.id.customer_list );
 
-		final CategoryListAdapter model = new CategoryListAdapter(getActivity(), R.layout.category_menu_row, R.id.category_menu_label);
-		menu.setAdapter(model);
+		final CustomerListAdapter model = new CustomerListAdapter( getActivity() );
+		show_matches.setAdapter(model);
+
+		// TODO: REMOVE BELOW & PLUG async-Queue-Handler 
+		// since data arrives on background thread
+		AppDb.getInstance().asyncFindCustomerWithKeyword( "", new AppDb.FindCustomerWithKeywordReply() {
+				@Override
+				public void onCustomerRecordFound(List<Customer> data) {
+					model.showData( data );
+				}
+			});
 
 		// install click-event listener
-		menu.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		show_matches.setOnItemClickListener(new AdapterView.OnItemClickListener()
 			{
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 				{
-					CategoryListAdapter.Entry entry = model.getEntry( position );
-					EventHub.post( MessageId.CATEGORY_CLICKED, entry.tag_id );
+					Customer entry = (Customer) model.getItem( position );
+					EventHub.post( MessageId.CUSTOMER_DETAILS_AVAILABLE, entry );
 				}
 			});
-		*/
 
 		return layout;
 	}

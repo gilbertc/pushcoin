@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:background="@drawable/window_shape"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal">
+
+	<!-- Customer mugshot -->
+	<ImageView
+		android:id="@+id/customer_list_mugshot"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+		android:layout_height="140dp" 
+		android:layout_width="110dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginBottom="5dp"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="10dp"
+		android:adjustViewBounds="true" />
+
+	<!-- Customer first name -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/customer_list_fname"
+		android:layout_alignParentTop="true"
+		android:layout_toRightOf="@+id/customer_list_mugshot"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="20sp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
+
+	<!-- Customer last name -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/customer_list_lname"
+		android:layout_alignParentTop="true"
+		android:layout_toRightOf="@+id/customer_list_fname"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="10dp"
+		android:textSize="20sp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
+
+	<!-- Customer Title -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/customer_list_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/customer_list_lname"
+		android:layout_toRightOf="@+id/customer_list_mugshot"
+		android:textSize="20sp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+	<!-- Customer Identifier -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/customer_list_identifier"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/customer_list_title"
+		android:layout_toRightOf="@+id/customer_list_mugshot"
+		android:textSize="20sp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+	<!-- HACK: RelativeLayout ignores bottom margin
+	 if height=wrap_content -->
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_below="@id/customer_list_mugshot" />
+
+</RelativeLayout>

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.graphics.BitmapFactory;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 import java.util.Map;
 import java.util.List;
@@ -18,6 +19,71 @@ import java.io.IOException;
 
 public class AppDb extends SQLiteAssetHelper 
 {
+	/**
+		Find a customer with keywords.
+	*/
+	interface FindCustomerWithKeywordReply
+	{
+		void onCustomerRecordFound(List<Customer> data);
+	}
+
+	public void asyncFindCustomerWithKeyword( String keyword, FindCustomerWithKeywordReply handler )
+	{
+		List<Customer> res = new ArrayList();
+		// populate sample
+		Customer c1 = Customer.newInstance();
+		c1.accountId = "CAX5PNCPKC";
+		c1.firstName = "Slawomir";
+		c1.lastName = "Lisznianski";
+		c1.title = "Creative Guru";
+		c1.identifier = "123-123-3123";
+		c1.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_sl );
+		c1.balance = new BigDecimal("56.32");
+		res.add( c1 );
+
+		Customer c2 = Customer.newInstance();
+		c2.accountId = "CAX5RNCPKC";
+		c2.firstName = "Eng";
+		c2.lastName = "Choong";
+		c2.title = "Coding Ninja";
+		c2.identifier = "221-823-3123";
+		c2.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_ec );
+		c2.balance = new BigDecimal("156.32");
+		res.add( c2 );
+
+		Customer c3 = Customer.newInstance();
+		c3.accountId = "KAX5RNCPKC";
+		c3.firstName = "Gilbert";
+		c3.lastName = "Cheung";
+		c3.title = "Hardware Hacker";
+		c3.identifier = "331-823-3123";
+		c3.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_gc );
+		c3.balance = new BigDecimal("88.10");
+		res.add( c3 );
+
+		Customer c4 = Customer.newInstance();
+		c4.accountId = "LAX5RNCPKC";
+		c4.firstName = "Lucas";
+		c4.lastName = "Lisznianski";
+		c4.title = "8th Grade Student";
+		c4.identifier = "331-823-3123";
+		c4.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_lucas );
+		c4.balance = new BigDecimal("8.10");
+		res.add( c4 );
+
+		Customer c5 = Customer.newInstance();
+		c5.accountId = "JJX5RNCPKC";
+		c5.firstName = "Milosh";
+		c5.lastName = "Lisznianski";
+		c5.title = "4th Grade Student";
+		c5.identifier = "881-823-3123";
+		c5.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_milosh );
+		c5.balance = new BigDecimal("1.00");
+		res.add( c5 );
+
+		handler.onCustomerRecordFound( res );
+	}
+
 	/**
 		Get labels.
 	*/
@@ -163,6 +229,22 @@ public class AppDb extends SQLiteAssetHelper
 		}
 	}
 
+	public static AppDb newInstance(Context ctx) 
+	{
+		if (inst_ == null) {
+			inst_ = new AppDb(ctx.getApplicationContext());
+		}
+		return inst_;
+	}
+
+	public static AppDb getInstance() 
+	{
+		if (inst_ == null) {
+			throw new BitsyError("Did you forget to call AppDb.newInstance in Activity?");
+		}
+		return inst_;
+	}
+
 	private void initSample(Context ctx)
 	{
 		// Sample data found, begin import
@@ -223,22 +305,6 @@ public class AppDb extends SQLiteAssetHelper
 		return ret;
 	}
 
-	public static AppDb newInstance(Context ctx) 
-	{
-		if (inst_ == null) {
-			inst_ = new AppDb(ctx.getApplicationContext());
-		}
-		return inst_;
-	}
-
-	public static AppDb getInstance() 
-	{
-		if (inst_ == null) {
-			throw new BitsyError("Did you forget to call AppDb.newInstance in Activity?");
-		}
-		return inst_;
-	}
-
 	/**
 		Private constructor ensures that direct instatiateion isn't possible.
 
@@ -255,6 +321,9 @@ public class AppDb extends SQLiteAssetHelper
 		// to write to it
 		//super(context, DATABASE_NAME, context.getExternalFilesDir(null).getAbsolutePath(), null, DATABASE_VERSION);
 	
+		// Store app context
+		appCtx_ = ctx;
+
 		// Compiled-statements cache
 		stmtCache_ = new TreeMap<String, SQLiteStatement>();
 
@@ -263,5 +332,6 @@ public class AppDb extends SQLiteAssetHelper
 	}
 
 	private static AppDb inst_;
+	Context appCtx_;
 	private TreeMap<String, SQLiteStatement> stmtCache_;
 }
