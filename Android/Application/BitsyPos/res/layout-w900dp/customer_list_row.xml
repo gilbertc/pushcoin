@@ -24,9 +24,11 @@
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/customer_list_fname"
 		android:layout_alignParentTop="true"
-		android:layout_toRightOf="@+id/customer_list_mugshot"
+		android:layout_toRightOf="@id/customer_list_mugshot"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:includeFontPadding="false"
 		android:textSize="20sp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
@@ -34,11 +36,11 @@
 	<!-- Customer last name -->
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/customer_list_lname"
-		android:layout_alignParentTop="true"
-		android:layout_toRightOf="@+id/customer_list_fname"
+		android:layout_below="@id/customer_list_fname"
+		android:layout_toRightOf="@id/customer_list_mugshot"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="10dp"
+		android:includeFontPadding="false"
 		android:textSize="20sp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/DejaVuSansCondensed-Bold.ttf" />
@@ -49,8 +51,9 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/customer_list_lname"
-		android:layout_toRightOf="@+id/customer_list_mugshot"
-		android:textSize="20sp"
+		android:layout_toRightOf="@id/customer_list_mugshot"
+		android:layout_marginTop="10dp"
+		android:textSize="18sp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
@@ -60,8 +63,9 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/customer_list_title"
-		android:layout_toRightOf="@+id/customer_list_mugshot"
-		android:textSize="20sp"
+		android:layout_toRightOf="@id/customer_list_mugshot"
+		android:includeFontPadding="false"
+		android:textSize="18sp"
 		android:textColor="@color/lightui_mediumgray"
 		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 

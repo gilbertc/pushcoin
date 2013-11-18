@@ -131,7 +131,8 @@ public class BrowseCatalogActivity
 	{
 		Intent intent = new Intent(this, CheckoutActivity.class);
 		startActivity( intent );
-		overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+		// comment in if you like anim
+		// overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 	}
 
 	/** Adds item to cart, with option to set its properties. */

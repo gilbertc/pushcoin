@@ -80,7 +80,7 @@
 
 	<!-- Charge Button -->
 	<Button
-		android:id="@+id/customer_details_debit_button" 
+		android:id="@+id/customer_details_charge_button" 
 		android:text="@string/btn_charge" 
 		android:layout_alignBottom="@id/customer_details_mugshot"
 		android:layout_alignParentRight="true"
@@ -91,8 +91,6 @@
 		android:background="@drawable/btn_blue"
 		android:paddingTop="12dp"
 		android:paddingBottom="12dp"
-		android:paddingLeft="28dp"
-		android:paddingRight="28dp"
 		style="@style/ShoppingCartCheckout" />
 
 	<!-- Customer Title -->
