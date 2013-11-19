@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.List;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.lang.ref.WeakReference;
@@ -64,6 +65,14 @@ public class CustomerDetailsFragment extends Fragment
 		rootView_.setVisibility(View.VISIBLE);
 	}
 	
+	private void onQueryUsersReply( Message msg )
+	{
+		List<Customer> customers = (List<Customer>) msg.obj;
+		if (customers.size() == 1) {
+			onCustomerDetailsAvailable( customers.get(0) ); 
+		}
+	}
+
 	private Handler handler_;
 	// UI with user info
 	private View rootView_;
@@ -96,9 +105,14 @@ public class CustomerDetailsFragment extends Fragment
 			{
 				switch( msg.what )
 				{
-					case MessageId.CUSTOMER_DETAILS_AVAILABLE:
+					case MessageId.CUSTOMER_CLICKED:
 						ref.onCustomerDetailsAvailable( (Customer) msg.obj );
 					break;
+
+					case MessageId.QUERY_USERS_REPLY:
+						ref.onQueryUsersReply( msg );
+					break;
+
 				}
 			}
 		}

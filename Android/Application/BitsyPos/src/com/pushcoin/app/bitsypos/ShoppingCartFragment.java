@@ -25,8 +25,6 @@ import java.lang.ref.WeakReference;
 
 public class ShoppingCartFragment extends Fragment
 {
-	CartEntryArrayAdapter adapter_;
-
 	/** Called when the fragment is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -43,6 +41,9 @@ public class ShoppingCartFragment extends Fragment
 		super.onResume();
 		// Register self with the hub and start receiving events
 		EventHub.getInstance().register( handler_, "ShoppingCartFragment" );
+
+		// Reset cart contents
+		onCartContentChanged();
 	}
 
 	@Override
@@ -59,7 +60,11 @@ public class ShoppingCartFragment extends Fragment
 		Context ctx = getActivity();
 
 		// Cart adapter
-		adapter_ = new CartEntryArrayAdapter(ctx);
+		adapter_ = new CartEntryArrayAdapter(ctx,
+			R.layout.shopping_cart_row,
+			R.id.shopping_cart_entry_title,
+			R.id.shopping_cart_entry_price,
+			R.id.shopping_cart_entry_note);
 
 		// Inflate the layout for this fragment
 		View cartLayout = inflater.inflate(R.layout.shopping_cart, container, false);
@@ -148,9 +153,6 @@ public class ShoppingCartFragment extends Fragment
 			}
 		});
 
-		// Reset cart contents
-		onCartContentChanged();
-
 		return cartLayout;
 	}
 
@@ -183,6 +185,7 @@ public class ShoppingCartFragment extends Fragment
 		newFragment.show(ft, Conf.DIALOG_EDIT_CART);
 	}
 
+	private CartEntryArrayAdapter adapter_;
 	private TextView cartTotal_;
 	private TextView tabName_;
 	private Handler handler_;

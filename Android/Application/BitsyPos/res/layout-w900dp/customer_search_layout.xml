@@ -16,9 +16,11 @@
 		android:orientation="horizontal" >
 
 		<EditText
+			android:id="@+id/customer_search_button"
+			android:layout_weight="1"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
+			android:imeOptions="actionSearch"
 			android:background="@drawable/noborder"
 			android:hint="@string/customer_search_hint"
 			android:padding="8dp"
@@ -35,7 +37,7 @@
 	</LinearLayout>
 
 	<ListView
-		android:id="@+id/customer_list"
+		android:id="@+id/customer_search_list"
 		android:dividerHeight="3dp"
 		android:divider="@android:color/transparent"
 		android:footerDividersEnabled="false"

@@ -15,8 +15,12 @@ import java.util.ArrayList;
 
 public class CartEntryArrayAdapter extends BaseAdapter 
 {
-	public CartEntryArrayAdapter(Context context)
+	public CartEntryArrayAdapter(Context context, int rowRes, int titleRes, int priceRes, int noteRes)
 	{
+		rowRes_ = rowRes;
+		titleRes_ = titleRes; 
+		priceRes_ = priceRes;
+		noteRes_ = noteRes;
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from( context );
 	}
@@ -58,14 +62,14 @@ public class CartEntryArrayAdapter extends BaseAdapter
 
 	private View inflateRow()
 	{
-		View view = inflater_.inflate(R.layout.shopping_cart_row, null);
+		View view = inflater_.inflate(rowRes_, null);
 		
 		// Creates a ViewHolder and store references to the children views
 		// we want to bind data to.
 		ViewHolder holder = new ViewHolder();
-		holder.title = (TextView) view.findViewById(R.id.shopping_cart_entry_title);
-		holder.price = (TextView) view.findViewById(R.id.shopping_cart_entry_price);
-		holder.note = (TextView) view.findViewById(R.id.shopping_cart_entry_note);
+		holder.title = (TextView) view.findViewById(titleRes_);
+		holder.price = (TextView) view.findViewById(priceRes_);
+		holder.note = (TextView) view.findViewById(noteRes_);
 		holder.convertViewVer = convertViewVer_;
 		view.setTag(holder);
 		return view;
@@ -107,6 +111,12 @@ public class CartEntryArrayAdapter extends BaseAdapter
 
 		holder.title.setText( label );
 		holder.price.setText( item.getPrettyPrice() );
+		// show note only if present
+		if ( item.note.isEmpty() ) {
+			holder.note.setVisibility( View.GONE );
+		} else {
+			holder.note.setVisibility( View.VISIBLE );
+		}
 		holder.note.setText( item.note );
 
 		return convertView;
@@ -120,6 +130,10 @@ public class CartEntryArrayAdapter extends BaseAdapter
 		int convertViewVer;
 	}
 
+	final int rowRes_;
+	final int titleRes_;
+	final int priceRes_;
+	final int noteRes_;
 	private LayoutInflater inflater_;
 	private int convertViewVer_ = 0;
 }

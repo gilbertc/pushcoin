@@ -95,6 +95,13 @@ public class Cart
 			basePrice = rhs.basePrice;
 		}
 	}
+
+	public static class Transaction
+	{
+		Customer customer;
+		String transactionId;
+		BigDecimal amount;
+	}
 	
 	void add( Combo item )
 	{
@@ -201,8 +208,27 @@ public class Cart
 		}
 	}
 
+	BigDecimal totalProcessed()
+	{
+		synchronized (lock_) 
+		{
+			BigDecimal total = new BigDecimal(0);
+			for (Transaction tx: transactions_) {
+				total = total.add( tx.amount );
+			}
+			return total;
+		}
+	}
+
+	BigDecimal amountDue()
+	{
+		BigDecimal due = totalValue().subtract( totalProcessed() );
+		return ( due.compareTo( Conf.ZERO_PRICE) < 0 ) ? Conf.ZERO_PRICE: due;
+	}
+
 	private Handler parentContext_;
 	private final Object lock_ = new Object();
 
 	ArrayList<Combo> items_ = new ArrayList<Combo>();
+	ArrayList<Transaction> transactions_ = new ArrayList<Transaction>();
 }

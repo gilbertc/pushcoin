@@ -15,25 +15,30 @@
 		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/shopping_cart_entry_price"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentRight="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="20sp"
+		android:textColor="@color/android_holo_blue_light"
+		geekui:customTypeface="fonts/DejaVuSans.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_cart_entry_note"
 		android:layout_below="@id/shopping_cart_entry_title"
 		android:layout_alignParentLeft="true"
-		android:layout_toLeftOf="@+id/shopping_cart_entry_price"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginRight="4dp"
+		android:visibility="gone"
 		android:textSize="18sp"
 		android:textColor="@color/android_holo_green_light"
 		geekui:customTypeface="fonts/DejaVuSansCondensed-Oblique.ttf" />
 
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/shopping_cart_entry_price"
-		android:layout_below="@id/shopping_cart_entry_title"
-		android:layout_alignParentRight="true"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textSize="18sp"
-		android:textColor="@color/android_holo_blue_light"
-		geekui:customTypeface="fonts/DejaVuSans.ttf" />
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="10dp"
+		android:layout_below="@id/shopping_cart_entry_note" />
 
 </RelativeLayout>

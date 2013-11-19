@@ -7,7 +7,7 @@ import android.os.Handler;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EventHub
+public class EventHub implements Handler.Callback
 {
 	public static EventHub newInstance(Context ctx) 
 	{
@@ -23,6 +23,14 @@ public class EventHub
 			throw new BitsyError("Did you forget to call EventHub.newInstance in Activity?");
 		}
 		return inst_;
+	}
+
+	/**
+		Handler.Callback interface.
+	*/
+	@Override
+	public boolean handleMessage(Message m) {
+		post(m); return true;
 	}
 
 	/**

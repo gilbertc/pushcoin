@@ -10,7 +10,8 @@
 		android:orientation="vertical"
 		android:layout_weight="1"
 		android:layout_width="wrap_content"
-		android:layout_height="0dp" >
+		android:layout_height="0dp"
+		android:paddingBottom="20dp" >
 
 		<!-- Cart Total Label -->
 		<com.mobsandgeeks.ui.TypefaceTextView 
@@ -29,7 +30,6 @@
 		<!-- Cart Total -->
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/checkout_cart_total"
-			android:text="$12.01"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignBaseline="@+id/checkout_cart_tab_name"
@@ -54,7 +54,6 @@
 
 		<!-- Tab Name -->
 		<com.mobsandgeeks.ui.TypefaceTextView
-			android:text="MAIN"
 			android:id="@+id/checkout_cart_tab_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -66,7 +65,7 @@
 			android:textColor="@color/lightui_mediumgray"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
 
-		<!-- Shopping Cart Contents -->
+		<!-- Cart Contents -->
 		<ListView
 			android:id="@+id/checkout_cart_list"
 			android:divider="@drawable/dotted"
@@ -74,11 +73,11 @@
 			android:footerDividersEnabled="false"
 			android:headerDividersEnabled="false"
 			android:cacheColorHint="@android:color/transparent"
-			android:paddingTop="12dp"
+			android:paddingTop="6dp"
 			android:paddingLeft="1dp"
 			android:paddingRight="1dp"
 			android:layout_below="@id/checkout_cart_tab_name"
-			android:layout_above="@+id/checkout_cart_charge_amount_label"
+			android:layout_above="@+id/checkout_cart_charge_amount"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
 
@@ -101,7 +100,6 @@
 		<!-- Charge Amount -->
 		<com.pushcoin.app.bitsypos.TypefaceEditText
 			android:id="@+id/checkout_cart_charge_amount"
-			android:text="$0.00"
 			android:minEms="2"
 			android:gravity="right"
 			android:imeOptions="actionDone"
@@ -110,7 +108,7 @@
 			android:layout_alignParentRight="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="38sp"
+			android:textSize="28sp"
 			android:paddingRight="6dp"
 			android:textColor="@color/android_holo_red_bright"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
@@ -132,12 +130,11 @@
 		<!-- Due Amount -->
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@id/checkout_cart_due_amount"
-			android:text="$0.00"
 			android:layout_alignParentRight="true"
 			android:layout_above="@+id/checkout_cart_discount"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="38sp"
+			android:textSize="28sp"
 			android:paddingRight="6dp"
 			android:textColor="@color/lightui_darkgray"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
@@ -151,20 +148,22 @@
 			android:layout_alignParentLeft="true"
 			android:layout_alignBaseline="@+id/checkout_cart_discount"
 			android:textSize="18sp"
-			android:gravity="right"
 			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
 			android:textColor="@color/lightui_darkgray"
 			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
-		<!-- Discount Pct Label -->
-		<com.mobsandgeeks.ui.TypefaceTextView 
+		<!-- Discount Pct -->
+		<com.pushcoin.app.bitsypos.TypefaceEditText
 			android:id="@+id/checkout_cart_dicount_pct"
 			android:text="10%"
+			android:minEms="1"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignBaseline="@+id/checkout_cart_discount"
 			android:layout_toLeftOf="@+id/checkout_cart_discount"
+			android:gravity="right"
+			android:imeOptions="actionDone"
+			android:inputType="numberDecimal"
 			android:textSize="28sp"
 			android:paddingRight="10dp"
 			android:textColor="@color/lightui_darkgray"
@@ -179,91 +178,13 @@
 			android:imeOptions="actionDone"
 			android:inputType="numberDecimal"
 			android:layout_alignParentRight="true"
-			android:layout_above="@+id/checkout_cart_discount_bar"
+			android:layout_alignParentBottom="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="28sp"
 			android:paddingRight="6dp"
 			android:textColor="@color/lightui_darkgray"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
-
-		<!-- Discount Bar -->
-		<LinearLayout
-        android:id="@id/checkout_cart_discount_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-				android:layout_marginBottom="27dp"
-				android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <SeekBar
-            android:id="@+id/volume_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-						android:layout_marginBottom="10dp"
-            android:progress="0"
-            android:max="50"
-            android:progressDrawable="@drawable/progressbar"
-            android:secondaryProgress="0" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            android:weightSum="10" >
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center_horizontal"
-                android:text="0%"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center_horizontal"
-                android:text="10%"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center_horizontal"
-                android:text="20%"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center_horizontal"
-                android:text="30%"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center_horizontal"
-                android:text="40%"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-    </LinearLayout>
-
 
 	</RelativeLayout>
 

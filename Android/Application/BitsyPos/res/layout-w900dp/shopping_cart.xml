@@ -71,7 +71,7 @@
 			android:footerDividersEnabled="false"
 			android:headerDividersEnabled="false"
 			android:cacheColorHint="@android:color/transparent"
-			android:paddingTop="12dp"
+			android:paddingTop="6dp"
 			android:paddingLeft="1dp"
 			android:paddingRight="1dp"
 			android:layout_below="@id/shopping_cart_tab_name"
