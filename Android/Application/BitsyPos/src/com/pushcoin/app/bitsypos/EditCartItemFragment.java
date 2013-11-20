@@ -197,7 +197,7 @@ public class EditCartItemFragment extends DialogFragment
 		return backgroundView_;
 	}
 
-	public void clearFieldShowKeyboard(EditText v)
+	private void clearFieldShowKeyboard(EditText v)
 	{
 		v.setText("");
 		v.requestFocus();

@@ -27,6 +27,9 @@ public class Conf
 	static final String PROPERTY_SEPARATOR = ":";
 	static final String KEY_VALUE_SEPARATOR = "=";
 	static final BigDecimal ZERO_PRICE = new BigDecimal("0.00");
+	static final BigDecimal BIG_ZERO = new BigDecimal(0);
+	static final BigDecimal BIG_ONE = new BigDecimal(1);
+	static final BigDecimal BIG_HUNDRED = new BigDecimal(100);
 	static final int MAX_COLS_IN_ITEM_PROPERTY_EDITOR = 5;
 	static final List<Item> EMPTY_ITEM_LIST = unmodifiableList( new ArrayList<Item>() );
 	static final List<Customer> EMPTY_CUSTOMER_LIST = unmodifiableList( new ArrayList<Customer>() );

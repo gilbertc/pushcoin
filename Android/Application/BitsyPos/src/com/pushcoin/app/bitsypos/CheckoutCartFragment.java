@@ -11,6 +11,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -62,10 +65,10 @@ public class CheckoutCartFragment extends Fragment
 
 		// Cart adapter
 		adapter_ = new CartEntryArrayAdapter(ctx,
-			R.layout.shopping_cart_row,
-			R.id.shopping_cart_entry_title,
-			R.id.shopping_cart_entry_price,
-			R.id.shopping_cart_entry_note);
+			R.layout.checkout_cart_row,
+			R.id.checkout_cart_entry_title,
+			R.id.checkout_cart_entry_price,
+			R.id.checkout_cart_entry_note);
 
 		// Inflate the layout for this fragment
 		View cartLayout = inflater.inflate(R.layout.checkout_cart, container, false);
@@ -75,15 +78,137 @@ public class CheckoutCartFragment extends Fragment
 		tabName_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_tab_name);
 		chargeAmount_ = (EditText) cartLayout.findViewById(R.id.checkout_cart_charge_amount);
 		amountDue_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_due_amount);
+		discountValue_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_discount);
+		discountPct_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_dicount_pct);
+
+		// Handle charge amount
+		chargeAmount_.setOnEditorActionListener(new TextView.OnEditorActionListener()
+			{
+				public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+				{
+					if ( actionId == EditorInfo.IME_ACTION_DONE ) {
+						v.clearFocus();
+					}
+					return false;
+				}
+			});
+
+		chargeAmount_.setOnFocusChangeListener( new View.OnFocusChangeListener()
+			{
+				public void onFocusChange(View v, boolean hasFocus)
+				{
+					EditText field = (EditText) v;
+					if (!hasFocus)
+					{
+						Cart cart = CartManager.getInstance().getActiveCart();
+						// Update only if changed
+						String newValStr = field.getText().toString();
+						BigDecimal amountDue = cart.amountDue(); 
+						BigDecimal newVal = amountDue;
+						if ( !newValStr.isEmpty() ) 
+						{
+							try 
+							{
+								BigDecimal newValTry = new BigDecimal( newValStr );
+								if ( !(newValTry.compareTo(amountDue) > 1) && newValTry.compareTo(Conf.BIG_ZERO) > 0) {
+									newVal = newValTry;
+								}
+							} catch (NumberFormatException e) { }
+						} 
+						field.setText( NumberFormat.getCurrencyInstance().format(newVal) );
+						hideKeyboard();
+					} 
+					else {
+						clearFieldShowKeyboard( field );
+					}
+				}
+			});
+
+		// Handle applied discount value
+		discountValue_.setOnEditorActionListener(new TextView.OnEditorActionListener()
+			{
+				public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+				{
+					if ( actionId == EditorInfo.IME_ACTION_DONE ) {
+						v.clearFocus();
+					}
+					return false;
+				}
+			});
+
+		discountValue_.setOnFocusChangeListener( new View.OnFocusChangeListener()
+			{
+				public void onFocusChange(View v, boolean hasFocus)
+				{
+					EditText field = (EditText) v;
+					if (!hasFocus)
+					{
+						Cart cart = CartManager.getInstance().getActiveCart();
+						// Update only if changed
+						String newVal = field.getText().toString();
+						BigDecimal oldVal = cart.getDiscount();
+						if ( !newVal.isEmpty() && !newVal.equals( oldVal.toString()) ) 
+						{
+							try {
+								cart.setDiscount( new BigDecimal( newVal ) );
+							} catch (NumberFormatException e) { }
+						} 
+						field.setText( NumberFormat.getCurrencyInstance().format(oldVal) );
+						hideKeyboard();
+					} 
+					else {
+						clearFieldShowKeyboard( field );
+					}
+				}
+			});
+
+		// Handle applied discount percent
+		discountPct_.setOnEditorActionListener(new TextView.OnEditorActionListener()
+			{
+				public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+				{
+					if ( actionId == EditorInfo.IME_ACTION_DONE ) {
+						v.clearFocus();
+					}
+					return false;
+				}
+			});
+
+		discountPct_.setOnFocusChangeListener( new View.OnFocusChangeListener()
+			{
+				public void onFocusChange(View v, boolean hasFocus)
+				{
+					EditText field = (EditText) v;
+					if (!hasFocus)
+					{
+						Cart cart = CartManager.getInstance().getActiveCart();
+						// Update only if changed
+						String newValStr = field.getText().toString();
+						if ( !newValStr.isEmpty() )
+						{
+							try {
+								cart.setDiscountPct( new BigDecimal( newValStr ).divide(Conf.BIG_HUNDRED) );
+							} catch (NumberFormatException e) { }
+						} 
+						field.setText( NumberFormat.getPercentInstance().format(cart.getDiscountPct()) );
+						hideKeyboard();
+					} 
+					else {
+						clearFieldShowKeyboard( field );
+					}
+				}
+			});
 
 		// Handle "Read Card" click
 		Button readCard = (Button) cartLayout.findViewById(R.id.checkout_cart_read_card_button);
-		readCard.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				AppDb.getInstance().asyncFindCustomerWithKeyword( getActivity(), "one", EventHub.getInstance() );
-			}
-		});
+		readCard.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v) {
+					AppDb.getInstance().asyncFindCustomerWithKeyword( getActivity(), "one", EventHub.getInstance() );
+				}
+			});
+
 
 		ListView cartItemList = (ListView) cartLayout.findViewById(R.id.checkout_cart_list);
 		// Keep in focus
@@ -93,16 +218,36 @@ public class CheckoutCartFragment extends Fragment
 		return cartLayout;
 	}
 
+	private void hideKeyboard()
+	{
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(tabName_.getWindowToken(), 0);
+		tabName_.requestFocus();
+	}
+
+	private void clearFieldShowKeyboard(EditText v)
+	{
+		v.setText("");
+		v.requestFocus();
+		InputMethodManager manager= (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		manager.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+	}
+
 	private void onCartContentChanged()
 	{
-		// Update cart total, owning balance
 		CartManager.Entry cartHolder = CartManager.getInstance().getActiveEntry();
-		cartTotal_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.totalValue() ) );
-		chargeAmount_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.amountDue() ) );
-		amountDue_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.amountDue() ) );
-		// cart name might have changed too -- on tab change
-		tabName_.setText( cartHolder.name );
 
+		BigDecimal amountDue = cartHolder.cart.amountDue();
+
+		// Update displayed values
+		cartTotal_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.totalValue() ) );
+		chargeAmount_.setText( NumberFormat.getCurrencyInstance().format( amountDue ) );
+		amountDue_.setText( NumberFormat.getCurrencyInstance().format( amountDue ) );
+		discountValue_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.getDiscount() ) );
+		discountPct_.setText( NumberFormat.getPercentInstance().format( cartHolder.cart.getDiscountPct() ) );
+
+		// reset cart name, hide soft keyboard
+		tabName_.setText( cartHolder.name );
 		adapter_.refreshView();
 	}
 
@@ -111,6 +256,8 @@ public class CheckoutCartFragment extends Fragment
 	private TextView tabName_;
 	private EditText chargeAmount_;
 	private TextView amountDue_;
+	private TextView discountValue_;
+	private TextView discountPct_;
 	private Handler handler_;
 
 	/**

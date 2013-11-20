@@ -69,6 +69,10 @@
 		<ListView
 			android:id="@+id/checkout_cart_list"
 			android:divider="@drawable/dotted"
+			android:focusable="false"
+			android:focusableInTouchMode="false"
+			android:clickable="false"
+			android:listSelector="@android:color/transparent"
 			android:dividerHeight="1px"
 			android:footerDividersEnabled="false"
 			android:headerDividersEnabled="false"
@@ -155,7 +159,6 @@
 		<!-- Discount Pct -->
 		<com.pushcoin.app.bitsypos.TypefaceEditText
 			android:id="@+id/checkout_cart_dicount_pct"
-			android:text="10%"
 			android:minEms="1"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -172,7 +175,6 @@
 		<!-- Discount Value -->
 		<com.pushcoin.app.bitsypos.TypefaceEditText
 			android:id="@+id/checkout_cart_discount"
-			android:text="$0.00"
 			android:minEms="2"
 			android:gravity="right"
 			android:imeOptions="actionDone"

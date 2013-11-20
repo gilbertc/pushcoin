@@ -5,8 +5,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import java.util.ArrayList;
-import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Cart
 {
@@ -222,8 +223,47 @@ public class Cart
 
 	BigDecimal amountDue()
 	{
-		BigDecimal due = totalValue().subtract( totalProcessed() );
+		BigDecimal due = totalValue().subtract(discount_).subtract( totalProcessed() );
 		return ( due.compareTo( Conf.ZERO_PRICE) < 0 ) ? Conf.ZERO_PRICE: due;
+	}
+
+	public void setDiscount(BigDecimal discount)
+	{
+		discount_ = discount;
+		// broadcast cart content has changed
+		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+	}
+
+	public BigDecimal getDiscount() {
+		return discount_;
+	}
+
+	public BigDecimal getDiscountPct() {
+		return discount_.divide( totalValue(), 2, RoundingMode.HALF_UP );
+	}
+
+	public void setDiscountPct(BigDecimal discount) throws NumberFormatException
+	{
+		if ( discount.compareTo(Conf.BIG_ZERO) < 0 || discount.compareTo(Conf.BIG_ONE) > 0) {
+			throw new NumberFormatException("Discount percent must be in the range 0..1");
+		}
+		setDiscount( totalValue().multiply(discount) );
+	}
+
+
+	public void addTransaction( Transaction tx )
+	{
+		transactions_.add( tx );
+		// broadcast cart content has changed
+		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+	}
+
+	public Transaction getTransaction( int position ) {
+		return transactions_.get( position );
+	}
+
+	public int totalTransactions() {
+		return transactions_.size();
 	}
 
 	private Handler parentContext_;
@@ -231,4 +271,5 @@ public class Cart
 
 	ArrayList<Combo> items_ = new ArrayList<Combo>();
 	ArrayList<Transaction> transactions_ = new ArrayList<Transaction>();
+	BigDecimal discount_ = Conf.ZERO_PRICE;
 }
