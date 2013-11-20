@@ -16,7 +16,7 @@ import com.pushcoin.lib.pcos.OutputDocument;
 import com.pushcoin.lib.pcos.PcosError;
 import com.pushcoin.lib.pcos.ProtocolTag;
 
-import com.pushcoin.lib.core.data.Challenge;
+import com.pushcoin.lib.core.data.IChallenge;
 import com.pushcoin.lib.core.exceptions.InvalidProtocolException;
 
 //segment device_meta
@@ -110,7 +110,7 @@ public class NfcPayment implements IPayment {
 		return tag.readPages(pageOffset);
 	}
 
-	public byte[] getMessage(Challenge challenge) throws Exception {
+	public byte[] getMessage(IChallenge challenge) throws Exception {
 
 		if (challenge == null)
 			throw new Exception("Challenge not ready");

@@ -41,6 +41,9 @@ public class MiniReader implements IPaymentDevice {
 
 	@Override
 	public void open(UsbDevice usbDevice) throws IOException {
+		log.d("Opening reader: " + this.getClass().getSimpleName() + " at "
+				+ usbDevice.getDeviceName());
+		
 		this.usbDevice = usbDevice;
 		if (usbDevice.getInterfaceCount() != 1) {
 			log.d("unexpected usb interface size: "

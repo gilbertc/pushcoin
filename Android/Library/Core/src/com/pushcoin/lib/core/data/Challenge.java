@@ -2,7 +2,7 @@ package com.pushcoin.lib.core.data;
 
 import java.util.Date;
 
-public class Challenge {
+public class Challenge implements IChallenge{
 	
 	private TransactionKey key;
 	private byte[] appSeed;

@@ -12,7 +12,6 @@ public class Result implements Parcelable {
 	
 	public static final int TYPE_UNKNOWN = 0;
 	public static final int TYPE_BOOTSTRAP = 1;
-	public static final int TYPE_CHARGE = 2;
 	public static final int TYPE_REGISTER = 3;
 	public static final int TYPE_SETTINGS = 4;
 		

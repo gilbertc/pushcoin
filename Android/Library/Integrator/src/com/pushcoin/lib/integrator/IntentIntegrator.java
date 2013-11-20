@@ -5,10 +5,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.pushcoin.ifce.connect.data.CallbackParams;
 import com.pushcoin.ifce.connect.data.ChargeParams;
-import com.pushcoin.ifce.connect.data.Result;
+import com.pushcoin.ifce.connect.data.ChargeResult;
+import com.pushcoin.ifce.connect.data.PollParams;
+import com.pushcoin.ifce.connect.data.QueryParams;
+import com.pushcoin.ifce.connect.data.QueryResult;
+import com.pushcoin.ifce.connect.data.Error;
 import com.pushcoin.ifce.connect.Actions;
 import com.pushcoin.ifce.connect.Keys;
+import com.pushcoin.ifce.connect.Messages;
+import com.pushcoin.ifce.connect.listeners.ChargeResultListener;
+import com.pushcoin.ifce.connect.listeners.PollResultListener;
+import com.pushcoin.ifce.connect.listeners.QueryResultListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,12 +27,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.Parcelable;
 import android.util.Log;
 
 public class IntentIntegrator {
 
-	public static final int REQUEST_CODE = 0x0000a088; // Only use bottom 16 bits
+	public static final int REQUEST_CODE = 0x0000a088; // Only use bottom 16
+														// bits
 	public static final String PUSHCOIN_GATEWAY_PACKAGE_NAME = "com.pushcoin.srv.gateway";
 	public static final Collection<String> TARGET_ALL_KNOWN = list(PUSHCOIN_GATEWAY_PACKAGE_NAME);
 
@@ -37,7 +50,8 @@ public class IntentIntegrator {
 	public IntentIntegrator(Activity activity) {
 		this.activity = activity;
 		this.title = activity.getString(R.string.default_install_service_title);
-		this.message = activity.getString(R.string.default_install_service_prompt);
+		this.message = activity
+				.getString(R.string.default_install_service_prompt);
 		this.buttonYes = activity.getString(R.string.default_yes);
 		this.buttonNo = activity.getString(R.string.default_no);
 		this.targetApplications = TARGET_ALL_KNOWN;
@@ -103,7 +117,7 @@ public class IntentIntegrator {
 		this.targetApplications = Collections.singleton(targetApplication);
 	}
 
-	public AlertDialog invoke(String action, Parcelable p) {
+	public AlertDialog invokeActivity(String action, Parcelable p) {
 		Intent intent = new Intent(PUSHCOIN_GATEWAY_PACKAGE_NAME + action);
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
 		if (p != null)
@@ -121,15 +135,82 @@ public class IntentIntegrator {
 	}
 
 	public AlertDialog bootstrap() {
-		return invoke(Actions.ACTION_BOOTSTRAP, null);
+		return invokeActivity(Actions.ACTION_BOOTSTRAP, null);
 	}
 
-	public AlertDialog charge(ChargeParams params) {
-		return invoke(Actions.ACTION_CHARGE, params);
+	public boolean query(QueryParams params, final QueryResultListener listener) {
+		Handler handler = new Handler() {
+			public void handleMessage(Message message) {
+				switch (message.what) {
+				case Messages.MSGID_QUERY_RESULT:
+					listener.onResult(new QueryResult(message.getData()));
+					break;
+				case Messages.MSGID_ERROR:
+					listener.onResult(new Error(message.getData()));
+				}
+			};
+		};
+		return invokeService(Actions.ACTION_QUERY, params, handler);
+	}
+
+	public boolean charge(ChargeParams params,
+			final ChargeResultListener listener) {
+		Handler handler = new Handler() {
+			public void handleMessage(Message message) {
+				switch (message.what) {
+				case Messages.MSGID_CHARGE_RESULT:
+					listener.onResult(new ChargeResult(message.getData()));
+					break;
+				case Messages.MSGID_ERROR:
+					listener.onResult(new Error(message.getData()));
+				}
+			};
+		};
+		return invokeService(Actions.ACTION_CHARGE, params, handler);
+	}
+
+	public boolean poll(PollParams params, final PollResultListener listener) {
+		Handler handler = new Handler() {
+			public void handleMessage(Message message) {
+				switch (message.what) {
+				case Messages.MSGID_CHARGE_RESULT:
+					listener.onResult(new ChargeResult(message.getData()));
+					break;
+				case Messages.MSGID_QUERY_RESULT:
+					listener.onResult(new QueryResult(message.getData()));
+					break;
+				case Messages.MSGID_ERROR:
+					listener.onResult(new Error(message.getData()));
+				}
+			};
+		};
+		return invokeService(Actions.ACTION_POLL, params, handler);
+	}
+
+	public boolean idle() {
+		return invokeService(Actions.ACTION_IDLE, null, null);
+	}
+
+	public boolean invokeService(String action, CallbackParams params,
+			Handler handler) {
+		Intent intent = new Intent();
+		intent.setClassName(PUSHCOIN_GATEWAY_PACKAGE_NAME,
+				PUSHCOIN_GATEWAY_PACKAGE_NAME + ".services.PushCoinService");
+		intent.setAction(PUSHCOIN_GATEWAY_PACKAGE_NAME + action);
+
+		if (params != null) {
+			if (handler != null) {
+				params.setMessenger(new Messenger(handler));
+			}
+			intent.putExtras(params.getBundle());
+		}
+
+		this.activity.startService(intent);
+		return true;
 	}
 
 	public AlertDialog settings() {
-		return invoke(Actions.ACTION_SETTINGS, null);
+		return invokeActivity(Actions.ACTION_SETTINGS, null);
 	}
 
 	protected void startActivityForResult(Intent intent, int requestCode) {
@@ -159,14 +240,15 @@ public class IntentIntegrator {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
-						Uri uri = Uri
-								.parse("market://details?id=" + PUSHCOIN_GATEWAY_PACKAGE_NAME);
+						Uri uri = Uri.parse("market://details?id="
+								+ PUSHCOIN_GATEWAY_PACKAGE_NAME);
 						Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 						try {
 							activity.startActivity(intent);
 						} catch (ActivityNotFoundException anfe) {
 							// Hmm, market is not installed
-							Log.w("IntentIntegrator", "Android Market is not installed; cannot install PushCoin");
+							Log.w("IntentIntegrator",
+									"Android Market is not installed; cannot install PushCoin");
 						}
 					}
 				});
@@ -177,17 +259,6 @@ public class IntentIntegrator {
 					}
 				});
 		return downloadDialog.show();
-	}
-
-	public static IntentResult parseActivityResult(int requestCode,
-			int resultCode, Intent intent) {
-		if (requestCode == REQUEST_CODE) {
-			if (resultCode == Result.RESULT_OK) {
-				return new IntentResult(intent);
-			}
-			return new IntentResult();
-		}
-		return null;
 	}
 
 	private static Collection<String> list(String... values) {

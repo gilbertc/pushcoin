@@ -17,6 +17,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 import android.content.Context;
 
+import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.utils.Logger;
 
 public class KeyStore {

@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 import com.pushcoin.lib.core.data.DisplayParcel;
+import com.pushcoin.lib.core.devices.biometric.digitalpersona.FingerprintReader;
 import com.pushcoin.lib.core.devices.magnetic.magtek.MiniReader;
 import com.pushcoin.lib.core.devices.nfc.acs.ACR1222L;
 import com.pushcoin.lib.core.devices.nfc.acs.ACR122U;
@@ -106,6 +107,8 @@ public class DeviceManager {
 			return ACR122U.class;
 		if (MiniReader.Match(usbDevice))
 			return MiniReader.class;
+		if (FingerprintReader.Match(usbDevice))
+			return FingerprintReader.class;
 		return null;
 	}
 

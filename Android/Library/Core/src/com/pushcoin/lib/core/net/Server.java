@@ -45,7 +45,8 @@ public class Server {
 		EC_KeyStoreException(1002), EC_NoSuchAlgorithmException(1003), EC_CertificateException(
 				1004), EC_UnknownHostException(1005), EC_IOException(1006), EC_KeyManagementException(
 				1007), EC_UnrecoverableKeyException(1008), EC_UnknownException(
-				1009);
+				1009), EC_InvalidRequestException(1010), EC_InterruptedException(
+				1011);
 
 		public int code;
 
@@ -93,6 +94,7 @@ public class Server {
 		params.url = url;
 		params.data = data;
 		params.listener = listener;
+		params.isStagedResponse = false;
 
 		new PostTask().execute(params);
 	}
@@ -107,6 +109,37 @@ public class Server {
 		params.tag = tag;
 		params.url = url;
 		params.data = data;
+		params.isStagedResponse = false;
+
+		return post(params).data;
+	}
+
+	public void stageAsync(byte[] data, ResponseListener listener) {
+		stageAsync(null, data, listener);
+	}
+
+	public void stageAsync(Object tag, byte[] data, ResponseListener listener) {
+		AsyncPostParams params = new AsyncPostParams();
+		params.tag = tag;
+		params.url = "";
+		params.data = data;
+		params.listener = listener;
+		params.isStagedResponse = true;
+
+		new PostTask().execute(params);
+	}
+
+	public byte[] stage(byte[] data) throws Exception {
+		return post(null, data);
+	}
+
+	public byte[] stage(Object tag, byte[] data) throws Exception {
+
+		PostParams params = new PostParams();
+		params.tag = tag;
+		params.url = "";
+		params.data = data;
+		params.isStagedResponse = true;
 
 		return post(params).data;
 	}
@@ -115,6 +148,8 @@ public class Server {
 		public Object tag;
 		public String url;
 		public byte[] data;
+		public boolean isStagedResponse; // true if data is a staged response
+											// for demo
 	}
 
 	private class AsyncPostParams extends PostParams {
@@ -171,86 +206,101 @@ public class Server {
 
 	private PostResult post(PostParams params) throws ServerException {
 
-		if (params.data != null)
-			log.d("Sending: " + Stringifier.toString(params.data));
-		try {
-			KeyStore trustStore;
-			trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-			trustStore.load(null, null);
+		if (params.data != null) {
 
-			SSLSocketFactory sf;
-			sf = new SSLSocketFactory(trustStore);
-			sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			if (params.isStagedResponse) {
+				log.d("Staging: " + Stringifier.toString(params.data));
+				try {
+					// Mimic server calls
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					log.e("InterruptedException", e);
+					throw new ServerException(ErrorCode.EC_InterruptedException);
+				}
+				return new PostResult(params, params.data);
+			}
 
-			HttpParams httpParams = new BasicHttpParams();
-			HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
-			HttpProtocolParams.setContentCharset(httpParams, HTTP.UTF_8);
+			log.d("Posting: " + Stringifier.toString(params.data));
+			try {
+				KeyStore trustStore;
+				trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+				trustStore.load(null, null);
 
-			// Set the timeout in milliseconds until a connection is
-			// established.
-			int timeoutConnection = 10000;
-			HttpConnectionParams.setConnectionTimeout(httpParams,
-					timeoutConnection);
+				SSLSocketFactory sf;
+				sf = new SSLSocketFactory(trustStore);
+				sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
-			// Set the default socket timeout (SO_TIMEOUT)
-			// in milliseconds which is the timeout for waiting for data.
-			int timeoutSocket = 10000;
-			HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
+				HttpParams httpParams = new BasicHttpParams();
+				HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
+				HttpProtocolParams.setContentCharset(httpParams, HTTP.UTF_8);
 
-			SchemeRegistry registry = new SchemeRegistry();
-			registry.register(new Scheme("http", PlainSocketFactory
-					.getSocketFactory(), 80));
-			registry.register(new Scheme("https", sf, 443));
+				// Set the timeout in milliseconds until a connection is
+				// established.
+				int timeoutConnection = 10000;
+				HttpConnectionParams.setConnectionTimeout(httpParams,
+						timeoutConnection);
 
-			ClientConnectionManager ccm = new ThreadSafeClientConnManager(
-					httpParams, registry);
+				// Set the default socket timeout (SO_TIMEOUT)
+				// in milliseconds which is the timeout for waiting for data.
+				int timeoutSocket = 10000;
+				HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
 
-			HttpClient httpclient = new DefaultHttpClient(ccm, httpParams);
-			HttpPost httppost = new HttpPost(params.url);
+				SchemeRegistry registry = new SchemeRegistry();
+				registry.register(new Scheme("http", PlainSocketFactory
+						.getSocketFactory(), 80));
+				registry.register(new Scheme("https", sf, 443));
 
-			ByteArrayEntity bytesentity = new ByteArrayEntity(params.data);
-			httppost.setEntity(bytesentity);
+				ClientConnectionManager ccm = new ThreadSafeClientConnManager(
+						httpParams, registry);
 
-			// Execute HTTP Post Request
-			HttpResponse response;
-			response = httpclient.execute(httppost);
+				HttpClient httpclient = new DefaultHttpClient(ccm, httpParams);
+				HttpPost httppost = new HttpPost(params.url);
 
-			ByteArrayOutputStream bao = new ByteArrayOutputStream();
+				ByteArrayEntity bytesentity = new ByteArrayEntity(params.data);
+				httppost.setEntity(bytesentity);
 
-			response.getEntity().writeTo(bao);
+				// Execute HTTP Post Request
+				HttpResponse response;
+				response = httpclient.execute(httppost);
 
-			byte[] res = bao.toByteArray();
+				ByteArrayOutputStream bao = new ByteArrayOutputStream();
 
-			log.d("Receiving: " + Stringifier.toString(res));
+				response.getEntity().writeTo(bao);
 
-			return new PostResult(params, res);
+				byte[] res = bao.toByteArray();
 
-		} catch (KeyStoreException e) {
-			log.e("KeyStoreException", e);
-			throw new ServerException(ErrorCode.EC_KeyStoreException);
-		} catch (NoSuchAlgorithmException e) {
-			log.e("NoSuchAlgorithmException", e);
-			throw new ServerException(ErrorCode.EC_NoSuchAlgorithmException);
-		} catch (CertificateException e) {
-			log.e("CertificateException", e);
-			throw new ServerException(ErrorCode.EC_CertificateException);
-		} catch (UnknownHostException e) {
-			log.e("UnknownHostException", e);
-			throw new ServerException(ErrorCode.EC_UnknownHostException);
-		} catch (IOException e) {
-			log.e("IOException", e);
-			throw new ServerException(ErrorCode.EC_IOException);
-		} catch (KeyManagementException e) {
-			log.e("KeyManagementException", e);
-			throw new ServerException(ErrorCode.EC_KeyManagementException);
-		} catch (UnrecoverableKeyException e) {
-			log.e("UnrecoverableKeyException", e);
-			throw new ServerException(ErrorCode.EC_UnrecoverableKeyException);
-		} catch (Exception e) {
-			log.e("Exception", e);
-			throw new ServerException(ErrorCode.EC_UnknownException);
+				log.d("Receiving: " + Stringifier.toString(res));
+
+				return new PostResult(params, res);
+
+			} catch (KeyStoreException e) {
+				log.e("KeyStoreException", e);
+				throw new ServerException(ErrorCode.EC_KeyStoreException);
+			} catch (NoSuchAlgorithmException e) {
+				log.e("NoSuchAlgorithmException", e);
+				throw new ServerException(ErrorCode.EC_NoSuchAlgorithmException);
+			} catch (CertificateException e) {
+				log.e("CertificateException", e);
+				throw new ServerException(ErrorCode.EC_CertificateException);
+			} catch (UnknownHostException e) {
+				log.e("UnknownHostException", e);
+				throw new ServerException(ErrorCode.EC_UnknownHostException);
+			} catch (IOException e) {
+				log.e("IOException", e);
+				throw new ServerException(ErrorCode.EC_IOException);
+			} catch (KeyManagementException e) {
+				log.e("KeyManagementException", e);
+				throw new ServerException(ErrorCode.EC_KeyManagementException);
+			} catch (UnrecoverableKeyException e) {
+				log.e("UnrecoverableKeyException", e);
+				throw new ServerException(
+						ErrorCode.EC_UnrecoverableKeyException);
+			} catch (Exception e) {
+				log.e("Exception", e);
+				throw new ServerException(ErrorCode.EC_UnknownException);
+			}
+		} else {
+			throw new ServerException(ErrorCode.EC_InvalidRequestException);
 		}
-
 	}
-
 }

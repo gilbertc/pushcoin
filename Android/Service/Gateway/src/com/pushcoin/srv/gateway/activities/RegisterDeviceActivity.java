@@ -3,6 +3,7 @@ package com.pushcoin.srv.gateway.activities;
 import java.net.UnknownHostException;
 
 import com.pushcoin.srv.gateway.R;
+import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.net.PcosServer;
 import com.pushcoin.lib.core.security.KeyStore;
 import com.pushcoin.lib.core.utils.Logger;
@@ -71,16 +72,13 @@ public class RegisterDeviceActivity extends Activity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
+	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
-		if (item.getItemId() == R.id.action_settings )
-		{
+		if (item.getItemId() == R.id.action_settings) {
 			Intent myIntent = new Intent(this, SettingsActivity.class);
 			startActivity(myIntent);
 			return true;
-		}
-		else {
+		} else {
 			return super.onOptionsItemSelected(item);
 		}
 	}
@@ -124,6 +122,17 @@ public class RegisterDeviceActivity extends Activity {
 			showProgress(true);
 
 			try {
+				if (Preferences.isDemoMode(this, false)) {
+					log.d("registration skipped because demo mode");
+					Intent returnIntent = new Intent();
+					Result result = new Result();
+					result.type = Result.TYPE_REGISTER;
+					returnIntent.putExtra(Keys.KEY_RESULT, result);
+					setResult(Result.RESULT_OK, returnIntent);
+					finish();
+					return;
+				}
+
 				DocumentWriter writer = new DocumentWriter("Register");
 				BlockWriter bo = new BlockWriter("Bo");
 				bo.writeString(registrationCode);
@@ -131,12 +140,10 @@ public class RegisterDeviceActivity extends Activity {
 				writer.addBlock(bo);
 
 				String url = PcosServer.getDefaultUrl();
-				if (url.isEmpty())
-					throw new UnknownHostException();
-
 				server = new PcosServer();
 				server.postAsync(url, writer, new RegistrationResponseListener(
 						server));
+
 			} catch (Exception ex) {
 				registrationCodeView.setError(ex.getMessage());
 				registrationCodeView.requestFocus();

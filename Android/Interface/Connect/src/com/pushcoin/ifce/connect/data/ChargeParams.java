@@ -1,89 +1,96 @@
 package com.pushcoin.ifce.connect.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Bundle;
 
-public class ChargeParams implements Parcelable {
+public class ChargeParams extends CallbackParams {
+	public static final String KEY_REFDATA = "REFDATA";
+	public static final String KEY_PAYMENT = "PAYMENT";
+	public static final String KEY_TAX = "TAX";
+	public static final String KEY_TIPS = "TIPS";
+	public static final String KEY_PASSCODE = "PASSCODE";
+	public static final String KEY_CURRENCY = "CURRENCY";
+	public static final String KEY_INVOICE = "INOVICE";
+	public static final String KEY_NOTE = "NOTE";
+	public static final String KEY_GEOLOCATION = "GEOLOCATION";
 
-	public String refData = "";
-	public Amount payment = new Amount();
-	public Amount tax = null;
-	public Amount tips = null;
-	public String passcode = "";
-	public String currency = "USD";
-	public String invoice = "";
-	public String note = "";
-	public GeoLocation geoLocation = null;
-	
-	public ChargeParams()
-	{
-		
-	}
-	
-	@Override
-	public int describeContents() {
-		return 0;
+	public ChargeParams() {
+		this(new Bundle());
 	}
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(refData);
-		dest.writeParcelable(payment, flags);
-
-		if (tax != null) {
-			dest.writeByte((byte) 1);
-			dest.writeParcelable(tax, flags);
-		} else {
-			dest.writeByte((byte) 0);
-		}
-
-		if (tips != null) {
-			dest.writeByte((byte) 1);
-			dest.writeParcelable(tips, flags);
-		} else {
-			dest.writeByte((byte) 0);
-		}
-
-		dest.writeString(passcode);
-		dest.writeString(currency);
-		dest.writeString(invoice);
-		dest.writeString(note);
-
-		if (geoLocation != null) {
-			dest.writeByte((byte) 1);
-			dest.writeParcelable(geoLocation, flags);
-		} else {
-			dest.writeByte((byte) 0);
-		}
+	public ChargeParams(Bundle bundle) {
+		super(bundle);
 	}
 
-	private void readFromParcel(Parcel in) {
-		refData = in.readString();
-		payment = (Amount) in.readParcelable(Amount.class.getClassLoader());
-		tax = (in.readByte() == 1 ? (Amount) in.readParcelable(Amount.class
-				.getClassLoader()) : null);
-		tips = (in.readByte() == 1 ? (Amount) in.readParcelable(Amount.class
-				.getClassLoader()) : null);
-		passcode = in.readString();
-		currency = in.readString();
-		invoice = in.readString();
-		note = in.readString();
-		geoLocation = (in.readByte() == 1 ? (GeoLocation) in
-				.readParcelable(GeoLocation.class.getClassLoader()) : null);
+	public String getRefData() {
+		return bundle.getString(KEY_REFDATA, "");
 	}
 
-	public static final Parcelable.Creator<ChargeParams> CREATOR = new Parcelable.Creator<ChargeParams>() {
-		public ChargeParams createFromParcel(Parcel in) {
-			return new ChargeParams(in);
-		}
+	public void setRefData(String value) {
+		bundle.putString(KEY_REFDATA, value);
+	}
 
-		public ChargeParams[] newArray(int size) {
-			return new ChargeParams[size];
-		}
-	};
+	public Amount getPayment() {
+		return bundle.getParcelable(KEY_PAYMENT);
+	}
 
-	private ChargeParams(Parcel in) {
-		this.readFromParcel(in);
+	public void setPayment(Amount value) {
+		bundle.putParcelable(KEY_PAYMENT, value);
+	}
+
+	public Amount getTax() {
+		return bundle.getParcelable(KEY_TAX);
+	}
+
+	public void setTax(Amount value) {
+		bundle.putParcelable(KEY_TAX, value);
+	}
+
+	public Amount getTips() {
+		return bundle.getParcelable(KEY_TIPS);
+	}
+
+	public void setTips(Amount value) {
+		bundle.putParcelable(KEY_TIPS, value);
+	}
+
+	public String getPasscode() {
+		return bundle.getString(KEY_PASSCODE, "");
+	}
+
+	public void setPasscode(String value) {
+		bundle.putString(KEY_PASSCODE, value);
+	}
+
+	public String getCurrency() {
+		return bundle.getString(KEY_CURRENCY, "USD");
+	}
+
+	public void setCurrency(String value) {
+		bundle.putString(KEY_CURRENCY, value);
+	}
+
+	public String getInvoice() {
+		return bundle.getString(KEY_INVOICE, "");
+	}
+
+	public void setInvoice(String value) {
+		bundle.putString(KEY_INVOICE, value);
+	}
+
+	public String getNote() {
+		return bundle.getString(KEY_NOTE, "");
+	}
+
+	public void setNote(String value) {
+		bundle.putString(KEY_NOTE, value);
+	}
+
+	public GeoLocation getGeoLocation() {
+		return bundle.getParcelable(KEY_GEOLOCATION);
+	}
+
+	public void setGeoLocation(GeoLocation value) {
+		bundle.putParcelable(KEY_GEOLOCATION, value);
 	}
 
 }
