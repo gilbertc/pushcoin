@@ -1,7 +1,32 @@
 package com.pushcoin.ifce.connect.data;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+public class ChargeParams implements Bundaable
+{
+	public static final String KEY_REFDATA = "REFDATA";
+	public static final String KEY_PAYMENT = "PAYMENT";
+	public static final String KEY_TAX = "TAX";
+	public static final String KEY_TIPS = "TIPS";
+	public static final String KEY_PASSCODE = "PASSCODE";
+	public static final String KEY_CURRENCY = "CURRENCY";
+	public static final String KEY_INVOICE = "INOVICE";
+	public static final String KEY_NOTE = "NOTE";
+	public static final String KEY_GEOLOCATION = "GEOLOCATION";
+	
+	private Bundle bundle;
+	
+	public ChargeParams(Bundle bundle)
+	{
+		this.bundle = bundle;
+	}
+	
+	public String getRefData() { return bundle.getString(KEY_REFDATA); }
+	public void setRefData(String refData) { bundle.putString(KEY_REFDATA, refData); }
+	
+}
 
 public class ChargeParams implements Parcelable {
 
