@@ -1,5 +1,6 @@
 package com.pushcoin.app.bitsypos;
 
+import com.pushcoin.ifce.connect.data.Customer;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;

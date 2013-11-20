@@ -1,9 +1,9 @@
 package com.pushcoin.app.bitsypos;
 
+import com.pushcoin.ifce.connect.data.Customer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.AsyncTask;
 import android.app.ProgressDialog;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -75,21 +75,8 @@ public class CustomerSearchFragment extends Fragment
 						String query = search.getText().toString();
 
 						// check if anything to do...
-						if (!query.isEmpty() && pendingQuery_ == null)
-						{
-							pendingQuery_ = AppDb.getInstance().asyncFindCustomerWithKeyword( getActivity(), query, EventHub.getInstance() );
-							/*
-							showProgress_ = ProgressDialog.show(getActivity(), "Searching...", "Please wait.", true, true, new DialogInterface.OnCancelListener()
-								{
-									@Override
-									public void onCancel(DialogInterface dialog)
-									{
-										if (pendingQuery_ != null) {
-											pendingQuery_.cancel( true );
-										}
-									}
-								});
-							*/
+						if (!query.isEmpty()) {
+							AppDb.getInstance().asyncFindCustomerWithKeyword( getActivity(), query, EventHub.getInstance() );
 						}
 					}
 					return false;
@@ -116,13 +103,6 @@ public class CustomerSearchFragment extends Fragment
 
 	private void onQueryUsersReply( Message msg )
 	{
-		// allow another query
-		pendingQuery_ = null;
-		// stop showing indeterminate progress
-		if (showProgress_ != null) {
-			showProgress_.cancel();
-		}
-
 		List<Customer> customers = (List<Customer>) msg.obj;
 		if (customers.size() > 1) {
 			customers_.showData( customers );
@@ -133,8 +113,6 @@ public class CustomerSearchFragment extends Fragment
 
 	private Handler handler_;
 	private CustomerListAdapter customers_;
-	private AsyncTask pendingQuery_ = null;
-	private ProgressDialog showProgress_ = null;
 
 	/**
 		Static handler keeps lint happy about (temporary?) memory leaks if queued 

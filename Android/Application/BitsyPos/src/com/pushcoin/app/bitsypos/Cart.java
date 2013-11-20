@@ -1,5 +1,6 @@
 package com.pushcoin.app.bitsypos;
 
+import com.pushcoin.ifce.connect.data.Customer;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -238,8 +239,11 @@ public class Cart
 		return discount_;
 	}
 
-	public BigDecimal getDiscountPct() {
-		return discount_.divide( totalValue(), 2, RoundingMode.HALF_UP );
+	public BigDecimal getDiscountPct()
+	{
+		BigDecimal totalValue = totalValue();
+		return (totalValue.compareTo( Conf.BIG_ZERO ) > 1)
+			? discount_.divide( totalValue, 2, RoundingMode.HALF_UP ) : Conf.BIG_ZERO;
 	}
 
 	public void setDiscountPct(BigDecimal discount) throws NumberFormatException

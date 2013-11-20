@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.lang.ref.WeakReference;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
+import com.pushcoin.lib.integrator.IntentIntegrator;
 
 public class BrowseCatalogActivity 
 	extends SlidingActivity implements EditItemPropertiesFragment.OnDismissed
@@ -38,7 +39,7 @@ public class BrowseCatalogActivity
 		handler_ = new IncomingHandler( this );
 
 		// Bootstrap database before creating fragments
-		AppDb.newInstance( this );
+		AppDb.newInstance( this, new IntentIntegrator(this) );
 
 		// Session manager
 		carts_ = CartManager.newInstance( this );
@@ -83,6 +84,15 @@ public class BrowseCatalogActivity
 		super.onPause();
 		// Remove self from the event hub.
 		EventHub.getInstance().unregister( handler_ );
+	}
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		// Let PushCoin service know we are back
+		Log.v( Conf.TAG, "bootstrapping integrator" );
+		AppDb.getInstance().getIntegrator().bootstrap();
 	}
 
 	/** User clicks on category item. */

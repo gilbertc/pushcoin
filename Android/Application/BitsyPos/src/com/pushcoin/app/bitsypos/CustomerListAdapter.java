@@ -1,5 +1,7 @@
 package com.pushcoin.app.bitsypos;
 
+import com.pushcoin.ifce.connect.data.Customer;
+
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;

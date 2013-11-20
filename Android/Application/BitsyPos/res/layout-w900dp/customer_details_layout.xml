@@ -9,7 +9,6 @@
 
 	<ImageView
 		android:id="@+id/customer_details_mugshot"
-		android:src="@drawable/contrib_sl"
 		android:layout_alignParentTop="true"
 		android:layout_alignParentLeft="true"
 		android:layout_height="280dp" 

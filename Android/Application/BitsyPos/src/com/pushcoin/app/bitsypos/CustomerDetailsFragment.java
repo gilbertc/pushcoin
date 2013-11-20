@@ -1,5 +1,6 @@
 package com.pushcoin.app.bitsypos;
 
+import com.pushcoin.ifce.connect.data.Customer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;

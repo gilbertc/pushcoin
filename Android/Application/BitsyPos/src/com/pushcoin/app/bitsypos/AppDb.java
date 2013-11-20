@@ -1,5 +1,15 @@
 package com.pushcoin.app.bitsypos;
 
+import com.pushcoin.lib.integrator.IntentIntegrator;
+import com.pushcoin.ifce.connect.data.Amount;
+import com.pushcoin.ifce.connect.data.ChargeResult;
+import com.pushcoin.ifce.connect.data.Customer;
+import com.pushcoin.ifce.connect.data.Error;
+import com.pushcoin.ifce.connect.data.PollParams;
+import com.pushcoin.ifce.connect.data.QueryParams;
+import com.pushcoin.ifce.connect.data.QueryResult;
+import com.pushcoin.ifce.connect.listeners.QueryResultListener;
+
 import android.os.Handler;
 import android.os.AsyncTask;
 import android.os.Message;
@@ -28,17 +38,18 @@ public class AppDb extends SQLiteAssetHelper
 	/**
 		Find a customer with keywords.
 	*/
-	public AsyncTask asyncFindCustomerWithKeyword( Context context, String keyword, Handler.Callback handler )
+	public ProgressDialog asyncFindCustomerWithKeyword( Context context, String keyword, Handler.Callback handler )
 	{
 		ProgressDialog progress = new ProgressDialog( context );
 		progress.setTitle("Searching...");
 		progress.setMessage("Please wait.");
 		progress.setIndeterminate(true);
 		progress.setCanceledOnTouchOutside(true);
-		FindCustomerWithKeywordTask task = new FindCustomerWithKeywordTask( appCtx_, handler, progress );
+		FindCustomerWithKeywordTask task = new FindCustomerWithKeywordTask( handler, progress );
 		// now we can install cancel handler
 		progress.setOnCancelListener( task );
-		return task.execute( keyword );
+		task.execute( keyword );
+		return progress;
 	}
 
 	/**
@@ -187,28 +198,16 @@ public class AppDb extends SQLiteAssetHelper
 	}
 
 	/**
-		Shows progress.
+		Makes PushCoin service available to others.
 	*/
-	private void showModalUndeterminateProgress(Context context)
-	{
-		showProgress_ = ProgressDialog.show(context, "Searching...", "Please wait.", true, true, new DialogInterface.OnCancelListener()
-			{
-				@Override
-				public void onCancel(DialogInterface dialog)
-				{
-					/*
-					if (pendingQuery_ != null) {
-						pendingQuery_.cancel( true );
-					}
-					*/
-				}
-			});
+	public IntentIntegrator getIntegrator() {
+		return integrator_;
 	}
 
-	public static AppDb newInstance(Context ctx) 
+	public static AppDb newInstance(Context ctx, IntentIntegrator integrator) 
 	{
 		if (inst_ == null) {
-			inst_ = new AppDb(ctx.getApplicationContext());
+			inst_ = new AppDb(ctx.getApplicationContext(), integrator);
 		}
 		return inst_;
 	}
@@ -288,7 +287,7 @@ public class AppDb extends SQLiteAssetHelper
 		All non-activity code uses getInstance(), at which point this singleton
 		has to be already constructed.
 	*/
-	private AppDb(Context ctx) 
+	private AppDb(Context ctx, IntentIntegrator integrator) 
 	{
 		super(ctx, Conf.DATABASE_NAME, null, Conf.DATABASE_VERSION);
 		// you can use an alternate constructor to specify a database location
@@ -300,6 +299,9 @@ public class AppDb extends SQLiteAssetHelper
 		// Store app context
 		appCtx_ = ctx;
 
+		// PushCoin service integrator	
+		integrator_ = integrator;
+
 		// Compiled-statements cache
 		stmtCache_ = new TreeMap<String, SQLiteStatement>();
 
@@ -309,141 +311,60 @@ public class AppDb extends SQLiteAssetHelper
 
 	private static AppDb inst_;
 	private Context appCtx_;
+	private IntentIntegrator integrator_;
 	private TreeMap<String, SQLiteStatement> stmtCache_;
 	private ProgressDialog showProgress_ = null;
 
-	static private class FindCustomerWithKeywordTask extends AsyncTask<String, Void, List<Customer> >
-		implements DialogInterface.OnCancelListener
+	static private class FindCustomerWithKeywordTask
+		implements DialogInterface.OnCancelListener, QueryResultListener
 	{
-		FindCustomerWithKeywordTask(Context ctx, Handler.Callback handler, Dialog progress)
+		FindCustomerWithKeywordTask(Handler.Callback handler, Dialog progress)
 		{
-			appCtx_ = ctx;
 			handler_ = handler;
 			progress_ = progress;
 		}
 
-		protected List<Customer> doInBackground(String... keywords)
+		public void execute(String keywords)
 		{
-			List<Customer> res = new ArrayList();
-
-			// get out on bad input
-			if (keywords.length != 1) {
-				return res;
-			}
-
-			// let the user cancel from time to time..
-			int i = 0; final int waitTime = 4;
-			for (i = 0; i < waitTime && !isCancelled(); ++i)
-			{
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {}
-			}
-			
-			// provide results only if user waited long enough...
-			if (i == waitTime) {
-				appendDummyResult(res, keywords[0]);
-			}
-
-			// Safe to call from another thread
-			Message msg = Message.obtain(null, MessageId.QUERY_USERS_REPLY, res);
-			handler_.handleMessage(msg);
-			return res;
-		}
-
-		private void appendDummyResult( List<Customer> res, String keyword )
-		{
-			Customer c1 = Customer.newInstance();
-			c1.accountId = "CAX5PNCPKC";
-			c1.firstName = "Slawomir";
-			c1.lastName = "Lisznianski";
-			c1.title = "Creative Guru";
-			c1.identifier = "123-123-3123";
-			c1.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_sl );
-			c1.balance = new BigDecimal("56.32");
-			res.add( c1 );
-
-			if (keyword.equals("one"))
-				return;
-				
-			Customer c2 = Customer.newInstance();
-			c2.accountId = "CAX5RNCPKC";
-			c2.firstName = "Eng";
-			c2.lastName = "Choong";
-			c2.title = "Coding Ninja";
-			c2.identifier = "221-823-3123";
-			c2.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_ec );
-			c2.balance = new BigDecimal("156.32");
-			res.add( c2 );
-
-			if (keyword.equals("two"))
-				return;
-				
-			Customer c3 = Customer.newInstance();
-			c3.accountId = "KAX5RNCPKC";
-			c3.firstName = "Gilbert";
-			c3.lastName = "Cheung";
-			c3.title = "Hardware Hacker";
-			c3.identifier = "331-823-3123";
-			c3.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_gc );
-			c3.balance = new BigDecimal("88.10");
-			res.add( c3 );
-
-			if (keyword.equals("three"))
-				return;
-				
-			Customer c4 = Customer.newInstance();
-			c4.accountId = "LAX5RNCPKC";
-			c4.firstName = "Lucas";
-			c4.lastName = "Lisznianski";
-			c4.title = "8th Grade Student";
-			c4.identifier = "331-823-3123";
-			c4.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_lucas );
-			c4.balance = new BigDecimal("8.10");
-			res.add( c4 );
-
-			Customer c5 = Customer.newInstance();
-			c5.accountId = "JJX5RNCPKC";
-			c5.firstName = "Milosh";
-			c5.lastName = "Lisznianski";
-			c5.title = "4th Grade Student";
-			c5.identifier = "881-823-3123";
-			c5.mugshot = BitmapFactory.decodeResource( appCtx_.getResources(), R.drawable.contrib_milosh );
-			c5.balance = new BigDecimal("1.00");
-			res.add( c5 );
-		}
-
-		@Override
-		public void onCancel(DialogInterface dialog) {
-			super.cancel( true );
-		}
-
-		@Override
-		public void onPostExecute(List<Customer> result)
-		{
-			if (progress_ != null) {
-				progress_.cancel();
-			}
-		}
-
-		@Override
-		public void onCancelled(List<Customer> result)
-		{
-			if (progress_ != null) {
-				progress_.cancel();
-			}
-		}
-
-		@Override
-		public void onPreExecute()
-		{
+			// let user know we're working..
 			if (progress_ != null) {
 				progress_.show();
+			}
+			QueryParams params = new QueryParams();
+			params.setQuery(keywords);
+			AppDb.getInstance().getIntegrator().query(params, this);
+		}
+
+		@Override
+		public void onCancel(DialogInterface dialog)
+		{
+			AppDb.getInstance().getIntegrator().idle();
+		}
+
+		@Override
+		public void onResult(QueryResult result)
+		{
+			List<Customer> customers = result.getCustomers();
+			Message msg = Message.obtain(null, MessageId.QUERY_USERS_REPLY, customers);
+			handler_.handleMessage(msg);
+			finish();
+		}
+
+		@Override
+		public void onResult(Error err)
+		{
+			Log.v(Conf.TAG, "query-error|what="+err.getReason());
+			finish();
+		}
+
+		private void finish()
+		{
+			if (progress_ != null) {
+				progress_.cancel();
 			}
 		}
 
 		private Handler.Callback handler_;
-		private Context appCtx_;
 		private Dialog progress_;
 	}
 }
