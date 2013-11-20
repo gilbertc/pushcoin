@@ -45,7 +45,8 @@ public class Server {
 		EC_KeyStoreException(1002), EC_NoSuchAlgorithmException(1003), EC_CertificateException(
 				1004), EC_UnknownHostException(1005), EC_IOException(1006), EC_KeyManagementException(
 				1007), EC_UnrecoverableKeyException(1008), EC_UnknownException(
-				1009), EC_InvalidRequestException(1010);
+				1009), EC_InvalidRequestException(1010), EC_InterruptedException(
+				1011);
 
 		public int code;
 
@@ -209,6 +210,13 @@ public class Server {
 
 			if (params.isStagedResponse) {
 				log.d("Staging: " + Stringifier.toString(params.data));
+				try {
+					// Mimic server calls
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					log.e("InterruptedException", e);
+					throw new ServerException(ErrorCode.EC_InterruptedException);
+				}
 				return new PostResult(params, params.data);
 			}
 

@@ -1,13 +1,23 @@
 package com.pushcoin.srv.gateway.services;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.pushcoin.ifce.connect.Actions;
-import com.pushcoin.ifce.connect.Keys;
+import com.pushcoin.ifce.connect.Messages;
+import com.pushcoin.ifce.connect.data.Amount;
+import com.pushcoin.ifce.connect.data.CallbackParams;
 import com.pushcoin.ifce.connect.data.ChargeParams;
-import com.pushcoin.ifce.connect.data.Result;
+import com.pushcoin.ifce.connect.data.ChargeResult;
+import com.pushcoin.ifce.connect.data.Customer;
+import com.pushcoin.ifce.connect.data.PollParams;
+import com.pushcoin.ifce.connect.data.QueryParams;
+import com.pushcoin.ifce.connect.data.Error;
+import com.pushcoin.ifce.connect.data.QueryResult;
 import com.pushcoin.lib.core.data.DisplayParcel;
+import com.pushcoin.lib.core.data.DisplayParcel.TextAlignment;
 import com.pushcoin.lib.core.data.PcosAmount;
 import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.exceptions.MATUnavailableException;
@@ -21,30 +31,24 @@ import com.pushcoin.lib.pcos.InputDocument;
 import com.pushcoin.lib.pcos.OutputBlock;
 import com.pushcoin.lib.pcos.OutputDocument;
 import com.pushcoin.lib.pcos.PcosError;
-import com.pushcoin.srv.gateway.activities.ChargeActivity;
-import com.pushcoin.srv.gateway.activities.ChargeActivity.PaymentResponseListener;
+import com.pushcoin.srv.gateway.R;
+import com.pushcoin.srv.gateway.demo.QueryResultBuilder;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.Parcelable;
-import android.view.View;
 import android.widget.Toast;
 
 public class PushCoinService extends Service {
 	private static Logger log = Logger.getLogger(PushCoinService.class);
 
-	private Messenger messenger;
-	private int startId;
+	private ChargeParams chargeParams = null;
+	private QueryParams queryParams = null;
 
 	public PushCoinService() {
 		log.d("constructor");
@@ -54,11 +58,11 @@ public class PushCoinService extends Service {
 	public void onCreate() {
 		log.d("onCreate");
 		super.onCreate();
+		idle();
 	}
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		this.startId = startId;
 		onHandleIntent(intent);
 	}
 
@@ -83,176 +87,221 @@ public class PushCoinService extends Service {
 
 	protected void onHandleIntent(Intent intent) {
 		log.d(intent.getAction());
-		if (intent.getAction() == Actions.ACTION_QUERY) {
-			Bundle bundle = intent.getExtras();
-			query(bundle);
-		} else if (intent.getAction() == Actions.ACTION_POLL) {
-			Bundle bundle = intent.getExtras();
-			poll(bundle);
-		} else if (intent.getAction() == Actions.ACTION_CHARGE) {
-			Bundle bundle = intent.getExtras();
-			charge(bundle);
-		} else if (intent.getAction() == Actions.ACTION_IDLE) {
-			Bundle bundle = intent.getExtras();
-			idle(bundle);
+		if (intent.getAction().endsWith(Actions.ACTION_QUERY)) {
+			query(new QueryParams(intent.getExtras()));
+		} else if (intent.getAction().endsWith(Actions.ACTION_POLL)) {
+			poll(new PollParams(intent.getExtras()));
+		} else if (intent.getAction().endsWith(Actions.ACTION_CHARGE)) {
+			charge(new ChargeParams(intent.getExtras()));
+		} else if (intent.getAction().endsWith(Actions.ACTION_IDLE)) {
+			idle();
 		} else {
 			log.d("not supported action: " + intent.getAction());
 		}
 	}
 
-	private void query(Bundle bundle) {
+	private void poll(PollParams params) {
+		log.d("poll");
+
+		if (this.chargeParams != null) {
+			onError(params, "In use");
+			return;
+		}
+		this.chargeParams = params;
+
+		Amount payment = params.getPayment();
+		if (payment == null) {
+			onError(params, "Invalid Poll Params");
+			return;
+		}
+
+		double amount = payment.value * Math.pow(10, payment.scale);
+		if (amount <= 0) {
+			onError(params, "Payment too low");
+			return;
+		}
+
+		log.d("Charging " + payment.value + " * 10^" + payment.scale);
+		display(new DisplayParcel(new String[] { ">>> Tap Now <<<",
+				"Amount " + new DecimalFormat("$###0.00").format(amount) },
+				DisplayParcel.TextAlignment.CENTER));
+
+		start(amount);
+	}
+
+	private void query(QueryParams params) {
 		log.d("query");
 
-		if (bundle == null) {
-			log.e("bundle null");
-		} else {
-			try {
-				this.messenger = (Messenger) bundle.get(KEY_MESSENGER);
-			} catch (Exception ex) {
-				log.e("start", ex);
+		// Allow reentrant
+		this.queryParams = params;
+
+		try {
+			PcosServer server = new PcosServer();
+			if (Preferences.isDemoMode(this, false)) {
+				OutputDocument doc = createQuerySuccessResult();
+				server.stageAsync(doc, new QueryResponseListener(server));
+			} else {
+				onError(params, "Query not supported in Production");
 			}
+
+		} catch (Exception ex) {
+			log.e("exception when submitting payment", ex);
+			onQueryError(ex.getMessage());
 		}
 	}
 
-	private void poll(Bundle bundle) {
-		log.d("poll");
-	}
-
-	private void charge(Bundle bundle) {
+	private void charge(ChargeParams params) {
 		log.d("charge");
+
+		if (this.chargeParams != null) {
+			onError(params, "In use");
+			return;
+		}
+		this.chargeParams = params;
 	}
-	
-	private void idle(Bundle bundle) {
+
+	private void idle() {
 		log.d("idle");
-		cancelCharge();
-	}
-	
-	private void cancelCharge() {
+		this.chargeParams = null;
+		this.queryParams = null;
+		display(new DisplayParcel("PUSHCOIN", TextAlignment.CENTER));
 		stop();
-
-		Intent returnIntent = new Intent();
-		Result result = new Result();
-		result.reason = "User Cancelled";
-		result.type = Result.TYPE_CHARGE;
-		result.result = Result.RESULT_CANCELED;
-		returnIntent.putExtra(Keys.KEY_RESULT, result);
-		setResult(Result.RESULT_CANCELED, returnIntent);
-		finish();
 	}
 
-	private void startIntent(Intent intent) {
+	private void onError(CallbackParams params, String reason) {
 
-		Result result = new Result();
-		result.type = Result.TYPE_CHARGE;
-		if (intent.getAction().endsWith(Actions.ACTION_CHARGE)) {
+		if (params != null) {
+			Error error = new Error();
+			error.setReason(reason);
 
-			if (!intent.getExtras().containsKey(Keys.KEY_PARAMS)) {
-				result.reason = "No Params defined";
-				result.result = Result.RESULT_ERROR;
-			} else {
-				ChargeParams params = (ChargeParams) intent
-						.getParcelableExtra(Keys.KEY_PARAMS);
+			Messenger messenger = params.getMessenger();
+			if (messenger != null) {
+				Message m = Message.obtain();
+				m.what = Messages.MSGID_ERROR;
+				m.setData(error.getBundle());
 
-				double amount = params.payment.value
-						* Math.pow(10, params.payment.scale);
-				if (amount > 0) {
-					log.d("Charging " + params.payment.value + " * 10^"
-							+ params.payment.scale);
-					chargingMessageView.setText("Charging "
-							+ params.payment.value + " * 10^"
-							+ params.payment.scale);
-
-					display(new DisplayParcel(
-							new String[] {
-									">>> Tap Now <<<",
-									"Amount "
-											+ new DecimalFormat("$###0.00")
-													.format(amount) },
-							DisplayParcel.TextAlignment.CENTER));
-
-					start(amount);
-					return;
-				} else {
-					result.reason = "Payment too low";
-					result.result = Result.RESULT_ERROR;
+				try {
+					messenger.send(m);
+				} catch (Exception ex) {
+					log.e("messenger", ex);
 				}
 			}
-		} else {
-			result.reason = "Invalid Action";
-			result.result = Result.RESULT_ERROR;
 		}
 
-		display(new DisplayParcel(result.reason));
-
-		Intent returnIntent = new Intent();
-		returnIntent.putExtra(Keys.KEY_RESULT, result);
-		setResult(Result.RESULT_ERROR, returnIntent);
-
-		finish();
+		Toast.makeText(PushCoinService.this, reason, Toast.LENGTH_LONG).show();
+		display(new DisplayParcel(reason));
 	}
 
 	// Received device blob
 	private void onPaymentReady(byte[] pta) {
 		display(new DisplayParcel("Submitting..."));
 		log.i("submitting payment");
-		
-		Intent intent = getIntent();
-		if (intent.getAction().endsWith(Actions.ACTION_CHARGE)) {
 
-			try {
-				PcosServer server = new PcosServer();
-				if (Preferences.isDemoMode(this, false)) {
-					OutputDocument doc = createSuccessResult();
-					server.stageAsync(doc, new PaymentResponseListener(server));
-				} else {
-					String url = PcosServer.getDefaultUrl();
-					OutputDocument doc = createPaymentRequest(
-							intent.getParcelableExtra(Keys.KEY_PARAMS), pta);
-					server.postAsync(url, doc, new PaymentResponseListener(
-							server));
-				}
+		if (chargeParams == null) {
+			log.e("Charge params lost");
+			return;
+		}
 
-			} catch (Exception ex) {
-				log.e("exception when submitting payment", ex);
-				onPaymentError(ex.getMessage());
+		try {
+			PcosServer server = new PcosServer();
+			if (Preferences.isDemoMode(this, false)) {
+				OutputDocument doc = createPaymentSuccessResult();
+				server.stageAsync(doc, new PaymentResponseListener(server));
+			} else {
+				String url = PcosServer.getDefaultUrl();
+				OutputDocument doc = createPaymentRequest(chargeParams, pta);
+				server.postAsync(url, doc, new PaymentResponseListener(server));
 			}
-		} else {
-			log.e("charge intent unexpected lost");
-			onPaymentError("Internal Error");
+
+		} catch (Exception ex) {
+			log.e("exception when submitting payment", ex);
+			onPaymentError(ex.getMessage());
+		}
+	}
+
+	private void onQueryError(String reason) {
+		onError(this.queryParams, reason);
+	}
+
+	private void onQuerySuccess() {
+		if (!Preferences.isDemoMode(this, false)) {
+			log.e("Query not supported in production");
+			return;
+		}
+
+		if (queryParams == null) {
+			log.e("Query params lost");
+			return;
+		}
+
+		Messenger messenger = queryParams.getMessenger();
+		if (messenger == null) {
+			log.e("invalid query params");
+			return;
+		}
+
+		QueryResult res = QueryResultBuilder.makeResult(this,
+				queryParams.getQuery());
+		log.d("Query received customers: " + res.getCustomers().size());
+
+		Message m = Message.obtain();
+		m.what = Messages.MSGID_QUERY_RESULT;
+		m.setData(res.getBundle());
+
+		try {
+			messenger.send(m);
+		} catch (Exception ex) {
+			log.e("onQuerySuccess", ex);
 		}
 	}
 
 	private void onPaymentError(String reason) {
-		Toast.makeText(PushCoinService.this, reason, Toast.LENGTH_LONG).show();
-		display(new DisplayParcel(reason));
-
-		Intent returnIntent = new Intent();
-		Result result = new Result();
-		result.reason = reason;
-		result.type = Result.TYPE_CHARGE;
-		result.result = Result.RESULT_ERROR;
-		returnIntent.putExtra(Keys.KEY_RESULT, result);
-		PushCoinService.this.setResult(Result.RESULT_ERROR, returnIntent);
-		finish();
+		onError(this.chargeParams, reason);
 	}
 
 	private void onPaymentSuccess(byte[] refData, String trxId,
 			boolean isAmountExact, PcosAmount balance, Date utc) {
 		Toast.makeText(PushCoinService.this, "Thank You", Toast.LENGTH_LONG)
 				.show();
-		display(new DisplayParcel("Thank You"));
+		display(new DisplayParcel("Thank You", TextAlignment.CENTER));
 
-		// TODO: return information
-		Intent returnIntent = new Intent();
-		Result result = new Result();
-		result.type = Result.TYPE_CHARGE;
-		returnIntent.putExtra(Keys.KEY_RESULT, result);
+		if (chargeParams == null) {
+			log.e("Charge params lost");
+			return;
+		}
 
-		PushCoinService.this.setResult(Result.RESULT_OK, returnIntent);
-		finish();
+		Messenger messenger = chargeParams.getMessenger();
+		if (messenger == null) {
+			log.e("invalid charge params");
+			return;
+		}
+
+		ChargeResult res = new ChargeResult();
+		res.setRefData(refData);
+		res.setTrxId(trxId);
+		res.setIsAmountExact(isAmountExact);
+		res.setBalance(new Amount(balance.getValue(), balance.getScale()));
+		res.setUtc(utc.getTime());
+
+		Message m = Message.obtain();
+		m.what = Messages.MSGID_CHARGE_RESULT;
+		m.setData(res.getBundle());
+
+		try {
+			messenger.send(m);
+		} catch (Exception ex) {
+			log.e("onPaymentSuccess", ex);
+		}
+
 	}
 
-	private OutputDocument createSuccessResult() throws PcosError,
+	private OutputDocument createQuerySuccessResult() throws PcosError {
+		OutputDocument doc;
+		doc = new DocumentWriter("QueryAck");
+		return doc;
+	}
+
+	private OutputDocument createPaymentSuccessResult() throws PcosError,
 			MATUnavailableException {
 		OutputDocument doc;
 		doc = new DocumentWriter("PaymentAck");
@@ -278,14 +327,12 @@ public class PushCoinService extends Service {
 		return doc;
 	}
 
-	private OutputDocument createPaymentRequest(Parcelable p, byte[] pta)
+	private OutputDocument createPaymentRequest(ChargeParams params, byte[] pta)
 			throws PcosError, MATUnavailableException {
 
 		KeyStore keyStore = KeyStore.getInstance(this);
 		if (keyStore == null || !keyStore.hasMAT())
 			throw new MATUnavailableException();
-
-		ChargeParams params = (ChargeParams) p;
 
 		OutputDocument doc;
 		doc = new DocumentWriter("PaymentReq");
@@ -296,21 +343,22 @@ public class PushCoinService extends Service {
 		r1.writeByteStr(keyStore.getMAT());
 
 		// Ref Data
-		r1.writeString(params.refData);
+		r1.writeString(params.getRefData());
 
 		// Creation Time
 		r1.writeUlong(new Date().getTime());
 
 		// Total
-		new PcosAmount(params.payment.value, params.payment.scale).write(r1);
+		new PcosAmount(params.getPayment().value, params.getPayment().scale)
+				.write(r1);
 
-		log.i("submitting: " + params.payment.value + " "
-				+ params.payment.scale);
+		log.i("submitting: " + params.getPayment().value + " "
+				+ params.getPayment().scale);
 
 		// Tax (optional)
-		if (params.tax != null) {
+		if (params.getTax() != null) {
 
-			new PcosAmount(params.tax.value, params.tax.scale,
+			new PcosAmount(params.getTax().value, params.getTax().scale,
 					PcosAmount.OPTIONAL).write(r1);
 
 		} else {
@@ -318,9 +366,9 @@ public class PushCoinService extends Service {
 		}
 
 		// Tips (optional)
-		if (params.tips != null) {
+		if (params.getTips() != null) {
 
-			new PcosAmount(params.tips.value, params.tips.scale,
+			new PcosAmount(params.getTips().value, params.getTips().scale,
 					PcosAmount.OPTIONAL).write(r1);
 
 		} else {
@@ -328,23 +376,23 @@ public class PushCoinService extends Service {
 		}
 
 		// PassCode
-		r1.writeString(params.passcode);
+		r1.writeString(params.getPasscode());
 
 		// Currency
-		r1.writeString(params.currency);
+		r1.writeString(params.getCurrency());
 
 		// Invoice
-		r1.writeString(params.invoice);
+		r1.writeString(params.getInvoice());
 
 		// Note
-		r1.writeString(params.note);
+		r1.writeString(params.getNote());
 
 		// GPS (optional)
-		if (params.geoLocation != null) {
+		if (params.getGeoLocation() != null) {
 
 			r1.writeBool(true);
-			r1.writeDouble(params.geoLocation.latitude);
-			r1.writeDouble(params.geoLocation.longitude);
+			r1.writeDouble(params.getGeoLocation().latitude);
+			r1.writeDouble(params.getGeoLocation().longitude);
 
 		} else {
 			r1.writeBool(false);
@@ -367,6 +415,30 @@ public class PushCoinService extends Service {
 
 	}
 
+	public class QueryResponseListener extends PcosServer.PcosResponseListener {
+		QueryResponseListener(PcosServer server) {
+			server.super();
+		}
+
+		@Override
+		public void onErrorResponse(Object tag, byte[] trxId, long ec,
+				String reason) {
+			log.e("server returned error: " + reason);
+			onQueryError(reason);
+		}
+
+		@Override
+		public void onResponse(Object tag, InputDocument doc) {
+			onQuerySuccess();
+		}
+
+		@Override
+		public void onError(Object tag, Exception ex) {
+			log.e("query req exception", ex);
+			onQueryError("Error: " + ex.getMessage());
+		}
+	}
+
 	public class PaymentResponseListener extends
 			PcosServer.PcosResponseListener {
 		PaymentResponseListener(PcosServer server) {
@@ -383,7 +455,8 @@ public class PushCoinService extends Service {
 		@Override
 		public void onResponse(Object tag, InputDocument doc) {
 			KeyStore keyStore = KeyStore.getInstance(PushCoinService.this);
-			if ((keyStore != null && keyStore.hasMAT()) || Preferences.isDemoMode(PushCoinService.this, false)) {
+			if ((keyStore != null && keyStore.hasMAT())
+					|| Preferences.isDemoMode(PushCoinService.this, false)) {
 				try {
 					if (doc.getDocumentName().contains("PaymentAck")) {
 

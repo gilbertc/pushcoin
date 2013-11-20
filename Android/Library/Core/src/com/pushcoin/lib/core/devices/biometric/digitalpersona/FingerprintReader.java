@@ -1,4 +1,4 @@
-package com.pushcoin.lib.core.devices.magnetic.magtek;
+package com.pushcoin.lib.core.devices.biometric.digitalpersona;
 
 import java.io.IOException;
 
@@ -11,14 +11,14 @@ import android.hardware.usb.UsbManager;
 import com.pushcoin.lib.core.devices.DeviceManager;
 import com.pushcoin.lib.core.devices.IPaymentDevice;
 import com.pushcoin.lib.core.payment.PaymentListener;
-import com.pushcoin.lib.core.payment.magnetic.MagneticPayment;
+import com.pushcoin.lib.core.payment.biometric.FingerprintPayment;
 import com.pushcoin.lib.core.utils.Logger;
 
-public class MiniReader implements IPaymentDevice {
-	private static Logger log = Logger.getLogger(MiniReader.class);
+public class FingerprintReader implements IPaymentDevice {
+	private static Logger log = Logger.getLogger(FingerprintReader.class);
 
-	public static int VENDOR_ID = 2049;
-	public static int PRODUCT_ID = 2;
+	public static int VENDOR_ID = 1466;
+	public static int PRODUCT_ID = 10;
 
 	private UsbManager usbManager;
 	private UsbDevice usbDevice;
@@ -30,7 +30,7 @@ public class MiniReader implements IPaymentDevice {
 				&& device.getProductId() == PRODUCT_ID;
 	}
 
-	public MiniReader(DeviceManager manager) {
+	public FingerprintReader(DeviceManager manager) {
 		this.usbManager = manager.getUsbManager();
 	}
 
@@ -52,11 +52,13 @@ public class MiniReader implements IPaymentDevice {
 		}
 
 		UsbInterface usbInterface = usbDevice.getInterface(0);
+		/*
 		if (usbInterface.getEndpointCount() != 1) {
 			log.d("unexpected usb endpoint size: "
 					+ usbInterface.getEndpointCount());
 			return;
 		}
+		*/
 
 		UsbEndpoint usbEndpoint = usbInterface.getEndpoint(0);
 		UsbDeviceConnection usbDeviceConnection = this.usbManager
@@ -88,9 +90,9 @@ public class MiniReader implements IPaymentDevice {
 						int readLen = usbDeviceConnection.bulkTransfer(
 								usbEndpoint, buf, 1024, 1000);
 						if (readLen > 0) {
-							synchronized (MiniReader.this) {
+							synchronized (FingerprintReader.this) {
 								if (receiver != null) {
-									receiver.onPaymentDiscovered(new MagneticPayment(
+									receiver.onPaymentDiscovered(new FingerprintPayment(
 											buf, readLen));
 								}
 							}

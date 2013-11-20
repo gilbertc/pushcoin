@@ -2,9 +2,13 @@ package com.pushcoin.ifce.connect.data;
 
 import android.os.Bundle;
 
-public class Error {
+public class Error implements Bundlable {
 	public static final String KEY_REASON = "REASON";
 	private Bundle bundle;
+
+	public Error() {
+		this(new Bundle());
+	}
 
 	public Error(Bundle bundle) {
 		this.bundle = bundle;

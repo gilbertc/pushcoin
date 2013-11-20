@@ -2,13 +2,15 @@ package com.pushcoin.ifce.connect.data;
 
 import android.os.Bundle;
 
-public class QueryParams implements Bundlable {
+public class QueryParams extends CallbackParams {
 	public static final String KEY_QUERY = "QUERY";
 
-	private Bundle bundle;
+	public QueryParams() {
+		this(new Bundle());
+	}
 
 	public QueryParams(Bundle bundle) {
-		this.bundle = bundle;
+		super(bundle);
 	}
 
 	public String getQuery() {
@@ -19,7 +21,4 @@ public class QueryParams implements Bundlable {
 		bundle.putString(KEY_QUERY, query);
 	}
 
-	public Bundle getBundle() {
-		return bundle;
-	}
 }

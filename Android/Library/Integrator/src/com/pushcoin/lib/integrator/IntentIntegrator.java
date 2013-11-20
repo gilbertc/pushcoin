@@ -5,16 +5,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.pushcoin.ifce.connect.data.CallbackParams;
 import com.pushcoin.ifce.connect.data.ChargeParams;
+import com.pushcoin.ifce.connect.data.ChargeResult;
+import com.pushcoin.ifce.connect.data.PollParams;
 import com.pushcoin.ifce.connect.data.QueryParams;
 import com.pushcoin.ifce.connect.data.QueryResult;
 import com.pushcoin.ifce.connect.data.Error;
-import com.pushcoin.ifce.connect.data.Result;
 import com.pushcoin.ifce.connect.Actions;
 import com.pushcoin.ifce.connect.Keys;
 import com.pushcoin.ifce.connect.Messages;
+import com.pushcoin.ifce.connect.listeners.ChargeResultListener;
+import com.pushcoin.ifce.connect.listeners.PollResultListener;
 import com.pushcoin.ifce.connect.listeners.QueryResultListener;
-import com.pushcoin.srv.gateway.services.PaymentService;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,7 +27,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
@@ -141,17 +143,18 @@ public class IntentIntegrator {
 			public void handleMessage(Message message) {
 				switch (message.what) {
 				case Messages.MSGID_QUERY_RESULT:
-					listener.onQueryResult(new QueryResult(message.getData()));
+					listener.onResult(new QueryResult(message.getData()));
 					break;
 				case Messages.MSGID_ERROR:
-					listener.onQueryResult(new Error(message.getData()));
+					listener.onResult(new Error(message.getData()));
 				}
 			};
 		};
-		return invokeService(Actions.ACTION_QUERY, params.getBundle(), handler);
+		return invokeService(Actions.ACTION_QUERY, params, handler);
 	}
-	
-	public boolean charge(ChargeParams params, final ChargeResultListener listener) {
+
+	public boolean charge(ChargeParams params,
+			final ChargeResultListener listener) {
 		Handler handler = new Handler() {
 			public void handleMessage(Message message) {
 				switch (message.what) {
@@ -159,65 +162,51 @@ public class IntentIntegrator {
 					listener.onResult(new ChargeResult(message.getData()));
 					break;
 				case Messages.MSGID_ERROR:
-					listener.onChargeResult(new Error(message.getData()));
+					listener.onResult(new Error(message.getData()));
 				}
 			};
 		};
-		return invokeService(Actions.ACTION_CHARGE, params.getBundle(), handler);
+		return invokeService(Actions.ACTION_CHARGE, params, handler);
 	}
-	
+
 	public boolean poll(PollParams params, final PollResultListener listener) {
 		Handler handler = new Handler() {
 			public void handleMessage(Message message) {
 				switch (message.what) {
 				case Messages.MSGID_CHARGE_RESULT:
-					listener.onPollResult(new ChargeResult(message.getData()));
+					listener.onResult(new ChargeResult(message.getData()));
 					break;
 				case Messages.MSGID_QUERY_RESULT:
-					listener.onPollResult(new QueryResult(message.getData()));
+					listener.onResult(new QueryResult(message.getData()));
 					break;
 				case Messages.MSGID_ERROR:
-					listener.onPollResult(new Error(message.getData()));
+					listener.onResult(new Error(message.getData()));
 				}
 			};
 		};
-		return invokeService(Actions.ACTION_POLL, params.getBundle(), handler);
+		return invokeService(Actions.ACTION_POLL, params, handler);
 	}
-	
-	public boolean idle(IdleParams params, final IdleResultListener listener) {
-		Handler handler = new Handler() {
-			public void handleMessage(Message message) {
-				switch (message.what) {
-				case Messages.MSGID_IDLE_RESULT:
-					listener.onIdleResult(new IdleResult(message.getData()));
-					break;
-				case Messages.MSGID_ERROR:
-					listener.onIdleResult(new Error(message.getData()));
-				}
-			};
-		};
-		return invokeService(Actions.ACTION_IDLE, params.getBundle(), handler);
-	}
-	
-	public boolean invokeService(String action, Bundle bundle, Handler handler)
-	{
-		Intent intent = new Intent(PUSHCOIN_GATEWAY_PACKAGE_NAME + action);
-		Messenger messenger = new Messenger(handler);
-		intent.addCategory(Intent.CATEGORY_DEFAULT);
-		
-		String targetAppPackage = findTargetAppPackage(intent);
-		if (targetAppPackage == null) {
-			return false;
-		}
-		
-		intent.setPackage(targetAppPackage);
 
-		if (bundle == null)
-			bundle = new Bundle();
-		
-		bundle.putParcelable(Keys.KEY_MESSENGER, messenger);
-		intent.putExtras(bundle);
+	public boolean idle() {
+		return invokeService(Actions.ACTION_IDLE, null, null);
+	}
+
+	public boolean invokeService(String action, CallbackParams params,
+			Handler handler) {
+		Intent intent = new Intent();
+		intent.setClassName(PUSHCOIN_GATEWAY_PACKAGE_NAME,
+				PUSHCOIN_GATEWAY_PACKAGE_NAME + ".services.PushCoinService");
+		intent.setAction(PUSHCOIN_GATEWAY_PACKAGE_NAME + action);
+
+		if (params != null) {
+			if (handler != null) {
+				params.setMessenger(new Messenger(handler));
+			}
+			intent.putExtras(params.getBundle());
+		}
+
 		this.activity.startService(intent);
+		return true;
 	}
 
 	public AlertDialog settings() {

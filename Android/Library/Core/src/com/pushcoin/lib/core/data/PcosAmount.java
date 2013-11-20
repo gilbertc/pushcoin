@@ -58,4 +58,12 @@ public class PcosAmount {
 		return FMT_WITH_SIGN.format(Amount.doubleValue());
 	}
 
+	public long getValue() {
+		return value;
+	}
+
+	public int getScale() {
+		return scale;
+	}
+
 }
