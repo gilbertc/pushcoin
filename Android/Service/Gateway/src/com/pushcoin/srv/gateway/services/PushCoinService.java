@@ -158,6 +158,19 @@ public class PushCoinService extends Service {
 			return;
 		}
 		this.chargeParams = params;
+		try {
+			PcosServer server = new PcosServer();
+			if (Preferences.isDemoMode(this, false)) {
+				OutputDocument doc = createPaymentSuccessResult();
+				server.stageAsync(doc, new PaymentResponseListener(server));
+			} else {
+				onError(params, "Charge not supported in Production");
+			}
+
+		} catch (Exception ex) {
+			log.e("exception when submitting payment", ex);
+			onQueryError(ex.getMessage());
+		}
 	}
 
 	private void idle() {
