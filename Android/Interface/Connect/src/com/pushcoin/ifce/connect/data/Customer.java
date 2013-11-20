@@ -39,8 +39,8 @@ public class Customer implements Parcelable {
 		lastName = in.readString();
 		title = in.readString();
 		identifier = in.readString();
-		in.readParcelable(Bitmap.class.getClassLoader());
-		in.readParcelable(Amount.class.getClassLoader());
+		mugshot = in.readParcelable(Bitmap.class.getClassLoader());
+		balance = in.readParcelable(Amount.class.getClassLoader());
 	}
 
 	public static final Parcelable.Creator<Customer> CREATOR = new Parcelable.Creator<Customer>() {

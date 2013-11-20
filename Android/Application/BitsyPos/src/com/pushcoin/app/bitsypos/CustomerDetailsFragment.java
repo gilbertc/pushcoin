@@ -61,8 +61,14 @@ public class CustomerDetailsFragment extends Fragment
 		lastName_.setText( user.lastName );
 		title_.setText( user.title );
 		identifier_.setText( user.identifier );
-		balance_.setText(  NumberFormat.getCurrencyInstance().format( user.balance ) );
-		mugshot_.setImageBitmap( user.mugshot );
+		if (user.balance != null) {
+			balance_.setText(  NumberFormat.getCurrencyInstance().format( user.balance.asDecimal() ) );
+			balance_.setVisibility(View.VISIBLE);
+		} else {
+			balance_.setVisibility(View.INVISIBLE);
+		}
+		if (user.mugshot != null)
+			mugshot_.setImageBitmap( user.mugshot );
 		rootView_.setVisibility(View.VISIBLE);
 	}
 	

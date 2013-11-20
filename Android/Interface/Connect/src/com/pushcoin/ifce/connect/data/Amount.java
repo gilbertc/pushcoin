@@ -2,6 +2,7 @@ package com.pushcoin.ifce.connect.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import java.math.BigDecimal;
 
 public class Amount implements Parcelable {
 
@@ -13,6 +14,13 @@ public class Amount implements Parcelable {
 		this.scale = scale;
 	}
 	
+	public BigDecimal asDecimal() {
+		return BigDecimal.valueOf(value, -scale);
+	}
+
+	/**
+		Parcelable logic below.
+	*/
 	@Override
 	public int describeContents() {
 		return 0;
