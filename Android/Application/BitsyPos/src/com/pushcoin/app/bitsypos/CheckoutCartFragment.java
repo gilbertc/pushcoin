@@ -80,6 +80,19 @@ public class CheckoutCartFragment extends Fragment
 		amountDue_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_due_amount);
 		discountValue_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_discount);
 		discountPct_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_dicount_pct);
+		btnFinished_ = (Button) cartLayout.findViewById(R.id.checkout_cart_finished_button);
+
+		// Handle finished-click
+		btnFinished_.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					CartManager carts = CartManager.getInstance();
+					carts.remove( carts.getActive() );
+					getActivity().finish();
+				}
+			});
 
 		// Handle charge amount
 		chargeAmount_.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -103,19 +116,14 @@ public class CheckoutCartFragment extends Fragment
 						Cart cart = CartManager.getInstance().getActiveCart();
 						// Update only if changed
 						String newValStr = field.getText().toString();
-						BigDecimal amountDue = cart.amountDue(); 
-						BigDecimal newVal = amountDue;
-						if ( !newValStr.isEmpty() ) 
+						BigDecimal oldVal = cart.getChargeAmount();
+						if ( !newValStr.isEmpty() && !newValStr.equals(oldVal.toString()) ) 
 						{
-							try 
-							{
-								BigDecimal newValTry = new BigDecimal( newValStr );
-								if ( !(newValTry.compareTo(amountDue) > 1) && newValTry.compareTo(Conf.BIG_ZERO) > 0) {
-									newVal = newValTry;
-								}
-							} catch (NumberFormatException e) { }
+							try {
+								cart.setChargeAmount( new BigDecimal( newValStr ) );
+							} catch (RuntimeException e) { }
 						} 
-						field.setText( NumberFormat.getCurrencyInstance().format(newVal) );
+						field.setText( NumberFormat.getCurrencyInstance().format(oldVal) );
 						hideKeyboard();
 					} 
 					else {
@@ -235,14 +243,12 @@ public class CheckoutCartFragment extends Fragment
 
 	private void onCartContentChanged()
 	{
-		CartManager.Entry cartHolder = CartManager.getInstance().getActiveEntry();
-
-		BigDecimal amountDue = cartHolder.cart.amountDue();
+		CartManager.Entry cartHolder = CartManager.getInstance().getActive();
 
 		// Update displayed values
 		cartTotal_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.totalValue() ) );
-		chargeAmount_.setText( NumberFormat.getCurrencyInstance().format( amountDue ) );
-		amountDue_.setText( NumberFormat.getCurrencyInstance().format( amountDue ) );
+		chargeAmount_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.getChargeAmount() ) );
+		amountDue_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.amountDue() ) );
 		discountValue_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.getDiscount() ) );
 		discountPct_.setText( NumberFormat.getPercentInstance().format( cartHolder.cart.getDiscountPct() ) );
 
@@ -258,6 +264,7 @@ public class CheckoutCartFragment extends Fragment
 	private TextView amountDue_;
 	private TextView discountValue_;
 	private TextView discountPct_;
+	private Button btnFinished_;
 	private Handler handler_;
 
 	/**
@@ -282,7 +289,6 @@ public class CheckoutCartFragment extends Fragment
 			{
 				switch( msg.what )
 				{
-					case MessageId.CART_POOL_CHANGED:
 					case MessageId.CART_CONTENT_CHANGED:
 						ref.onCartContentChanged();
 					break;

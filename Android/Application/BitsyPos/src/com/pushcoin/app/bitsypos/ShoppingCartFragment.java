@@ -162,7 +162,7 @@ public class ShoppingCartFragment extends Fragment
 		Cart cart = CartManager.getInstance().getActiveCart();
 		cartTotal_.setText( NumberFormat.getCurrencyInstance().format( cart.totalValue() ) );
 		// cart name might have changed too -- on tab change
-		tabName_.setText( CartManager.getInstance().getActiveEntry().name );
+		tabName_.setText( CartManager.getInstance().getActive().name );
 
 		adapter_.refreshView();
 	}

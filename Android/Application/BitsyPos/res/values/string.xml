@@ -35,7 +35,7 @@
 	<string name="new_tab">New Tab</string>
 	<string name="default_tab_name">Main</string>
 	<string name="checkout">Checkout &#187;</string>
-	<string name="complete">Finished</string>
+	<string name="finished">Finished</string>
 	<string name="cash_or_check">Cash or\nCheck</string>
 	<string name="read_card">Read\nCard</string>
 	<string name="enter_card">Enter\nCard</string>

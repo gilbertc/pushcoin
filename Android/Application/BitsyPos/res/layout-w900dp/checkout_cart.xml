@@ -228,11 +228,11 @@
 			android:layout_marginRight="2dp"
 			style="@style/ShoppingCartAction" />
 
-		<Button android:text="@string/complete" 
+		<Button android:text="@string/finished" 
+			android:id="@+id/checkout_cart_finished_button" 
 			android:layout_weight="2"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:id="@+id/checkout_cart_checkout_button" 
 			android:background="@drawable/btn_green"
 			style="@style/ShoppingCartCheckout" />
 

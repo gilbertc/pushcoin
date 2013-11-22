@@ -36,23 +36,6 @@ import java.io.IOException;
 public class AppDb extends SQLiteAssetHelper 
 {
 	/**
-		Find a customer with keywords.
-	*/
-	public ProgressDialog asyncFindCustomerWithKeyword( Context context, String keyword, Handler.Callback handler )
-	{
-		ProgressDialog progress = new ProgressDialog( context );
-		progress.setTitle("Searching...");
-		progress.setMessage("Please wait.");
-		progress.setIndeterminate(true);
-		progress.setCanceledOnTouchOutside(true);
-		FindCustomerWithKeywordTask task = new FindCustomerWithKeywordTask( handler, progress );
-		// now we can install cancel handler
-		progress.setOnCancelListener( task );
-		task.execute( keyword );
-		return progress;
-	}
-
-	/**
 		Get labels.
 	*/
 	public ArrayList<Category> getMainCategories() 
@@ -307,6 +290,23 @@ public class AppDb extends SQLiteAssetHelper
 
 		// Populate sample data
 		initSample(ctx);
+	}
+
+	/**
+		Find a customer with keywords.
+	*/
+	public ProgressDialog asyncFindCustomerWithKeyword( Context context, String keyword, Handler.Callback handler )
+	{
+		ProgressDialog progress = new ProgressDialog( context );
+		progress.setTitle("Searching...");
+		progress.setMessage("Please wait.");
+		progress.setIndeterminate(true);
+		progress.setCanceledOnTouchOutside(true);
+		FindCustomerWithKeywordTask task = new FindCustomerWithKeywordTask( handler, progress );
+		// now we can install cancel handler
+		progress.setOnCancelListener( task );
+		task.execute( keyword );
+		return progress;
 	}
 
 	private static AppDb inst_;

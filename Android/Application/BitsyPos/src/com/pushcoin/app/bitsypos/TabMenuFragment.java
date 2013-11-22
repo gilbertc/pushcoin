@@ -1,5 +1,6 @@
 package com.pushcoin.app.bitsypos;
 
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,6 +34,9 @@ public class TabMenuFragment extends Fragment
 		super.onResume();
 		// Register self with the hub and start receiving events
 		EventHub.getInstance().register( handler_, "TabMenuFragment" );
+
+		// Cart might have changed while we were gone.
+		onCartPoolChanged();
 	}
 
 	@Override
@@ -57,8 +61,10 @@ public class TabMenuFragment extends Fragment
 		menu.setOnItemClickListener(new AdapterView.OnItemClickListener()
 			{
 				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					CartManager.Entry entry = CartManager.getInstance().setActiveEntry( position );
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+				{
+					CartManager.Entry entry = CartManager.getInstance().setActive( position );
+					((SlidingActivity)getActivity()).getSlidingMenu().toggle();
 				}
 			});
 

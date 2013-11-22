@@ -52,27 +52,44 @@ public class CartManager
 	*/
 	public Cart getActiveCart()
 	{
-		return getActiveEntry().cart;
+		return getActive().cart;
 	}
 
 	/**
 		Returns an active cart or creates new one and nominates it as active.
 	*/
-	public Entry getActiveEntry()
+	public Entry getActive()
 	{
 		Entry entry = findActive();	
-
-		// If there is no active, create a new one
-		if (entry == null) {
-			entry = createEntry( defaultCartName_, true );
+		
+		// If found, return right away
+		if (entry != null) {
+			return entry;
 		}
-		return entry;
+
+		// If there is no active, find Main
+		if (entry == null) {
+			entry = findWithName(defaultCartName_);
+		}
+
+		// No Main? Pick oldest
+		if (entry == null && !carts_.isEmpty()) {
+			entry = carts_.get(0);
+		}
+
+		// Still nothing? Create a new one!
+		if (entry == null) {
+			entry = create( defaultCartName_, false );
+		}
+		
+		// nominate as active, return
+		return setActive( entry );	
 	}
 
 	/**
 		Creates a new cart with a given name.
 	*/
-	public Entry createEntry(String name, boolean active)
+	public Entry create(String name, boolean active)
 	{
 		Log.v( Conf.TAG, "creating-new-cart|name="+name+";active="+active );
 		// If the new entry is active, we de-activate an existing entry
@@ -88,16 +105,26 @@ public class CartManager
 	/**
 		Removes entry at position.
 	*/
-	public void removeEntry(int position)
+	public void remove(int position)
 	{
-		Entry entry = carts_.remove( position );
+		carts_.remove( position );
 		EventHub.post( MessageId.CART_POOL_CHANGED );
+	}
+
+	/**
+		Removes object equal to the one provided.
+	*/
+	public void remove(Entry e)
+	{
+		if (carts_.remove( e ) ) {
+			EventHub.post( MessageId.CART_POOL_CHANGED );
+		}
 	}
 
 	/**
 		Returns entry at position.
 	*/
-	public Entry getEntry( int position )
+	public Entry get( int position )
 	{
 		Entry entry = carts_.get( position );
 		return entry;
@@ -106,7 +133,7 @@ public class CartManager
 	/**
 		Sets cart as 'active'.
 	*/
-	public Entry setActiveEntry( int position )
+	public Entry setActive( int position )
 	{
 		// clear previous active cart
 		clearActive();
@@ -116,6 +143,19 @@ public class CartManager
 		EventHub.post( MessageId.CART_POOL_CHANGED );
 		Log.v( Conf.TAG, "switching-active-cart|name="+entry.name );
 		return entry;
+	}
+
+	/**
+		Sets cart as 'active'.
+	*/
+	private Entry setActive( Entry other )
+	{
+		// clear previous active cart
+		clearActive();
+		other.active = true;
+		EventHub.post( MessageId.CART_POOL_CHANGED );
+		Log.v( Conf.TAG, "switching-active-cart|name="+other.name );
+		return other;
 	}
 
 	/**
@@ -134,6 +174,20 @@ public class CartManager
 		if ( e != null ) {
 			e.active = false;
 		}
+	}
+
+	/**
+		Returns named cart
+	*/
+	public Entry findWithName(String name)
+	{
+		for (Entry e: carts_)
+		{
+			if ( e.name.equals(name) ) {
+				return e; 
+			}
+		}
+		return null;
 	}
 
 	/**

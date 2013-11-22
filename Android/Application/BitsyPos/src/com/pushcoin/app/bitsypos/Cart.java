@@ -98,22 +98,13 @@ public class Cart
 		}
 	}
 
-	public static class Transaction
-	{
-		Customer customer;
-		String transactionId;
-		BigDecimal amount;
-	}
-	
 	void add( Combo item )
 	{
 		Log.v(Conf.TAG, "cart-append-item="+item.getName() );
 		synchronized (lock_) {
 			items_.add(item);
 		}
-
-		// broadcast cart content has changed
-		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+		notifyOnChange();
 	}
 
 	void insert( Combo item, int position )
@@ -128,7 +119,7 @@ public class Cart
 				items_.add(position, item);
 			}
 		}
-		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+		notifyOnChange();
 	}
 
 	Combo remove( int position )
@@ -143,7 +134,7 @@ public class Cart
 		if (item != null) 
 		{
 			Log.v(Conf.TAG, "cart-remove-item="+item.getName()+";at-pos="+position);
-			EventHub.post( MessageId.CART_CONTENT_CHANGED );
+			notifyOnChange();
 		}
 		return item;
 	}
@@ -161,7 +152,7 @@ public class Cart
 
 			items_.add(position, item);
 		}
-		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+		notifyOnChange();
 	}
 
 	void clear()
@@ -174,7 +165,7 @@ public class Cart
 		}
 
 		if (effective) {
-			EventHub.post( MessageId.CART_CONTENT_CHANGED );
+			notifyOnChange();
 		}
 	}
 
@@ -215,8 +206,11 @@ public class Cart
 		synchronized (lock_) 
 		{
 			BigDecimal total = new BigDecimal(0);
-			for (Transaction tx: transactions_) {
-				total = total.add( tx.amount );
+			for (Transaction tx: transactions_)
+			{
+				if ( tx.isApproved() ) {
+					total = total.add( tx.getAmount() );
+				}
 			}
 			return total;
 		}
@@ -228,11 +222,29 @@ public class Cart
 		return ( due.compareTo( Conf.ZERO_PRICE) < 0 ) ? Conf.ZERO_PRICE: due;
 	}
 
+	public void setChargeAmount(BigDecimal charge)
+	{
+		if ( charge.compareTo(amountDue()) > 0 || !(charge.compareTo(Conf.BIG_ZERO) > 0)) {
+			throw new BitsyError("Invalid charge amount");
+		}
+		notifyOnChange();
+		// notification wipes cached values, so set it after
+		chargeAmount_ = charge;
+	}
+
+	public BigDecimal getChargeAmount()
+	{
+		BigDecimal amountDue = amountDue();
+		if ( chargeAmount_ == null || chargeAmount_.compareTo(amountDue) > 0) {
+			chargeAmount_ = amountDue;
+		}
+		return chargeAmount_;
+	}
+
 	public void setDiscount(BigDecimal discount)
 	{
 		discount_ = discount;
-		// broadcast cart content has changed
-		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+		notifyOnChange();
 	}
 
 	public BigDecimal getDiscount() {
@@ -242,7 +254,7 @@ public class Cart
 	public BigDecimal getDiscountPct()
 	{
 		BigDecimal totalValue = totalValue();
-		return (totalValue.compareTo( Conf.BIG_ZERO ) > 1)
+		return (totalValue.compareTo( Conf.BIG_ZERO ) > 0)
 			? discount_.divide( totalValue, 2, RoundingMode.HALF_UP ) : Conf.BIG_ZERO;
 	}
 
@@ -254,20 +266,60 @@ public class Cart
 		setDiscount( totalValue().multiply(discount) );
 	}
 
-
-	public void addTransaction( Transaction tx )
+	public Transaction createChargeTransaction()
 	{
-		transactions_.add( tx );
-		// broadcast cart content has changed
-		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+		BigDecimal chargeAmount = getChargeAmount();
+		Transaction trx = null;
+		if (chargeAmount.compareTo(Conf.BIG_ZERO) > 0)
+		{
+			trx = new Transaction( chargeAmount );
+			transactions_.add( trx );
+		}
+		return trx;
 	}
 
 	public Transaction getTransaction( int position ) {
 		return transactions_.get( position );
 	}
 
+	public void updateTransaction( Transaction newTransaction )
+	{
+		int pos = getPositionWithClientTransactionId( newTransaction.getClientTransactionId() );
+		if (pos < 0) {
+			transactions_.add(newTransaction);
+		} else {
+			transactions_.set(pos, newTransaction);
+		}
+		notifyOnChange();
+	}
+
 	public int totalTransactions() {
 		return transactions_.size();
+	}
+
+	public Transaction findTransactionWithClientTransactionId( String key )
+	{
+		int pos = getPositionWithClientTransactionId( key );
+		return (pos < 0) ? null : getTransaction( pos );
+	}
+
+	private int getPositionWithClientTransactionId( String otherId )
+	{
+		for ( int pos = 0; pos < transactions_.size(); ++pos ) {
+			if (transactions_.get(pos).getClientTransactionId().equals(otherId)) {
+				return pos;
+			}
+		}
+		return -1;
+	}
+
+	private void notifyOnChange()
+	{
+		// clear cache
+		chargeAmount_ = null;
+
+		// broadcast cart content has changed
+		EventHub.post( MessageId.CART_CONTENT_CHANGED );
 	}
 
 	private Handler parentContext_;
@@ -276,4 +328,5 @@ public class Cart
 	ArrayList<Combo> items_ = new ArrayList<Combo>();
 	ArrayList<Transaction> transactions_ = new ArrayList<Transaction>();
 	BigDecimal discount_ = Conf.ZERO_PRICE;
+	BigDecimal chargeAmount_ = null;
 }
