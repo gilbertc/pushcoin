@@ -1,5 +1,14 @@
 package com.pushcoin.app.bitsypos;
 
+import com.pushcoin.lib.integrator.IntentIntegrator;
+import com.pushcoin.ifce.connect.data.Amount;
+import com.pushcoin.ifce.connect.data.ChargeResult;
+import com.pushcoin.ifce.connect.data.Customer;
+import com.pushcoin.ifce.connect.data.Error;
+import com.pushcoin.ifce.connect.data.PollParams;
+import com.pushcoin.ifce.connect.data.QueryResult;
+import com.pushcoin.ifce.connect.listeners.PollResultListener;
+
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.Fragment;
@@ -14,12 +23,16 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
+import android.widget.Toast;
 import android.content.Context;
 import android.util.Log;
-import java.util.ArrayList;
+import java.util.List;
 import java.lang.ref.WeakReference;
+import java.math.BigDecimal;
 
-public class CheckoutActivity extends Activity
+public class CheckoutActivity 
+	extends Activity
+	implements PollResultListener
 {
 	/** Called when the activity is first created. */
 	@Override
@@ -33,11 +46,17 @@ public class CheckoutActivity extends Activity
 		// Handler where we dispatch events.
 		handler_ = new IncomingHandler( this );
 
-		// Session manager
-		carts_ = CartManager.newInstance( this );
-
 		// Set this activity UI layout
 		setContentView(R.layout.checkout_layout);
+	}
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		// Let PushCoin service know we are back
+		Log.v( Conf.TAG, "bootstrapping integrator" );
+		AppDb.getInstance().getIntegrator().bootstrap();
 	}
 
 	/** Called when the activity resumes. */
@@ -47,18 +66,79 @@ public class CheckoutActivity extends Activity
 		super.onResume();
 		// Register self with the hub and start receiving events
 		EventHub.getInstance().register( handler_, "CheckoutActivity" );
+		// ready to accept payments
+		waitForPayment();
 	}
 
 	@Override
 	public void onPause()
 	{
 		super.onPause();
+
+		// Stop accepting payments
+		AppDb.getInstance().getIntegrator().idle();
+
 		// Remove self from the event hub.
 		EventHub.getInstance().unregister( handler_ );
 	}
 
 	private Handler handler_;
-	private CartManager carts_;
+
+	private void waitForPayment()
+	{
+		IntentIntegrator integrator = 
+			AppDb.getInstance().getIntegrator();
+
+		Cart cart = CartManager.getInstance().getActiveCart();
+		Transaction charge = cart.createChargeTransaction();
+
+		// Do we owe anything at this point?
+		if (charge != null)
+		{
+			PollParams params = new PollParams();
+			BigDecimal chargeAmount = charge.getAmount();
+			params.setPayment(
+				new Amount(chargeAmount.unscaledValue().longValue(), -chargeAmount.scale()));
+			integrator.poll(params, this);
+			Toast.makeText(this, "Waiting for $"+chargeAmount, Toast.LENGTH_LONG).show();
+		} 
+		else {
+			integrator.idle();
+		}
+	}
+
+	/**
+		Polling on device resulted in a user-query (ie thumb-scan)
+	*/
+  @Override
+  public void onResult(QueryResult result)
+	{
+		List<Customer> customers = result.getCustomers();
+		Message msg = Message.obtain(null, MessageId.QUERY_USERS_REPLY, customers);
+		handler_.handleMessage(msg);
+  }
+  
+	/**
+		Successful charge transaction.
+	*/
+  @Override
+  public void onResult(ChargeResult result)
+	{
+		Cart cart = CartManager.getInstance().getActiveCart();
+		// FIXME: look up transaction by client-transaction-id
+		Transaction transaction = cart.getTransaction(0);
+		cart.updateTransaction( transaction.approved(result.getTrxId(), result.getUtc()) );
+  }
+
+	/**
+		Error polling on device.
+	*/
+  @Override
+  public void onResult(Error err)
+	{
+		Toast.makeText(this, "Error: " + err.getReason(), Toast.LENGTH_LONG)
+			.show();
+  }
 
 	/**
 		Static handler keeps lint happy about (temporary?) memory leaks if queued 
@@ -82,11 +162,9 @@ public class CheckoutActivity extends Activity
 			{
 				switch( msg.what )
 				{
-				/*
-					case MessageId.CART_POOL_CHANGED:
-						ref.getSlidingMenu().toggle();
+					case MessageId.CART_CONTENT_CHANGED:
+						ref.waitForPayment();
 					break;
-				*/
 				}
 			}
 		}

@@ -52,7 +52,7 @@ public class TabMenuAdapter extends BaseAdapter
 	 */
 	public CartManager.Entry getEntry(int position) 
 	{
-		return CartManager.getInstance().getEntry( position );
+		return CartManager.getInstance().get( position );
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class TabMenuAdapter extends BaseAdapter
 		}
 
 		// Bind the data efficiently with the holder.
-		holder.label.setText( CartManager.getInstance().getEntry( position ).name );
+		holder.label.setText( CartManager.getInstance().get( position ).name );
 
 		return convertView;
 	}

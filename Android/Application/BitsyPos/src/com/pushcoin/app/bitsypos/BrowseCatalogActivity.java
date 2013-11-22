@@ -86,15 +86,6 @@ public class BrowseCatalogActivity
 		EventHub.getInstance().unregister( handler_ );
 	}
 
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-		// Let PushCoin service know we are back
-		Log.v( Conf.TAG, "bootstrapping integrator" );
-		AppDb.getInstance().getIntegrator().bootstrap();
-	}
-
 	/** User clicks on category item. */
 	private void onShoppingCategoryClicked(String categoryTag)
 	{
@@ -209,10 +200,6 @@ public class BrowseCatalogActivity
 
 					case MessageId.CHECKOUT_CLICKED:
 						ref.onCheckoutClicked();
-					break;
-
-					case MessageId.CART_POOL_CHANGED:
-						ref.getSlidingMenu().toggle();
 					break;
 				}
 			}
