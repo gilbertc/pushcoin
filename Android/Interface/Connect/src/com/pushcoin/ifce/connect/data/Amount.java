@@ -13,14 +13,19 @@ public class Amount implements Parcelable {
 		this.value = value;
 		this.scale = scale;
 	}
-	
+
+	public Amount(BigDecimal v) {
+		this.value = v.longValue();
+		this.scale = v.scale();
+	}
+
 	public BigDecimal asDecimal() {
 		return BigDecimal.valueOf(value, -scale);
 	}
 
 	/**
-		Parcelable logic below.
-	*/
+	 * Parcelable logic below.
+	 */
 	@Override
 	public int describeContents() {
 		return 0;

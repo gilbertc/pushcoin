@@ -4,23 +4,16 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 
-public class QueryResult implements Bundlable {
+public class QueryResult extends CallbackResult {
 	public static final String KEY_QUERY = "QUERY";
 	public static final String KEY_CUSTOMERS = "CUSTOMERS";
-
-	private Bundle bundle;
 
 	public QueryResult() {
 		this(new Bundle());
 	}
 
 	public QueryResult(Bundle bundle) {
-		this.bundle = bundle;
-		this.bundle.setClassLoader(Thread.currentThread().getContextClassLoader());
-	}
-
-	public Bundle getBundle() {
-		return bundle;
+		super(bundle);
 	}
 
 	public String getQuery() {

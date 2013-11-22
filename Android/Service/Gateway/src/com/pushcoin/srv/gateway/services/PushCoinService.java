@@ -1,17 +1,15 @@
 package com.pushcoin.srv.gateway.services;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.pushcoin.ifce.connect.Actions;
 import com.pushcoin.ifce.connect.Messages;
 import com.pushcoin.ifce.connect.data.Amount;
 import com.pushcoin.ifce.connect.data.CallbackParams;
+import com.pushcoin.ifce.connect.data.Cancelled;
 import com.pushcoin.ifce.connect.data.ChargeParams;
 import com.pushcoin.ifce.connect.data.ChargeResult;
-import com.pushcoin.ifce.connect.data.Customer;
 import com.pushcoin.ifce.connect.data.PollParams;
 import com.pushcoin.ifce.connect.data.QueryParams;
 import com.pushcoin.ifce.connect.data.Error;
@@ -31,24 +29,20 @@ import com.pushcoin.lib.pcos.InputDocument;
 import com.pushcoin.lib.pcos.OutputBlock;
 import com.pushcoin.lib.pcos.OutputDocument;
 import com.pushcoin.lib.pcos.PcosError;
-import com.pushcoin.srv.gateway.R;
 import com.pushcoin.srv.gateway.demo.QueryResultBuilder;
 
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.widget.Toast;
 
 public class PushCoinService extends Service {
 	private static Logger log = Logger.getLogger(PushCoinService.class);
 
-	private ChargeParams chargeParams = null;
-	private QueryParams queryParams = null;
+	private PollParams pollParams = null;
 
 	public PushCoinService() {
 		log.d("constructor");
@@ -103,12 +97,6 @@ public class PushCoinService extends Service {
 	private void poll(PollParams params) {
 		log.d("poll");
 
-		if (this.chargeParams != null) {
-			onError(params, "In use");
-			return;
-		}
-		this.chargeParams = params;
-
 		Amount payment = params.getPayment();
 		if (payment == null) {
 			onError(params, "Invalid Poll Params");
@@ -121,6 +109,8 @@ public class PushCoinService extends Service {
 			return;
 		}
 
+		onNewPollRequest(params);
+
 		log.d("Charging " + payment.value + " * 10^" + payment.scale);
 		display(new DisplayParcel(new String[] { ">>> Tap Now <<<",
 				"Amount " + new DecimalFormat("$###0.00").format(amount) },
@@ -132,53 +122,56 @@ public class PushCoinService extends Service {
 	private void query(QueryParams params) {
 		log.d("query");
 
-		// Allow reentrant
-		this.queryParams = params;
-
 		try {
 			PcosServer server = new PcosServer();
 			if (Preferences.isDemoMode(this, false)) {
 				OutputDocument doc = createQuerySuccessResult();
-				server.stageAsync(doc, new QueryResponseListener(server));
+				server.stageAsync(params, doc,
+						new QueryResponseListener(server));
 			} else {
 				onError(params, "Query not supported in Production");
 			}
 
 		} catch (Exception ex) {
 			log.e("exception when submitting payment", ex);
-			onQueryError(ex.getMessage());
+			onError(params, ex.getMessage());
 		}
 	}
 
 	private void charge(ChargeParams params) {
 		log.d("charge");
 
-		if (this.chargeParams != null) {
-			onError(params, "In use");
-			return;
-		}
-		this.chargeParams = params;
 		try {
 			PcosServer server = new PcosServer();
 			if (Preferences.isDemoMode(this, false)) {
 				OutputDocument doc = createPaymentSuccessResult();
-				server.stageAsync(doc, new PaymentResponseListener(server));
+				server.stageAsync(params, doc, new PaymentResponseListener(
+						server, false));
 			} else {
 				onError(params, "Charge not supported in Production");
 			}
 
 		} catch (Exception ex) {
 			log.e("exception when submitting payment", ex);
-			onQueryError(ex.getMessage());
+			onError(params, ex.getMessage());
 		}
 	}
 
 	private void idle() {
 		log.d("idle");
-		this.chargeParams = null;
-		this.queryParams = null;
+
+		if (this.pollParams != null)
+			onCancelled(this.pollParams);
+
+		this.pollParams = null;
 		display(new DisplayParcel("PUSHCOIN", TextAlignment.CENTER));
 		stop();
+	}
+
+	private void onPollError(String reason) {
+		PollParams params = this.pollParams;
+		onPollCompleted();
+		onError(params, reason);
 	}
 
 	private void onError(CallbackParams params, String reason) {
@@ -186,6 +179,7 @@ public class PushCoinService extends Service {
 		if (params != null) {
 			Error error = new Error();
 			error.setReason(reason);
+			error.setClientRequestId(params.getClientRequestId());
 
 			Messenger messenger = params.getMessenger();
 			if (messenger != null) {
@@ -201,8 +195,29 @@ public class PushCoinService extends Service {
 			}
 		}
 
-		Toast.makeText(PushCoinService.this, reason, Toast.LENGTH_LONG).show();
+		log.e(reason);
 		display(new DisplayParcel(reason));
+	}
+
+	private void onCancelled(CallbackParams params) {
+		if (params != null) {
+			log.e("cancelled");
+			Cancelled cancelled = new Cancelled();
+			cancelled.setClientRequestId(params.getClientRequestId());
+
+			Messenger messenger = params.getMessenger();
+			if (messenger != null) {
+				Message m = Message.obtain();
+				m.what = Messages.MSGID_CANCELLED;
+				m.setData(cancelled.getBundle());
+
+				try {
+					messenger.send(m);
+				} catch (Exception ex) {
+					log.e("messenger", ex);
+				}
+			}
+		}
 	}
 
 	// Received device blob
@@ -210,51 +225,58 @@ public class PushCoinService extends Service {
 		display(new DisplayParcel("Submitting..."));
 		log.i("submitting payment");
 
-		if (chargeParams == null) {
-			log.e("Charge params lost");
+		if (this.pollParams == null) {
+			onPollError("Poll params lost");
 			return;
 		}
+		PollParams params = this.pollParams;
+
+		// From here, we have a definite params obj.
+		onPollCompleted();
 
 		try {
 			PcosServer server = new PcosServer();
 			if (Preferences.isDemoMode(this, false)) {
 				OutputDocument doc = createPaymentSuccessResult();
-				server.stageAsync(doc, new PaymentResponseListener(server));
+				server.stageAsync(params, doc, new PaymentResponseListener(
+						server, true));
 			} else {
 				String url = PcosServer.getDefaultUrl();
-				OutputDocument doc = createPaymentRequest(chargeParams, pta);
-				server.postAsync(url, doc, new PaymentResponseListener(server));
+				OutputDocument doc = createPaymentRequest(params, pta);
+				server.postAsync(params, url, doc, new PaymentResponseListener(
+						server, true));
 			}
 
 		} catch (Exception ex) {
 			log.e("exception when submitting payment", ex);
-			onPaymentError(ex.getMessage());
+			onPaymentError(params, ex.getMessage());
 		}
 	}
 
-	private void onQueryError(String reason) {
-		onError(this.queryParams, reason);
+	private void onQueryError(QueryParams params, String reason) {
+		onError(params, reason);
 	}
 
-	private void onQuerySuccess() {
+	private void onQuerySuccess(QueryParams params) {
 		if (!Preferences.isDemoMode(this, false)) {
 			log.e("Query not supported in production");
 			return;
 		}
 
-		if (queryParams == null) {
+		if (params == null) {
 			log.e("Query params lost");
 			return;
 		}
 
-		Messenger messenger = queryParams.getMessenger();
+		Messenger messenger = params.getMessenger();
 		if (messenger == null) {
 			log.e("invalid query params");
 			return;
 		}
 
-		QueryResult res = QueryResultBuilder.makeResult(this,
-				queryParams.getQuery());
+		QueryResult res = QueryResultBuilder
+				.makeResult(this, params.getQuery());
+		res.setClientRequestId(params.getClientRequestId());
 		log.d("Query received customers: " + res.getCustomers().size());
 
 		Message m = Message.obtain();
@@ -268,28 +290,30 @@ public class PushCoinService extends Service {
 		}
 	}
 
-	private void onPaymentError(String reason) {
-		onError(this.chargeParams, reason);
+	private void onPaymentError(ChargeParams params, String reason) {
+		onError(params, reason);
 	}
 
-	private void onPaymentSuccess(byte[] refData, String trxId,
-			boolean isAmountExact, PcosAmount balance, Date utc) {
-		Toast.makeText(PushCoinService.this, "Thank You", Toast.LENGTH_LONG)
-				.show();
-		display(new DisplayParcel("Thank You", TextAlignment.CENTER));
+	private void onPaymentSuccess(ChargeParams params, byte[] refData,
+			String trxId, boolean isAmountExact, PcosAmount balance, Date utc,
+			boolean thankyou) {
 
-		if (chargeParams == null) {
-			log.e("Charge params lost");
+		if (thankyou)
+			display(new DisplayParcel("Thank You", TextAlignment.CENTER));
+
+		if (params == null) {
+			onError(params, "Poll params lost");
 			return;
 		}
 
-		Messenger messenger = chargeParams.getMessenger();
+		Messenger messenger = params.getMessenger();
 		if (messenger == null) {
-			log.e("invalid charge params");
+			onError(params, "Invalid poll params");
 			return;
 		}
 
 		ChargeResult res = new ChargeResult();
+		res.setClientRequestId(params.getClientRequestId());
 		res.setRefData(refData);
 		res.setTrxId(trxId);
 		res.setIsAmountExact(isAmountExact);
@@ -437,32 +461,35 @@ public class PushCoinService extends Service {
 		public void onErrorResponse(Object tag, byte[] trxId, long ec,
 				String reason) {
 			log.e("server returned error: " + reason);
-			onQueryError(reason);
+			onQueryError((QueryParams) tag, reason);
 		}
 
 		@Override
 		public void onResponse(Object tag, InputDocument doc) {
-			onQuerySuccess();
+			onQuerySuccess((QueryParams) tag);
 		}
 
 		@Override
 		public void onError(Object tag, Exception ex) {
 			log.e("query req exception", ex);
-			onQueryError("Error: " + ex.getMessage());
+			onQueryError((QueryParams) tag, "Error: " + ex.getMessage());
 		}
 	}
 
 	public class PaymentResponseListener extends
 			PcosServer.PcosResponseListener {
-		PaymentResponseListener(PcosServer server) {
+		private boolean thankyou = false;
+
+		PaymentResponseListener(PcosServer server, boolean thankyou) {
 			server.super();
+			this.thankyou = thankyou;
 		}
 
 		@Override
 		public void onErrorResponse(Object tag, byte[] trxId, long ec,
 				String reason) {
 			log.e("server returned error: " + reason);
-			onPaymentError(reason);
+			onPaymentError((PollParams) tag, reason);
 		}
 
 		@Override
@@ -481,27 +508,27 @@ public class PushCoinService extends Service {
 						PcosAmount balance = new PcosAmount(bo);
 						Date utc = new Date(bo.readUlong());
 
-						onPaymentSuccess(refData, trxId, isAmountExact,
-								balance, utc);
+						onPaymentSuccess((ChargeParams) tag, refData, trxId,
+								isAmountExact, balance, utc, thankyou);
 						return;
 					} else {
 						log.e("unexpected message received: "
 								+ doc.getDocumentName());
-						onPaymentError("Internal Error");
+						onPaymentError((ChargeParams) tag, "Internal Error");
 						return;
 					}
 				} catch (Exception ex) {
-					onPaymentError(ex.getMessage());
+					onPaymentError((ChargeParams) tag, ex.getMessage());
 					return;
 				}
 			}
-			onPaymentError("PushCoin not ready");
+			onPaymentError((ChargeParams) tag, "PushCoin not ready");
 		}
 
 		@Override
 		public void onError(Object tag, Exception ex) {
 			log.e("payment req exception", ex);
-			onPaymentError("Error: " + ex.getMessage());
+			onPaymentError((ChargeParams) tag, "Error: " + ex.getMessage());
 		}
 	}
 
@@ -512,7 +539,7 @@ public class PushCoinService extends Service {
 				onPaymentReady((byte[]) message.obj);
 				break;
 			case PaymentService.MSGID_ERROR:
-				onPaymentError(((Exception) message.obj).getMessage());
+				onPollError(((Exception) message.obj).getMessage());
 			}
 		};
 	};
@@ -524,7 +551,6 @@ public class PushCoinService extends Service {
 		intent.setAction(PaymentService.ACTION_START);
 
 		Bundle bundle = new Bundle();
-		bundle.putString(PaymentService.KEY_AMOUNT, Double.toString(amount));
 		bundle.putParcelable(PaymentService.KEY_MESSENGER, messenger);
 
 		intent.putExtras(bundle);
@@ -549,4 +575,14 @@ public class PushCoinService extends Service {
 		startService(intent);
 	}
 
+	private void onNewPollRequest(PollParams params) {
+		if (this.pollParams != null)
+			onCancelled(this.pollParams);
+
+		this.pollParams = params;
+	}
+
+	private void onPollCompleted() {
+		this.pollParams = null;
+	}
 }

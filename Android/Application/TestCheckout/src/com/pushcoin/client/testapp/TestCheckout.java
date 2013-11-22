@@ -1,18 +1,23 @@
 package com.pushcoin.client.testapp;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pushcoin.lib.integrator.IntentIntegrator;
 import com.pushcoin.ifce.connect.data.Amount;
+import com.pushcoin.ifce.connect.data.Cancelled;
+import com.pushcoin.ifce.connect.data.ChargeParams;
 import com.pushcoin.ifce.connect.data.ChargeResult;
 import com.pushcoin.ifce.connect.data.Customer;
 import com.pushcoin.ifce.connect.data.Error;
@@ -27,11 +32,13 @@ public class TestCheckout extends Activity implements PollResultListener {
 	private static Logger log = Logger.getLogger(TestCheckout.class);
 
 	private IntentIntegrator integrator;
-	private Button btnStart;
+	private Button btnPoll;
+	private Button btnIdle;
+	private Button btnCharge;
 	private Button btnQuery;
-
-	private OnClickListener startCharge;
-	private OnClickListener stopCharge;
+	private Button btnClear;
+	private TextView tvLog;
+	private int nextClientId = 0;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -40,49 +47,76 @@ public class TestCheckout extends Activity implements PollResultListener {
 		setContentView(R.layout.main);
 		this.integrator = new IntentIntegrator(this);
 
-		this.btnStart = (Button) this.findViewById(R.id.btnStart);
+		this.btnPoll = (Button) this.findViewById(R.id.btnPoll);
+		this.btnIdle = (Button) this.findViewById(R.id.btnIdle);
+		this.btnCharge = (Button) this.findViewById(R.id.btnCharge);
 		this.btnQuery = (Button) this.findViewById(R.id.btnQuery);
+		this.btnClear = (Button) this.findViewById(R.id.btnClear);
+		this.tvLog = (TextView) this.findViewById(R.id.tvLog);
+		this.tvLog.setMovementMethod(new ScrollingMovementMethod());
 
-		this.startCharge = new OnClickListener() {
+		this.btnPoll.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				btnStart.setText("Stop Charge");
-				PollParams params = new PollParams();
 				Amount amount = new Amount(29, -1);
+
+				PollParams params = new PollParams();
+				params.setClientRequestId(Integer.toString((++nextClientId)));
 				params.setPayment(amount);
 
-				btnStart.setOnClickListener(stopCharge);
+				log("Polling Requested: " + nextClientId);
 				integrator.poll(params, TestCheckout.this);
 			}
-		};
-
-		this.stopCharge = new OnClickListener() {
+		});
+		this.btnCharge.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				completeCharge();
-			}
-		};
+				Amount amount = new Amount(29, -1);
 
-		this.btnStart.setOnClickListener(startCharge);
+				ChargeParams params = new ChargeParams();
+				params.setClientRequestId(Integer.toString((++nextClientId)));
+				params.setPayment(amount);
+
+				log("Charge Requested: " + nextClientId);
+				integrator.charge(params, TestCheckout.this);
+			}
+		});
+		this.btnIdle.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				log("Idle Requested");
+				integrator.idle();
+			}
+		});
 		this.btnQuery.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				btnQuery.setText("Querying");
 				QueryParams params = new QueryParams();
+				params.setClientRequestId(Integer.toString((++nextClientId)));
 				params.setQuery("Test");
+
+				log("Query Requested: " + nextClientId);
 				integrator.query(params, TestCheckout.this);
 			}
 		});
+		this.btnClear.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				tvLog.setText("");
+			}
+		});
+
 	}
 
-	private void completeCharge() {
-		btnStart.setText("Start Charge");
-		btnStart.setOnClickListener(startCharge);
-		integrator.idle();
-	}
-
-	private void completeQuery() {
-		btnQuery.setText("Start Query");
+	private void log(String text) {
+		tvLog.append("" + new Date().getTime() + ": " + text + "\n");
+		final int scrollAmount = tvLog.getLayout().getLineTop(
+				tvLog.getLineCount())
+				- tvLog.getHeight();
+		if (scrollAmount > 0)
+			tvLog.scrollTo(0, scrollAmount);
+		else
+			tvLog.scrollTo(0, 0);
 	}
 
 	@Override
@@ -115,24 +149,23 @@ public class TestCheckout extends Activity implements PollResultListener {
 	@Override
 	public void onResult(QueryResult result) {
 		ArrayList<Customer> customers = result.getCustomers();
-		Toast.makeText(this, "Query Results: " + customers.size(),
-				Toast.LENGTH_LONG).show();
-		completeQuery();
+		log("[" + result.getClientRequestId() + "] Query Results: "
+				+ customers.size());
 	}
 
 	@Override
 	public void onResult(Error err) {
-		Toast.makeText(this, "Error: " + err.getReason(), Toast.LENGTH_LONG)
-				.show();
-		completeCharge();
-		completeQuery();
+		log("[" + err.getClientRequestId() + "] Error: " + err.getReason());
 	}
 
 	@Override
 	public void onResult(ChargeResult result) {
-		Toast.makeText(this, "Charge Result Received: " + result.getTrxId(),
-				Toast.LENGTH_LONG).show();
-		completeCharge();
+		log("[" + result.getClientRequestId() + "] Charge Result Received: "
+				+ result.getTrxId());
 	}
 
+	@Override
+	public void onResult(Cancelled cancelled) {
+		log("[" + cancelled.getClientRequestId() + "] Cancelled");
+	}
 }

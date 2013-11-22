@@ -2,7 +2,6 @@ package com.pushcoin.srv.gateway.services;
 
 import java.util.Date;
 
-import com.pushcoin.lib.core.data.Challenge;
 import com.pushcoin.lib.core.data.DemoChallenge;
 import com.pushcoin.lib.core.data.DisplayParcel;
 import com.pushcoin.lib.core.data.IChallenge;
@@ -28,15 +27,14 @@ public class PaymentService extends Service implements PaymentListener {
 	public static final String ACTION_START = "com.pushcoin.srv.gateway.services.PaymentService.START";
 	public static final String ACTION_STOP = "com.pushcoin.srv.gateway.services.PaymentService.STOP";
 	public static final String ACTION_DISPLAY = "com.pushcoin.srv.gateway.services.PaymentService.DISPLAY";
-	public static final String KEY_AMOUNT = "Amount";
 	public static final String KEY_DISPLAYPARCEL = "DisplayParcel";
 	public static final String KEY_MESSENGER = "Messenger";
+	public static final String KEY_REQUEST_ID = "RequestId";
 
 	public static final int MSGID_COMPLETE = 1;
 	public static final int MSGID_ERROR = -1;
 
 	private DeviceManager deviceManager;
-	private String amount;
 	private Messenger messenger;
 	private int startId = -1;
 
@@ -102,7 +100,6 @@ public class PaymentService extends Service implements PaymentListener {
 		} else {
 			try {
 				this.messenger = (Messenger) bundle.get(KEY_MESSENGER);
-				this.amount = bundle.getString(KEY_AMOUNT);
 				this.deviceManager.enable(this);
 			} catch (Exception ex) {
 				log.e("start", ex);
@@ -157,7 +154,7 @@ public class PaymentService extends Service implements PaymentListener {
 
 			msg.what = MSGID_COMPLETE;
 			msg.obj = tech.getMessage(getChallenge());
-
+			
 			tech.close();
 
 		} catch (Exception e) {
