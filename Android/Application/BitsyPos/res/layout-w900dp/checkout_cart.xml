@@ -112,9 +112,9 @@
 			android:layout_alignParentRight="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="28sp"
+			android:textSize="38sp"
 			android:paddingRight="6dp"
-			android:textColor="@color/android_holo_red_bright"
+			android:textColor="@color/android_holo_yellow_bright"
 			geekui:customTypeface="fonts/TT0467M.ttf" />
 
 		<!-- Due Amount Label -->

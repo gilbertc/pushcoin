@@ -74,7 +74,7 @@
 		android:layout_toRightOf="@id/customer_details_mugshot"
 		android:textSize="38sp"
 		android:paddingRight="10dp"
-		android:textColor="@color/android_holo_yellow_bright"
+		android:textColor="@color/android_holo_blue_bright"
 		geekui:customTypeface="fonts/TT0467M.ttf" />
 
 	<!-- Charge Button -->
