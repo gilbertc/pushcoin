@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.pushcoin.ifce.connect.data.CallbackParams;
+import com.pushcoin.ifce.connect.data.Cancelled;
 import com.pushcoin.ifce.connect.data.ChargeParams;
 import com.pushcoin.ifce.connect.data.ChargeResult;
 import com.pushcoin.ifce.connect.data.PollParams;
@@ -181,6 +182,10 @@ public class IntentIntegrator {
 					break;
 				case Messages.MSGID_ERROR:
 					listener.onResult(new Error(message.getData()));
+					break;
+				case Messages.MSGID_CANCELLED:
+					listener.onResult(new Cancelled(message.getData()));
+					break;
 				}
 			};
 		};

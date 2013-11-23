@@ -2,26 +2,19 @@ package com.pushcoin.ifce.connect.data;
 
 import android.os.Bundle;
 
-public class ChargeResult implements Bundlable {
+public class ChargeResult extends CallbackResult {
 	public static final String KEY_REFDATA = "REFDATA";
 	public static final String KEY_TRXID = "TRXID";
 	public static final String KEY_ISAMOUNTEXACT = "ISAMOUNTEXACT";
 	public static final String KEY_BALANCE = "BALANCE";
 	public static final String KEY_UTC = "UTC";
 
-	private Bundle bundle;
-
 	public ChargeResult() {
 		this(new Bundle());
 	}
 
 	public ChargeResult(Bundle bundle) {
-		this.bundle = bundle;
-		this.bundle.setClassLoader(Thread.currentThread().getContextClassLoader());
-	}
-
-	public Bundle getBundle() {
-		return bundle;
+		super(bundle);
 	}
 
 	public byte[] getRefData() {
@@ -31,7 +24,7 @@ public class ChargeResult implements Bundlable {
 	public void setRefData(byte[] value) {
 		bundle.putByteArray(KEY_REFDATA, value);
 	}
-	
+
 	public String getTrxId() {
 		return bundle.getString(KEY_TRXID);
 	}

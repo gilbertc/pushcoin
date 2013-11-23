@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
+    android:orientation="vertical" >
 
     <Button
-        android:id="@+id/btnStart"
+        android:id="@+id/btnPoll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start Charge" />
-    
+        android:text="Poll" />
+
+    <Button
+        android:id="@+id/btnIdle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Idle" />
+
+    <Button
+        android:id="@+id/btnCharge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Charge" />
+
     <Button
         android:id="@+id/btnQuery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start Query" />
-    
+        android:text="Query" />
+
+    <TextView
+        android:id="@+id/tvLog"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:maxLines="10000"
+        android:scrollbars="vertical" />
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clear" />
 
 </LinearLayout>
-
