@@ -104,7 +104,8 @@ public class Cart
 		synchronized (lock_) {
 			items_.add(item);
 		}
-		notifyOnChange();
+		resetChargeAmount(null);
+		emitCartContentChanged();
 	}
 
 	void insert( Combo item, int position )
@@ -119,7 +120,8 @@ public class Cart
 				items_.add(position, item);
 			}
 		}
-		notifyOnChange();
+		resetChargeAmount(null);
+		emitCartContentChanged();
 	}
 
 	Combo remove( int position )
@@ -134,7 +136,8 @@ public class Cart
 		if (item != null) 
 		{
 			Log.v(Conf.TAG, "cart-remove-item="+item.getName()+";at-pos="+position);
-			notifyOnChange();
+			resetChargeAmount(null);
+			emitCartContentChanged();
 		}
 		return item;
 	}
@@ -152,7 +155,8 @@ public class Cart
 
 			items_.add(position, item);
 		}
-		notifyOnChange();
+		resetChargeAmount(null);
+		emitCartContentChanged();
 	}
 
 	void clear()
@@ -164,8 +168,10 @@ public class Cart
 			items_.clear();
 		}
 
-		if (effective) {
-			notifyOnChange();
+		if (effective)
+		{
+			resetChargeAmount(null);
+			emitCartContentChanged();
 		}
 	}
 
@@ -224,16 +230,16 @@ public class Cart
 
 	public void setChargeAmount(BigDecimal charge)
 	{
-		if ( charge.compareTo(amountDue()) > 0 || !(charge.compareTo(Conf.BIG_ZERO) > 0)) {
-			throw new BitsyError("Invalid charge amount");
-		}
-		notifyOnChange();
-		// notification wipes cached values, so set it after
-		chargeAmount_ = charge;
+		// fresh charge amount
+		resetChargeAmount(charge);
+
+		// time to broadcast
+		emitCartContentChanged();
 	}
 
 	public BigDecimal getChargeAmount()
 	{
+		// Charge amount comes from either total due or a value set by user
 		BigDecimal amountDue = amountDue();
 		if ( chargeAmount_ == null || chargeAmount_.compareTo(amountDue) > 0) {
 			chargeAmount_ = amountDue;
@@ -244,7 +250,8 @@ public class Cart
 	public void setDiscount(BigDecimal discount)
 	{
 		discount_ = discount;
-		notifyOnChange();
+		resetChargeAmount(null);
+		emitCartContentChanged();
 	}
 
 	public BigDecimal getDiscount() {
@@ -274,12 +281,34 @@ public class Cart
 		{
 			trx = new Transaction( chargeAmount );
 			transactions_.add( trx );
+			emitTransactionChanged();
 		}
 		return trx;
 	}
 
 	public Transaction getTransaction( int position ) {
 		return transactions_.get( position );
+	}
+
+	public Transaction findTransactionWithClientTransactionId( String key )
+	{
+		int pos = getPositionWithClientTransactionId( key );
+		return (pos < 0) ? null : getTransaction( pos );
+	}
+
+	public void cancelTransaction( String clientTransactionId )
+	{
+		int pos = getPositionWithClientTransactionId( clientTransactionId );
+		if (! (pos < 0))
+		{
+			Transaction transaction = getTransaction( pos );
+			// cannot remove already approved transaction
+			if (! transaction.isApproved() )
+			{
+				transactions_.remove( pos );
+				emitTransactionChanged();
+			}
+		}
 	}
 
 	public void updateTransaction( Transaction newTransaction )
@@ -290,17 +319,11 @@ public class Cart
 		} else {
 			transactions_.set(pos, newTransaction);
 		}
-		notifyOnChange();
+		emitTransactionChanged();
 	}
 
 	public int totalTransactions() {
 		return transactions_.size();
-	}
-
-	public Transaction findTransactionWithClientTransactionId( String key )
-	{
-		int pos = getPositionWithClientTransactionId( key );
-		return (pos < 0) ? null : getTransaction( pos );
 	}
 
 	private int getPositionWithClientTransactionId( String otherId )
@@ -313,13 +336,27 @@ public class Cart
 		return -1;
 	}
 
-	private void notifyOnChange()
+	private void resetChargeAmount( BigDecimal newCharge )
 	{
-		// clear cache
-		chargeAmount_ = null;
+		if (newCharge != null) 
+		{
+			if ( newCharge.compareTo(amountDue()) > 0 || !(newCharge.compareTo(Conf.BIG_ZERO) > 0)) {
+				throw new BitsyError("Invalid charge amount");
+			}
+		}
+		chargeAmount_ = newCharge;
+	}
 
+	private void emitCartContentChanged()
+	{
 		// broadcast cart content has changed
 		EventHub.post( MessageId.CART_CONTENT_CHANGED );
+	}
+
+	private void emitTransactionChanged()
+	{
+		// broadcast cart content has changed
+		EventHub.post( MessageId.TRANSATION_STATUS_CHANGED );
 	}
 
 	private Handler parentContext_;

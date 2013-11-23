@@ -5,6 +5,7 @@ import com.pushcoin.ifce.connect.data.Amount;
 import com.pushcoin.ifce.connect.data.ChargeResult;
 import com.pushcoin.ifce.connect.data.Customer;
 import com.pushcoin.ifce.connect.data.Error;
+import com.pushcoin.ifce.connect.data.Cancelled;
 import com.pushcoin.ifce.connect.data.PollParams;
 import com.pushcoin.ifce.connect.data.QueryResult;
 import com.pushcoin.ifce.connect.listeners.PollResultListener;
@@ -97,10 +98,11 @@ public class CheckoutActivity
 		{
 			PollParams params = new PollParams();
 			BigDecimal chargeAmount = charge.getAmount();
+			params.setClientRequestId( charge.getClientTransactionId() );
 			params.setPayment(
 				new Amount(chargeAmount.unscaledValue().longValue(), -chargeAmount.scale()));
 			integrator.poll(params, this);
-			Toast.makeText(this, "Waiting for $"+chargeAmount, Toast.LENGTH_LONG).show();
+			Log.v( Conf.TAG, "pending-charge|id=" + charge.getClientTransactionId() + ";amt=" + chargeAmount);
 		} 
 		else {
 			integrator.idle();
@@ -125,20 +127,37 @@ public class CheckoutActivity
   public void onResult(ChargeResult result)
 	{
 		Cart cart = CartManager.getInstance().getActiveCart();
-		// FIXME: look up transaction by client-transaction-id
-		Transaction transaction = cart.getTransaction(0);
-		cart.updateTransaction( transaction.approved(result.getTrxId(), result.getUtc()) );
+		Transaction transaction = cart.findTransactionWithClientTransactionId( result.getClientRequestId() );
+		if (transaction != null)
+		{
+			cart.updateTransaction( transaction.approved(result.getTrxId(), result.getUtc()) );
+			// at this point, the old charge amount likely does not
+			// reflect what the user wants to do next -- reset it
+			cart.setChargeAmount(null);
+			Log.v( Conf.TAG, "approved-charge|id=" + result.getClientRequestId() );
+		} else { 
+			Log.e( Conf.TAG, "result-for-unknown-transaction|id=" + result.getClientRequestId());
+		}
   }
 
 	/**
 		Error polling on device.
 	*/
   @Override
-  public void onResult(Error err)
-	{
-		Toast.makeText(this, "Error: " + err.getReason(), Toast.LENGTH_LONG)
-			.show();
+  public void onResult(Error err) {
+		Log.e( Conf.TAG, "error-charge|why=" + err.getReason() );
   }
+
+	/**
+		Previous request got canceled.
+	*/
+	@Override
+	public void onResult(Cancelled canceled)
+	{
+		Log.v( Conf.TAG, "canceled-charge|id=" + canceled.getClientRequestId() );
+		Cart cart = CartManager.getInstance().getActiveCart();
+		cart.cancelTransaction( canceled.getClientRequestId() );
+	}
 
 	/**
 		Static handler keeps lint happy about (temporary?) memory leaks if queued 

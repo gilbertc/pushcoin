@@ -47,7 +47,7 @@ public class CheckoutCartFragment extends Fragment
 		EventHub.getInstance().register( handler_, "CheckoutCartFragment" );
 
 		// Restore cart contents
-		onCartContentChanged();
+		onCartContentChanged( CartManager.getInstance().getActive() );
 	}
 
 	@Override
@@ -241,20 +241,23 @@ public class CheckoutCartFragment extends Fragment
 		manager.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
 	}
 
-	private void onCartContentChanged()
+	private void onCartContentChanged( CartManager.Entry cartHolder )
 	{
-		CartManager.Entry cartHolder = CartManager.getInstance().getActive();
+		// Update totals, amount dues	
+		onTransactionStatusChanged( cartHolder );
+		// reset cart name, hide soft keyboard
+		tabName_.setText( cartHolder.name );
+		adapter_.refreshView();
+	}
 
+	private void onTransactionStatusChanged( CartManager.Entry cartHolder )
+	{
 		// Update displayed values
 		cartTotal_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.totalValue() ) );
 		chargeAmount_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.getChargeAmount() ) );
 		amountDue_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.amountDue() ) );
 		discountValue_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.getDiscount() ) );
 		discountPct_.setText( NumberFormat.getPercentInstance().format( cartHolder.cart.getDiscountPct() ) );
-
-		// reset cart name, hide soft keyboard
-		tabName_.setText( cartHolder.name );
-		adapter_.refreshView();
 	}
 
 	private CartEntryArrayAdapter adapter_;
@@ -290,7 +293,11 @@ public class CheckoutCartFragment extends Fragment
 				switch( msg.what )
 				{
 					case MessageId.CART_CONTENT_CHANGED:
-						ref.onCartContentChanged();
+					ref.onCartContentChanged( CartManager.getInstance().getActive() );
+					break;
+
+					case MessageId.TRANSATION_STATUS_CHANGED:
+					ref.onTransactionStatusChanged( CartManager.getInstance().getActive() );
 					break;
 				}
 			}
