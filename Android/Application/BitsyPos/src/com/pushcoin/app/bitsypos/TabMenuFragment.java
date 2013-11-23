@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.util.Log;
 import java.util.ArrayList;
 import java.lang.ref.WeakReference;
@@ -64,12 +65,12 @@ public class TabMenuFragment extends Fragment
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 				{
 					CartManager.Entry entry = CartManager.getInstance().setActive( position );
-					((SlidingActivity)getActivity()).getSlidingMenu().toggle();
+					((SlidingActivity)getActivity()).getSlidingMenu().showContent();
 				}
 			});
 
 		// Hook up the listener for the new-tab button
-		Button newTabBtn = (Button) layout.findViewById( R.id.tab_menu_new_tab_button );
+		TextView newTabBtn = (TextView) layout.findViewById( R.id.tab_menu_new_tab_button );
 		newTabBtn.setOnClickListener(new View.OnClickListener()
 			{
 				public void onClick(View v)

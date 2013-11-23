@@ -14,7 +14,7 @@
 		android:id="@+id/tab_menu_label"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:textColor="@color/lightui_darkestgray"
+		android:textColor="@color/lightui_darkgray"
 		android:textSize="32sp"
 		geekui:customTypeface="fonts/TT0467M.ttf" />
 

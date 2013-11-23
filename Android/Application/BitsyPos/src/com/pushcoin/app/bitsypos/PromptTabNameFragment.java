@@ -1,5 +1,6 @@
 package com.pushcoin.app.bitsypos;
 
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class PromptTabNameFragment extends DialogFragment
 				{
 					String newTabName = tabName.getText().toString().trim();
 					CartManager.getInstance().create( newTabName, true );
+					((SlidingActivity)getActivity()).getSlidingMenu().showContent();
 					dismiss();
 				}
 			});

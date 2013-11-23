@@ -15,23 +15,23 @@
 		android:background="@android:color/white"
 		android:headerDividersEnabled="false"
 		android:footerDividersEnabled="true"
-		android:divider="@color/lightui_darkestgray"
+		android:divider="@color/lightui_mediumgray"
 		android:dividerHeight="1dp"
 		android:fadeScrollbars="true" />
 
-	<Button android:text="@string/new_tab"
+	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/tab_menu_new_tab_button" 
+		android:gravity="center"
+		android:text="@string/new_tab"
+		android:background="@color/lightui_lightgray"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="@drawable/btn_black"
-		android:textColor="@android:color/white"
-		android:textSize="22sp"
-		android:textStyle="bold"
-		android:shadowColor="@android:color/black"
-		android:shadowDx="1"
-		android:shadowDy="1"
-		android:shadowRadius="2"
-		android:paddingTop="12dp"
-		android:paddingBottom="12dp"/>
+		android:onClick="onClick"
+		android:clickable="true"
+		android:textColor="@color/lightui_darkestgray"
+		android:textSize="32sp"
+		android:paddingTop="16dp"
+		android:paddingBottom="16dp"
+		geekui:customTypeface="fonts/TT0467M.ttf" />
 		
 </LinearLayout>
