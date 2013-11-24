@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/customer_search_layout_root" 
 	android:orientation="vertical"
 	android:focusable="true" 
@@ -7,34 +8,17 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
-	<!-- Search Bar -->
-	<LinearLayout
-		android:layout_width="fill_parent"
+	<com.pushcoin.app.bitsypos.TypefaceEditText
+		android:id="@+id/customer_search_button"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="@drawable/roundborder"
-		android:gravity="center"
-		android:orientation="horizontal" >
-
-		<EditText
-			android:id="@+id/customer_search_button"
-			android:layout_weight="1"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:imeOptions="actionSearch"
-			android:background="@drawable/noborder"
-			android:hint="@string/customer_search_hint"
-			android:padding="8dp"
-			android:textSize="24sp"
-			android:textColor="@color/lightui_darkestgray"
-			android:singleLine="true" />
-
-		<ImageView
-			android:layout_width="40dp"
-			android:layout_height="40dp"
-			android:padding="5dp"
-			android:src="@android:drawable/ic_menu_search" />
-
-	</LinearLayout>
+		android:imeOptions="actionSearch"
+		android:inputType="textNoSuggestions"
+		android:hint="@string/customer_search_hint"
+		android:padding="8dp"
+		android:textSize="28sp"
+		android:singleLine="true"
+		geekui:customTypeface="fonts/TT0467M.ttf" />
 
 	<ListView
 		android:id="@+id/customer_search_list"

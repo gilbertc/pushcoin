@@ -57,19 +57,24 @@ public class CustomerDetailsFragment extends Fragment
 	
 	private void onCustomerDetailsAvailable( Customer user )
 	{
-		firstName_.setText( user.firstName );
-		lastName_.setText( user.lastName );
-		title_.setText( user.title );
-		identifier_.setText( user.identifier );
-		if (user.balance != null) {
-			balance_.setText(  NumberFormat.getCurrencyInstance().format( user.balance.asDecimal() ) );
-			balance_.setVisibility(View.VISIBLE);
+		if (user != null)
+		{
+			firstName_.setText( user.firstName );
+			lastName_.setText( user.lastName );
+			title_.setText( user.title );
+			identifier_.setText( user.identifier );
+			if (user.balance != null) {
+				balance_.setText(  NumberFormat.getCurrencyInstance().format( user.balance.asDecimal() ) );
+				balance_.setVisibility(View.VISIBLE);
+			} else {
+				balance_.setVisibility(View.INVISIBLE);
+			}
+			if (user.mugshot != null)
+				mugshot_.setImageBitmap( user.mugshot );
+			rootView_.setVisibility(View.VISIBLE);
 		} else {
-			balance_.setVisibility(View.INVISIBLE);
+			rootView_.setVisibility(View.GONE);
 		}
-		if (user.mugshot != null)
-			mugshot_.setImageBitmap( user.mugshot );
-		rootView_.setVisibility(View.VISIBLE);
 	}
 	
 	private void onQueryUsersReply( Message msg )
@@ -77,6 +82,8 @@ public class CustomerDetailsFragment extends Fragment
 		List<Customer> customers = (List<Customer>) msg.obj;
 		if (customers.size() == 1) {
 			onCustomerDetailsAvailable( customers.get(0) ); 
+		} else {
+			onCustomerDetailsAvailable( null ); 
 		}
 	}
 
