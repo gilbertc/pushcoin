@@ -51,15 +51,6 @@ public class CheckoutActivity
 		setContentView(R.layout.checkout_layout);
 	}
 
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-		// Let PushCoin service know we are back
-		Log.v( Conf.TAG, "bootstrapping integrator" );
-		AppDb.getInstance().getIntegrator().bootstrap();
-	}
-
 	/** Called when the activity resumes. */
 	@Override
 	public void onResume()

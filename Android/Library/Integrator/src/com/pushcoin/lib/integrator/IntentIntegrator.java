@@ -25,6 +25,7 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -41,20 +42,20 @@ public class IntentIntegrator {
 	public static final String PUSHCOIN_GATEWAY_PACKAGE_NAME = "com.pushcoin.srv.gateway";
 	public static final Collection<String> TARGET_ALL_KNOWN = list(PUSHCOIN_GATEWAY_PACKAGE_NAME);
 
-	private final Activity activity;
+	private final Context context;
 	private String title;
 	private String message;
 	private String buttonYes;
 	private String buttonNo;
 	private Collection<String> targetApplications;
 
-	public IntentIntegrator(Activity activity) {
-		this.activity = activity;
-		this.title = activity.getString(R.string.default_install_service_title);
-		this.message = activity
+	public IntentIntegrator(Context context) {
+		this.context = context.getApplicationContext();
+		this.title = context.getString(R.string.default_install_service_title);
+		this.message = context
 				.getString(R.string.default_install_service_prompt);
-		this.buttonYes = activity.getString(R.string.default_yes);
-		this.buttonNo = activity.getString(R.string.default_no);
+		this.buttonYes = context.getString(R.string.default_yes);
+		this.buttonNo = context.getString(R.string.default_no);
 		this.targetApplications = TARGET_ALL_KNOWN;
 	}
 
@@ -67,7 +68,7 @@ public class IntentIntegrator {
 	}
 
 	public void setTitleByID(int titleID) {
-		title = activity.getString(titleID);
+		title = context.getString(titleID);
 	}
 
 	public String getMessage() {
@@ -79,7 +80,7 @@ public class IntentIntegrator {
 	}
 
 	public void setMessageByID(int messageID) {
-		message = activity.getString(messageID);
+		message = context.getString(messageID);
 	}
 
 	public String getButtonYes() {
@@ -91,7 +92,7 @@ public class IntentIntegrator {
 	}
 
 	public void setButtonYesByID(int buttonYesID) {
-		buttonYes = activity.getString(buttonYesID);
+		buttonYes = context.getString(buttonYesID);
 	}
 
 	public String getButtonNo() {
@@ -103,7 +104,7 @@ public class IntentIntegrator {
 	}
 
 	public void setButtonNoByID(int buttonNoID) {
-		buttonNo = activity.getString(buttonNoID);
+		buttonNo = context.getString(buttonNoID);
 	}
 
 	public Collection<String> getTargetApplications() {
@@ -118,7 +119,7 @@ public class IntentIntegrator {
 		this.targetApplications = Collections.singleton(targetApplication);
 	}
 
-	public AlertDialog invokeActivity(String action, Parcelable p) {
+	public AlertDialog invokeActivity(Activity activity, String action, Parcelable p) {
 		Intent intent = new Intent(PUSHCOIN_GATEWAY_PACKAGE_NAME + action);
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
 		if (p != null)
@@ -126,17 +127,17 @@ public class IntentIntegrator {
 
 		String targetAppPackage = findTargetAppPackage(intent);
 		if (targetAppPackage == null) {
-			return showDownloadDialog();
+			return showDownloadDialog(activity);
 		}
 		intent.setPackage(targetAppPackage);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQUEST_CODE);
+		startActivityForResult(activity, intent, REQUEST_CODE);
 		return null;
 	}
 
-	public AlertDialog bootstrap() {
-		return invokeActivity(Actions.ACTION_BOOTSTRAP, null);
+	public AlertDialog bootstrap(Activity activity) {
+		return invokeActivity(activity, Actions.ACTION_BOOTSTRAP, null);
 	}
 
 	public boolean query(QueryParams params, final QueryResultListener listener) {
@@ -210,20 +211,20 @@ public class IntentIntegrator {
 			intent.putExtras(params.getBundle());
 		}
 
-		this.activity.startService(intent);
+		this.context.startService(intent);
 		return true;
 	}
 
-	public AlertDialog settings() {
-		return invokeActivity(Actions.ACTION_SETTINGS, null);
+	public AlertDialog settings(Activity activity) {
+		return invokeActivity(activity, Actions.ACTION_SETTINGS, null);
 	}
 
-	protected void startActivityForResult(Intent intent, int requestCode) {
+	protected void startActivityForResult(Activity activity, Intent intent, int requestCode) {
 		activity.startActivityForResult(intent, requestCode);
 	}
 
 	private String findTargetAppPackage(Intent intent) {
-		PackageManager pm = activity.getPackageManager();
+		PackageManager pm = context.getPackageManager();
 		List<ResolveInfo> availableApps = pm.queryIntentActivities(intent,
 				PackageManager.MATCH_DEFAULT_ONLY);
 		if (availableApps != null) {
@@ -237,7 +238,7 @@ public class IntentIntegrator {
 		return null;
 	}
 
-	private AlertDialog showDownloadDialog() {
+	private AlertDialog showDownloadDialog(final Activity activity) {
 		AlertDialog.Builder downloadDialog = new AlertDialog.Builder(activity);
 		downloadDialog.setTitle(title);
 		downloadDialog.setMessage(message);

@@ -187,10 +187,10 @@ public class AppDb extends SQLiteAssetHelper
 		return integrator_;
 	}
 
-	public static AppDb newInstance(Context ctx, IntentIntegrator integrator) 
+	public static AppDb newInstance(Context ctx) 
 	{
 		if (inst_ == null) {
-			inst_ = new AppDb(ctx.getApplicationContext(), integrator);
+			inst_ = new AppDb(ctx.getApplicationContext(), new IntentIntegrator(ctx) );
 		}
 		return inst_;
 	}

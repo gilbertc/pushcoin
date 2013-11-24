@@ -39,7 +39,7 @@ public class BrowseCatalogActivity
 		handler_ = new IncomingHandler( this );
 
 		// Bootstrap database before creating fragments
-		AppDb.newInstance( this, new IntentIntegrator(this) );
+		AppDb.newInstance( this );
 
 		// Session manager
 		carts_ = CartManager.newInstance( this );
@@ -61,6 +61,15 @@ public class BrowseCatalogActivity
 		// Don't let device go to sleep.
 		// TODO: Let user change this behavior in Settings
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		// Let PushCoin service know we are back
+		Log.v( Conf.TAG, "bootstrapping integrator" );
+		AppDb.getInstance().getIntegrator().bootstrap(this);
 	}
 
 	/** Called when the activity resumes. */

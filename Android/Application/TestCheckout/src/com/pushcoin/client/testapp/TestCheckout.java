@@ -131,7 +131,7 @@ public class TestCheckout extends Activity implements PollResultListener {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_settings:
-			integrator.settings();
+			integrator.settings(this);
 			return true;
 
 		default:
@@ -143,7 +143,7 @@ public class TestCheckout extends Activity implements PollResultListener {
 	public void onStart() {
 		super.onStart();
 		log.i("Bootstrapping");
-		integrator.bootstrap();
+		integrator.bootstrap(this);
 	}
 
 	@Override

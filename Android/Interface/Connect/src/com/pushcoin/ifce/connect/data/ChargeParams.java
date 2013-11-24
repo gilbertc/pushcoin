@@ -12,6 +12,7 @@ public class ChargeParams extends CallbackParams {
 	public static final String KEY_INVOICE = "INOVICE";
 	public static final String KEY_NOTE = "NOTE";
 	public static final String KEY_GEOLOCATION = "GEOLOCATION";
+	public static final String KEY_ACCOUNT_ID = "ACCOUNT_ID";
 
 	public ChargeParams() {
 		this(new Bundle());
@@ -83,6 +84,14 @@ public class ChargeParams extends CallbackParams {
 
 	public void setNote(String value) {
 		bundle.putString(KEY_NOTE, value);
+	}
+
+	public String getAccountId() {
+		return bundle.getString(KEY_ACCOUNT_ID, "");
+	}
+
+	public void setAccountId(String value) {
+		bundle.putString(KEY_ACCOUNT_ID, value);
 	}
 
 	public GeoLocation getGeoLocation() {

@@ -1,17 +1,15 @@
 package com.pushcoin.app.bitsypos;
 
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
+import android.util.Log;
+import java.util.Locale;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 
 public class TabMenuAdapter extends BaseAdapter 
 {
@@ -19,6 +17,12 @@ public class TabMenuAdapter extends BaseAdapter
 	{
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater_ = LayoutInflater.from(context);
+
+		activeLabelColor_ = context.getResources().getColor(R.color.lightui_darkestgray);
+		activeLabelBgResource_ = R.color.lightui_lightestgray;
+
+		inactiveLabelColor_ = context.getResources().getColor(R.color.lightui_darkgray);
+		inactiveLabelBgResource_ = android.R.color.white;
 	}
 
 	// Returns number of tabs we manage
@@ -36,7 +40,7 @@ public class TabMenuAdapter extends BaseAdapter
 	 */
 	public Object getItem(int position) 
 	{
-		return position;
+		return CartManager.getInstance().get( position );
 	}
 
 	/**
@@ -45,14 +49,6 @@ public class TabMenuAdapter extends BaseAdapter
 	public long getItemId(int position) 
 	{
 		return position;
-	}
-
-	/**
-	 * Use the array index to lookup entry.
-	 */
-	public CartManager.Entry getEntry(int position) 
-	{
-		return CartManager.getInstance().get( position );
 	}
 
 	/**
@@ -75,17 +71,32 @@ public class TabMenuAdapter extends BaseAdapter
 			// we want to bind data to.
 			holder = new ViewHolder();
 			holder.label = (TextView) convertView.findViewById(R.id.tab_menu_label);
+			holder.createTime = (TextView) convertView.findViewById(R.id.tab_menu_create_time);
 			convertView.setTag(holder);
 		} 
 		else 
 		{
 			// Get the ViewHolder back to get fast access to the TextView
-			// and the ImageView.
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		// Bind the data efficiently with the holder.
-		holder.label.setText( CartManager.getInstance().get( position ).name );
+		// Bind data with the holder.
+		CartManager.Entry entry = CartManager.getInstance().get( position );
+		Log.v( Conf.TAG, "tab-entry="+ entry.name + ";is-active="+entry.active);
+		if (entry.active)
+		{
+			convertView.setBackgroundResource( activeLabelBgResource_ );
+			holder.label.setTextColor( activeLabelColor_ );
+			holder.createTime.setTextColor( activeLabelColor_ );
+		}
+		else
+		{
+			convertView.setBackgroundResource( inactiveLabelBgResource_ );
+			holder.label.setTextColor( inactiveLabelColor_ );
+			holder.createTime.setTextColor( inactiveLabelColor_ );
+		}
+		holder.label.setText( entry.name );
+		holder.createTime.setText( timeFormatter_.format( entry.tmCreate ) );
 
 		return convertView;
 	}
@@ -93,7 +104,14 @@ public class TabMenuAdapter extends BaseAdapter
 	private static class ViewHolder 
 	{
 		TextView label;
+		TextView createTime;
 	}
 
 	private LayoutInflater inflater_;
+	private int activeLabelColor_;
+	private int activeLabelBgResource_;
+	private int inactiveLabelColor_;
+	private int inactiveLabelBgResource_;
+
+	static private final SimpleDateFormat timeFormatter_ = new SimpleDateFormat("h:mm a", Locale.getDefault());
 }

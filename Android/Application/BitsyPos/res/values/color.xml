@@ -19,6 +19,7 @@
 	<color name="android_holo_yellow_bright">#ffe600</color>
 
 	<!-- Light UI -->
+	<color name="lightui_lightestgray">#eeeeee</color>
 	<color name="lightui_lightgray">#dddddd</color>
 	<color name="lightui_mediumgray">#bababa</color>
 	<color name="lightui_darkgray">#999999</color>

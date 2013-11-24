@@ -37,8 +37,11 @@ public class PromptTabNameFragment extends DialogFragment
 				public void onClick(View v)
 				{
 					String newTabName = tabName.getText().toString().trim();
-					CartManager.getInstance().create( newTabName, true );
-					((SlidingActivity)getActivity()).getSlidingMenu().showContent();
+					if (! newTabName.isEmpty() ) 
+					{
+						CartManager.getInstance().create( newTabName, true );
+						((SlidingActivity)getActivity()).getSlidingMenu().showContent();
+					}
 					dismiss();
 				}
 			});
