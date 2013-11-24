@@ -1,0 +1,9 @@
+[submodule "Android/Library/SwipeToDismissUndoList"]
+	path = Android/Library/SwipeToDismissUndoList
+	url = https://github.com/timroes/SwipeToDismissUndoList
+[submodule "Android/Library/TypefaceTextView"]
+	path = Android/Library/TypefaceTextView
+	url = https://github.com/ragunathjawahar/android-typeface-textview.git
+[submodule "Android/Library/SlidingMenu"]
+	path = Android/Library/SlidingMenu
+	url = https://github.com/jfeinstein10/SlidingMenu.git
