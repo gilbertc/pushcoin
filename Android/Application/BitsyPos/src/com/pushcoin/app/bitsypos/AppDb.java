@@ -337,9 +337,7 @@ public class AppDb extends SQLiteAssetHelper
 
 		@Override
 		public void onCancel(DialogInterface dialog)
-		{
-			AppDb.getInstance().getIntegrator().idle();
-		}
+		{ }
 
 		@Override
 		public void onResult(QueryResult result)
@@ -360,7 +358,7 @@ public class AppDb extends SQLiteAssetHelper
 		private void finish()
 		{
 			if (progress_ != null) {
-				progress_.cancel();
+				progress_.dismiss();
 			}
 		}
 
