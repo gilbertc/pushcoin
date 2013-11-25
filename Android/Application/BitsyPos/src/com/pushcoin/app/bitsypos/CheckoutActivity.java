@@ -95,9 +95,7 @@ public class CheckoutActivity
 
 	private void waitForPayment()
 	{
-		IntentIntegrator integrator = 
-			AppDb.getInstance().getIntegrator();
-
+		IntentIntegrator integrator = AppDb.getInstance().getIntegrator();
 		Cart cart = CartManager.getInstance().getActiveCart();
 		Transaction charge = cart.createChargeTransaction();
 
@@ -118,11 +116,12 @@ public class CheckoutActivity
 	}
 
 	/**
-		Polling on device resulted in a user-query (ie thumb-scan)
+		Key-token (ie thumb-scan) scanned, query results arrived
 	*/
   @Override
   public void onResult(QueryResult result)
 	{
+		AppDb.getInstance().soundOnDataArrived();
 		List<Customer> customers = result.getCustomers();
 		Message msg = Message.obtain(null, MessageId.QUERY_USERS_REPLY, customers);
 		handler_.handleMessage(msg);
@@ -143,6 +142,8 @@ public class CheckoutActivity
 			// reflect what the user wants to do next -- reset it
 			cart.setChargeAmount(null);
 			Log.v( Conf.TAG, "approved-charge|id=" + result.getClientRequestId() );
+			AppDb.getInstance().soundOnPaymentAccepted();
+
 		} else { 
 			Log.e( Conf.TAG, "result-for-unknown-transaction|id=" + result.getClientRequestId());
 		}

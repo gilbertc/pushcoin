@@ -17,6 +17,10 @@
 
 package com.pushcoin.app.bitsypos;
 
+import com.pushcoin.ifce.connect.data.ChargeParams;
+import com.pushcoin.ifce.connect.data.Amount;
+import com.pushcoin.ifce.connect.listeners.ChargeResultListener;
+
 import com.pushcoin.ifce.connect.data.Customer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,11 +34,13 @@ import android.widget.ListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Button;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.lang.ref.WeakReference;
+import android.util.Log;
 
 public class CustomerDetailsFragment extends Fragment 
 {
@@ -69,11 +75,41 @@ public class CustomerDetailsFragment extends Fragment
 		balance_ = (TextView) rootView_.findViewById(R.id.customer_details_customer_balance);
 		mugshot_ = (ImageView) rootView_.findViewById(R.id.customer_details_mugshot);
 
+		Button chargeBtn = (Button) rootView_.findViewById(R.id.customer_details_charge_button);
+		chargeBtn.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					// we shouldn't even be here if there is no user data...
+					if (user_ == null) return;
+
+					Cart cart = CartManager.getInstance().getActiveCart();
+					Transaction charge = cart.createChargeTransaction();
+
+					// Do we owe anything at this point?
+					if (charge != null)
+					{
+						ChargeParams params = new ChargeParams();
+						BigDecimal chargeAmount = charge.getAmount();
+						params.setAccountId( user_.accountId );
+						params.setClientRequestId( charge.getClientTransactionId() );
+						params.setPayment(
+							new Amount(chargeAmount.unscaledValue().longValue(), -chargeAmount.scale()));
+						AppDb.getInstance().getIntegrator().charge(params, (ChargeResultListener) getActivity() );
+						Log.v( Conf.TAG, "pending-manual-charge|id=" + charge.getClientTransactionId() + ";amt=" + chargeAmount);
+					} 
+				}
+			});
+
 		return rootView_;
 	}
 	
 	private void onCustomerDetailsAvailable( Customer user )
 	{
+		// Store user presently displayed (or null)
+		user_ = user;
+
 		if (user != null)
 		{
 			firstName_.setText( user.firstName );
@@ -105,6 +141,7 @@ public class CustomerDetailsFragment extends Fragment
 	}
 
 	private Handler handler_;
+	private Customer user_;
 	// UI with user info
 	private View rootView_;
 	private TextView firstName_;

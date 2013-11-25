@@ -30,6 +30,7 @@ import com.pushcoin.ifce.connect.listeners.QueryResultListener;
 import android.os.Handler;
 import android.os.AsyncTask;
 import android.os.Message;
+import android.net.Uri;
 import android.util.Log;
 import android.app.ProgressDialog;
 import android.app.Dialog;
@@ -41,6 +42,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.BitmapFactory;
+import android.media.SoundPool;
+import android.media.AudioManager;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 import java.util.Map;
 import java.util.List;
@@ -280,6 +283,21 @@ public class AppDb extends SQLiteAssetHelper
 		return ret;
 	}
 
+	void soundOnPaymentAccepted()
+	{
+		try {
+			soundPool_.play(soundPaymentAccepted_, 1, 1, 0, 0, 1);
+		} catch (Exception e) {}
+	}
+
+	void soundOnDataArrived()
+	{
+		try {
+			soundPool_.play(soundDataArrived_, 1, 1, 0, 0, 1);
+		} catch (Exception e) {}
+	}
+
+
 	/**
 		Private constructor ensures that direct instatiateion isn't possible.
 
@@ -305,8 +323,23 @@ public class AppDb extends SQLiteAssetHelper
 		// Compiled-statements cache
 		stmtCache_ = new TreeMap<String, SQLiteStatement>();
 
+		// Loading sounds takes a while, so start early
+		loadSounds(ctx);
+
 		// Populate sample data
 		initSample(ctx);
+	}
+
+	private void loadSounds(Context ctx)
+	{
+		try
+		{
+			soundPool_ = new SoundPool(5, AudioManager.STREAM_NOTIFICATION, 0);
+
+			soundDataArrived_ = soundPool_.load(ctx, R.raw.user_info_available, 1);
+			soundPaymentAccepted_ = soundPool_.load(ctx, R.raw.cha_ching, 1);
+
+		} catch (Exception e) {}
 	}
 
 	/**
@@ -331,6 +364,11 @@ public class AppDb extends SQLiteAssetHelper
 	private IntentIntegrator integrator_;
 	private TreeMap<String, SQLiteStatement> stmtCache_;
 	private ProgressDialog showProgress_ = null;
+
+	// sounds
+	private SoundPool soundPool_;
+	private int soundPaymentAccepted_;
+	private int soundDataArrived_;
 
 	static private class FindCustomerWithKeywordTask
 		implements DialogInterface.OnCancelListener, QueryResultListener
@@ -359,6 +397,7 @@ public class AppDb extends SQLiteAssetHelper
 		@Override
 		public void onResult(QueryResult result)
 		{
+			AppDb.getInstance().soundOnDataArrived();
 			List<Customer> customers = result.getCustomers();
 			Message msg = Message.obtain(null, MessageId.QUERY_USERS_REPLY, customers);
 			handler_.handleMessage(msg);
