@@ -64,19 +64,36 @@ public class CategoryListAdapter extends BaseAdapter
 	public void setActiveEntry( int position )
 	{
 		// clear previous active
-		for (Entry e: entries_)
-		{
-			if (e.isActive)
-			{
-				e.isActive = false;
-				break;
-			}
+		Entry old = getActiveEntry();
+		if (old != null) {
+			old.isActive = false;
 		}
-		// set new active
-		entries_.get( position ).isActive = true;
+
+		// if provided, set the new active
+		if (position != NONE_ACTIVE) {
+			entries_.get( position ).isActive = true;
+		}
 
 		// Tell view the underlaying content has changed.
 		notifyDataSetChanged();
+	}
+
+	public Entry getActiveEntry()
+	{
+		int position = getActiveEntryPosition();
+		return (position != NONE_ACTIVE) ? entries_.get( position ) : null;
+	}
+
+	public int getActiveEntryPosition()
+	{
+		for (int i = 0; i < entries_.size(); ++i)
+		{
+			Entry e = entries_.get(i);	
+			if (e.isActive) {
+				return i;
+			}
+		}
+		return NONE_ACTIVE;
 	}
 
 	/**
@@ -192,4 +209,6 @@ public class CategoryListAdapter extends BaseAdapter
 
 	// Icon and label resource IDs
 	final private int labelViewResourceId_;
+
+	static public final int NONE_ACTIVE = -1;
 }

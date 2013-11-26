@@ -96,12 +96,6 @@ public class BrowseCatalogActivity
 		super.onResume();
 		// Register self with the hub and start receiving events
 		EventHub.getInstance().register( handler_, "BrowseCatalogActivity" );
-
-		// Display category menu, item browser.
-		getFragmentManager().beginTransaction()
-			.replace( R.id.hz_left_pane, 
-				new CategoryMenuFragment(), FragmentTag.CATEGORY_MENU_FRAG )
-			.commit();
 	}
 
 	@Override

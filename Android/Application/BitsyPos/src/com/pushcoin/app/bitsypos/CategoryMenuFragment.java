@@ -28,16 +28,17 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.AdapterView;
 import java.util.ArrayList;
+import android.util.Log;
 
 public class CategoryMenuFragment extends Fragment 
 {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
+		Log.v( Conf.TAG, "CategoryMenuFragment::onCreateView" );
 		// Listview showing categories.
 		View layout = inflater.inflate(R.layout.category_menu, container, false);
 		ListView menu = (ListView)layout.findViewById( R.id.category_menu );
-
 		final CategoryListAdapter model = new CategoryListAdapter(getActivity(), R.layout.category_menu_row, R.id.category_menu_label);
 		menu.setAdapter(model);
 
