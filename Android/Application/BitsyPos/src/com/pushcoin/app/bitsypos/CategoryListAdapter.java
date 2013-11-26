@@ -34,11 +34,11 @@ public class CategoryListAdapter extends BaseAdapter
 {
 	public static class Entry
 	{
-		// Label text
-		String label;
+		// Holds ref to a category this entry describes
+		Category cat;
 
-		// Tag ID
-		String tag_id;
+		// We change the look of actively selected category
+		boolean isActive;
 	}
 
 	public CategoryListAdapter(Context context, int rowLayoutResourceId, int labelViewResourceId)
@@ -50,6 +50,10 @@ public class CategoryListAdapter extends BaseAdapter
 		rowLayoutResourceId_ = rowLayoutResourceId;
 		labelViewResourceId_ = labelViewResourceId;
 
+		// cache few color resources
+		btnTextColorOn_ = context.getResources().getColor( R.color.android_holo_blue_bright );
+		btnTextColorOff_ = context.getResources().getColor( R.color.lightui_mediumgray );
+
 		// Try loading data.
 		reloadData();
 	}
@@ -57,15 +61,38 @@ public class CategoryListAdapter extends BaseAdapter
 	/**
 		Go out and fetch categories.
 	*/
+	public void setActiveEntry( int position )
+	{
+		// clear previous active
+		for (Entry e: entries_)
+		{
+			if (e.isActive)
+			{
+				e.isActive = false;
+				break;
+			}
+		}
+		// set new active
+		entries_.get( position ).isActive = true;
+
+		// Tell view the underlaying content has changed.
+		notifyDataSetChanged();
+	}
+
+	/**
+		Go out and fetch categories.
+	*/
 	public void reloadData()
 	{
-		// Decode icon resource IDs to speed up drawing on scroll.
+		// We wrap categories into our Entry-holder, so we can track
+		// which category is currently active and render the label 
+		// slightly differently.
 		entries_ = new ArrayList<Entry>();
 		for ( Category cat : AppDb.getInstance().getMainCategories() )
 		{
 			Entry ce = new Entry();
-			ce.label = cat.category_id;
-			ce.tag_id = cat.tag_id;
+			ce.cat = cat;
+			ce.isActive = false;
 			entries_.add( ce );
 		}
 
@@ -125,7 +152,6 @@ public class CategoryListAdapter extends BaseAdapter
 			// Creates a ViewHolder and store references to the two children views
 			// we want to bind data to.
 			holder = new ViewHolder();
-			holder.icon = (TextView) convertView.findViewById(R.id.category_menu_icon);
 			holder.label = (TextView) convertView.findViewById(labelViewResourceId_);
 
 			convertView.setTag(holder);
@@ -137,21 +163,29 @@ public class CategoryListAdapter extends BaseAdapter
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		// Bind the data efficiently with the holder.
-		holder.icon.setText( "%" );
-		holder.label.setText( entries_.get( position ).label );
+		// Depending if entry is active, we show slightly different view
+		Entry en = entries_.get( position );
+		if ( en.isActive ) {
+			holder.label.setTextColor( btnTextColorOn_ );
+		} else { // not active
+			holder.label.setTextColor( btnTextColorOff_ );
+		}
+
+		// Bind the data
+		holder.label.setText( en.cat.label );
 
 		return convertView;
 	}
 
 	private static class ViewHolder 
 	{
-		TextView icon;
 		TextView label;
 	}
 
 	private LayoutInflater inflater_;
 	private List<Entry> entries_;
+	private int btnTextColorOn_;
+	private int btnTextColorOff_;
 
 	// The resource ID for a layout file containing a layout to use when instantiating views.
 	final private int rowLayoutResourceId_;

@@ -74,11 +74,11 @@ public class AppDb extends SQLiteAssetHelper
 			do 
 			{
 				Category cat = new Category();
-				cat.category_id = c.getString(0);
-				cat.tag_id = c.getString(1);
+				cat.label = c.getString(0);
+				cat.tagId = c.getString(1);
 
 				rs.add( cat );
-				Log.v(Conf.TAG, "main-category|name="+cat.category_id+";tag="+cat.tag_id);
+				Log.v(Conf.TAG, "main-category|name="+cat.label+";tag="+cat.tagId);
 			}
 			while (c.moveToNext());
 

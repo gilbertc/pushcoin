@@ -12,24 +12,9 @@
 	android:orientation="horizontal">
 
 	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/category_menu_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:textColor="@color/android_holo_blue_light"
-		geekui:customTypeface="fonts/modernpics.otf"
-		android:gravity="center"
-		android:textSize="18sp"
-		android:paddingRight="6dp"
-		android:shadowColor="#444444"
-		android:shadowDx="-1"
-		android:shadowDy="-1"
-		android:shadowRadius="0.8"/>
-
-	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/category_menu_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textColor="@color/lightui_mediumgray"
 		android:shadowColor="#333333"
 		android:shadowDx="-0.5"
 		android:shadowDy="-0.5"

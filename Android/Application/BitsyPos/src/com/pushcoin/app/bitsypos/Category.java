@@ -22,6 +22,10 @@ package com.pushcoin.app.bitsypos;
 */
 public class Category
 {
-	String category_id;
-	String tag_id;
+	// Pretty-name for a category
+	String label;
+
+	// Tag which, if applied to a product, makes it
+	// belong to this category.
+	String tagId;
 }

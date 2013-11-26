@@ -48,7 +48,8 @@ public class CategoryMenuFragment extends Fragment
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 				{
 					CategoryListAdapter.Entry entry = model.getEntry( position );
-					EventHub.post( MessageId.CATEGORY_CLICKED, entry.tag_id );
+					model.setActiveEntry( position );
+					EventHub.post( MessageId.CATEGORY_CLICKED, entry.cat.tagId );
 				}
 			});
 
