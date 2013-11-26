@@ -365,7 +365,7 @@ public class CheckoutCartFragment extends Fragment
 					ref.onCartContentChanged( CartManager.getInstance().getActive() );
 					break;
 
-					case MessageId.TRANSATION_STATUS_CHANGED:
+					case MessageId.TRANSACTION_STATUS_CHANGED:
 					ref.onTransactionStatusChanged( CartManager.getInstance().getActive() );
 					break;
 				}

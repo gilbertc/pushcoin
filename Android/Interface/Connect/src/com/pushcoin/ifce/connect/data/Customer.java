@@ -30,6 +30,7 @@ public class Customer implements Parcelable {
 	public String identifier;
 	public Bitmap mugshot;
 	public Amount balance;
+	public long balanceAsOf;
 
 	public Customer() {
 	}
@@ -48,6 +49,7 @@ public class Customer implements Parcelable {
 		dest.writeString(identifier);
 		dest.writeParcelable(mugshot, flags);
 		dest.writeParcelable(balance, flags);
+		dest.writeLong(balanceAsOf);
 	}
 
 	private void readFromParcel(Parcel in) {
@@ -58,6 +60,7 @@ public class Customer implements Parcelable {
 		identifier = in.readString();
 		mugshot = in.readParcelable(Bitmap.class.getClassLoader());
 		balance = in.readParcelable(Amount.class.getClassLoader());
+		balanceAsOf = in.readLong();
 	}
 
 	public static final Parcelable.Creator<Customer> CREATOR = new Parcelable.Creator<Customer>() {

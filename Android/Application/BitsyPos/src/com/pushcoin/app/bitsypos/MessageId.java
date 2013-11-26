@@ -26,7 +26,7 @@ public class MessageId
 	// Events pertaining to the items within a single cart
 	final static int CART_CONTENT_CHANGED = 10;
 	// Transaction status changed
-	final static int TRANSATION_STATUS_CHANGED = 11;
+	final static int TRANSACTION_STATUS_CHANGED = 11;
 	// Events pertaining to the collection of carts
 	final static int CART_POOL_CHANGED = 20;
 	// Query returns user data

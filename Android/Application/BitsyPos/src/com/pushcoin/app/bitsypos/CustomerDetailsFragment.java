@@ -72,11 +72,17 @@ public class CustomerDetailsFragment extends Fragment
 		lastName_ = (TextView) rootView_.findViewById(R.id.customer_details_lname);
 		title_ = (TextView) rootView_.findViewById(R.id.customer_details_title);
 		identifier_ = (TextView) rootView_.findViewById(R.id.customer_details_customer_identifier);
+		balanceLabel_ = (TextView) rootView_.findViewById(R.id.customer_details_customer_balance_label);
 		balance_ = (TextView) rootView_.findViewById(R.id.customer_details_customer_balance);
 		mugshot_ = (ImageView) rootView_.findViewById(R.id.customer_details_mugshot);
+		chargeBtn_ = (Button) rootView_.findViewById(R.id.customer_details_charge_button);
 
-		Button chargeBtn = (Button) rootView_.findViewById(R.id.customer_details_charge_button);
-		chargeBtn.setOnClickListener(new View.OnClickListener()
+		// cache few color resources
+		btnTextColorOn_ = getResources().getColor( android.R.color.white );
+		btnTextColorOff_ = getResources().getColor( R.color.lightui_lightgray );
+
+		// handle charge click
+		chargeBtn_.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
@@ -116,15 +122,27 @@ public class CustomerDetailsFragment extends Fragment
 			lastName_.setText( user.lastName );
 			title_.setText( user.title );
 			identifier_.setText( user.identifier );
-			if (user.balance != null) {
-				balance_.setText(  NumberFormat.getCurrencyInstance().format( user.balance.asDecimal() ) );
+			if (user.balance != null)
+			{
+				balanceLabel_.setVisibility(View.VISIBLE);
+				balanceLabel_.setText( "Balance as of " + Util.prettyRelativeTime( System.currentTimeMillis(), user.balanceAsOf));
+
+				balance_.setText( NumberFormat.getCurrencyInstance().format( user.balance.asDecimal()));
 				balance_.setVisibility(View.VISIBLE);
-			} else {
+			} 
+			else
+			{
+				balanceLabel_.setVisibility(View.INVISIBLE);
 				balance_.setVisibility(View.INVISIBLE);
 			}
-			if (user.mugshot != null)
+			if (user.mugshot != null) {
 				mugshot_.setImageBitmap( user.mugshot );
+			}
 			rootView_.setVisibility(View.VISIBLE);
+
+			// Turn on/off charge-button depending if cart is paid off
+			onTransactionStatusChanged( CartManager.getInstance().getActive() );
+
 		} else {
 			rootView_.setVisibility(View.GONE);
 		}
@@ -140,6 +158,16 @@ public class CustomerDetailsFragment extends Fragment
 		}
 	}
 
+	private void onTransactionStatusChanged( CartManager.Entry cartHolder )
+	{
+		// Turn on/off buttons depending on cart state.
+		if ( cartHolder.cart.isPaid() ) {
+			Util.disableButton( chargeBtn_, R.drawable.btn_gray, btnTextColorOff_);
+		} else {
+			Util.enableButton( chargeBtn_, R.drawable.btn_blue, btnTextColorOn_);
+		}
+	}
+
 	private Handler handler_;
 	private Customer user_;
 	// UI with user info
@@ -148,8 +176,13 @@ public class CustomerDetailsFragment extends Fragment
 	private TextView lastName_;
 	private TextView title_;
 	private TextView identifier_;
+	private TextView balanceLabel_;
 	private TextView balance_;
 	private ImageView mugshot_;
+	private Button chargeBtn_;
+
+	private int btnTextColorOn_;
+	private int btnTextColorOff_;
 
 	/**
 		Static handler keeps lint happy about (temporary?) memory leaks if queued 
@@ -181,6 +214,9 @@ public class CustomerDetailsFragment extends Fragment
 						ref.onQueryUsersReply( msg );
 					break;
 
+					case MessageId.TRANSACTION_STATUS_CHANGED:
+						ref.onTransactionStatusChanged( CartManager.getInstance().getActive() );
+					break;
 				}
 			}
 		}

@@ -384,7 +384,7 @@ public class Cart
 	private void emitTransactionChanged()
 	{
 		// broadcast cart content has changed
-		EventHub.post( MessageId.TRANSATION_STATUS_CHANGED );
+		EventHub.post( MessageId.TRANSACTION_STATUS_CHANGED );
 	}
 
 	private Handler parentContext_;

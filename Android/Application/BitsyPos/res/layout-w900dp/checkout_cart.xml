@@ -192,7 +192,7 @@
 		<!-- Cart Paid Off Message -->
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/checkout_cart_paid_off_label"
-			android:text="@string/cart_paid_off"
+			android:text="@string/thank_you"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerHorizontal="true"

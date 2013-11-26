@@ -54,7 +54,6 @@
 
 	<!-- Customer Balance Label -->
 	<com.mobsandgeeks.ui.TypefaceTextView
-		android:text="@string/balance"
 		android:id="@+id/customer_details_customer_balance_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -80,14 +79,13 @@
 	<!-- Charge Button -->
 	<Button
 		android:id="@+id/customer_details_charge_button" 
-		android:text="@string/btn_charge" 
+		android:text="@string/charge"
 		android:layout_alignBottom="@id/customer_details_mugshot"
 		android:layout_alignParentRight="true"
 		android:layout_toRightOf="@id/customer_details_mugshot"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginRight="10dp"
-		android:background="@drawable/btn_blue"
 		android:paddingTop="12dp"
 		android:paddingBottom="12dp"
 		style="@style/ShoppingCartCheckout" />

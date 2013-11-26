@@ -23,11 +23,10 @@
 	<string name="special_instructions">Special instructions</string>
 	<string name="base_price">Base Price:</string>
 	<string name="combo_total">Combo Total:</string>
-	<string name="cart_paid_off">Paid in Full</string>
+	<string name="thank_you">Thank You</string>
 	<string name="total">Total:</string>
 	<string name="charge_amount">Charge Amount:</string>
-	<string name="due_amount">Amount Due:</string>
-	<string name="balance">Balance:</string>
+	<string name="due_amount">Remaining:</string>
 	<string name="discount">Discount:</string>
 	<string name="server_name">Server Name</string>
 	<string name="start_over">Start\nOver</string>
@@ -41,7 +40,7 @@
 	<string name="cash_or_check">Cash or\nCheck</string>
 	<string name="go_back">Go\nBack</string>
 	<string name="enter_card">Enter\nCard</string>
-	<string name="btn_charge">Charge</string>
+	<string name="charge">Charge</string>
 
 </resources>
 

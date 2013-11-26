@@ -22,8 +22,11 @@ import android.os.Parcel;
 import android.widget.Button;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Date;
+import java.util.Locale;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 
 class Util
 {
@@ -153,4 +156,19 @@ class Util
 		btn.setBackgroundResource( bgRes );
 		btn.setTextColor( textColor );
 	}
+
+	static public String prettyRelativeTime( long nowTime, long eventTime )
+	{
+		long timeDifferenceMilliseconds = nowTime - eventTime;
+		long diffHours = timeDifferenceMilliseconds / (3600 * 1000);
+
+		if (diffHours < 1) {
+			return shortTimeFormatter_.format(new Date(eventTime));
+		} else {
+			return fullTimeFormatter_.format(new Date(eventTime));
+		}
+	}
+
+	static private final SimpleDateFormat shortTimeFormatter_ = new SimpleDateFormat("h:mm a", Locale.getDefault());
+	static private final SimpleDateFormat fullTimeFormatter_ = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault());
 }
