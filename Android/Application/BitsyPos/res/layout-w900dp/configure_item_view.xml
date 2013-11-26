@@ -36,7 +36,6 @@
 			android:id="@+id/add_combo_item_to_cart" 
 			android:layout_width="wrap_content" 
 			android:layout_height="wrap_content"
-			android:background="@drawable/btn_blue" 
 			style="@style/SlotItemsAddToCart" />
 
 	</LinearLayout>

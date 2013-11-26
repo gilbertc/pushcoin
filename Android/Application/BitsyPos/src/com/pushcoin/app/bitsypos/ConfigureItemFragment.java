@@ -62,6 +62,10 @@ public class ConfigureItemFragment
 	{
 		final Context ctx = getActivity();
 
+		// cache few color resources
+		btnTextColorOn_ = ctx.getResources().getColor( android.R.color.white );
+		btnTextColorOff_ = ctx.getResources().getColor( R.color.lightui_lightgray );
+
 		// Unpack item to configure
 		parent_ = getArguments().getParcelable( Conf.FIELD_ITEM );
 
@@ -204,15 +208,10 @@ public class ConfigureItemFragment
 
 	private void enableAddToCart( boolean enabled )
 	{
-		if ( enabled )
-		{
-			addToCartBtn_.setVisibility( View.VISIBLE );
-			addToCartBtn_.setEnabled( true );
-		}
-		else 
-		{
-			addToCartBtn_.setVisibility( View.INVISIBLE );
-			addToCartBtn_.setEnabled( false );
+		if ( enabled ) {
+			Util.enableButton( addToCartBtn_, R.drawable.btn_blue, btnTextColorOn_);
+		} else {
+			Util.disableButton( addToCartBtn_, R.drawable.btn_gray, btnTextColorOff_);
 		}
 	}
 
@@ -224,6 +223,8 @@ public class ConfigureItemFragment
 	private Button addToCartBtn_;
 	private Item parent_;
 	private List<Item> relatedItems_;
+	private int btnTextColorOn_;
+	private int btnTextColorOff_;
 
 	private int curSlotIndx_ = 0;
 	private TextView curSlotTitle_ = null;
