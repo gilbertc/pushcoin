@@ -90,13 +90,13 @@ public class Cart
 		/**
 			Returns price formatted according to currency precision.
 		*/
-		String getPrettyPrice() 
+		public String getPrettyPrice() 
 		{
 			return NumberFormat.getCurrencyInstance().format( getPrice() );
 		}
 
 		// ctor
-		Combo()
+		public Combo()
 		{
 			note = "";
 			name = "";
@@ -104,7 +104,7 @@ public class Cart
 		}
 
 		// copy ctor
-		Combo( Combo rhs )
+		public Combo( Combo rhs )
 		{
 			for (Entry e: rhs.entries) {
 				entries.add( new Entry( e ) );
@@ -115,7 +115,7 @@ public class Cart
 		}
 	}
 
-	void add( Combo item )
+	public void add( Combo item )
 	{
 		Log.v(Conf.TAG, "cart-append-item="+item.getName() );
 		synchronized (lock_) {
@@ -125,7 +125,7 @@ public class Cart
 		emitCartContentChanged();
 	}
 
-	void insert( Combo item, int position )
+	public void insert( Combo item, int position )
 	{
 		Log.v(Conf.TAG, "cart-insert-item="+item.getName() );
 		synchronized (lock_) 
@@ -141,7 +141,7 @@ public class Cart
 		emitCartContentChanged();
 	}
 
-	Combo remove( int position )
+	public Combo remove( int position )
 	{
 		Combo item = null;
 		synchronized (lock_) 
@@ -159,7 +159,7 @@ public class Cart
 		return item;
 	}
 
-	void replace( Combo item, int position )
+	public void replace( Combo item, int position )
 	{
 		Log.v(Conf.TAG, "cart-replace-item="+item.getName()+";pos="+position);
 		synchronized (lock_) 
@@ -176,7 +176,11 @@ public class Cart
 		emitCartContentChanged();
 	}
 
-	void clear()
+	public boolean isEmpty() {
+		return items_.isEmpty();
+	}
+
+	public void clear()
 	{
 		boolean effective;
 		synchronized (lock_) 
@@ -195,7 +199,7 @@ public class Cart
 	/**
 		Retrieves an item at a position.
 	*/
-	Combo get( int position )
+	public Combo get( int position )
 	{
 		synchronized (lock_) {
 			return items_.get( position );
@@ -205,14 +209,14 @@ public class Cart
 	/**
 		Returns number of items in cart.
 	*/
-	int size() 
+	public int size() 
 	{
 		synchronized (lock_) {
 			return items_.size();
 		}
 	}
 
-	BigDecimal totalValue()
+	public BigDecimal totalValue()
 	{
 		synchronized (lock_) 
 		{
@@ -224,7 +228,10 @@ public class Cart
 		}
 	}
 
-	BigDecimal totalProcessed()
+	/**
+		Sums up amounts of approved transactions.
+	*/
+	public BigDecimal totalProcessed()
 	{
 		synchronized (lock_) 
 		{
@@ -239,10 +246,14 @@ public class Cart
 		}
 	}
 
-	BigDecimal amountDue()
+	public BigDecimal amountDue()
 	{
 		BigDecimal due = totalValue().subtract(discount_).subtract( totalProcessed() );
-		return ( due.compareTo( Conf.ZERO_PRICE) < 0 ) ? Conf.ZERO_PRICE: due;
+		return ( due.compareTo( Conf.ZERO_PRICE) > 0 ) ? due : Conf.ZERO_PRICE;
+	}
+
+	public boolean isPaid() {
+		return !(amountDue().compareTo( Conf.ZERO_PRICE ) > 0);
 	}
 
 	public void setChargeAmount(BigDecimal charge)

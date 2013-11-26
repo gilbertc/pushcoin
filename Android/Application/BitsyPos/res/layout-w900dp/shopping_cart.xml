@@ -88,19 +88,17 @@
 
 		<Button android:text="@string/start_over"
 			android:id="@+id/shopping_cart_startover_button" 
-			android:background="@drawable/btn_red"
 			android:layout_marginRight="2dp"
 			style="@style/ShoppingCartAction" />
 
 		<Button android:text="@string/open_item"
 			android:id="@+id/shopping_cart_open_item_button" 
-			android:background="@drawable/btn_blue"
 			android:layout_marginRight="2dp"
+			android:background="@drawable/btn_blue"
 			style="@style/ShoppingCartAction" />
 
 		<Button android:text="@string/queue_order" 
-			android:id="@+id/shopping_cart_queueup_button" 
-			android:background="@drawable/btn_yellow" 
+			android:id="@+id/shopping_cart_queue_order_button" 
 			style="@style/ShoppingCartAction" />
 
 	</LinearLayout>
@@ -113,7 +111,6 @@
 
 		<Button android:text="@string/print_receipt"
 			android:id="@+id/shopping_cart_print_button" 
-			android:background="@drawable/btn_purple"
 			android:layout_height="match_parent"
 			android:layout_marginRight="2dp"
 			style="@style/ShoppingCartAction" />
@@ -123,7 +120,6 @@
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:id="@+id/shopping_cart_checkout_button" 
-			android:background="@drawable/btn_green"
 			style="@style/ShoppingCartCheckout" />
 
 	</LinearLayout>

@@ -19,6 +19,7 @@ package com.pushcoin.app.bitsypos;
 
 import android.database.Cursor;
 import android.os.Parcel;
+import android.widget.Button;
 import java.util.Map;
 import java.util.TreeMap;
 import java.math.BigDecimal;
@@ -135,5 +136,21 @@ class Util
 			map.put( key, value );
 		}
 		return map;
+	}
+
+	public static void disableButton(Button btn, int bgRes, int textColor)
+	{
+		btn.setEnabled( false );
+		btn.setClickable( false );
+		btn.setBackgroundResource( bgRes );
+		btn.setTextColor( textColor );
+	}
+
+	public static void enableButton(Button btn, int bgRes, int textColor)
+	{
+		btn.setEnabled( true );
+		btn.setClickable( true );
+		btn.setBackgroundResource( bgRes );
+		btn.setTextColor( textColor );
 	}
 }

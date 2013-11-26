@@ -53,6 +53,10 @@ public class CheckoutCartFragment extends Fragment
 		super.onCreate( savedInstanceState );
 		// Handler where we dispatch events.
 		handler_ = new IncomingHandler( this );
+
+		// cache few color resources
+		btnTextColorOn_ = getResources().getColor( android.R.color.white );
+		btnTextColorOff_ = getResources().getColor( R.color.lightui_lightgray );
 	}
 
 	/** Called when the activity resumes. */
@@ -93,10 +97,14 @@ public class CheckoutCartFragment extends Fragment
 		// Cache cart widgets
 		cartTotal_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_total);
 		tabName_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_tab_name);
+		chargeAmountLabel_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_charge_amount_label);
 		chargeAmount_ = (EditText) cartLayout.findViewById(R.id.checkout_cart_charge_amount);
+		amountDueLabel_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_due_amount_label);
 		amountDue_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_due_amount);
+		discountLabel_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_dicount_label);
 		discountValue_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_discount);
 		discountPct_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_dicount_pct);
+		cartPaidOffLabel_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_paid_off_label);
 		btnFinished_ = (Button) cartLayout.findViewById(R.id.checkout_cart_finished_button);
 
 		// Handle finished-click
@@ -106,8 +114,17 @@ public class CheckoutCartFragment extends Fragment
 				public void onClick(View v)
 				{
 					CartManager carts = CartManager.getInstance();
-					carts.remove( carts.getActive() );
-					getActivity().finish();
+					CartManager.Entry cartEntry = carts.getActive();
+					if ( !cartEntry.cart.isPaid() )
+					{
+						// Confirm user really wants to dismiss upaid cart
+						DismissNonEmptyCartDialog.showDialog( getFragmentManager() );
+					}
+					else
+					{
+						carts.remove( cartEntry );
+						getActivity().finish();
+					}
 				}
 			});
 
@@ -224,13 +241,13 @@ public class CheckoutCartFragment extends Fragment
 				}
 			});
 
-		// Handle "Read Card" click
-		Button readCard = (Button) cartLayout.findViewById(R.id.checkout_cart_read_card_button);
-		readCard.setOnClickListener(new View.OnClickListener()
+		// Button: Go Back
+		Button goBackBtn = (Button) cartLayout.findViewById(R.id.checkout_cart_go_back_button);
+		goBackBtn.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v) {
-					AppDb.getInstance().asyncFindCustomerWithKeyword( getActivity(), "one", EventHub.getInstance() );
+					getActivity().finish();
 				}
 			});
 
@@ -275,17 +292,52 @@ public class CheckoutCartFragment extends Fragment
 		amountDue_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.amountDue() ) );
 		discountValue_.setText( NumberFormat.getCurrencyInstance().format( cartHolder.cart.getDiscount() ) );
 		discountPct_.setText( NumberFormat.getPercentInstance().format( cartHolder.cart.getDiscountPct() ) );
+
+		// Turn on/off buttons depending on cart state.
+		if ( cartHolder.cart.isPaid() )
+		{
+			chargeAmountLabel_.setVisibility( View.GONE );
+			chargeAmount_.setVisibility( View.GONE );
+			amountDueLabel_.setVisibility( View.GONE );
+			amountDue_.setVisibility( View.GONE );
+			discountLabel_.setVisibility( View.GONE );
+			discountValue_.setVisibility( View.GONE );
+			discountPct_.setVisibility( View.GONE );
+			cartPaidOffLabel_.setVisibility( View.VISIBLE );
+			Util.enableButton(btnFinished_, R.drawable.btn_green, btnTextColorOn_);
+		}
+		else // cart not paid in full
+		{
+			chargeAmountLabel_.setVisibility( View.VISIBLE );
+			chargeAmount_.setVisibility( View.VISIBLE );
+			amountDueLabel_.setVisibility( View.VISIBLE );
+			amountDue_.setVisibility( View.VISIBLE );
+			discountLabel_.setVisibility( View.VISIBLE );
+			discountValue_.setVisibility( View.VISIBLE );
+			discountPct_.setVisibility( View.VISIBLE );
+			cartPaidOffLabel_.setVisibility( View.GONE );
+			// Keep button enabled, but gray it out to signify 
+			// not an ideal finishing stage
+			Util.enableButton(btnFinished_, R.drawable.btn_gray, btnTextColorOff_);
+		}
 	}
 
 	private CartEntryArrayAdapter adapter_;
 	private TextView cartTotal_;
 	private TextView tabName_;
+	private TextView chargeAmountLabel_;
 	private EditText chargeAmount_;
+	private TextView amountDueLabel_;
 	private TextView amountDue_;
+
+	private TextView discountLabel_;
 	private TextView discountValue_;
 	private TextView discountPct_;
 	private Button btnFinished_;
+	private TextView cartPaidOffLabel_;
 	private Handler handler_;
+	private int btnTextColorOn_;
+	private int btnTextColorOff_;
 
 	/**
 		Static handler keeps lint happy about (temporary?) memory leaks if queued 

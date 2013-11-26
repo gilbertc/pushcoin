@@ -61,7 +61,6 @@
 	</style>
 
 	<style name="ShoppingCartCheckout">
-			<item name="android:textColor">#ffffff</item>
 			<item name="android:textSize">30sp</item>
 			<item name="android:textStyle">bold</item>
 			<item name="android:shadowColor">#000000</item>

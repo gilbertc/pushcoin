@@ -26,7 +26,7 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.content.DialogInterface;
 
-public class ClearCartDialogFragment extends DialogFragment
+public class ClearCartDialog extends DialogFragment
 {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -40,10 +40,9 @@ public class ClearCartDialogFragment extends DialogFragment
 						CartManager.getInstance().getActiveCart().clear();
 					}
 				})
-			.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int id) {
-					// User cancelled the dialog
+			.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) { 
+						// no-op, without it Cancel is not offered
 					}
 				});
 		// Create the AlertDialog object and return it
@@ -60,7 +59,7 @@ public class ClearCartDialogFragment extends DialogFragment
 		ft.addToBackStack(null);
 
 		// Create and show the dialog.
-		DialogFragment newFragment = new ClearCartDialogFragment();
+		DialogFragment newFragment = new ClearCartDialog();
 		newFragment.show(ft, Conf.DIALOG_CONFIRM_CLEAR_CART);
 	}
 }

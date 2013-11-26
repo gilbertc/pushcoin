@@ -49,6 +49,10 @@ public class ShoppingCartFragment extends Fragment
 		super.onCreate( savedInstanceState );
 		// Handler where we dispatch events.
 		handler_ = new IncomingHandler( this );
+
+		// cache few color resources
+		btnTextColorOn_ = getResources().getColor( android.R.color.white );
+		btnTextColorOff_ = getResources().getColor( R.color.lightui_lightgray );
 	}
 
 	/** Called when the activity resumes. */
@@ -91,28 +95,34 @@ public class ShoppingCartFragment extends Fragment
 		// Tab name
 		tabName_ = (TextView) cartLayout.findViewById(R.id.shopping_cart_tab_name);
 
-		// Handle "start over" user request
-		Button startOver = (Button) cartLayout.findViewById(R.id.shopping_cart_startover_button);
-		startOver.setOnClickListener(new View.OnClickListener() {
+		// Button: Start Over
+		startOverBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_startover_button);
+		startOverBtn_.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// Confirm user really wants to clear the cart
-				ClearCartDialogFragment.showDialog( getFragmentManager() );
+				ClearCartDialog.showDialog( getFragmentManager() );
 			}
 		});
 
-		// Handle Add Open Item request
-		Button openItemBtn = (Button) cartLayout.findViewById(R.id.shopping_cart_open_item_button);
-		openItemBtn.setOnClickListener(new View.OnClickListener() {
+		// Button: Open Item
+		openItemBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_open_item_button);
+		openItemBtn_.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onEditCartItem( Conf.CART_OPEN_ITEM_ID );
 			}
 		});
 
-		// Handle Checkout
-		Button checkoutBtn = (Button) cartLayout.findViewById(R.id.shopping_cart_checkout_button);
-		checkoutBtn.setOnClickListener(new View.OnClickListener() {
+		// Button: Queue Order
+		queueOrderBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_queue_order_button);
+
+		// Button: Print Receipt
+		printReceiptBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_print_button);
+
+		// Button: Checkout
+		checkoutBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_checkout_button);
+		checkoutBtn_.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				EventHub.post( MessageId.CHECKOUT_CLICKED );
@@ -181,6 +191,22 @@ public class ShoppingCartFragment extends Fragment
 		// cart name might have changed too -- on tab change
 		tabName_.setText( CartManager.getInstance().getActive().name );
 
+		// Turn on/off buttons depending on cart state.
+		if ( cart.isEmpty() )
+		{
+			Util.disableButton( startOverBtn_, R.drawable.btn_gray, btnTextColorOff_);
+			Util.disableButton( queueOrderBtn_, R.drawable.btn_gray, btnTextColorOff_);
+			Util.disableButton( printReceiptBtn_, R.drawable.btn_gray, btnTextColorOff_);
+			Util.disableButton( checkoutBtn_, R.drawable.btn_gray, btnTextColorOff_);
+		}
+		else // cart not empy
+		{
+			Util.enableButton( startOverBtn_, R.drawable.btn_red, btnTextColorOn_);
+			Util.enableButton( queueOrderBtn_, R.drawable.btn_yellow, btnTextColorOn_);
+			Util.enableButton( printReceiptBtn_, R.drawable.btn_purple, btnTextColorOn_);
+			Util.enableButton( checkoutBtn_, R.drawable.btn_green, btnTextColorOn_);
+		}
+
 		adapter_.refreshView();
 	}
 
@@ -206,6 +232,14 @@ public class ShoppingCartFragment extends Fragment
 	private TextView cartTotal_;
 	private TextView tabName_;
 	private Handler handler_;
+	private Button startOverBtn_;
+	private Button openItemBtn_;
+	private Button queueOrderBtn_;
+	private Button printReceiptBtn_;
+	private Button checkoutBtn_;
+
+	private int btnTextColorOn_;
+	private int btnTextColorOff_;
 
 	/**
 		Static handler keeps lint happy about (temporary?) memory leaks if queued 

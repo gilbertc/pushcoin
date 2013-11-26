@@ -12,6 +12,7 @@
 	<!-- UI texts -->
 	<string name="done">Done</string>
 	<string name="confirm_clear_cart">Erase all items from the cart?</string>
+	<string name="confirm_dismiss_unpaid_cart">Dismiss cart without full payment?</string>
 	<string name="sku">SKU</string>
 	<string name="name">Name</string>
 	<string name="qty">Qty</string>
@@ -22,6 +23,7 @@
 	<string name="special_instructions">Special instructions</string>
 	<string name="base_price">Base Price:</string>
 	<string name="combo_total">Combo Total:</string>
+	<string name="cart_paid_off">Paid in Full</string>
 	<string name="total">Total:</string>
 	<string name="charge_amount">Charge Amount:</string>
 	<string name="due_amount">Amount Due:</string>
@@ -35,9 +37,9 @@
 	<string name="new_tab">New Tab</string>
 	<string name="default_tab_name">Main</string>
 	<string name="checkout">Checkout &#187;</string>
-	<string name="finished">Finished</string>
+	<string name="finished">Finish</string>
 	<string name="cash_or_check">Cash or\nCheck</string>
-	<string name="read_card">Read\nCard</string>
+	<string name="go_back">Go\nBack</string>
 	<string name="enter_card">Enter\nCard</string>
 	<string name="btn_charge">Charge</string>
 
