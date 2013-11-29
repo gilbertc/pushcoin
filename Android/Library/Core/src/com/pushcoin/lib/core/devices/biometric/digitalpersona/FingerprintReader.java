@@ -2,6 +2,8 @@ package com.pushcoin.lib.core.devices.biometric.digitalpersona;
 
 import java.io.IOException;
 
+import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
@@ -14,15 +16,23 @@ import com.pushcoin.lib.core.payment.PaymentListener;
 import com.pushcoin.lib.core.payment.biometric.FingerprintPayment;
 import com.pushcoin.lib.core.utils.Logger;
 
+import com.digitalpersona.uareu.Reader;
+import com.digitalpersona.uareu.ReaderCollection;
+import com.digitalpersona.uareu.UareUException;
+import com.digitalpersona.uareu.UareUGlobal;
+import com.digitalpersona.uareu.Reader.Priority;
+
 public class FingerprintReader implements IPaymentDevice {
 	private static Logger log = Logger.getLogger(FingerprintReader.class);
 
 	public static int VENDOR_ID = 1466;
-	public static int PRODUCT_ID = 10;
+	public static int PRODUCT_ID = 11;
 
 	private UsbManager usbManager;
 	private UsbDevice usbDevice;
 	private PaymentListener receiver;
+	private Reader reader;
+
 	private volatile boolean isRunning = false;
 
 	public static boolean Match(UsbDevice device) {
@@ -43,30 +53,25 @@ public class FingerprintReader implements IPaymentDevice {
 	public void open(UsbDevice usbDevice) throws IOException {
 		log.d("Opening reader: " + this.getClass().getSimpleName() + " at "
 				+ usbDevice.getDeviceName());
-		
+
 		this.usbDevice = usbDevice;
-		if (usbDevice.getInterfaceCount() != 1) {
-			log.d("unexpected usb interface size: "
-					+ usbDevice.getInterfaceCount());
+		
+		ReaderCollection readers = UareUGlobal.GetReaderCollection();
+		
+		if (readers.size() == 0) {
+			return;
+		}
+		
+		Reader r = readers.get(0);
+		if (r.GetDescription().serial_number == reader.GetDescription().serial_number) {
 			return;
 		}
 
-		UsbInterface usbInterface = usbDevice.getInterface(0);
-		/*
-		if (usbInterface.getEndpointCount() != 1) {
-			log.d("unexpected usb endpoint size: "
-					+ usbInterface.getEndpointCount());
-			return;
-		}
-		*/
-
-		UsbEndpoint usbEndpoint = usbInterface.getEndpoint(0);
-		UsbDeviceConnection usbDeviceConnection = this.usbManager
-				.openDevice(usbDevice);
-
-		if (usbDeviceConnection.getFileDescriptor() == -1) {
-			log.d("Fails to open DeviceConnection");
-		} else {
+		reader = r;
+		disableCamera();
+		
+		reader.Open(Priority.EXCLUSIVE);
+		
 
 			class ReadTask implements Runnable {
 				private UsbEndpoint usbEndpoint;
@@ -119,11 +124,15 @@ public class FingerprintReader implements IPaymentDevice {
 	@Override
 	public void close() throws IOException {
 		this.isRunning = false;
+		this.reader.Close();
+		this.reader = null;
+		
+		enableCamera();
 	}
 
 	@Override
 	public boolean isOpened() {
-		return this.isRunning;
+		return this.isRunning && this.readerSerialNumber != "";
 	}
 
 	@Override
@@ -144,6 +153,41 @@ public class FingerprintReader implements IPaymentDevice {
 	public boolean isEnabled() {
 		synchronized (this) {
 			return this.receiver != null;
+		}
+	}
+
+	private Camera m_Camera = null;
+
+	// re-enable camera on exit
+	public void enableCamera() {
+		try {
+			if (m_Camera != null) {
+				m_Camera.release();
+				m_Camera = null;
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	// prevents gallery app from popping up whenever a finger is detected by the
+	// fingerprint reader
+	private void disableCamera() {
+		try {
+			if (m_Camera == null) {
+				for (int camNo = 0; camNo < Camera.getNumberOfCameras(); camNo++) {
+					CameraInfo camInfo = new CameraInfo();
+					Camera.getCameraInfo(camNo, camInfo);
+
+					if (camInfo.facing == (Camera.CameraInfo.CAMERA_FACING_FRONT)) {
+						m_Camera = Camera.open(camNo);
+					}
+				}
+				if (m_Camera == null) {
+					m_Camera = Camera.open();
+				}
+			}
+		} catch (Exception e) {
+
 		}
 	}
 
