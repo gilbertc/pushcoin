@@ -3,6 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
+	android:background="@android:color/white"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
@@ -12,25 +13,30 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:cacheColorHint="@android:color/white"
-		android:background="@android:color/white"
 		android:headerDividersEnabled="false"
 		android:footerDividersEnabled="false"
 		android:fadeScrollbars="true" />
 
+	<View 
+		 android:background="@color/lightui_darkgray" 
+		 android:layout_marginTop="4dp"
+		 android:layout_marginBottom="10dp"
+		 android:layout_height="1dp" 
+		 android:layout_width="match_parent" />
+
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/tab_menu_new_tab_button" 
-		android:gravity="left"
 		android:text="@string/new_tab"
-		android:background="@color/lightui_lightgray"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:onClick="onClick"
-		android:clickable="true"
-		android:textColor="@color/lightui_darkestgray"
-		android:textSize="26sp"
-		android:paddingTop="16dp"
-		android:paddingBottom="16dp"
-		android:paddingLeft="6dp"
-		geekui:customTypeface="fonts/TT0467M.ttf" />
+		style="@style/TabMenuItem" />
+		
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/tab_menu_settings"
+		android:text="Settings"
+		style="@style/TabMenuItem" />
+		
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/tab_menu_exit_app"
+		android:text="Exit App"
+		style="@style/TabMenuItem" />
 		
 </LinearLayout>

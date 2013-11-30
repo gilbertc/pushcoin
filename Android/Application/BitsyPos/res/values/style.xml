@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="BitsyDarkTheme" parent="android:Theme.Holo.NoActionBar.Fullscreen">
+	<style name="BitsyDarkTheme" parent="android:Theme.Holo">
 		<item name="android:windowContentOverlay">@null</item>
 		<item name="android:windowBackground">@null</item>
 	</style>
@@ -91,5 +91,19 @@
 			<item name="android:shadowRadius">2</item>
 	</style>
 
+	<style name="TabMenuItem">
+			<item name="android:layout_width">match_parent</item>
+			<item name="android:layout_height">wrap_content</item>
+			<item name="android:onClick">onClick</item>
+			<item name="android:clickable">true</item>
+			<item name="android:textColor">@color/lightui_darkgray</item>
+			<item name="android:textSize">26sp</item>
+			<item name="android:paddingTop">16dp</item>
+			<item name="android:paddingBottom">16dp</item>
+			<item name="android:paddingLeft">6dp</item>
+			<item name="customTypeface">fonts/TT0467M.ttf</item>
+			<item name="android:gravity">left</item>
+	</style>
+	
 </resources>
 

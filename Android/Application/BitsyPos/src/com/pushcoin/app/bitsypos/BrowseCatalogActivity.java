@@ -49,6 +49,9 @@ public class BrowseCatalogActivity
 	{
 		super.onCreate( savedInstanceState );
 
+		// Hide the title bar, leave status bar as is
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 		// Create the event pump
 		EventHub.newInstance( this );
 
