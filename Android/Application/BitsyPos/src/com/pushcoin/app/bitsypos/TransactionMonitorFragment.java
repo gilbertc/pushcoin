@@ -28,23 +28,50 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.AdapterView;
 import java.util.ArrayList;
+import java.lang.ref.WeakReference;
 
 public class TransactionMonitorFragment extends Fragment 
 {
+	/** Called when the fragment is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate( savedInstanceState );
+		// Handler where we dispatch events.
+		handler_ = new IncomingHandler( this );
+	}
+
+	/** Called when the activity resumes. */
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		// Register self with the hub and start receiving events
+		EventHub.getInstance().register( handler_, "TransactionMonitorFragment" );
+	}
+
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		// Remove self from the event hub.
+		EventHub.getInstance().unregister( handler_ );
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		// Listview showing categories.
 		View layout = inflater.inflate(R.layout.transaction_monitor_layout, container, false);
 
-		/*
-		ListView menu = (ListView)layout.findViewById( R.id.category_menu );
+		ListView transactions = (ListView)layout.findViewById( R.id.transaction_list );
 
-		final CategoryListAdapter model = new CategoryListAdapter(getActivity(), R.layout.category_menu_row, R.id.category_menu_label);
-		menu.setAdapter(model);
+		model_ = new TransactionListAdapter(getActivity());
+		transactions.setAdapter(model_);
 
 		// install click-event listener
-		menu.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		/*
+		transactions.setOnItemClickListener(new AdapterView.OnItemClickListener()
 			{
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
@@ -56,5 +83,43 @@ public class TransactionMonitorFragment extends Fragment
 		*/
 
 		return layout;
+	}
+
+	private void onTransactionStatusChanged()
+	{
+		model_.reloadData();
+	}
+
+	private Handler handler_;
+	private TransactionListAdapter model_;
+
+	/**
+		Static handler keeps lint happy about (temporary?) memory leaks if queued 
+		messages refer to the Activity (our event consumer), which now cannot
+		be collected.
+	*/
+	static class IncomingHandler extends Handler
+	{
+		private final WeakReference<TransactionMonitorFragment> ref_; 
+
+		IncomingHandler(TransactionMonitorFragment ref) {
+			ref_ = new WeakReference<TransactionMonitorFragment>(ref);
+		}
+
+		/** Dispatch events. */
+		@Override
+		public void handleMessage(Message msg)
+		{
+			TransactionMonitorFragment ref = ref_.get();
+			if (ref != null)
+			{
+				switch( msg.what )
+				{
+					case MessageId.TRANSACTION_STATUS_CHANGED:
+						ref.onTransactionStatusChanged();
+					break;
+				}
+			}
+		}
 	}
 }

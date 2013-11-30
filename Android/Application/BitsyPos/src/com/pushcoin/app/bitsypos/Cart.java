@@ -303,11 +303,17 @@ public class Cart
 
 	public Transaction createChargeTransaction()
 	{
+		// anonymous transaction
+		return createChargeTransaction( null );
+	}
+
+	public Transaction createChargeTransaction( Customer customer )
+	{
 		BigDecimal chargeAmount = getChargeAmount();
 		Transaction trx = null;
 		if (chargeAmount.compareTo(Conf.BIG_ZERO) > 0)
 		{
-			trx = new Transaction( chargeAmount );
+			trx = new Transaction( chargeAmount, customer );
 			transactions_.add( trx );
 			emitTransactionChanged();
 		}
@@ -383,12 +389,16 @@ public class Cart
 
 	private void emitTransactionChanged()
 	{
+		// Don't post too fast, it creates ugly visual jitter.
+
+
 		// broadcast cart content has changed
 		EventHub.post( MessageId.TRANSACTION_STATUS_CHANGED );
 	}
 
 	private Handler parentContext_;
 	private final Object lock_ = new Object();
+	private long lastPost_ = 0;
 
 	ArrayList<Combo> items_ = new ArrayList<Combo>();
 	ArrayList<Transaction> transactions_ = new ArrayList<Transaction>();

@@ -24,9 +24,9 @@
 		android:id="@+id/customer_search_list"
 		android:dividerHeight="3dp"
 		android:divider="@android:color/transparent"
+		android:cacheColorHint="@android:color/transparent"
 		android:footerDividersEnabled="false"
 		android:headerDividersEnabled="false"
-		android:cacheColorHint="@android:color/transparent"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 

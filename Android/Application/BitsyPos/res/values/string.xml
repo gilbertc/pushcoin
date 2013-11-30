@@ -3,7 +3,7 @@
 
 	<string name="app_name">BitsyPos</string>
 	<string name="checkout_activity_label">Checkout</string>
-	<string name="customer_search_hint">Search by name or ID</string>
+	<string name="customer_search_hint">Search accounts&#8230;</string>
 
 	<!-- Swipe to remove styles -->
 	<string name="undo">Undo</string>

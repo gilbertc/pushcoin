@@ -20,6 +20,7 @@ package com.pushcoin.app.bitsypos;
 import com.pushcoin.ifce.connect.data.ChargeParams;
 import com.pushcoin.ifce.connect.data.Amount;
 import com.pushcoin.ifce.connect.listeners.ChargeResultListener;
+import com.pushcoin.lib.integrator.IntentIntegrator;
 
 import com.pushcoin.ifce.connect.data.Customer;
 import android.os.Bundle;
@@ -63,6 +64,14 @@ public class CustomerDetailsFragment extends Fragment
 	}
 
 	@Override
+	public void onPause()
+	{
+		super.onPause();
+		// Remove self from the event hub.
+		EventHub.getInstance().unregister( handler_ );
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		// User-details layout
@@ -90,8 +99,13 @@ public class CustomerDetailsFragment extends Fragment
 					// we shouldn't even be here if there is no user data...
 					if (user_ == null) return;
 
+					// Issue the idle request to turn off readers while we are
+					// submitting the manual charge...
+					IntentIntegrator integrator = AppDb.getInstance().getIntegrator();
+					integrator.idle();
+
 					Cart cart = CartManager.getInstance().getActiveCart();
-					Transaction charge = cart.createChargeTransaction();
+					Transaction charge = cart.createChargeTransaction( user_ );
 
 					// Do we owe anything at this point?
 					if (charge != null)
@@ -102,8 +116,7 @@ public class CustomerDetailsFragment extends Fragment
 						params.setClientRequestId( charge.getClientTransactionId() );
 						params.setPayment(
 							new Amount(chargeAmount.unscaledValue().longValue(), -chargeAmount.scale()));
-						AppDb.getInstance().getIntegrator().charge(params, (ChargeResultListener) getActivity() );
-						Log.v( Conf.TAG, "pending-manual-charge|id=" + charge.getClientTransactionId() + ";amt=" + chargeAmount);
+						integrator.charge(params, (ChargeResultListener) getActivity() );
 					} 
 				}
 			});

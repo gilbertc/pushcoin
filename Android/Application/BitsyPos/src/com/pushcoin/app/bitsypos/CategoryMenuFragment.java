@@ -35,7 +35,6 @@ public class CategoryMenuFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		Log.v( Conf.TAG, "CategoryMenuFragment::onCreateView" );
 		// Listview showing categories.
 		View layout = inflater.inflate(R.layout.category_menu, container, false);
 		ListView menu = (ListView)layout.findViewById( R.id.category_menu );

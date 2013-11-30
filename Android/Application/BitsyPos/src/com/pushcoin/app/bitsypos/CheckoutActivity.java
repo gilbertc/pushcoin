@@ -108,7 +108,6 @@ public class CheckoutActivity
 			params.setPayment(
 				new Amount(chargeAmount.unscaledValue().longValue(), -chargeAmount.scale()));
 			integrator.poll(params, this);
-			Log.v( Conf.TAG, "pending-charge|id=" + charge.getClientTransactionId() + ";amt=" + chargeAmount);
 		} 
 		else {
 			integrator.idle();

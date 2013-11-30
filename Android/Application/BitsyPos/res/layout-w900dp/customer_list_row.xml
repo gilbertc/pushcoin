@@ -4,8 +4,7 @@
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:background="@drawable/window_shape"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:orientation="horizontal">
+	android:layout_height="wrap_content">
 
 	<!-- Customer mugshot -->
 	<ImageView

@@ -31,11 +31,26 @@ import java.lang.System;
 
 public class Transaction
 {
-	public final int STATUS_PENDING = 1;
-	public final int STATUS_APPROVED = 2;
-	public final int STATUS_DENIED = 4;
+	public static final int STATUS_PENDING = 1;
+	public static final int STATUS_APPROVED = 2;
+	public static final int STATUS_DENIED = 4;
 
-	public Transaction( BigDecimal amount )
+	public static final String PRETTY_STATUS_PENDING = "PENDING";
+	public static final String PRETTY_STATUS_APPROVED = "APPROVED";
+	public static final String PRETTY_STATUS_DENIED = "DENIED";
+
+	public static String statusAsString( int status )
+	{
+		switch (status)
+		{
+			case STATUS_PENDING: return PRETTY_STATUS_PENDING;
+			case STATUS_APPROVED: return PRETTY_STATUS_APPROVED;
+			case STATUS_DENIED: return PRETTY_STATUS_DENIED;
+			default: return "UNKNOWN";
+		}
+	}
+
+	public Transaction( BigDecimal amount, Customer customer )
 	{
 		clientTransactionId_ = UUID.randomUUID();
 		amount_ = amount;
@@ -43,7 +58,7 @@ public class Transaction
 		createTime_ = System.currentTimeMillis();
 		exchangeTime_ = 0;
 		status_ = STATUS_PENDING;
-		customer_ = null;
+		customer_ = customer;
 	}
 
 	public Transaction approved( String exchangeTransactionId, long exchangeTime ) {
@@ -74,8 +89,20 @@ public class Transaction
 		return exchangeTime_;
 	}
 
+	public long getCreateTime() {
+		return createTime_;
+	}
+
 	public boolean isApproved() {
 		return status_ == STATUS_APPROVED;
+	}
+
+	public String getPrettyStatus() {
+		return statusAsString( status_ );
+	}
+
+	public int getStatus() {
+		return status_;
 	}
 
 	/**
