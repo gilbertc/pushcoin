@@ -17,6 +17,7 @@
 
 package com.pushcoin.app.bitsypos;
 
+import com.pushcoin.lib.integrator.IntentIntegrator;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -86,14 +87,35 @@ public class TabMenuFragment extends Fragment
 				}
 			});
 
-		// Hook up the listener for the new-tab button
-		TextView newTabBtn = (TextView) layout.findViewById( R.id.tab_menu_new_tab_button );
+		// Button: New Tab
+		View newTabBtn = layout.findViewById( R.id.tab_menu_new_tab_button );
 		newTabBtn.setOnClickListener(new View.OnClickListener()
 			{
 				public void onClick(View v)
 				{
 					// Ask for tab name
 					PromptTabNameFragment.showDialog( getFragmentManager() );
+				}
+			});
+
+		// Button: Settings
+		View settingsBtn = layout.findViewById( R.id.tab_menu_settings_button );
+		settingsBtn.setOnClickListener(new View.OnClickListener()
+			{
+				public void onClick(View v)
+				{
+					// Launch integrator configuration
+					AppDb.getInstance().getIntegrator().settings( getActivity() );
+				}
+			});
+
+		// Button: Lock
+		View exitBtn = layout.findViewById( R.id.tab_menu_exit_button );
+		exitBtn.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v) {
+					getActivity().finish();
 				}
 			});
 

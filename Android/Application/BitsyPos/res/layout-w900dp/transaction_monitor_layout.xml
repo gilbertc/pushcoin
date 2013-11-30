@@ -8,6 +8,7 @@
 
 	<ListView
 		android:id="@+id/transaction_list"
+		android:transcriptMode="alwaysScroll"
 		android:dividerHeight="6dp"
 		android:divider="@android:color/transparent"
 		android:cacheColorHint="@android:color/transparent"

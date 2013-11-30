@@ -42,5 +42,10 @@
 	<string name="enter_card">Enter\nCard</string>
 	<string name="charge">Charge</string>
 
+	<!-- iconmoon -->
+	<string name="icm_cog2">&#xe690;</string>
+	<string name="icm_paste2">&#xe62b;</string>
+	<string name="icm_lock">&#xe688;</string>
+
 </resources>
 

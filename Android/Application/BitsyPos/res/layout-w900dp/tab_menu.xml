@@ -24,19 +24,49 @@
 		 android:layout_height="1dp" 
 		 android:layout_width="match_parent" />
 
-	<com.mobsandgeeks.ui.TypefaceTextView
+	<!-- Row: New Tab -->
+	<LinearLayout 
 		android:id="@+id/tab_menu_new_tab_button" 
-		android:text="@string/new_tab"
-		style="@style/TabMenuItem" />
+		style="@style/TabMenuRow">
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:text="@string/icm_paste2"
+			style="@style/TabMenuIcon" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:text="@string/new_tab"
+			style="@style/TabMenuLabel" />
 		
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/tab_menu_settings"
-		android:text="Settings"
-		style="@style/TabMenuItem" />
+	</LinearLayout>
+
+	<!-- Row: Settings -->
+	<LinearLayout 
+		android:id="@+id/tab_menu_settings_button" 
+		style="@style/TabMenuRow">
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:text="@string/icm_cog2"
+			style="@style/TabMenuIcon" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:text="Settings"
+			style="@style/TabMenuLabel" />
+
+	</LinearLayout>
+
+	<!-- Row: Exit -->
+	<LinearLayout 
+		android:id="@+id/tab_menu_exit_button" 
+		style="@style/TabMenuRow">
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:text="@string/icm_lock"
+			style="@style/TabMenuIcon" />
+
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:text="Lock"
+			style="@style/TabMenuLabel" />
 		
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/tab_menu_exit_app"
-		android:text="Exit App"
-		style="@style/TabMenuItem" />
+	</LinearLayout>
 		
 </LinearLayout>
