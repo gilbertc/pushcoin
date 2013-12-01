@@ -13,11 +13,12 @@
   
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.pushcoin.srv.gateway.services;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.pushcoin.ifce.connect.Actions;
@@ -27,6 +28,7 @@ import com.pushcoin.ifce.connect.data.CallbackParams;
 import com.pushcoin.ifce.connect.data.Cancelled;
 import com.pushcoin.ifce.connect.data.ChargeParams;
 import com.pushcoin.ifce.connect.data.ChargeResult;
+import com.pushcoin.ifce.connect.data.Customer;
 import com.pushcoin.ifce.connect.data.PollParams;
 import com.pushcoin.ifce.connect.data.QueryParams;
 import com.pushcoin.ifce.connect.data.Error;
@@ -47,10 +49,12 @@ import com.pushcoin.lib.pcos.InputDocument;
 import com.pushcoin.lib.pcos.OutputBlock;
 import com.pushcoin.lib.pcos.OutputDocument;
 import com.pushcoin.lib.pcos.PcosError;
+import com.pushcoin.srv.gateway.R;
 import com.pushcoin.srv.gateway.demo.QueryResultBuilder;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -180,7 +184,7 @@ public class PushCoinService extends Service {
 
 		if (this.pollParams != null)
 			onCancelled(this.pollParams);
-		
+
 		onPollCompleted();
 		display(new DisplayParcel("PUSHCOIN", TextAlignment.CENTER));
 
@@ -238,27 +242,27 @@ public class PushCoinService extends Service {
 	}
 
 	// Received a query from device
-	private void onQueryReady(IQuery query)
-	{
+	private void onQueryReady(IQuery query) {
 		log.i("querying");
-		
+
 		if (this.pollParams == null) {
 			onPollError("Poll params lost");
 			return;
 		}
-		
+
 		// From here, we have a definite params obj.
 		PollParams pollParams = onPollCompleted();
-		
+		display(new DisplayParcel("PUSHCOIN", TextAlignment.CENTER));
+
 		// Create query params from the iquery result and our poll params
 		QueryParams params = new QueryParams();
 		params.setMessenger(pollParams.getMessenger());
 		params.setClientRequestId(pollParams.getClientRequestId());
 		params.setQuery("--Fingerprint--");
-		
+
 		query(params);
 	}
-	
+
 	// Received device blob
 	private void onPaymentReady(byte[] pta) {
 		display(new DisplayParcel("Submitting..."));
@@ -302,7 +306,7 @@ public class PushCoinService extends Service {
 		}
 
 		if (params == null) {
-			log.e("Query params lost");
+			onError(params, "Query Not Ready");
 			return;
 		}
 
@@ -334,13 +338,13 @@ public class PushCoinService extends Service {
 
 	private void onPaymentSuccess(ChargeParams params, byte[] refData,
 			String trxId, boolean isAmountExact, PcosAmount balance, Date utc,
-			boolean thankyou) {
+			Customer customer, boolean thankyou) {
 
 		if (thankyou)
 			display(new DisplayParcel("Thank You", TextAlignment.CENTER));
 
 		if (params == null) {
-			onError(params, "Poll params lost");
+			onError(params, "Payment Not Ready");
 			return;
 		}
 
@@ -357,6 +361,7 @@ public class PushCoinService extends Service {
 		res.setIsAmountExact(isAmountExact);
 		res.setBalance(new Amount(balance.getValue(), balance.getScale()));
 		res.setUtc(utc.getTime());
+		res.setCustomer(customer);
 
 		Message m = Message.obtain();
 		m.what = Messages.MSGID_CHARGE_RESULT;
@@ -545,9 +550,30 @@ public class PushCoinService extends Service {
 						boolean isAmountExact = bo.readBool();
 						PcosAmount balance = new PcosAmount(bo);
 						Date utc = new Date(bo.readUlong());
+						Customer customer = null;
+
+						// FOR TESTING ONLY - START
+						if (Preferences.isDemoMode(PushCoinService.this, false)) {
+							long balanceAsOf = System.currentTimeMillis();
+
+							Customer c1 = new Customer();
+							c1.accountId = "CAX5PNCPKC";
+							c1.firstName = "Slawomir";
+							c1.lastName = "Lisznianski";
+							c1.title = "Creative Guru";
+							c1.identifier = "123-123-3123";
+							c1.mugshot = BitmapFactory.decodeResource(
+									PushCoinService.this.getResources(),
+									R.drawable.contrib_sl);
+							c1.balance = new Amount(5632, -2);
+							c1.balanceAsOf = balanceAsOf;
+
+							customer = c1;
+						}
+						// FOR TESTING ONLY - END
 
 						onPaymentSuccess((ChargeParams) tag, refData, trxId,
-								isAmountExact, balance, utc, thankyou);
+								isAmountExact, balance, utc, customer, thankyou);
 						return;
 					} else {
 						log.e("unexpected message received: "
@@ -626,7 +652,7 @@ public class PushCoinService extends Service {
 
 	private PollParams onPollCompleted() {
 		stop();
-		
+
 		PollParams ret = this.pollParams;
 		this.pollParams = null;
 		return ret;

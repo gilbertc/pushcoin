@@ -13,9 +13,11 @@
   
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.pushcoin.ifce.connect.data;
+
+import java.util.ArrayList;
 
 import android.os.Bundle;
 
@@ -25,6 +27,7 @@ public class ChargeResult extends CallbackResult {
 	public static final String KEY_ISAMOUNTEXACT = "ISAMOUNTEXACT";
 	public static final String KEY_BALANCE = "BALANCE";
 	public static final String KEY_UTC = "UTC";
+	public static final String KEY_CUSTOMER = "CUSTOMER";
 
 	public ChargeResult() {
 		this(new Bundle());
@@ -74,4 +77,11 @@ public class ChargeResult extends CallbackResult {
 		bundle.putLong(KEY_UTC, value);
 	}
 
+	public Customer getCustomer() {
+		return bundle.getParcelable(KEY_CUSTOMER);
+	}
+
+	public void setCustomer(Customer value) {
+		bundle.putParcelable(KEY_CUSTOMER, value);
+	}
 }
