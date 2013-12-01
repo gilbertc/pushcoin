@@ -25,7 +25,7 @@ public class ACR122U implements IPaymentDevice, OnStateChangeListener {
 		return device.getVendorId() == VENDOR_ID
 				&& device.getProductId() == PRODUCT_ID;
 	}
-	public static boolean PermissionRequired() { return false; }
+	public static boolean PermissionRequired() { return true; }
 
 	public static ACR122U newInstance(DeviceManager manager) {
 		return new ACR122U(manager);

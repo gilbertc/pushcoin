@@ -28,7 +28,7 @@ public class ACR1222L implements IPaymentDevice, IDisplayDevice,
 		return device.getVendorId() == VENDOR_ID
 				&& device.getProductId() == PRODUCT_ID;
 	}
-	public static boolean PermissionRequired() { return false; }
+	public static boolean PermissionRequired() { return true; }
 
 	public static ACR1222L newInstance(DeviceManager manager) {
 		return new ACR1222L(manager);

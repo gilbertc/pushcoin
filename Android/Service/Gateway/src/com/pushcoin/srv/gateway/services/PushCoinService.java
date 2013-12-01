@@ -163,15 +163,14 @@ public class PushCoinService extends Service {
 
 		if (this.pollParams != null)
 			onCancelled(this.pollParams);
-
-		this.pollParams = null;
+		
+		onPollCompleted();
 		display(new DisplayParcel("PUSHCOIN", TextAlignment.CENTER));
-		stop();
+
 	}
 
 	private void onPollError(String reason) {
-		PollParams params = this.pollParams;
-		onPollCompleted();
+		PollParams params = onPollCompleted();
 		onError(params, reason);
 	}
 
@@ -224,7 +223,6 @@ public class PushCoinService extends Service {
 	// Received a query from device
 	private void onQueryReady(IQuery query)
 	{
-		display(new DisplayParcel("Querying"));
 		log.i("querying");
 		
 		if (this.pollParams == null) {
@@ -232,10 +230,13 @@ public class PushCoinService extends Service {
 			return;
 		}
 		
+		// From here, we have a definite params obj.
+		PollParams pollParams = onPollCompleted();
+		
 		// Create query params from the iquery result and our poll params
 		QueryParams params = new QueryParams();
-		params.setMessenger(this.pollParams.getMessenger());
-		params.setClientRequestId(this.pollParams.getClientRequestId());
+		params.setMessenger(pollParams.getMessenger());
+		params.setClientRequestId(pollParams.getClientRequestId());
 		params.setQuery("--Fingerprint--");
 		
 		query(params);
@@ -250,10 +251,9 @@ public class PushCoinService extends Service {
 			onPollError("Poll params lost");
 			return;
 		}
-		PollParams params = this.pollParams;
 
 		// From here, we have a definite params obj.
-		onPollCompleted();
+		PollParams params = onPollCompleted();
 
 		try {
 			PcosServer server = new PcosServer();
@@ -607,7 +607,11 @@ public class PushCoinService extends Service {
 		this.pollParams = params;
 	}
 
-	private void onPollCompleted() {
+	private PollParams onPollCompleted() {
+		stop();
+		
+		PollParams ret = this.pollParams;
 		this.pollParams = null;
+		return ret;
 	}
 }

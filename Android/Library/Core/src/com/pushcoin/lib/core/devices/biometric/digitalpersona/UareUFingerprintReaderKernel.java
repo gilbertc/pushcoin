@@ -39,9 +39,18 @@ public class UareUFingerprintReaderKernel {
 	private Engine engine = null;
 
 	public UareUFingerprintReaderKernel() {
-
+		disableCamera();
+		log.d("disabled camera");
 	}
-
+	
+	@Override
+	public void finalize() throws Throwable
+	{
+		enableCamera();
+		log.d("enabled camera");
+		super.finalize();
+	}
+	
 	public void getReaders() {
 		try {
 			ReaderCollection readers = UareUGlobal.GetReaderCollection();
@@ -58,13 +67,13 @@ public class UareUFingerprintReaderKernel {
 			}
 
 			if (reader != null) {
-				log.d("no change to reader");
 				return;
 			}
 
 			if (readers.size() == 0) {
 				log.d("no reader found");
-				return;
+				throw new Exception();
+				// return;
 			}
 
 			engine = UareUGlobal.GetEngine();
@@ -78,24 +87,24 @@ public class UareUFingerprintReaderKernel {
 		}
 	}
 
-	private class CaptureTask extends AsyncTask<Void, Void, IQuery> {
-		protected IQuery doInBackground(Void... params) {
+	private class CaptureTask extends AsyncTask<Reader, Void, IQuery> {
+		protected IQuery doInBackground(Reader... params) {
+
+			Reader thisReader = params[0];
 			try {
-				if (reader != null) {
-					reader.Open(Priority.EXCLUSIVE);
-					log.d("fingerprint reader opened");
-				}
-				return capture();
+				thisReader.Open(Priority.EXCLUSIVE);
+				log.d("fingerprint reader opened");
+				return capture(thisReader);
 			} catch (UareUException e) {
 				log.e("CaptureTask", e);
 				return null;
 			} finally {
-				if (reader != null) {
+				if (thisReader != null) {
 					try {
-						reader.Close();
+						thisReader.Close();
 						log.d("fingerprint reader closed");
-					} catch (UareUException ex) {
-						log.e("capture-close", ex);
+					} catch (Exception ex) {
+						log.e("CaptureTask-Close", ex);
 					}
 				}
 			}
@@ -113,12 +122,16 @@ public class UareUFingerprintReaderKernel {
 		if (this.isRunning == true)
 			return;
 
-		disableCamera();
 		this.isRunning = true;
 		this.listener = listener;
 
 		getReaders();
-		new CaptureTask().execute();
+
+		if (this.reader == null || this.engine == null) {
+			log.d("no reader for capture");
+		} else {
+			new CaptureTask().execute(this.reader);
+		}
 	}
 
 	public void disable() {
@@ -127,30 +140,24 @@ public class UareUFingerprintReaderKernel {
 
 		this.isRunning = false;
 		this.listener = null;
-		enableCamera();
 
-		try {
-			if (this.reader != null)
-				this.reader.CancelCapture();
-		} catch (Exception ex) {
-			log.e("disable", ex);
-		}
+		clearReader();
 	}
 
 	public boolean isEnabled() {
 		return this.isRunning && this.listener != null;
 	}
 
-	private IQuery capture() throws UareUException {
+	private IQuery capture(Reader thisReader) throws UareUException {
 
 		try {
 			log.d("capturing");
 
 			while (isRunning) {
-				if (engine == null || reader == null)
+				if (engine == null || thisReader == null)
 					return null;
 
-				CaptureResult res = reader.Capture(Format.ANSI_381_2004,
+				CaptureResult res = thisReader.Capture(Format.ANSI_381_2004,
 						ImageProcessing.IMG_PROC_DEFAULT, 500, -1);
 
 				if (res == null || res.image == null)
@@ -169,8 +176,13 @@ public class UareUFingerprintReaderKernel {
 		return null;
 	}
 
-	private void clearReader() throws UareUException {
+	private void clearReader() {
 		if (reader != null) {
+			try {
+				reader.CancelCapture();
+				reader.Close();
+			} catch (UareUException ex) {
+			}
 			reader = null;
 		}
 	}
