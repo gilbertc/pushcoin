@@ -5,10 +5,10 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@drawable/category_menu_glyph_shape"
-	android:paddingLeft="10dp"
-	android:paddingRight="10dp"
-	android:paddingTop="10dp"
-	android:paddingBottom="14dp"
+	android:paddingLeft="14dp"
+	android:paddingRight="14dp"
+	android:paddingTop="26dp"
+	android:paddingBottom="26dp"
 	android:orientation="horizontal">
 
 	<com.mobsandgeeks.ui.TypefaceTextView

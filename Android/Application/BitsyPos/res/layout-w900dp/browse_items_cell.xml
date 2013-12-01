@@ -2,9 +2,13 @@
 <LinearLayout 
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:background="#30707070"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:paddingTop="22dp"
+	android:paddingBottom="22dp"
 	android:paddingRight="10dp"
+	android:paddingLeft="10dp"
 	android:orientation="vertical">
 
 	<LinearLayout
@@ -18,10 +22,8 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:gravity="top"
-			android:paddingTop="6dp"
-			android:paddingBottom="12dp"
-			android:textSize="26sp"
-			android:textColor="@color/lightui_lightgray"
+			android:textSize="20sp"
+			android:textColor="@color/lightui_mediumgray"
 			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 		<com.mobsandgeeks.ui.TypefaceTextView
@@ -34,10 +36,5 @@
 			geekui:customTypeface="fonts/DejaVuSans.ttf" />
 
 	</LinearLayout>
-
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="1px" 
-		android:background="@drawable/dotted" />
 
 </LinearLayout>

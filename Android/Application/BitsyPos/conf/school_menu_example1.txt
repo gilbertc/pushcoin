@@ -1,0 +1,139 @@
+--[[
+        ____  _ _             ____           
+       | __ )(_) |_ ___ _   _|  _ \ ___  ___ 
+       |  _ \| | __/ __| | | | |_) / _ \/ __|
+       | |_) | | |_\__ \ |_| |  __/ (_) \__ \
+       |____/|_|\__|___/\__, |_|   \___/|___/v1
+                        |___/                
+      
+  Legend
+  ------
+  The 'product' entry defines all sellable goods. Products can 
+  be simple, one-item elements or compisite (aka combo).
+  
+  The 'category' describes major product groups (categories).
+ 
+]]--
+json = require('json')
+
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+-- INDEX (wraps all products and categories)
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+index = {
+	product= { 
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		-- BEVERAGES
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		{ name= 'Fat-Free Milk', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B1' },
+		{ name= 'Low-Fat 1% Milk', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B2' },
+		{ name= 'Low-Fat 2% Milk', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B3' },
+		{ name= 'Bottled Water', price= { unit= 0.49 }, tag= { 'beverage' }, id= 'B4' },
+		{ name= 'Orange Juice', price= { unit= 0.89 }, tag= { 'beverage', 'juice' }, id= 'B6' },
+		{ name= 'Tomato Juice', price= { unit= 0.89 }, tag= { 'beverage', 'juice' }, id= 'B7' },
+		{ name= 'Grapefruit Juice', price= { unit= 0.99 }, tag= { 'beverage', 'juice' }, id= 'B8' },
+		{ name= 'Cranberry Juice', price= { unit= 0.99 }, tag= { 'beverage', 'juice' }, id= 'B9' },
+		{ name= 'Apple Juice', price= { unit= 0.79 }, tag= { 'beverage', 'juice' }, id= 'B10' },
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		-- Main Course
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		{ name= 'Philly Cheesesteak\nMelt', price= { unit= 2.90 }, tag= { 'main_course' }, id= 'MAINC1' },
+		{ name= 'Beef & Broccoli\nTeriyaki Stir Fry', price= { unit= 2.95 }, tag= { 'main_course' }, id= 'MAINC2' },
+		{ name= 'Country Chicken\n& Potato Bowl', price= { unit= 2.98 }, tag= { 'main_course' }, id= 'MAINC3' },
+		{ name= 'Rotini Pasta\nwith Meat Sause', price= { unit= 2.99 }, tag= { 'main_course' }, id= 'MAINC4' },
+		{ name= 'Chilli Cheese\nBaked Potato', price= { unit= 2.79 }, tag= { 'main_course' }, id= 'MAINC5' },
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		-- Pizza
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		{ name= 'Buffalo Chicken', price= { unit= 2.90 }, tag= { 'pizza' }, id= 'PIZZA1' },
+		{ name= 'Pepperoni', price= { unit= 2.95 }, tag= { 'pizza' }, id= 'PIZZA2' },
+		{ name= 'BBQ Chicken', price= { unit= 2.98 }, tag= { 'pizza' }, id= 'PIZZA3' },
+		{ name= 'Taco Pizza', price= { unit= 2.99 }, tag= { 'pizza' }, id= 'PIZZA4' },
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		-- Grill
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		{ name= 'Chicago-Style\nHotdog', price= { unit= 2.90 }, tag= { 'grill' }, id= 'GRILL1' },
+		{ name= 'Chicken Tenders', price= { unit= 2.95 }, tag= { 'grill' }, id= 'GRILL2' },
+		{ name= 'Chicken Corn\nDog', price= { unit= 2.98 }, tag= { 'grill' }, id= 'GRILL3' },
+		{ name= 'Popping Chicken\nBites', price= { unit= 2.99 }, tag= { 'grill' }, id= 'GRILL4' },
+		{ name= 'Breaded Fish Melt', price= { unit= 2.99 }, tag= { 'grill' }, id= 'GRILL5' },
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		-- Tortilla
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		{ name= 'Nacho Works Bar', price= { unit= 2.90 }, tag= { 'tortilla' }, id= 'TORT1' },
+		{ name= 'Chicken & Bean\nBurrito', price= { unit= 2.95 }, tag= { 'tortilla' }, id= 'TORT2' },
+		{ name= 'Triple Layer Beef\n& Bean Lasagna', price= { unit= 2.98 }, tag= { 'tortilla' }, id= 'TORT3' },
+		{ name= 'Stuffed Burritos', price= { unit= 2.99 }, tag= { 'tortilla' }, id= 'TORT4' },
+		{ name= 'Beef Enchiladas', price= { unit= 2.99 }, tag= { 'tortilla' }, id= 'TORT5' },
+		{ name= 'Cheese Enchiladas', price= { unit= 2.99 }, tag= { 'tortilla' }, id= 'TORT6' },
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		-- Custom Sandwiches, Wraps & Salads
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		{ name= 'Chicken Ranch Wrap', price= { unit= 2.90 }, tag= { 'fast_take' }, id= 'FASTT1' },
+		{ name= 'All-American Wrap', price= { unit= 2.95 }, tag= { 'fast_take' }, id= 'FASTT2' },
+		{ name= 'Southwest Chicken\nWrap', price= { unit= 2.98 }, tag= { 'fast_take' }, id= 'FASTT3' },
+		{ name= 'Chicken-Ham\n& Swiss Wrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT4' },
+		{ name= 'Spicy Chicken\nWrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT5' },
+		{ name= 'House Chef Salad', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT6' },
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		-- Veggies
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		{ name= 'Tater Tots', price= { unit= 0.90 }, tag= { 'veggie' }, id= 'VEGG1' },
+		{ name= 'Fresh Broccoli', price= { unit= 0.95 }, tag= { 'veggie' }, id= 'VEGG2' },
+		{ name= 'Cinnamon Sweet\nPotatos', price= { unit= 0.98 }, tag= { 'veggie' }, id= 'VEGG3' },
+		{ name= 'Celery Sticks', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG4' },
+		{ name= 'Refried Beans', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG5' },
+		{ name= 'Baby Carrots', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG6' },
+		{ name= 'Green Beans', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG7' },
+		{ name= 'Cucumber & Tomato\nSalad', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG8' },
+		{ name= 'Steamed Carrots', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG9' },
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		-- Fruits
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		{ name= 'Fruit Cocktail', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU1' },
+		{ name= 'Fresh Apple', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU2' },
+		{ name= 'Pineapple Chunks', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU3' },
+		{ name= 'Fresh Pear', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU4' },
+		{ name= 'Diced Pears', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU5' },
+		{ name= 'Fresh Orange', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU6' },
+		{ name= 'Applesauce', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU7' },
+		{ name= 'Fresh Banana', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU8' },
+		{ name= 'Diced Peaches', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU9' },
+	}, -- end of products
+
+	--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+	-- MAIN MENU
+	--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+	category= {
+		{
+			name= 'Main Course',
+			tag= 'main_course'
+		},
+		{
+			name= 'Pizza',
+			tag= 'pizza'
+		},
+		{
+			name= 'Grill',
+			tag= 'grill'
+		},
+		{
+			name= 'Fast Takes',
+			tag= 'fast_take'
+		},
+		{
+			name= 'Veggies',
+			tag= 'veggie'
+		},
+		{
+			name= 'Fruits',
+			tag= 'fruit'
+		},
+		{
+			name= 'Beverages',
+			tag= 'beverage'
+		},
+	} -- end of categories 
+
+} -- end of index
+
+print (json.encode (index)) 
