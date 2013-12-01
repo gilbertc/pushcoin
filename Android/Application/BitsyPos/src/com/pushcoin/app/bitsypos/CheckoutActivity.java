@@ -44,7 +44,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 import android.content.Context;
 import android.util.Log;
-import java.util.List;
+import java.util.ArrayList;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 
@@ -124,8 +124,13 @@ public class CheckoutActivity
   public void onResult(QueryResult result)
 	{
 		AppDb.getInstance().soundOnDataArrived();
-		List<Customer> customers = result.getCustomers();
-		Log.v( Conf.TAG, "query-result|count=" + customers.size() );
+		ArrayList<Customer> customers = result.getCustomers();
+		// FIXME: remove this
+		if (result.getQuery().equals("--Fingerprint--") )
+		{
+			Log.e( Conf.TAG, "***REMOVE-IN-PROD***|limiting-query-result-for-fingerscan");
+			customers.subList(1, customers.size()).clear();
+		}
 		EventHub.post( MessageId.QUERY_USERS_REPLY, customers );
   }
   

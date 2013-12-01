@@ -68,8 +68,8 @@ index = {
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Custom Sandwiches, Wraps & Salads
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Chicken Ranch Wrap', price= { unit= 2.90 }, tag= { 'fast_take' }, id= 'FASTT1' },
-		{ name= 'All-American Wrap', price= { unit= 2.95 }, tag= { 'fast_take' }, id= 'FASTT2' },
+		{ name= 'Chicken Ranch\nWrap', price= { unit= 2.90 }, tag= { 'fast_take' }, id= 'FASTT1' },
+		{ name= 'All-American\nWrap', price= { unit= 2.95 }, tag= { 'fast_take' }, id= 'FASTT2' },
 		{ name= 'Southwest Chicken\nWrap', price= { unit= 2.98 }, tag= { 'fast_take' }, id= 'FASTT3' },
 		{ name= 'Chicken-Ham\n& Swiss Wrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT4' },
 		{ name= 'Spicy Chicken\nWrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT5' },

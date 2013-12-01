@@ -209,24 +209,24 @@
 		android:orientation="horizontal"
 		android:layout_marginTop="4dp"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content" >
+		android:layout_height="90dp" >
 
 		<Button android:text="@string/go_back_ico"
 			android:id="@+id/checkout_cart_go_back_button" 
 			android:background="@drawable/btn_red"
 			android:layout_marginRight="2dp"
-			style="@style/CheckoutCartAction" />
+			style="@style/CartActionButton" />
 
 		<Button android:text="@string/cash_or_check_ico"
 			android:id="@+id/checkout_cart_cash_or_check_button" 
 			android:background="@drawable/btn_blue"
 			android:layout_marginRight="2dp"
-			style="@style/CheckoutCartAction" />
+			style="@style/CartActionButton" />
 
 		<Button android:text="@string/enter_card_ico" 
 			android:id="@+id/checkout_cart_enter_card_button" 
 			android:background="@drawable/btn_yellow" 
-			style="@style/CheckoutCartAction" />
+			style="@style/CartActionButton" />
 
 	</LinearLayout>
 
@@ -234,20 +234,16 @@
 		android:orientation="horizontal"
 		android:layout_marginTop="2dp"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content" >
+		android:layout_height="90dp" >
 
 		<Button android:text="@string/print_receipt_ico"
 			android:id="@+id/checkout_cart_print_button" 
 			android:background="@drawable/btn_purple"
-			android:layout_height="match_parent"
 			android:layout_marginRight="2dp"
-			style="@style/CheckoutCartAction" />
+			style="@style/CartActionButton" />
 
 		<Button android:text="@string/finished" 
 			android:id="@+id/checkout_cart_finished_button" 
-			android:layout_weight="2"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
 			style="@style/ShoppingCartCheckout" />
 
 	</LinearLayout>

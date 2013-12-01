@@ -108,6 +108,7 @@ public class ShoppingCartFragment extends Fragment
 
 		// Button: Open Item
 		openItemBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_open_item_button);
+		Util.setCustomFont( ctx, openItemBtn_, Conf.ASSET_FONT_ICOMOON );
 		openItemBtn_.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
