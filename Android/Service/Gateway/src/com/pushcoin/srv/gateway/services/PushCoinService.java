@@ -340,8 +340,14 @@ public class PushCoinService extends Service {
 			String trxId, boolean isAmountExact, PcosAmount balance, Date utc,
 			Customer customer, boolean thankyou) {
 
-		if (thankyou)
-			display(new DisplayParcel("Thank You", TextAlignment.CENTER));
+		if (thankyou) {
+			double balanceValue = balance.getValue()
+					* Math.pow(10, balance.getScale());
+			String amountString = isAmountExact ? new DecimalFormat("$###0.00")
+					.format(balanceValue) : "$100+";
+			display(new DisplayParcel(new String[] { "Thank you",
+					"Balance: " + amountString }, TextAlignment.CENTER));
+		}
 
 		if (params == null) {
 			onError(params, "Payment Not Ready");
@@ -397,7 +403,7 @@ public class PushCoinService extends Service {
 		bo.writeBool(true);
 
 		// balance
-		PcosAmount amt = new PcosAmount(100, 10);
+		PcosAmount amt = new PcosAmount(192, -1);
 		amt.write(bo);
 
 		// utc balance time
@@ -582,6 +588,7 @@ public class PushCoinService extends Service {
 						return;
 					}
 				} catch (Exception ex) {
+					log.e("payment error", ex);
 					onPaymentError((ChargeParams) tag, ex.getMessage());
 					return;
 				}
