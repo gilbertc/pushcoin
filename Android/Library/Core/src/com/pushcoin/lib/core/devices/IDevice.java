@@ -6,12 +6,8 @@ import android.hardware.usb.UsbDevice;
 
 public interface IDevice {
 
-	public UsbDevice getUsbDevice();
-
 	public void open(UsbDevice device) throws IOException;
 
-	public void close() throws IOException;
-
-	public boolean isOpened();
+	public void close(UsbDevice device) throws IOException;
 
 }

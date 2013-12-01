@@ -25,6 +25,11 @@ public class ACR122U implements IPaymentDevice, OnStateChangeListener {
 		return device.getVendorId() == VENDOR_ID
 				&& device.getProductId() == PRODUCT_ID;
 	}
+	public static boolean PermissionRequired() { return false; }
+
+	public static ACR122U newInstance(DeviceManager manager) {
+		return new ACR122U(manager);
+	}
 
 	private int slotNum = -1;
 	private Reader reader;
@@ -47,7 +52,6 @@ public class ACR122U implements IPaymentDevice, OnStateChangeListener {
 		}
 	}
 
-	@Override
 	public UsbDevice getUsbDevice() {
 		return reader.getDevice();
 	}
@@ -68,11 +72,10 @@ public class ACR122U implements IPaymentDevice, OnStateChangeListener {
 	}
 
 	@Override
-	public void close() {
+	public void close(UsbDevice device) {
 		reader.close();
 	}
 
-	@Override
 	public boolean isOpened() {
 		return reader.isOpened();
 	}

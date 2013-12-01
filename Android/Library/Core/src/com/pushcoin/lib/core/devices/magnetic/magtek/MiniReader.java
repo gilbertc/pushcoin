@@ -10,6 +10,7 @@ import android.hardware.usb.UsbManager;
 
 import com.pushcoin.lib.core.devices.DeviceManager;
 import com.pushcoin.lib.core.devices.IPaymentDevice;
+import com.pushcoin.lib.core.devices.nfc.acs.ACR1222L;
 import com.pushcoin.lib.core.payment.PaymentListener;
 import com.pushcoin.lib.core.payment.magnetic.MagneticPayment;
 import com.pushcoin.lib.core.utils.Logger;
@@ -29,12 +30,16 @@ public class MiniReader implements IPaymentDevice {
 		return device.getVendorId() == VENDOR_ID
 				&& device.getProductId() == PRODUCT_ID;
 	}
+	public static boolean PermissionRequired() { return false; }
+
+	public static MiniReader newInstance(DeviceManager manager) {
+		return new MiniReader(manager);
+	}
 
 	public MiniReader(DeviceManager manager) {
 		this.usbManager = manager.getUsbManager();
 	}
 
-	@Override
 	public UsbDevice getUsbDevice() {
 		return usbDevice;
 	}
@@ -115,11 +120,10 @@ public class MiniReader implements IPaymentDevice {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close(UsbDevice device) throws IOException {
 		this.isRunning = false;
 	}
 
-	@Override
 	public boolean isOpened() {
 		return this.isRunning;
 	}

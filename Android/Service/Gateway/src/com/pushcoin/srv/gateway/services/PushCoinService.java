@@ -20,6 +20,7 @@ import com.pushcoin.lib.core.data.PcosAmount;
 import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.exceptions.MATUnavailableException;
 import com.pushcoin.lib.core.net.PcosServer;
+import com.pushcoin.lib.core.query.IQuery;
 import com.pushcoin.lib.core.security.KeyStore;
 import com.pushcoin.lib.core.utils.Logger;
 import com.pushcoin.lib.pcos.BlockWriter;
@@ -220,6 +221,26 @@ public class PushCoinService extends Service {
 		}
 	}
 
+	// Received a query from device
+	private void onQueryReady(IQuery query)
+	{
+		display(new DisplayParcel("Querying"));
+		log.i("querying");
+		
+		if (this.pollParams == null) {
+			onPollError("Poll params lost");
+			return;
+		}
+		
+		// Create query params from the iquery result and our poll params
+		QueryParams params = new QueryParams();
+		params.setMessenger(this.pollParams.getMessenger());
+		params.setClientRequestId(this.pollParams.getClientRequestId());
+		params.setQuery("--Fingerprint--");
+		
+		query(params);
+	}
+	
 	// Received device blob
 	private void onPaymentReady(byte[] pta) {
 		display(new DisplayParcel("Submitting..."));
@@ -538,8 +559,12 @@ public class PushCoinService extends Service {
 			case PaymentService.MSGID_COMPLETE:
 				onPaymentReady((byte[]) message.obj);
 				break;
+			case PaymentService.MSGID_QUERY:
+				onQueryReady((IQuery) message.obj);
+				break;
 			case PaymentService.MSGID_ERROR:
 				onPollError(((Exception) message.obj).getMessage());
+				break;
 			}
 		};
 	};

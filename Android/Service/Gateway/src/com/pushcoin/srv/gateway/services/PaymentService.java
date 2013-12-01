@@ -10,6 +10,8 @@ import com.pushcoin.lib.core.data.TransactionKey;
 import com.pushcoin.lib.core.devices.DeviceManager;
 import com.pushcoin.lib.core.payment.IPayment;
 import com.pushcoin.lib.core.payment.PaymentListener;
+import com.pushcoin.lib.core.query.IQuery;
+import com.pushcoin.lib.core.query.QueryListener;
 import com.pushcoin.lib.core.utils.Logger;
 
 import android.app.Service;
@@ -21,7 +23,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 
-public class PaymentService extends Service implements PaymentListener {
+public class PaymentService extends Service implements PaymentListener,
+		QueryListener {
 	private static Logger log = Logger.getLogger(PaymentService.class);
 
 	public static final String ACTION_START = "com.pushcoin.srv.gateway.services.PaymentService.START";
@@ -31,8 +34,9 @@ public class PaymentService extends Service implements PaymentListener {
 	public static final String KEY_MESSENGER = "Messenger";
 	public static final String KEY_REQUEST_ID = "RequestId";
 
-	public static final int MSGID_COMPLETE = 1;
 	public static final int MSGID_ERROR = -1;
+	public static final int MSGID_COMPLETE = 1;
+	public static final int MSGID_QUERY = 2;
 
 	private DeviceManager deviceManager;
 	private Messenger messenger;
@@ -100,7 +104,8 @@ public class PaymentService extends Service implements PaymentListener {
 		} else {
 			try {
 				this.messenger = (Messenger) bundle.get(KEY_MESSENGER);
-				this.deviceManager.enable(this);
+				this.deviceManager.enablePayment(this);
+				this.deviceManager.enableQuery(this);
 			} catch (Exception ex) {
 				log.e("start", ex);
 			}
@@ -110,7 +115,7 @@ public class PaymentService extends Service implements PaymentListener {
 	private void stop(Bundle bundle) {
 		log.d("stop");
 
-		this.deviceManager.disable();
+		this.deviceManager.disableAll();
 		stopSelf(this.startId);
 	}
 
@@ -154,7 +159,7 @@ public class PaymentService extends Service implements PaymentListener {
 
 			msg.what = MSGID_COMPLETE;
 			msg.obj = tech.getMessage(getChallenge());
-			
+
 			tech.close();
 
 		} catch (Exception e) {
@@ -169,6 +174,19 @@ public class PaymentService extends Service implements PaymentListener {
 			log.d("Service", e);
 		}
 
+	}
+
+	@Override
+	public void onQueryDiscovered(IQuery query) {
+		Message msg = Message.obtain();
+		msg.what = MSGID_QUERY;
+		msg.obj = query;
+
+		try {
+			this.messenger.send(msg);
+		} catch (Exception e) {
+			log.d("Service", e);
+		}
 	}
 
 }
