@@ -125,8 +125,8 @@ public class CheckoutActivity
 	{
 		AppDb.getInstance().soundOnDataArrived();
 		List<Customer> customers = result.getCustomers();
-		Message msg = Message.obtain(null, MessageId.QUERY_USERS_REPLY, customers);
-		handler_.handleMessage(msg);
+		Log.v( Conf.TAG, "query-result|count=" + customers.size() );
+		EventHub.post( MessageId.QUERY_USERS_REPLY, customers );
   }
   
 	/**
@@ -155,7 +155,9 @@ public class CheckoutActivity
 		Error polling on device.
 	*/
   @Override
-  public void onResult(Error err) {
+  public void onResult(Error err)
+	{
+		Toast.makeText(this, err.getReason(), Toast.LENGTH_LONG).show();
 		Log.e( Conf.TAG, "error-charge|why=" + err.getReason() );
   }
 

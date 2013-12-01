@@ -175,7 +175,7 @@ public class CustomerDetailsFragment extends Fragment
 	{
 		// Turn on/off buttons depending on cart state.
 		if ( cartHolder.cart.isPaid() ) {
-			Util.disableButton( chargeBtn_, R.drawable.btn_gray, btnTextColorOff_);
+			chargeBtn_.setVisibility(View.GONE);
 		} else {
 			Util.enableButton( chargeBtn_, R.drawable.btn_blue, btnTextColorOn_);
 		}

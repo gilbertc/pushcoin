@@ -227,6 +227,7 @@ public class Server {
 
 			if (params.isStagedResponse) {
 				log.d("Staging: " + Stringifier.toString(params.data));
+				/*
 				try {
 					// Mimic server calls
 					Thread.sleep(200);
@@ -234,6 +235,7 @@ public class Server {
 					log.e("InterruptedException", e);
 					throw new ServerException(ErrorCode.EC_InterruptedException);
 				}
+				*/
 				return new PostResult(params, params.data);
 			}
 
