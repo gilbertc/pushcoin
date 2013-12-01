@@ -23,6 +23,7 @@
 	<color name="lightui_lightgray">#dddddd</color>
 	<color name="lightui_mediumgray">#bababa</color>
 	<color name="lightui_darkgray">#999999</color>
+	<color name="lightui_darkergray">#777777</color>
 	<color name="lightui_darkestgray">#444444</color>
 	<color name="lightui_darkorange">#b66400</color>
 

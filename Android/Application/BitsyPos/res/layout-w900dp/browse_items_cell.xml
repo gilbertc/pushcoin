@@ -5,35 +5,38 @@
 	android:background="#30707070"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:paddingTop="22dp"
-	android:paddingBottom="22dp"
-	android:paddingRight="10dp"
-	android:paddingLeft="10dp"
+	android:paddingTop="5dp"
 	android:orientation="vertical">
 
-	<LinearLayout
-		android:orientation="horizontal"
+	<LinearLayout 
 		android:layout_width="match_parent"
-		android:layout_height="50sp">
+		android:layout_height="70sp"
+		android:orientation="horizontal">
 
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/item_summary_title"
 			android:layout_weight="1"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="5dp"
+			android:layout_marginLeft="10dp"
 			android:gravity="top"
 			android:textSize="20sp"
-			android:textColor="@color/lightui_mediumgray"
+			android:textColor="@color/lightui_lightgray"
 			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 		<com.mobsandgeeks.ui.TypefaceTextView
 			android:id="@+id/item_summary_price"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_gravity="bottom"
+			android:paddingTop="3dp"
+			android:paddingLeft="5dp"
+			android:paddingRight="5dp"
 			android:textSize="20sp"
-			android:textColor="@color/android_holo_blue_light"
+			android:textColor="@color/lightui_darkgray"
 			android:textStyle="bold"
-			geekui:customTypeface="fonts/DejaVuSans.ttf" />
+			geekui:customTypeface="fonts/TT0467M.ttf" />
 
 	</LinearLayout>
 

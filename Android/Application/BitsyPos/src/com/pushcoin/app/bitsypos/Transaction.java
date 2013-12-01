@@ -61,12 +61,12 @@ public class Transaction
 		customer_ = customer;
 	}
 
-	public Transaction approved( String exchangeTransactionId, long exchangeTime ) {
-		return new Transaction(this, exchangeTransactionId, exchangeTime, STATUS_APPROVED);
+	public Transaction approved( String exchangeTransactionId, long exchangeTime, Customer customer ) {
+		return new Transaction(this, exchangeTransactionId, exchangeTime, STATUS_APPROVED, customer );
 	}
 
-	public Transaction denied( String exchangeTransactionId, long exchangeTime ) {
-		return new Transaction(this, exchangeTransactionId, exchangeTime, STATUS_DENIED);
+	public Transaction denied( String exchangeTransactionId, long exchangeTime, Customer customer ) {
+		return new Transaction(this, exchangeTransactionId, exchangeTime, STATUS_DENIED, customer);
 	}
 
 	public Transaction setCustomer(Customer customer) {

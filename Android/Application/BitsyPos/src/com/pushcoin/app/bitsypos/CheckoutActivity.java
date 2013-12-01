@@ -45,6 +45,7 @@ import android.widget.Toast;
 import android.content.Context;
 import android.util.Log;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 
@@ -144,7 +145,13 @@ public class CheckoutActivity
 		Transaction transaction = cart.findTransactionWithClientTransactionId( result.getClientRequestId() );
 		if (transaction != null)
 		{
-			cart.updateTransaction( transaction.approved(result.getTrxId(), result.getUtc()) );
+			Customer customer = result.getCustomer();
+			// If customer info available, show it.
+			if (customer != null) {
+				EventHub.post( MessageId.QUERY_USERS_REPLY, Arrays.asList( customer ));
+			}
+
+			cart.updateTransaction( transaction.approved(result.getTrxId(), result.getUtc(), customer) );
 			// at this point, the old charge amount likely does not
 			// reflect what the user wants to do next -- reset it
 			cart.setChargeAmount(null);
