@@ -46,12 +46,16 @@ public class MiniReader implements IPaymentDevice {
 		return device.getVendorId() == VENDOR_ID
 				&& device.getProductId() == PRODUCT_ID;
 	}
+	public static boolean PermissionRequired() { return true; }
+
+	public static MiniReader newInstance(DeviceManager manager) {
+		return new MiniReader(manager);
+	}
 
 	public MiniReader(DeviceManager manager) {
 		this.usbManager = manager.getUsbManager();
 	}
 
-	@Override
 	public UsbDevice getUsbDevice() {
 		return usbDevice;
 	}
@@ -132,11 +136,10 @@ public class MiniReader implements IPaymentDevice {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close(UsbDevice device) throws IOException {
 		this.isRunning = false;
 	}
 
-	@Override
 	public boolean isOpened() {
 		return this.isRunning;
 	}

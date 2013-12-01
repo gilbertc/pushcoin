@@ -45,6 +45,11 @@ public class ACR1222L implements IPaymentDevice, IDisplayDevice,
 		return device.getVendorId() == VENDOR_ID
 				&& device.getProductId() == PRODUCT_ID;
 	}
+	public static boolean PermissionRequired() { return true; }
+
+	public static ACR1222L newInstance(DeviceManager manager) {
+		return new ACR1222L(manager);
+	}
 
 	private int slotNum = -1;
 	private Reader reader;
@@ -67,7 +72,6 @@ public class ACR1222L implements IPaymentDevice, IDisplayDevice,
 		}
 	}
 
-	@Override
 	public UsbDevice getUsbDevice() {
 		return reader.getDevice();
 	}
@@ -96,11 +100,10 @@ public class ACR1222L implements IPaymentDevice, IDisplayDevice,
 	}
 
 	@Override
-	public void close() {
+	public void close(UsbDevice device) {
 		reader.close();
 	}
 
-	@Override
 	public boolean isOpened() {
 		return reader.isOpened();
 	}

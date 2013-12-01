@@ -18,15 +18,18 @@
 package com.pushcoin.lib.core.devices;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
 import com.pushcoin.lib.core.data.DisplayParcel;
-import com.pushcoin.lib.core.devices.biometric.digitalpersona.FingerprintReader;
+import com.pushcoin.lib.core.devices.biometric.digitalpersona.UareU5160FingerprintReader;
 import com.pushcoin.lib.core.devices.magnetic.magtek.MiniReader;
 import com.pushcoin.lib.core.devices.nfc.acs.ACR1222L;
 import com.pushcoin.lib.core.devices.nfc.acs.ACR122U;
+import com.pushcoin.lib.core.exceptions.DeviceNotConstructedException;
 import com.pushcoin.lib.core.payment.PaymentListener;
+import com.pushcoin.lib.core.query.QueryListener;
 import com.pushcoin.lib.core.utils.Logger;
 
 import android.app.PendingIntent;
@@ -60,7 +63,8 @@ public class DeviceManager {
 	}
 
 	private SparseArray<IDevice> devices;
-	private PaymentListener dispatchListener;
+	private PaymentListener paymentListener;
+	private QueryListener queryListener;
 	private UsbManager usbManager;
 	private DisplayParcel displayParcel;
 
@@ -80,6 +84,25 @@ public class DeviceManager {
 	}
 
 	public void requestPermission(Context context, UsbDevice usbDevice) {
+
+		Class<? extends IDevice> deviceClass = getDeviceClass(usbDevice);
+		if (deviceClass == null)
+			return;
+
+		boolean permissionRequired = true;
+		try {
+			permissionRequired = ((Boolean) deviceClass.getMethod(
+					"PermissionRequired").invoke(null)).booleanValue();
+		} catch (Exception ex) {
+			log.e("requestPermission", ex);
+			return;
+		}
+
+		if (permissionRequired == false) {
+			onPermissionGranted(context, usbDevice);
+			return;
+		}
+
 		if (this.isPermissionRequesting) {
 			PendingPermissionRequest r = new PendingPermissionRequest();
 			r.context = context;
@@ -124,8 +147,8 @@ public class DeviceManager {
 			return ACR122U.class;
 		if (MiniReader.Match(usbDevice))
 			return MiniReader.class;
-		if (FingerprintReader.Match(usbDevice))
-			return FingerprintReader.class;
+		if (UareU5160FingerprintReader.Match(usbDevice))
+			return UareU5160FingerprintReader.class;
 		return null;
 	}
 
@@ -143,7 +166,7 @@ public class DeviceManager {
 		try {
 			IDevice device = devices.get(usbDevice.getDeviceId());
 			if (device != null) {
-				closeDevice(device);
+				closeDevice(device, usbDevice);
 				devices.remove(usbDevice.getDeviceId());
 			}
 		} catch (Exception ex) {
@@ -155,14 +178,19 @@ public class DeviceManager {
 			UsbDevice usbDevice) {
 		log.d("open device");
 		try {
-			IDevice device = (IDevice) deviceClass.getConstructor(
-					DeviceManager.class).newInstance(this);
+			Method newInstance = deviceClass.getMethod("newInstance",
+					DeviceManager.class);
+			IDevice device = (IDevice) newInstance.invoke(null, this);
+
+			if (device == null) {
+				throw new DeviceNotConstructedException();
+			}
 
 			device.open(usbDevice);
 
-			if (this.dispatchListener != null
+			if (this.paymentListener != null
 					&& device instanceof IPaymentDevice) {
-				((IPaymentDevice) device).enable(this.dispatchListener);
+				((IPaymentDevice) device).enable(this.paymentListener);
 			}
 
 			if (this.displayParcel != null && device instanceof IDisplayDevice) {
@@ -176,31 +204,56 @@ public class DeviceManager {
 		return null;
 	}
 
-	private void closeDevice(IDevice device) throws IOException {
-		device.close();
+	private void closeDevice(IDevice device, UsbDevice usbDevice)
+			throws IOException {
+		device.close(usbDevice);
 	}
 
-	public void enable(PaymentListener receiver) throws IOException {
-		log.d("enable");
-		this.dispatchListener = receiver;
+	public void enablePayment(PaymentListener receiver) throws IOException {
+		log.d("enable payment");
+		this.paymentListener = receiver;
 
 		for (int i = 0; i < this.devices.size(); ++i) {
-			log.d("trying device");
+			log.d("trying payment device");
 			IDevice device = this.devices.valueAt(i);
 			if (device instanceof IPaymentDevice) {
-				((IPaymentDevice) device).enable(this.dispatchListener);
+				((IPaymentDevice) device).enable(this.paymentListener);
 			}
 		}
 	}
 
-	public void disable() {
-		log.d("disable");
-		this.dispatchListener = null;
+	public void enableQuery(QueryListener receiver) throws IOException {
+		log.d("enable query");
+		this.queryListener = receiver;
+
+		for (int i = 0; i < this.devices.size(); ++i) {
+			log.d("trying query device");
+			IDevice device = this.devices.valueAt(i);
+			if (device instanceof IQueryDevice) {
+				((IQueryDevice) device).enable(this.queryListener);
+			}
+		}
+	}
+
+	public void disablePayment() {
+		log.d("disable payment");
+		this.paymentListener = null;
 
 		for (int i = 0; i < this.devices.size(); ++i) {
 			IDevice device = this.devices.valueAt(i);
 			if (device instanceof IPaymentDevice)
 				((IPaymentDevice) device).disable();
+		}
+	}
+
+	public void disableQuery() {
+		log.d("disable query");
+		this.queryListener = null;
+
+		for (int i = 0; i < this.devices.size(); ++i) {
+			IDevice device = this.devices.valueAt(i);
+			if (device instanceof IQueryDevice)
+				((IQueryDevice) device).disable();
 		}
 	}
 
@@ -214,7 +267,9 @@ public class DeviceManager {
 		}
 	}
 
-	public void cancel() {
-		disable();
+	public void disableAll() {
+		disablePayment();
+		disableQuery();
 	}
+
 }
