@@ -105,9 +105,9 @@ public class CheckoutCartFragment extends Fragment
 		discountValue_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_discount);
 		discountPct_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_dicount_pct);
 		cartPaidOffLabel_ = (TextView) cartLayout.findViewById(R.id.checkout_cart_paid_off_label);
-		btnFinished_ = (Button) cartLayout.findViewById(R.id.checkout_cart_finished_button);
 
-		// Handle finished-click
+		// Button: Finished
+		btnFinished_ = (Button) cartLayout.findViewById(R.id.checkout_cart_finished_button);
 		btnFinished_.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -243,6 +243,7 @@ public class CheckoutCartFragment extends Fragment
 
 		// Button: Go Back
 		Button goBackBtn = (Button) cartLayout.findViewById(R.id.checkout_cart_go_back_button);
+		Util.setCustomFont( ctx, goBackBtn, Conf.ASSET_FONT_ICOMOON );
 		goBackBtn.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -251,8 +252,21 @@ public class CheckoutCartFragment extends Fragment
 				}
 			});
 
+		// Button: Cash or Check
+		Button cashBtn = (Button) cartLayout.findViewById(R.id.checkout_cart_cash_or_check_button);
+		Util.setCustomFont( ctx, cashBtn, Conf.ASSET_FONT_ICOMOON );
 
+		// Button: Manual Card
+		Button manualCardBtn = (Button) cartLayout.findViewById(R.id.checkout_cart_enter_card_button);
+		Util.setCustomFont( ctx, manualCardBtn, Conf.ASSET_FONT_ICOMOON );
+
+		// Button: Print Receipt
+		Button printReceiptBtn = (Button) cartLayout.findViewById(R.id.checkout_cart_print_button);
+		Util.setCustomFont( ctx, printReceiptBtn, Conf.ASSET_FONT_ICOMOON );
+
+		// Cart items
 		ListView cartItemList = (ListView) cartLayout.findViewById(R.id.checkout_cart_list);
+
 		// Keep in focus
 		cartItemList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		cartItemList.setAdapter(adapter_);

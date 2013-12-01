@@ -97,6 +97,7 @@ public class ShoppingCartFragment extends Fragment
 
 		// Button: Start Over
 		startOverBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_startover_button);
+		Util.setCustomFont( ctx, startOverBtn_, Conf.ASSET_FONT_ICOMOON );
 		startOverBtn_.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -116,9 +117,11 @@ public class ShoppingCartFragment extends Fragment
 
 		// Button: Queue Order
 		queueOrderBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_queue_order_button);
+		Util.setCustomFont( ctx, queueOrderBtn_, Conf.ASSET_FONT_ICOMOON );
 
 		// Button: Print Receipt
 		printReceiptBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_print_button);
+		Util.setCustomFont( ctx, printReceiptBtn_, Conf.ASSET_FONT_ICOMOON );
 
 		// Button: Checkout
 		checkoutBtn_ = (Button) cartLayout.findViewById(R.id.shopping_cart_checkout_button);

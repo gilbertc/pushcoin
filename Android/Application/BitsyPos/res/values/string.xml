@@ -30,16 +30,20 @@
 	<string name="discount">Discount:</string>
 	<string name="server_name">Server Name</string>
 	<string name="start_over">Start\nOver</string>
+	<string name="start_over_ico">&#xe6a8;</string>
 	<string name="print_receipt">Print\nReceipt</string>
+	<string name="print_receipt_ico">&#xe650;</string>
 	<string name="queue_order">Queue\nOrder</string>
+	<string name="queue_order_ico">&#xe69f;</string>
 	<string name="open_item">Open\nItem</string>
+	<string name="open_item_ico">&#xe606;</string>
 	<string name="new_tab">New Tab</string>
 	<string name="default_tab_name">Main</string>
 	<string name="checkout">Checkout &#187;</string>
 	<string name="finished">Finish</string>
-	<string name="cash_or_check">Cash or\nCheck</string>
-	<string name="go_back">Go\nBack</string>
-	<string name="enter_card">Enter\nCard</string>
+	<string name="cash_or_check_ico">&#xe638;</string>
+	<string name="go_back_ico">&#xe666;</string>
+	<string name="enter_card_ico">&#xe639;</string>
 	<string name="charge">Charge</string>
 
 	<!-- iconmoon -->

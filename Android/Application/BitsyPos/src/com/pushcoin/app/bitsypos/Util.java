@@ -19,7 +19,10 @@ package com.pushcoin.app.bitsypos;
 
 import android.database.Cursor;
 import android.os.Parcel;
+import android.content.Context;
 import android.widget.Button;
+import android.widget.TextView;
+import android.graphics.Typeface;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Date;
@@ -167,6 +170,12 @@ class Util
 		} else {
 			return fullTimeFormatter_.format(new Date(eventTime));
 		}
+	}
+
+	static public void setCustomFont( Context context, TextView label, String fontPath )
+	{
+		Typeface font = Typeface.createFromAsset( context.getAssets(), fontPath );
+		label.setTypeface(font);
 	}
 
 	static private final SimpleDateFormat shortTimeFormatter_ = new SimpleDateFormat("h:mm a", Locale.getDefault());

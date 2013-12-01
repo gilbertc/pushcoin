@@ -86,18 +86,18 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" >
 
-		<Button android:text="@string/start_over"
+		<Button android:text="@string/start_over_ico"
 			android:id="@+id/shopping_cart_startover_button" 
 			android:layout_marginRight="2dp"
 			style="@style/ShoppingCartAction" />
 
-		<Button android:text="@string/open_item"
+		<Button android:text="@string/open_item_ico"
 			android:id="@+id/shopping_cart_open_item_button" 
 			android:layout_marginRight="2dp"
 			android:background="@drawable/btn_blue"
 			style="@style/ShoppingCartAction" />
 
-		<Button android:text="@string/queue_order" 
+		<Button android:text="@string/queue_order_ico" 
 			android:id="@+id/shopping_cart_queue_order_button" 
 			style="@style/ShoppingCartAction" />
 
@@ -109,11 +109,11 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" >
 
-		<Button android:text="@string/print_receipt"
+		<Button android:text="@string/print_receipt_ico"
 			android:id="@+id/shopping_cart_print_button" 
 			android:layout_height="match_parent"
 			android:layout_marginRight="2dp"
-			style="@style/ShoppingCartAction" />
+			style="@style/CheckoutAction" />
 
 		<Button android:text="@string/checkout" 
 			android:layout_weight="2"

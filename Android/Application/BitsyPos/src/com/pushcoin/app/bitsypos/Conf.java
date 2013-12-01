@@ -55,6 +55,15 @@ public class Conf
 	// Duration of time (ms) the user can undo removal of item from the cart. 
 	static final int CART_UNDO_HIDE_DELAY=3000;
 
+	/**
+		Custom fonts in assets directory.
+	*/
+	static final String ASSET_FONT_ICOMOON = "fonts/icomoon.ttf";
+	static final String ASSET_FONT_ENTYPO = "fonts/entypo.ttf";
+	static final String ASSET_FONT_PUSHCOIN_COMPACT = "fonts/TT0467M.ttf";
+	static final String ASSET_FONT_PUSHCOIN_REGULAR = "fonts/TT0468M.ttf";
+	static final String ASSET_FONT_PUSHCOIN_BOLD = "fonts/TT0469M.ttf";
+
 	/** 
 		Database queries.  
 
