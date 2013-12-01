@@ -16,6 +16,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:textSize="32sp"
+		android:includeFontPadding="false"
 		geekui:customTypeface="fonts/TT0467M.ttf" />
 
 	<com.mobsandgeeks.ui.TypefaceTextView

@@ -7,24 +7,6 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:text="@string/server_name"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center_horizontal"
-		android:textSize="30sp"
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-		android:textColor="#b0000000"
-		android:background="@drawable/category_menu_header_shape"
-		geekui:customTypeface="fonts/TT0467M.ttf" />
-
-	<!-- header drop shadow -->
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="2dp"
-		android:background="@drawable/category_menu_drop_shadow" />
-
 	<com.pushcoin.app.bitsypos.WrapContentListView
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/category_menu"

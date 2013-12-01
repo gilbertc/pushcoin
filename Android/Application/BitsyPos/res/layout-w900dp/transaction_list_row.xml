@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:geekui="http://schemas.android.com/apk/res-auto"
+	android:background="@drawable/window_shape"
+	android:padding="10dp"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<!-- first row: status, timestamp, amount -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/transaction_list_status"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+		android:textSize="30sp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/transaction_list_timestamp"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="30sp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/transaction_list_amount"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentRight="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="4dp"
+		android:textSize="36sp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/TT0467M.ttf" />
+
+	<!-- second row: customer name, customer account -->
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/transaction_list_customer_name"
+		android:layout_alignParentLeft="true"
+		android:layout_below="@id/transaction_list_status"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="4dp"
+		android:textSize="24sp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+	<com.mobsandgeeks.ui.TypefaceTextView
+		android:id="@+id/transaction_list_customer_account"
+		android:layout_alignParentRight="true"
+		android:layout_below="@id/transaction_list_status"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="4dp"
+		android:textSize="24sp"
+		android:textColor="@color/lightui_mediumgray"
+		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+
+</RelativeLayout>

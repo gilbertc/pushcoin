@@ -1,3 +1,20 @@
+/*
+  Copyright (c) 2013 PushCoin Inc
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.pushcoin.app.bitsypos;
 
 import android.app.Activity;
@@ -31,6 +48,9 @@ public class BrowseCatalogActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate( savedInstanceState );
+
+		// Hide the title bar, leave status bar as is
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		// Create the event pump
 		EventHub.newInstance( this );
@@ -79,12 +99,6 @@ public class BrowseCatalogActivity
 		super.onResume();
 		// Register self with the hub and start receiving events
 		EventHub.getInstance().register( handler_, "BrowseCatalogActivity" );
-
-		// Display category menu, item browser.
-		getFragmentManager().beginTransaction()
-			.replace( R.id.hz_left_pane, 
-				new CategoryMenuFragment(), FragmentTag.CATEGORY_MENU_FRAG )
-			.commit();
 	}
 
 	@Override

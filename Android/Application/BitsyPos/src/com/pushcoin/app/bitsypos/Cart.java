@@ -1,3 +1,20 @@
+/*
+  Copyright (c) 2013 PushCoin Inc
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.pushcoin.app.bitsypos;
 
 import com.pushcoin.ifce.connect.data.Customer;
@@ -73,13 +90,13 @@ public class Cart
 		/**
 			Returns price formatted according to currency precision.
 		*/
-		String getPrettyPrice() 
+		public String getPrettyPrice() 
 		{
 			return NumberFormat.getCurrencyInstance().format( getPrice() );
 		}
 
 		// ctor
-		Combo()
+		public Combo()
 		{
 			note = "";
 			name = "";
@@ -87,7 +104,7 @@ public class Cart
 		}
 
 		// copy ctor
-		Combo( Combo rhs )
+		public Combo( Combo rhs )
 		{
 			for (Entry e: rhs.entries) {
 				entries.add( new Entry( e ) );
@@ -98,7 +115,7 @@ public class Cart
 		}
 	}
 
-	void add( Combo item )
+	public void add( Combo item )
 	{
 		Log.v(Conf.TAG, "cart-append-item="+item.getName() );
 		synchronized (lock_) {
@@ -108,7 +125,7 @@ public class Cart
 		emitCartContentChanged();
 	}
 
-	void insert( Combo item, int position )
+	public void insert( Combo item, int position )
 	{
 		Log.v(Conf.TAG, "cart-insert-item="+item.getName() );
 		synchronized (lock_) 
@@ -124,7 +141,7 @@ public class Cart
 		emitCartContentChanged();
 	}
 
-	Combo remove( int position )
+	public Combo remove( int position )
 	{
 		Combo item = null;
 		synchronized (lock_) 
@@ -142,7 +159,7 @@ public class Cart
 		return item;
 	}
 
-	void replace( Combo item, int position )
+	public void replace( Combo item, int position )
 	{
 		Log.v(Conf.TAG, "cart-replace-item="+item.getName()+";pos="+position);
 		synchronized (lock_) 
@@ -159,7 +176,11 @@ public class Cart
 		emitCartContentChanged();
 	}
 
-	void clear()
+	public boolean isEmpty() {
+		return items_.isEmpty();
+	}
+
+	public void clear()
 	{
 		boolean effective;
 		synchronized (lock_) 
@@ -178,7 +199,7 @@ public class Cart
 	/**
 		Retrieves an item at a position.
 	*/
-	Combo get( int position )
+	public Combo get( int position )
 	{
 		synchronized (lock_) {
 			return items_.get( position );
@@ -188,14 +209,14 @@ public class Cart
 	/**
 		Returns number of items in cart.
 	*/
-	int size() 
+	public int size() 
 	{
 		synchronized (lock_) {
 			return items_.size();
 		}
 	}
 
-	BigDecimal totalValue()
+	public BigDecimal totalValue()
 	{
 		synchronized (lock_) 
 		{
@@ -207,7 +228,10 @@ public class Cart
 		}
 	}
 
-	BigDecimal totalProcessed()
+	/**
+		Sums up amounts of approved transactions.
+	*/
+	public BigDecimal totalProcessed()
 	{
 		synchronized (lock_) 
 		{
@@ -222,10 +246,14 @@ public class Cart
 		}
 	}
 
-	BigDecimal amountDue()
+	public BigDecimal amountDue()
 	{
 		BigDecimal due = totalValue().subtract(discount_).subtract( totalProcessed() );
-		return ( due.compareTo( Conf.ZERO_PRICE) < 0 ) ? Conf.ZERO_PRICE: due;
+		return ( due.compareTo( Conf.ZERO_PRICE) > 0 ) ? due : Conf.ZERO_PRICE;
+	}
+
+	public boolean isPaid() {
+		return !(amountDue().compareTo( Conf.ZERO_PRICE ) > 0);
 	}
 
 	public void setChargeAmount(BigDecimal charge)
@@ -275,11 +303,17 @@ public class Cart
 
 	public Transaction createChargeTransaction()
 	{
+		// anonymous transaction
+		return createChargeTransaction( null );
+	}
+
+	public Transaction createChargeTransaction( Customer customer )
+	{
 		BigDecimal chargeAmount = getChargeAmount();
 		Transaction trx = null;
 		if (chargeAmount.compareTo(Conf.BIG_ZERO) > 0)
 		{
-			trx = new Transaction( chargeAmount );
+			trx = new Transaction( chargeAmount, customer );
 			transactions_.add( trx );
 			emitTransactionChanged();
 		}
@@ -355,12 +389,16 @@ public class Cart
 
 	private void emitTransactionChanged()
 	{
+		// Don't post too fast, it creates ugly visual jitter.
+
+
 		// broadcast cart content has changed
-		EventHub.post( MessageId.TRANSATION_STATUS_CHANGED );
+		EventHub.post( MessageId.TRANSACTION_STATUS_CHANGED );
 	}
 
 	private Handler parentContext_;
 	private final Object lock_ = new Object();
+	private long lastPost_ = 0;
 
 	ArrayList<Combo> items_ = new ArrayList<Combo>();
 	ArrayList<Transaction> transactions_ = new ArrayList<Transaction>();

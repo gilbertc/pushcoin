@@ -1,3 +1,20 @@
+/*
+  Copyright (c) 2013 PushCoin Inc
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.pushcoin.srv.gateway.demo;
 
 import java.util.ArrayList;
@@ -17,6 +34,9 @@ public class QueryResultBuilder {
 		QueryResult res = new QueryResult();
 		res.setQuery(query);
 
+		// fabricate date of balance
+		long balanceAsOf = System.currentTimeMillis();
+
 		ArrayList<Customer> customers = new ArrayList<Customer>();
 		// populate sample
 		Customer c1 = new Customer();
@@ -28,6 +48,7 @@ public class QueryResultBuilder {
 		c1.mugshot = BitmapFactory.decodeResource(context.getResources(),
 				R.drawable.contrib_sl);
 		c1.balance = new Amount(5632, -2);
+		c1.balanceAsOf = balanceAsOf;
 		customers.add(c1);
 
 		Customer c2 = new Customer();
@@ -39,6 +60,7 @@ public class QueryResultBuilder {
 		c2.mugshot = BitmapFactory.decodeResource(context.getResources(),
 				R.drawable.contrib_ec);
 		c2.balance = new Amount(15632, -2);
+		c2.balanceAsOf = balanceAsOf;
 		customers.add(c2);
 
 		Customer c3 = new Customer();
@@ -50,6 +72,7 @@ public class QueryResultBuilder {
 		c3.mugshot = BitmapFactory.decodeResource(context.getResources(),
 				R.drawable.contrib_gc);
 		c3.balance = new Amount(8810, -2);
+		c3.balanceAsOf = balanceAsOf;
 		customers.add(c3);
 
 		Customer c4 = new Customer();
@@ -61,6 +84,7 @@ public class QueryResultBuilder {
 		c4.mugshot = BitmapFactory.decodeResource(context.getResources(),
 				R.drawable.contrib_lucas);
 		c4.balance = new Amount(810, -2);
+		c4.balanceAsOf = balanceAsOf;
 		customers.add(c4);
 
 		Customer c5 = new Customer();
@@ -72,6 +96,7 @@ public class QueryResultBuilder {
 		c5.mugshot = BitmapFactory.decodeResource(context.getResources(),
 				R.drawable.contrib_milosh);
 		c5.balance = new Amount(100, -2);
+		c5.balanceAsOf = balanceAsOf;
 		customers.add(c5);
 
 		res.setCustomers(customers);

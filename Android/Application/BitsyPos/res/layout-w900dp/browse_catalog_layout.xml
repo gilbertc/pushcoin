@@ -6,8 +6,8 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" >
 
-	<FrameLayout
-		android:id="@+id/hz_left_pane"
+	<fragment android:name="com.pushcoin.app.bitsypos.CategoryMenuFragment"
+		android:id="@+id/category_menu_fragment"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent" />
 

@@ -1,11 +1,32 @@
+/*
+  Copyright (c) 2013 PushCoin Inc
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.pushcoin.app.bitsypos;
 
 import android.database.Cursor;
 import android.os.Parcel;
+import android.widget.Button;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Date;
+import java.util.Locale;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 
 class Util
 {
@@ -119,4 +140,35 @@ class Util
 		}
 		return map;
 	}
+
+	public static void disableButton(Button btn, int bgRes, int textColor)
+	{
+		btn.setEnabled( false );
+		btn.setClickable( false );
+		btn.setBackgroundResource( bgRes );
+		btn.setTextColor( textColor );
+	}
+
+	public static void enableButton(Button btn, int bgRes, int textColor)
+	{
+		btn.setEnabled( true );
+		btn.setClickable( true );
+		btn.setBackgroundResource( bgRes );
+		btn.setTextColor( textColor );
+	}
+
+	static public String prettyRelativeTime( long nowTime, long eventTime )
+	{
+		long timeDifferenceMilliseconds = nowTime - eventTime;
+		long diffHours = timeDifferenceMilliseconds / (3600 * 1000);
+
+		if (diffHours < 1) {
+			return shortTimeFormatter_.format(new Date(eventTime));
+		} else {
+			return fullTimeFormatter_.format(new Date(eventTime));
+		}
+	}
+
+	static private final SimpleDateFormat shortTimeFormatter_ = new SimpleDateFormat("h:mm a", Locale.getDefault());
+	static private final SimpleDateFormat fullTimeFormatter_ = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault());
 }

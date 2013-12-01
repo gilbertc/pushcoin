@@ -61,7 +61,6 @@
 	</style>
 
 	<style name="ShoppingCartCheckout">
-			<item name="android:textColor">#ffffff</item>
 			<item name="android:textSize">30sp</item>
 			<item name="android:textStyle">bold</item>
 			<item name="android:shadowColor">#000000</item>
@@ -92,5 +91,36 @@
 			<item name="android:shadowRadius">2</item>
 	</style>
 
+	<style name="TabMenuIcon">
+			<item name="android:layout_width">wrap_content</item>
+			<item name="android:layout_height">wrap_content</item>
+			<item name="android:layout_gravity">center</item>
+			<item name="android:textColor">@color/lightui_darkgray</item>
+			<item name="android:textSize">32sp</item>
+			<item name="android:paddingLeft">16dp</item>
+			<item name="android:paddingRight">12dp</item>
+			<item name="customTypeface">fonts/icomoon.ttf</item>
+	</style>
+
+	<style name="TabMenuLabel">
+			<item name="android:layout_width">wrap_content</item>
+			<item name="android:layout_height">wrap_content</item>
+			<item name="android:layout_gravity">center</item>
+			<item name="android:textColor">@color/lightui_darkgray</item>
+			<item name="android:textSize">26sp</item>
+			<item name="android:includeFontPadding">false</item>
+			<item name="customTypeface">fonts/TT0467M.ttf</item>
+	</style>
+
+	<style name="TabMenuRow">
+			<item name="android:orientation">horizontal</item>
+			<item name="android:layout_width">match_parent</item>
+			<item name="android:layout_height">wrap_content</item>
+			<item name="android:onClick">onClick</item>
+			<item name="android:clickable">true</item>
+			<item name="android:paddingTop">16dp</item>
+			<item name="android:paddingBottom">16dp</item>
+	</style>
+	
 </resources>
 

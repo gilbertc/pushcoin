@@ -1,3 +1,20 @@
+/*
+  Copyright (c) 2013 PushCoin Inc
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.pushcoin.app.bitsypos;
 
 import com.pushcoin.lib.integrator.IntentIntegrator;
@@ -41,6 +58,9 @@ public class CheckoutActivity
 	{
 		super.onCreate( savedInstanceState );
 
+		// Hide the title bar, leave status bar as is
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 		// Create the event pump
 		EventHub.newInstance( this );
 
@@ -78,9 +98,7 @@ public class CheckoutActivity
 
 	private void waitForPayment()
 	{
-		IntentIntegrator integrator = 
-			AppDb.getInstance().getIntegrator();
-
+		IntentIntegrator integrator = AppDb.getInstance().getIntegrator();
 		Cart cart = CartManager.getInstance().getActiveCart();
 		Transaction charge = cart.createChargeTransaction();
 
@@ -93,7 +111,6 @@ public class CheckoutActivity
 			params.setPayment(
 				new Amount(chargeAmount.unscaledValue().longValue(), -chargeAmount.scale()));
 			integrator.poll(params, this);
-			Log.v( Conf.TAG, "pending-charge|id=" + charge.getClientTransactionId() + ";amt=" + chargeAmount);
 		} 
 		else {
 			integrator.idle();
@@ -101,11 +118,12 @@ public class CheckoutActivity
 	}
 
 	/**
-		Polling on device resulted in a user-query (ie thumb-scan)
+		Key-token (ie thumb-scan) scanned, query results arrived
 	*/
   @Override
   public void onResult(QueryResult result)
 	{
+		AppDb.getInstance().soundOnDataArrived();
 		List<Customer> customers = result.getCustomers();
 		Message msg = Message.obtain(null, MessageId.QUERY_USERS_REPLY, customers);
 		handler_.handleMessage(msg);
@@ -126,6 +144,8 @@ public class CheckoutActivity
 			// reflect what the user wants to do next -- reset it
 			cart.setChargeAmount(null);
 			Log.v( Conf.TAG, "approved-charge|id=" + result.getClientRequestId() );
+			AppDb.getInstance().soundOnPaymentAccepted();
+
 		} else { 
 			Log.e( Conf.TAG, "result-for-unknown-transaction|id=" + result.getClientRequestId());
 		}

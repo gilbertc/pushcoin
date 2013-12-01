@@ -1,118 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
-	android:background="@drawable/window_shape"
 	android:visibility="gone"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content" >
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
 
-	<ImageView
-		android:id="@+id/customer_details_mugshot"
-		android:layout_alignParentTop="true"
-		android:layout_alignParentLeft="true"
-		android:layout_height="280dp" 
-		android:layout_width="220dp"
-		android:layout_margin="10dp"
-		android:adjustViewBounds="true" />
-
-	<!-- Customer First Name -->
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/customer_details_fname"
+	<RelativeLayout
+		android:background="@drawable/window_shape"
+		android:layout_marginBottom="6dp"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:layout_toRightOf="@+id/customer_details_mugshot"
-		android:layout_marginTop="10dp"
-		android:includeFontPadding="false"
-		android:textSize="30sp"
-		android:textColor="@color/lightui_mediumgray"
-		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+		android:layout_height="wrap_content" >
 
-	<!-- Customer Name -->
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/customer_details_lname"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/customer_details_fname"
-		android:layout_toRightOf="@id/customer_details_mugshot"
-		android:includeFontPadding="false"
-		android:textSize="30sp"
-		android:textColor="@color/lightui_mediumgray"
-		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+		<ImageView
+			android:id="@+id/customer_details_mugshot"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_height="280dp" 
+			android:layout_width="220dp"
+			android:layout_margin="10dp"
+			android:adjustViewBounds="true" />
 
-	<!-- Customer Identifier -->
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/customer_details_customer_identifier"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/customer_details_lname"
-		android:layout_toRightOf="@id/customer_details_mugshot"
-		android:textSize="20sp"
-		android:textColor="@color/lightui_mediumgray"
-		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+		<!-- Customer First Name -->
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/customer_details_fname"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:layout_toRightOf="@+id/customer_details_mugshot"
+			android:layout_marginTop="10dp"
+			android:includeFontPadding="false"
+			android:textSize="30sp"
+			android:textColor="@color/lightui_mediumgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
-	<!-- Customer Balance Label -->
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:text="@string/balance"
-		android:id="@+id/customer_details_customer_balance_label"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="14dp"
-		android:layout_below="@id/customer_details_customer_identifier"
-		android:layout_toRightOf="@id/customer_details_mugshot"
-		android:textSize="18sp"
-		android:textColor="@color/lightui_mediumgray"
-		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+		<!-- Customer Name -->
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/customer_details_lname"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/customer_details_fname"
+			android:layout_toRightOf="@id/customer_details_mugshot"
+			android:includeFontPadding="false"
+			android:textSize="30sp"
+			android:textColor="@color/lightui_mediumgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
-	<!-- Customer Balance -->
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/customer_details_customer_balance"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/customer_details_customer_balance_label"
-		android:layout_toRightOf="@id/customer_details_mugshot"
-		android:textSize="38sp"
-		android:paddingRight="10dp"
-		android:textColor="@color/android_holo_blue_bright"
-		geekui:customTypeface="fonts/TT0467M.ttf" />
+		<!-- Customer Identifier -->
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/customer_details_customer_identifier"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/customer_details_lname"
+			android:layout_toRightOf="@id/customer_details_mugshot"
+			android:textSize="20sp"
+			android:textColor="@color/lightui_mediumgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
-	<!-- Charge Button -->
-	<Button
-		android:id="@+id/customer_details_charge_button" 
-		android:text="@string/btn_charge" 
-		android:layout_alignBottom="@id/customer_details_mugshot"
-		android:layout_alignParentRight="true"
-		android:layout_toRightOf="@id/customer_details_mugshot"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginRight="10dp"
-		android:background="@drawable/btn_blue"
-		android:paddingTop="12dp"
-		android:paddingBottom="12dp"
-		style="@style/ShoppingCartCheckout" />
+		<!-- Customer Balance Label -->
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/customer_details_customer_balance_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="14dp"
+			android:layout_below="@id/customer_details_customer_identifier"
+			android:layout_toRightOf="@id/customer_details_mugshot"
+			android:textSize="18sp"
+			android:textColor="@color/lightui_mediumgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
-	<!-- Customer Title -->
-	<com.mobsandgeeks.ui.TypefaceTextView
-		android:id="@+id/customer_details_title"
-		android:background="#70000000"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignBottom="@id/customer_details_mugshot"
-		android:layout_alignLeft="@id/customer_details_mugshot"
-		android:layout_alignRight="@id/customer_details_mugshot"
-		android:gravity="center"
-		android:minHeight="40sp"
-		android:textSize="18sp"
-		android:textColor="@color/lightui_lightgray"
-		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
+		<!-- Customer Balance -->
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/customer_details_customer_balance"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/customer_details_customer_balance_label"
+			android:layout_toRightOf="@id/customer_details_mugshot"
+			android:textSize="38sp"
+			android:paddingRight="10dp"
+			android:textColor="@color/android_holo_blue_bright"
+			geekui:customTypeface="fonts/TT0467M.ttf" />
 
-	<!-- HACK: RelativeLayout ignores bottom margin
-	 if height=wrap_content -->
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_below="@id/customer_details_mugshot" />
+		<!-- Charge Button -->
+		<Button
+			android:id="@+id/customer_details_charge_button" 
+			android:text="@string/charge"
+			android:layout_alignBottom="@id/customer_details_mugshot"
+			android:layout_alignParentRight="true"
+			android:layout_toRightOf="@id/customer_details_mugshot"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="10dp"
+			android:paddingTop="12dp"
+			android:paddingBottom="12dp"
+			style="@style/ShoppingCartCheckout" />
 
-</RelativeLayout>
+		<!-- Customer Title -->
+		<com.mobsandgeeks.ui.TypefaceTextView
+			android:id="@+id/customer_details_title"
+			android:background="#80000000"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignBottom="@id/customer_details_mugshot"
+			android:layout_alignLeft="@id/customer_details_mugshot"
+			android:layout_alignRight="@id/customer_details_mugshot"
+			android:gravity="center"
+			android:minHeight="40sp"
+			android:textSize="18sp"
+			android:textColor="@color/lightui_lightgray"
+			geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
+		<!-- HACK: RelativeLayout ignores bottom margin
+		 if height=wrap_content -->
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_below="@id/customer_details_mugshot" />
+
+	</RelativeLayout>
+
+</LinearLayout>
