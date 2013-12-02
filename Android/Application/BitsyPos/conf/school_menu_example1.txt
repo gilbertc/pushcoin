@@ -36,11 +36,11 @@ index = {
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Main Course
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Philly Cheesesteak\nMelt', price= { unit= 2.90 }, tag= { 'main_course' }, id= 'MAINC1' },
-		{ name= 'Beef & Broccoli\nTeriyaki Stir Fry', price= { unit= 2.95 }, tag= { 'main_course' }, id= 'MAINC2' },
-		{ name= 'Country Chicken\n& Potato Bowl', price= { unit= 2.98 }, tag= { 'main_course' }, id= 'MAINC3' },
-		{ name= 'Rotini Pasta\nwith Meat Sause', price= { unit= 2.99 }, tag= { 'main_course' }, id= 'MAINC4' },
-		{ name= 'Chilli Cheese\nBaked Potato', price= { unit= 2.79 }, tag= { 'main_course' }, id= 'MAINC5' },
+		{ name= 'Philly Cheesesteak Melt', price= { unit= 2.90 }, tag= { 'main_course' }, id= 'MAINC1' },
+		{ name= 'Beef & Broccoli Teriyaki Stir Fry', price= { unit= 2.95 }, tag= { 'main_course' }, id= 'MAINC2' },
+		{ name= 'Country Chicken & Potato Bowl', price= { unit= 2.98 }, tag= { 'main_course' }, id= 'MAINC3' },
+		{ name= 'Rotini Pasta with Meat Sause', price= { unit= 2.99 }, tag= { 'main_course' }, id= 'MAINC4' },
+		{ name= 'Chilli Cheese Baked Potato', price= { unit= 2.79 }, tag= { 'main_course' }, id= 'MAINC5' },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Pizza
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
@@ -51,40 +51,40 @@ index = {
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Grill
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Chicago-Style\nHotdog', price= { unit= 2.90 }, tag= { 'grill' }, id= 'GRILL1' },
+		{ name= 'Chicago-Style Hotdog', price= { unit= 2.90 }, tag= { 'grill' }, id= 'GRILL1' },
 		{ name= 'Chicken Tenders', price= { unit= 2.95 }, tag= { 'grill' }, id= 'GRILL2' },
-		{ name= 'Chicken Corn\nDog', price= { unit= 2.98 }, tag= { 'grill' }, id= 'GRILL3' },
-		{ name= 'Popping Chicken\nBites', price= { unit= 2.99 }, tag= { 'grill' }, id= 'GRILL4' },
+		{ name= 'Chicken Corn Dog', price= { unit= 2.98 }, tag= { 'grill' }, id= 'GRILL3' },
+		{ name= 'Popping Chicken Bites', price= { unit= 2.99 }, tag= { 'grill' }, id= 'GRILL4' },
 		{ name= 'Breaded Fish Melt', price= { unit= 2.99 }, tag= { 'grill' }, id= 'GRILL5' },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Tortilla
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		{ name= 'Nacho Works Bar', price= { unit= 2.90 }, tag= { 'tortilla' }, id= 'TORT1' },
-		{ name= 'Chicken & Bean\nBurrito', price= { unit= 2.95 }, tag= { 'tortilla' }, id= 'TORT2' },
-		{ name= 'Triple Layer Beef\n& Bean Lasagna', price= { unit= 2.98 }, tag= { 'tortilla' }, id= 'TORT3' },
+		{ name= 'Chicken & Bean Burrito', price= { unit= 2.95 }, tag= { 'tortilla' }, id= 'TORT2' },
+		{ name= 'Triple Layer Beef & Bean Lasagna', price= { unit= 2.98 }, tag= { 'tortilla' }, id= 'TORT3' },
 		{ name= 'Stuffed Burritos', price= { unit= 2.99 }, tag= { 'tortilla' }, id= 'TORT4' },
 		{ name= 'Beef Enchiladas', price= { unit= 2.99 }, tag= { 'tortilla' }, id= 'TORT5' },
 		{ name= 'Cheese Enchiladas', price= { unit= 2.99 }, tag= { 'tortilla' }, id= 'TORT6' },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Custom Sandwiches, Wraps & Salads
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Chicken Ranch\nWrap', price= { unit= 2.90 }, tag= { 'fast_take' }, id= 'FASTT1' },
-		{ name= 'All-American\nWrap', price= { unit= 2.95 }, tag= { 'fast_take' }, id= 'FASTT2' },
-		{ name= 'Southwest Chicken\nWrap', price= { unit= 2.98 }, tag= { 'fast_take' }, id= 'FASTT3' },
-		{ name= 'Chicken-Ham\n& Swiss Wrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT4' },
-		{ name= 'Spicy Chicken\nWrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT5' },
+		{ name= 'Chicken Ranch Wrap', price= { unit= 2.90 }, tag= { 'fast_take' }, id= 'FASTT1' },
+		{ name= 'All-American Wrap', price= { unit= 2.95 }, tag= { 'fast_take' }, id= 'FASTT2' },
+		{ name= 'Southwest Chicken Wrap', price= { unit= 2.98 }, tag= { 'fast_take' }, id= 'FASTT3' },
+		{ name= 'Chicken-Ham & Swiss Wrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT4' },
+		{ name= 'Spicy Chicken Wrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT5' },
 		{ name= 'House Chef Salad', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT6' },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Veggies
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		{ name= 'Tater Tots', price= { unit= 0.90 }, tag= { 'veggie' }, id= 'VEGG1' },
 		{ name= 'Fresh Broccoli', price= { unit= 0.95 }, tag= { 'veggie' }, id= 'VEGG2' },
-		{ name= 'Cinnamon Sweet\nPotatos', price= { unit= 0.98 }, tag= { 'veggie' }, id= 'VEGG3' },
+		{ name= 'Cinnamon Sweet Potatos', price= { unit= 0.98 }, tag= { 'veggie' }, id= 'VEGG3' },
 		{ name= 'Celery Sticks', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG4' },
 		{ name= 'Refried Beans', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG5' },
 		{ name= 'Baby Carrots', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG6' },
 		{ name= 'Green Beans', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG7' },
-		{ name= 'Cucumber & Tomato\nSalad', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG8' },
+		{ name= 'Cucumber & Tomato Salad', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG8' },
 		{ name= 'Steamed Carrots', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG9' },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Fruits

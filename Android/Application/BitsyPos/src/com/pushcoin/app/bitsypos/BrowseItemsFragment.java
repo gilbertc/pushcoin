@@ -67,7 +67,7 @@ public class BrowseItemsFragment extends Fragment
 			});
 
 		// Fit as many columns as possible
-		view.setColumnWidth( view.measureMaxChildWidth() );
+		// view.setColumnWidth( view.measureMaxChildWidth() );
 
 		return view;
 	}
