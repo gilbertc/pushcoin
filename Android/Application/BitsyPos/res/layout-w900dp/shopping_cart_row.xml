@@ -2,27 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:geekui="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="wrap_content"
+	android:paddingTop="6dp"
+	android:paddingBottom="6dp"
+	android:paddingLeft="3dp"
+	android:paddingRight="3dp">
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_cart_entry_title"
 		android:layout_alignParentTop="true"
 		android:layout_alignParentLeft="true"
-		android:textSize="20sp"
+		android:textSize="18sp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textColor="@color/win8_lime"
+		android:textColor="@color/lightui_darkgray"
 		geekui:customTypeface="fonts/DejaVuSansCondensed.ttf" />
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_cart_entry_price"
-		android:layout_alignParentTop="true"
-		android:layout_alignParentRight="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="20sp"
-		android:textColor="@color/android_holo_blue_light"
-		geekui:customTypeface="fonts/DejaVuSans.ttf" />
+		android:layout_alignParentRight="true"
+		android:layout_alignBaseline="@id/shopping_cart_entry_title"
+		android:textSize="18sp"
+		android:textColor="@color/lightui_darkgray"
+		geekui:customTypeface="fonts/TT0467M.ttf" />
 
 	<com.mobsandgeeks.ui.TypefaceTextView
 		android:id="@+id/shopping_cart_entry_note"
