@@ -102,6 +102,9 @@ public class ItemSummaryArrayAdapter extends BaseAdapter
 		holder.title.setText( item.getName() );
 		holder.price.setText( item.isDefined() ? Util.displayPrice( item.getPrice() ) : "..." );
 
+		// Set tint (background color) of the cell
+		convertView.setBackgroundResource( Util.getColorResourceForTint( item.getTint()) );
+
 		return convertView;
 	}
 

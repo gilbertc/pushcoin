@@ -12,6 +12,10 @@
   be simple, one-item elements or compisite (aka combo).
   
   The 'category' describes major product groups (categories).
+
+	Supported color tints:
+		red, cyan, blue, purple, olive
+		magenta, orange, green
  
 ]]--
 json = require('json')
@@ -22,82 +26,88 @@ json = require('json')
 index = {
 	product= { 
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		-- BEVERAGES
+		-- Favorites
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Fat-Free Milk', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B1' },
-		{ name= 'Low-Fat 1% Milk', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B2' },
-		{ name= 'Low-Fat 2% Milk', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B3' },
-		{ name= 'Bottled Water', price= { unit= 0.49 }, tag= { 'beverage' }, id= 'B4' },
-		{ name= 'Orange Juice', price= { unit= 0.89 }, tag= { 'beverage', 'juice' }, id= 'B6' },
-		{ name= 'Tomato Juice', price= { unit= 0.89 }, tag= { 'beverage', 'juice' }, id= 'B7' },
-		{ name= 'Grapefruit Juice', price= { unit= 0.99 }, tag= { 'beverage', 'juice' }, id= 'B8' },
-		{ name= 'Cranberry Juice', price= { unit= 0.99 }, tag= { 'beverage', 'juice' }, id= 'B9' },
-		{ name= 'Apple Juice', price= { unit= 0.79 }, tag= { 'beverage', 'juice' }, id= 'B10' },
-		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		-- Main Course
-		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Philly Cheesesteak Melt', price= { unit= 2.90 }, tag= { 'main_course' }, id= 'MAINC1' },
-		{ name= 'Beef & Broccoli Teriyaki Stir Fry', price= { unit= 2.95 }, tag= { 'main_course' }, id= 'MAINC2' },
-		{ name= 'Country Chicken & Potato Bowl', price= { unit= 2.98 }, tag= { 'main_course' }, id= 'MAINC3' },
-		{ name= 'Rotini Pasta with Meat Sause', price= { unit= 2.99 }, tag= { 'main_course' }, id= 'MAINC4' },
-		{ name= 'Chilli Cheese Baked Potato', price= { unit= 2.79 }, tag= { 'main_course' }, id= 'MAINC5' },
+		{ name= 'Philly Cheesesteak Melt', price= { unit= 2.90 }, tag= { 'favorites' }, id= 'EX1', tint= 'purple', order=1 },
+		{ name= 'Beef & Broccoli Teriyaki Stir Fry', price= { unit= 2.95 }, tag= { 'favorites' }, id= 'EX2', tint= 'purple', order=1 },
+		{ name= 'Country Chicken & Potato Bowl', price= { unit= 2.98 }, tag= { 'favorites' }, id= 'EX3', tint= 'purple', order=1 },
+		{ name= 'Rotini Pasta with Meat Sause', price= { unit= 2.99 }, tag= { 'favorites' }, id= 'EX4', tint= 'purple', order=1 },
+		{ name= 'Chilli Cheese Baked Potato', price= { unit= 2.79 }, tag= { 'favorites' }, id= 'EX5', tint= 'purple', order=1 },
+		{ name= 'Mac & Cheese Veggie Caserole', price= { unit= 2.79 }, tag= { 'favorites' }, id= 'EX6', tint= 'purple', order=1 },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Pizza
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Buffalo Chicken', price= { unit= 2.90 }, tag= { 'pizza' }, id= 'PIZZA1' },
-		{ name= 'Pepperoni', price= { unit= 2.95 }, tag= { 'pizza' }, id= 'PIZZA2' },
-		{ name= 'BBQ Chicken', price= { unit= 2.98 }, tag= { 'pizza' }, id= 'PIZZA3' },
-		{ name= 'Taco Pizza', price= { unit= 2.99 }, tag= { 'pizza' }, id= 'PIZZA4' },
+		{ name= 'Pepperoni', price= { unit= 1.29 }, tag= { 'favorites', 'pizzagrill' }, id= 'EX7', tint= 'red', order=2 },
+		{ name= 'BBQ Chicken', price= { unit= 1.39 }, tag= { 'favorites', 'pizzagrill' }, id= 'EX8', tint= 'red', order=2 },
+		{ name= 'Hawaiian', price= { unit= 1.49 }, tag= { 'favorites', 'pizzagrill' }, id= 'EX9', tint= 'red', order=2 },
+		{ name= 'Italian Beef', price= { unit= 1.29 }, tag= { 'pizzagrill' }, id= 'EX10', tint= 'red', order=2 },
+		{ name= 'Veggie Lover', price= { unit= 1.39 }, tag= { 'pizzagrill' }, id= 'EX11', tint= 'red', order=2 },
+		{ name= 'Supreme', price= { unit= 1.49 }, tag= { 'pizzagrill' }, id= 'EX12', tint= 'red', order=2 },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		-- Grill
+		-- Beverages
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Chicago-Style Hotdog', price= { unit= 2.90 }, tag= { 'grill' }, id= 'GRILL1' },
-		{ name= 'Chicken Tenders', price= { unit= 2.95 }, tag= { 'grill' }, id= 'GRILL2' },
-		{ name= 'Chicken Corn Dog', price= { unit= 2.98 }, tag= { 'grill' }, id= 'GRILL3' },
-		{ name= 'Popping Chicken Bites', price= { unit= 2.99 }, tag= { 'grill' }, id= 'GRILL4' },
-		{ name= 'Breaded Fish Melt', price= { unit= 2.99 }, tag= { 'grill' }, id= 'GRILL5' },
+		{ name= 'Fat-Free Milk', price= { unit= 0.89 }, tag= { 'favorites', 'beverage' }, id= 'B1', tint= 'blue', order=3 },
+		{ name= 'Low-Fat 1% Milk', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B2', tint= 'blue', order=3 },
+		{ name= 'Low-Fat 2% Milk', price= { unit= 0.89 }, tag= { 'favorites', 'beverage' }, id= 'B3', tint= 'blue', order=3 },
+		{ name= 'Bottled Water', price= { unit= 0.49 }, tag= { 'favorites', 'beverage' }, id= 'B4', tint= 'blue', order=3 },
+		{ name= 'Orange Juice', price= { unit= 0.89 }, tag= { 'favorites', 'beverage' }, id= 'B6', tint= 'blue', order=3 },
+		{ name= 'Tomato Juice', price= { unit= 0.89 }, tag= { 'favorites', 'beverage' }, id= 'B7', tint= 'blue', order=3 },
+		{ name= 'Apple Juice', price= { unit= 0.79 }, tag= { 'favorites', 'beverage' }, id= 'B10', tint= 'blue', order=3 },
+		{ name= 'Energy Drink', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B11', order=4 },
+		{ name= 'Coffee', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B12', order=5 },
+		{ name= 'Latte', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B13', order=6 },
+		{ name= 'Mocha', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B14', order=7 },
+		{ name= 'Hot Tee', price= { unit= 0.89 }, tag= { 'beverage' }, id= 'B15', order=8 },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Tortilla
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Nacho Works Bar', price= { unit= 2.90 }, tag= { 'tortilla' }, id= 'TORT1' },
-		{ name= 'Chicken & Bean Burrito', price= { unit= 2.95 }, tag= { 'tortilla' }, id= 'TORT2' },
-		{ name= 'Triple Layer Beef & Bean Lasagna', price= { unit= 2.98 }, tag= { 'tortilla' }, id= 'TORT3' },
-		{ name= 'Stuffed Burritos', price= { unit= 2.99 }, tag= { 'tortilla' }, id= 'TORT4' },
-		{ name= 'Beef Enchiladas', price= { unit= 2.99 }, tag= { 'tortilla' }, id= 'TORT5' },
-		{ name= 'Cheese Enchiladas', price= { unit= 2.99 }, tag= { 'tortilla' }, id= 'TORT6' },
+		{ name= 'Nacho Works Bar', price= { unit= 2.90 }, tag= { 'fast_take' }, id= 'TORT1', tint= 'olive', order=4 },
+		{ name= 'Chicken & Bean Burrito', price= { unit= 2.95 }, tag= { 'fast_take' }, id= 'TORT2', tint= 'olive', order=4 },
+		{ name= 'Triple Layer Beef & Bean Lasagna', price= { unit= 2.98 }, tag= { 'fast_take' }, id= 'TORT3', tint= 'olive', order=4 },
+		{ name= 'Stuffed Burritos', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'TORT4', tint= 'olive', order=4 },
+		{ name= 'Beef Enchiladas', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'TORT5', tint= 'olive', order=4 },
+		{ name= 'Cheese Enchiladas', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'TORT6', tint= 'olive', order=4 },
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		-- Grill
+		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+		{ name= 'Chicago-Style Hotdog', price= { unit= 2.90 }, tag= { 'pizzagrill' }, id= 'GRILL1', tint= 'cyan', order=5 },
+		{ name= 'Chicken Tenders', price= { unit= 2.95 }, tag= { 'pizzagrill' }, id= 'GRILL2', tint= 'cyan', order=5 },
+		{ name= 'Chicken Corn Dog', price= { unit= 2.98 }, tag= { 'pizzagrill' }, id= 'GRILL3', tint= 'cyan', order=5 },
+		{ name= 'Popping Chicken Bites', price= { unit= 2.99 }, tag= { 'pizzagrill' }, id= 'GRILL4', tint= 'cyan', order=5 },
+		{ name= 'Breaded Fish Melt', price= { unit= 2.99 }, tag= { 'pizzagrill' }, id= 'GRILL5', tint= 'cyan', order=5 },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Custom Sandwiches, Wraps & Salads
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Chicken Ranch Wrap', price= { unit= 2.90 }, tag= { 'fast_take' }, id= 'FASTT1' },
-		{ name= 'All-American Wrap', price= { unit= 2.95 }, tag= { 'fast_take' }, id= 'FASTT2' },
-		{ name= 'Southwest Chicken Wrap', price= { unit= 2.98 }, tag= { 'fast_take' }, id= 'FASTT3' },
-		{ name= 'Chicken-Ham & Swiss Wrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT4' },
-		{ name= 'Spicy Chicken Wrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT5' },
-		{ name= 'House Chef Salad', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT6' },
+		{ name= 'Chicken Ranch Wrap', price= { unit= 2.90 }, tag= { 'fast_take' }, id= 'FASTT1', tint= 'magenta' },
+		{ name= 'All-American Wrap', price= { unit= 2.95 }, tag= { 'fast_take' }, id= 'FASTT2', tint= 'magenta' },
+		{ name= 'Southwest Chicken Wrap', price= { unit= 2.98 }, tag= { 'fast_take' }, id= 'FASTT3', tint= 'magenta' },
+		{ name= 'Chicken-Ham & Swiss Wrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT4', tint= 'magenta' },
+		{ name= 'Spicy Chicken Wrap', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT5', tint= 'magenta' },
+		{ name= 'House Chef Salad', price= { unit= 2.99 }, tag= { 'fast_take' }, id= 'FASTT6', tint= 'magenta' },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Veggies
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Tater Tots', price= { unit= 0.90 }, tag= { 'veggie' }, id= 'VEGG1' },
-		{ name= 'Fresh Broccoli', price= { unit= 0.95 }, tag= { 'veggie' }, id= 'VEGG2' },
-		{ name= 'Cinnamon Sweet Potatos', price= { unit= 0.98 }, tag= { 'veggie' }, id= 'VEGG3' },
-		{ name= 'Celery Sticks', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG4' },
-		{ name= 'Refried Beans', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG5' },
-		{ name= 'Baby Carrots', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG6' },
-		{ name= 'Green Beans', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG7' },
-		{ name= 'Cucumber & Tomato Salad', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG8' },
-		{ name= 'Steamed Carrots', price= { unit= 0.99 }, tag= { 'veggie' }, id= 'VEGG9' },
+		{ name= 'Tater Tots', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'VEGG1', tint= 'green', order=7 },
+		{ name= 'Fresh Broccoli', price= { unit= 0.95 }, tag= { 'veggiefruit' }, id= 'VEGG2', tint= 'green', order=7 },
+		{ name= 'Cinnamon Sweet Potatos', price= { unit= 0.98 }, tag= { 'veggiefruit' }, id= 'VEGG3', tint= 'green', order=7 },
+		{ name= 'Celery Sticks', price= { unit= 0.99 }, tag= { 'veggiefruit' }, id= 'VEGG4', tint= 'green', order=7 },
+		{ name= 'Refried Beans', price= { unit= 0.99 }, tag= { 'veggiefruit' }, id= 'VEGG5', tint= 'green', order=7 },
+		{ name= 'Baby Carrots', price= { unit= 0.99 }, tag= { 'veggiefruit' }, id= 'VEGG6', tint= 'green', order=7 },
+		{ name= 'Green Beans', price= { unit= 0.99 }, tag= { 'veggiefruit' }, id= 'VEGG7', tint= 'green', order=7 },
+		{ name= 'Cucumber & Tomato Salad', price= { unit= 0.99 }, tag= { 'veggiefruit' }, id= 'VEGG8', tint= 'green', order=7 },
+		{ name= 'Steamed Carrots', price= { unit= 0.99 }, tag= { 'veggiefruit' }, id= 'VEGG9', tint= 'green', order=7 },
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 		-- Fruits
 		--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
-		{ name= 'Fruit Cocktail', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU1' },
-		{ name= 'Fresh Apple', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU2' },
-		{ name= 'Pineapple Chunks', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU3' },
-		{ name= 'Fresh Pear', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU4' },
-		{ name= 'Diced Pears', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU5' },
-		{ name= 'Fresh Orange', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU6' },
-		{ name= 'Applesauce', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU7' },
-		{ name= 'Fresh Banana', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU8' },
-		{ name= 'Diced Peaches', price= { unit= 0.90 }, tag= { 'fruit' }, id= 'FRU9' },
+		{ name= 'Fruit Cocktail', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'FRU1', tint= 'orange', order=8 },
+		{ name= 'Fresh Apple', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'FRU2', tint= 'orange', order=8 },
+		{ name= 'Pineapple Chunks', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'FRU3', tint= 'orange', order=8 },
+		{ name= 'Fresh Pear', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'FRU4', tint= 'orange', order=8 },
+		{ name= 'Diced Pears', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'FRU5', tint= 'orange', order=8 },
+		{ name= 'Fresh Orange', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'FRU6', tint= 'orange', order=8 },
+		{ name= 'Applesauce', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'FRU7', tint= 'orange', order=8 },
+		{ name= 'Fresh Banana', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'FRU8', tint= 'orange', order=8 },
+		{ name= 'Diced Peaches', price= { unit= 0.90 }, tag= { 'veggiefruit' }, id= 'FRU9', tint= 'orange', order=8 },
 	}, -- end of products
 
 	--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
@@ -105,28 +115,20 @@ index = {
 	--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 	category= {
 		{
-			name= 'Main Course',
-			tag= 'main_course'
+			name= 'Favorites',
+			tag= 'favorites'
 		},
 		{
-			name= 'Pizza',
-			tag= 'pizza'
+			name= 'Pizza, Grill',
+			tag= 'pizzagrill'
 		},
 		{
-			name= 'Grill',
-			tag= 'grill'
-		},
-		{
-			name= 'Fast Takes',
+			name= 'Salsa, Wraps',
 			tag= 'fast_take'
 		},
 		{
-			name= 'Veggies',
-			tag= 'veggie'
-		},
-		{
-			name= 'Fruits',
-			tag= 'fruit'
+			name= 'Fruits, Veggies',
+			tag= 'veggiefruit'
 		},
 		{
 			name= 'Beverages',

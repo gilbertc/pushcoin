@@ -52,6 +52,12 @@ public interface Item extends Parcelable
 	String getId();
 
 	/**
+		Color to apply to a frame or background when 
+		rendering this item in the catalog.
+	*/
+	String getTint();
+
+	/**
 		Return true if item can be priced.
 	*/
 	boolean isDefined();

@@ -37,19 +37,21 @@ import static java.util.Collections.unmodifiableMap;
 */
 public class ComboItem implements Item
 {
-	public ComboItem ( String comboId, String comboName, BigDecimal basePrice, Map<String, String> properties, int childCount )
+	public ComboItem ( String comboId, String comboName, BigDecimal basePrice, Map<String, String> properties, int childCount, String comboTint )
 	{
 		comboId_ = comboId;
 		comboName_ = comboName;
+		comboTint_ = comboTint;
 		basePrice_ = basePrice;
 		properties_ = unmodifiableMap( properties );
 		childCount_ = childCount;
 	}
 
-	public ComboItem ( String comboId, String comboName, BigDecimal basePrice, Map<String, String> properties, List<Item> children )
+	public ComboItem ( String comboId, String comboName, BigDecimal basePrice, Map<String, String> properties, List<Item> children, String comboTint )
 	{
 		comboId_ = comboId;
 		comboName_ = comboName;
+		comboTint_ = comboTint;
 		basePrice_ = basePrice;
 		properties_ = unmodifiableMap( properties );
 		childCount_ = children.size();
@@ -59,6 +61,11 @@ public class ComboItem implements Item
 	@Override
 	public String getName() {
 		return comboName_;
+	}
+
+	@Override
+	public String getTint() {
+		return comboTint_;
 	}
 
 	@Override
@@ -148,7 +155,7 @@ public class ComboItem implements Item
 		// local list is unmodifiable, copy then remove
 		ArrayList<Item> newChildren = new ArrayList<Item>(children_);
 		newChildren.remove(index);
-		return new ComboItem(comboId_, comboName_, basePrice_, properties_, newChildren);
+		return new ComboItem(comboId_, comboName_, basePrice_, properties_, newChildren, comboTint_ );
 	}
 
 	@Override
@@ -157,7 +164,7 @@ public class ComboItem implements Item
 		// local list is unmodifiable, copy then replace
 		ArrayList<Item> newChildren = new ArrayList<Item>(children_);
 		newChildren.set(index, item);
-		return new ComboItem(comboId_, comboName_, basePrice_, properties_, newChildren);
+		return new ComboItem(comboId_, comboName_, basePrice_, properties_, newChildren, comboTint_);
 	}
 
 	@Override
@@ -166,7 +173,7 @@ public class ComboItem implements Item
 		// local list is unmodifiable, copy then append
 		ArrayList<Item> newChildren = new ArrayList<Item>(children_);
 		newChildren.add(item);
-		return new ComboItem(comboId_, comboName_, basePrice_, properties_, newChildren);
+		return new ComboItem(comboId_, comboName_, basePrice_, properties_, newChildren, comboTint_);
 	}
 
 	@Override
@@ -185,15 +192,16 @@ public class ComboItem implements Item
 		// If we haven't yet fetched children, we create a combo
 		// using only the child-count
 		if (children_ == null) {
-			return new ComboItem( comboId_, comboName_, basePrice_, properties, childCount_);
+			return new ComboItem( comboId_, comboName_, basePrice_, properties, childCount_, comboTint_);
 		} 
 		else { 
-			return new ComboItem( comboId_, comboName_, basePrice_, properties, children_);
+			return new ComboItem( comboId_, comboName_, basePrice_, properties, children_, comboTint_);
 		}
 	}
 
 	private final String comboId_;
 	private final String comboName_;
+	private final String comboTint_;
 	private final BigDecimal basePrice_;
 	private final Map<String, String> properties_;
 	private final int childCount_;
@@ -211,6 +219,7 @@ public class ComboItem implements Item
 	{
 		comboId_ = in.readString();
 		comboName_ = in.readString();
+		comboTint_ = in.readString();
 		basePrice_ = new BigDecimal( in.readString() );
 		properties_ = Util.readPropertiesFromParcel( in, new TreeMap<String,String>() );
 		childCount_ = in.readInt();
@@ -224,6 +233,7 @@ public class ComboItem implements Item
 	{
 		out.writeString( comboId_ );
 		out.writeString( comboName_ );
+		out.writeString( comboTint_ );
 		out.writeString( basePrice_.toString() );
 		Util.writePropertiesToParcel( out, properties_ );
 		out.writeInt( childCount_ );

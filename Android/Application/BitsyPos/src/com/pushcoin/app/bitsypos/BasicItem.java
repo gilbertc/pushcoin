@@ -34,10 +34,11 @@ import static java.util.Collections.unmodifiableMap;
 */
 public class BasicItem implements Item
 {
-	public BasicItem ( String itemId, String name, BigDecimal price, Map<String, String> properties )
+	public BasicItem ( String itemId, String name, BigDecimal price, Map<String, String> properties, String tint )
 	{
 		itemId_ = itemId;
 		name_ = name;
+		tint_ = tint;
 		price_ = price;
 		properties_ = unmodifiableMap( properties );
 	}
@@ -71,6 +72,11 @@ public class BasicItem implements Item
 	@Override
 	public String getId() {
 		return itemId_;
+	}
+
+	@Override
+	public String getTint() {
+		return tint_;
 	}
 
 	@Override
@@ -127,7 +133,7 @@ public class BasicItem implements Item
 	public Item append(Item item)
 	{
 		// transitioning to a combo
-		return new ComboItem( "", "", Conf.ZERO_PRICE, help_.ZERO_PROPS, asList(this, item) );
+		return new ComboItem( "", "", Conf.ZERO_PRICE, help_.ZERO_PROPS, asList(this, item), "" );
 	}
 
 	@Override
@@ -142,11 +148,12 @@ public class BasicItem implements Item
 
 	@Override
 	public Item setProperties( Map<String, String> properties ) {
-		return new BasicItem( itemId_, name_, price_, properties);
+		return new BasicItem( itemId_, name_, price_, properties, tint_ );
 	}
 
 	private final String itemId_;
 	private final String name_;
+	private final String tint_;
 	private final BigDecimal price_;
 	private final Map<String, String> properties_;
 
@@ -162,6 +169,7 @@ public class BasicItem implements Item
 	{
 		itemId_ = in.readString();
 		name_ = in.readString();
+		tint_ = in.readString();
 		price_ = new BigDecimal( in.readString() );
 		properties_ = Util.readPropertiesFromParcel( in, new TreeMap<String,String>() );
 	}
@@ -171,6 +179,7 @@ public class BasicItem implements Item
 	{
 		out.writeString( itemId_ );
 		out.writeString( name_ );
+		out.writeString( tint_ );
 		out.writeString( price_.toString() );
 		Util.writePropertiesToParcel( out, properties_ );
 	}

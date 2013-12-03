@@ -165,11 +165,12 @@ public class AppDb extends SQLiteAssetHelper
 		BigDecimal price = new BigDecimal( c.getString( field.get(Conf.FIELD_PRICE) ) );
 		Map<String, String> properties = Util.splitProperties( c.getString( field.get(Conf.FIELD_ITEM_PROPERTY) ) );
 		int children = c.getInt( field.get(Conf.FIELD_ITEM_CHILDREN) );
+		String tint = c.getString( field.get(Conf.FIELD_TINT) );
 
 		// return basic combo item
 		return (children == 0) ?
-			new BasicItem( id, name, price, properties ) : 
-			new ComboItem( id, name, price, properties, children );
+			new BasicItem( id, name, price, properties, tint ) : 
+			new ComboItem( id, name, price, properties, children, tint );
 	}
 
 	/**

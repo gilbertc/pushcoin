@@ -84,7 +84,14 @@ public class JsonImporter
 		try 
 		{
 			ArrayList<Statement> rs = new ArrayList<Statement>();
-			String[] args = new String[] { product.getString( Conf.FIELD_ITEM_ID ), product.getString( Conf.FIELD_NAME ), product.optString( Conf.FIELD_IMAGE, null ) };
+			String[] args = new String[] 
+				{
+					product.getString( Conf.FIELD_ITEM_ID ),
+					product.getString( Conf.FIELD_NAME ),
+					product.optString( Conf.FIELD_IMAGE, "" ),
+					product.optString( Conf.FIELD_TINT, "" ),
+					Integer.toString( product.optInt( Conf.FIELD_ORDER, Short.MAX_VALUE ) )
+				};
 			rs.add( new Statement( Conf.STMT_ITEM_INSERT, args ) );
 			return rs;
 		} catch (JSONException e) {

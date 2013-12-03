@@ -178,6 +178,15 @@ class Util
 		label.setTypeface(font);
 	}
 
+	static public int getColorResourceForTint( String tint )
+	{
+		Integer resourceId = null;
+		if ( ! tint.isEmpty() ) {
+			resourceId = Conf.COLOR_TINT_MAP.get( tint );
+		}
+		return (resourceId != null) ? resourceId.intValue() : R.color.tint_gray;
+	}
+
 	static private final SimpleDateFormat shortTimeFormatter_ = new SimpleDateFormat("h:mm a", Locale.getDefault());
 	static private final SimpleDateFormat fullTimeFormatter_ = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault());
 }

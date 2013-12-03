@@ -4,7 +4,10 @@ CREATE TABLE item
 (
 	item_id TEXT NOT NULL,
 	name TEXT NOT NULL,
-	image TEXT NULL,
+	image TEXT NOT NULL,
+	tint TEXT NOT NULL,
+	-- overrides default order by item name
+	sort_id int,
 	PRIMARY KEY (item_id)
 );
 

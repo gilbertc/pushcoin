@@ -78,7 +78,13 @@ public class Conf
 			priceTag
 			itemID
 		
-		select item.item_id, item.name, price.value, group_concat(props.name||"="||props.value,':') as prop, count(combo.slot_name) as slots
+		select
+			item.item_id,
+			item.name,
+			price.value,
+			group_concat(props.name||"="||props.value,':') as prop,
+			count(combo.slot_name) as slots,
+			item.tint
 		from item 
 			join price on 
 				item.item_id = price.item_id and price.price_tag = 'combo_priced_in'
@@ -89,7 +95,7 @@ public class Conf
 		where item.item_id = 'BSI1'
 		group by item.item_id;
 	*/
-	static final String SQL_FETCH_ITEM_BY_ID = "select item.item_id, item.name, price.value, ifnull(group_concat(props.name||'='||props.value,':'), '') as prop, count(combo.slot_name) as slots from item join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id left join item_property props on props.item_id = item.item_id where item.item_id = ? group by item.item_id";
+	static final String SQL_FETCH_ITEM_BY_ID = "select item.item_id, item.name, price.value, ifnull(group_concat(props.name||'='||props.value,':'), '') as prop, count(combo.slot_name) as slots, item.tint from item join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id left join item_property props on props.item_id = item.item_id where item.item_id = ? group by item.item_id";
 
 	/**
 		Fetch item(s) by tag.
@@ -101,7 +107,8 @@ public class Conf
 		select 
 			item.item_id, item.name, price.value, 
 			ifnull(group_concat(props.name||"="||props.value,':'), "") as prop,
-			count(combo.slot_name) as slots 
+			count(combo.slot_name) as slots,
+			item.tint
 		from item 
 			join tagged_item tagged on 
 				item.item_id = tagged.item_id 
@@ -114,9 +121,9 @@ public class Conf
 				props.item_id = item.item_id
 		where tagged.tag_id = 'breakfast_special_item' 
 		group by item.item_id
-		order by item.name;
+		order by item.sort_id ASC, item.name;
 	*/
-	static final String SQL_FETCH_ITEMS_BY_TAG = "select item.item_id, item.name, price.value, ifnull(group_concat(props.name||'='||props.value,':'), '') as prop, count(combo.slot_name) as slots from item join tagged_item tagged on item.item_id = tagged.item_id join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id left join item_property props on props.item_id = item.item_id where tagged.tag_id = ? group by item.item_id order by item.name";
+	static final String SQL_FETCH_ITEMS_BY_TAG = "select item.item_id, item.name, price.value, ifnull(group_concat(props.name||'='||props.value,':'), '') as prop, count(combo.slot_name) as slots, item.tint from item join tagged_item tagged on item.item_id = tagged.item_id join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id left join item_property props on props.item_id = item.item_id where tagged.tag_id = ? group by item.item_id order by item.sort_id ASC, item.name";
 
 	/**
 		Fetch related item(s) of an item.
@@ -129,7 +136,8 @@ public class Conf
 		select 
 			item.item_id, item.name, price.value, 
 			ifnull(group_concat(props.name||"="||props.value,':'), "") as prop,
-			count(combo.slot_name) as slots
+			count(combo.slot_name) as slots,
+			item.tint
 		from item
 			join tagged_item tagged 
 				on item.item_id = tagged.item_id 
@@ -144,9 +152,9 @@ public class Conf
 			(select tag_id from related_item where item_id = 'BSC1')
 			and item.item_id != 'BSC1'
 		group by item.item_id
-		order by item.name;
+		order by item.sort_id ASC, item.name;
 	*/
-	static final String SQL_FETCH_RELATED_ITEMS = "select item.item_id, item.name, price.value, ifnull(group_concat(props.name||'='||props.value,':'), '') as prop, count(combo.slot_name) as slots from item join tagged_item tagged on item.item_id = tagged.item_id join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id left join item_property props on props.item_id = item.item_id where tagged.tag_id in (select tag_id from related_item where item_id = ?) and item.item_id != ? group by item.item_id order by item.name";
+	static final String SQL_FETCH_RELATED_ITEMS = "select item.item_id, item.name, price.value, ifnull(group_concat(props.name||'='||props.value,':'), '') as prop, count(combo.slot_name) as slots, item.tint from item join tagged_item tagged on item.item_id = tagged.item_id join price on item.item_id = price.item_id and price.price_tag = ? left join combo_item combo on combo.parent_item_id = item.item_id left join item_property props on props.item_id = item.item_id where tagged.tag_id in (select tag_id from related_item where item_id = ?) and item.item_id != ? group by item.item_id order by item.sort_id ASC, item.name";
 
 	/**
 		Fetch children in a combo item.
@@ -164,7 +172,8 @@ public class Conf
 			ifnull(combo.default_item_id, ''),
 			default_item.name, default_item_price.value, 
 			ifnull(group_concat(default_item_props.name||'='||default_item_props.value,':'), ''),
-			count(default_item_combo.slot_name)
+			count(default_item_combo.slot_name),
+			default_item.tint
 		from
 			combo_item combo
 			left join item default_item on
@@ -181,7 +190,7 @@ public class Conf
 		group by combo.slot_name
 		order by combo.slot_name;
 	*/
-	static final String SQL_GET_CHILDREN = "select combo.parent_item_id, combo.slot_name, combo.price_tag, ifnull(combo.choice_item_tag, ''), ifnull(combo.default_item_id, ''), default_item.name, default_item_price.value, ifnull(group_concat(default_item_props.name||'='||default_item_props.value,':'), ''), count(default_item_combo.slot_name) from combo_item combo left join item default_item on combo.default_item_id = default_item.item_id left join price default_item_price on combo.default_item_id = default_item_price.item_id and combo.price_tag = default_item_price.price_tag left join item_property default_item_props on combo.default_item_id = default_item_props.item_id left join combo_item default_item_combo on combo.default_item_id = default_item_combo.parent_item_id where combo.parent_item_id = ? group by combo.slot_name order by combo.slot_name";
+	static final String SQL_GET_CHILDREN = "select combo.parent_item_id, combo.slot_name, combo.price_tag, ifnull(combo.choice_item_tag, ''), ifnull(combo.default_item_id, ''), default_item.name, default_item_price.value, ifnull(group_concat(default_item_props.name||'='||default_item_props.value,':'), ''), count(default_item_combo.slot_name), default_item.tint from combo_item combo left join item default_item on combo.default_item_id = default_item.item_id left join price default_item_price on combo.default_item_id = default_item_price.item_id and combo.price_tag = default_item_price.price_tag left join item_property default_item_props on combo.default_item_id = default_item_props.item_id left join combo_item default_item_combo on combo.default_item_id = default_item_combo.parent_item_id where combo.parent_item_id = ? group by combo.slot_name order by combo.slot_name";
 
 	/**
 		Returns item-categories that go into Bitsy's main menu.
@@ -192,7 +201,7 @@ public class Conf
 		JSON import SQL
 	*/
 	static final String STMT_CATEGORY_INSERT = "insert into category (category_id, tag_id) values(?, ?)";
-	static final String STMT_ITEM_INSERT = "insert into item (item_id, name, image) values(?, ?, ?)";
+	static final String STMT_ITEM_INSERT = "insert into item (item_id, name, image, tint, sort_id) values(?, ?, ?, ?, ?)";
 	static final String STMT_TAGGED_ITEM_INSERT = "insert into tagged_item ( tag_id, item_id ) values (?, ?)";
 	static final String STMT_RELATED_ITEM_INSERT = "insert into related_item ( item_id, tag_id ) values (?, ?)";
 	static final String STMT_ITEM_PROPERTY_INSERT = "insert into item_property ( item_id, name, value ) values (?, ?, ?)";
@@ -216,6 +225,8 @@ public class Conf
 	static final String FIELD_PRODUCT = "product";
 	static final String FIELD_ITEM_ID = "id";
 	static final String FIELD_IMAGE = "image";
+	static final String FIELD_TINT = "tint";
+	static final String FIELD_ORDER = "order";
 	static final String FIELD_PRICE = "price";
 	static final String FIELD_COMBO = "combo";
 	static final String FIELD_QUANTITY = "quantity";
@@ -237,6 +248,7 @@ public class Conf
 		tmpITEM_IN_CURSOR_T0.put(FIELD_PRICE, 2);
 		tmpITEM_IN_CURSOR_T0.put(FIELD_ITEM_PROPERTY, 3);
 		tmpITEM_IN_CURSOR_T0.put(FIELD_ITEM_CHILDREN, 4);
+		tmpITEM_IN_CURSOR_T0.put(FIELD_TINT, 5);
 
 		ITEM_IN_CURSOR_T0 = unmodifiableMap( tmpITEM_IN_CURSOR_T0 );
 	}
@@ -251,7 +263,25 @@ public class Conf
 		tmpITEM_IN_CURSOR_T1.put(FIELD_PRICE, 6);
 		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_PROPERTY, 7);
 		tmpITEM_IN_CURSOR_T1.put(FIELD_ITEM_CHILDREN, 8);
+		tmpITEM_IN_CURSOR_T1.put(FIELD_TINT, 9);
 
 		ITEM_IN_CURSOR_T1 = unmodifiableMap( tmpITEM_IN_CURSOR_T1 );
+	}
+
+	static final Map<String, Integer> COLOR_TINT_MAP;
+	static 
+	{
+		Map<String, Integer> tmp = new HashMap<String, Integer>();
+
+		tmp.put("red", R.color.tint_red);
+		tmp.put("cyan", R.color.tint_cyan);
+		tmp.put("blue", R.color.tint_blue);
+		tmp.put("purple", R.color.tint_purple);
+		tmp.put("magenta", R.color.tint_magenta);
+		tmp.put("orange", R.color.tint_orange);
+		tmp.put("green", R.color.tint_green);
+		tmp.put("olive", R.color.tint_olive);
+
+		COLOR_TINT_MAP = unmodifiableMap( tmp );
 	}
 }

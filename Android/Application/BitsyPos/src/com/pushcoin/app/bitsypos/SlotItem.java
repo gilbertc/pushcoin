@@ -64,6 +64,11 @@ public class SlotItem implements Item
 	}
 
 	@Override
+	public String getTint() {
+		return (chosenItem_ == null) ? "" : chosenItem_.getTint();
+	}
+
+	@Override
 	public String toString() {
 		return getName();
 	}

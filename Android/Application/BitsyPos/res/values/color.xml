@@ -36,4 +36,15 @@
 	<color name="rounded_container_border">#3b3f44</color>
 	<color name="light_gray_header_color">#646663</color>
 
+	<!-- Tints (item groups, backgrounds, fills) -->
+	<color name="tint_gray">#30707070</color>
+	<color name="tint_red">#30de0000</color>
+	<color name="tint_purple">#30900090</color>
+	<color name="tint_blue">#300060ff</color>
+	<color name="tint_olive">#30bdbd00</color>
+	<color name="tint_cyan">#3000b5b5</color>
+	<color name="tint_orange">#30ff6b0e</color>
+	<color name="tint_green">#30009800</color>
+	<color name="tint_magenta">#30970097</color>
+
 </resources>
