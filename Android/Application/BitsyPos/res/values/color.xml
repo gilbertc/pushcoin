@@ -38,9 +38,9 @@
 
 	<!-- Tints (item groups, backgrounds, fills) -->
 	<color name="tint_gray">#30707070</color>
-	<color name="tint_red">#30de0000</color>
-	<color name="tint_purple">#30900090</color>
-	<color name="tint_blue">#300060ff</color>
+	<color name="tint_red">#30ff3f3f</color>
+	<color name="tint_purple">#30aa00aa</color>
+	<color name="tint_blue">#30008bff</color>
 	<color name="tint_olive">#30bdbd00</color>
 	<color name="tint_cyan">#3000b5b5</color>
 	<color name="tint_orange">#30ff6b0e</color>

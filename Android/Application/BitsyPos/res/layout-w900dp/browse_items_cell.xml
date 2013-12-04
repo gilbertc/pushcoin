@@ -5,12 +5,13 @@
 	android:background="#30707070"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:paddingTop="5dp"
+	android:paddingTop="10dp"
+	android:paddingLeft="10dp"
 	android:orientation="vertical">
 
 	<LinearLayout 
 		android:layout_width="match_parent"
-		android:layout_height="70sp"
+		android:layout_height="100sp"
 		android:orientation="horizontal">
 
 		<com.mobsandgeeks.ui.TypefaceTextView
@@ -18,8 +19,6 @@
 			android:layout_weight="1"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="5dp"
-			android:layout_marginLeft="10dp"
 			android:gravity="top"
 			android:textSize="20sp"
 			android:textColor="@color/lightui_lightgray"
