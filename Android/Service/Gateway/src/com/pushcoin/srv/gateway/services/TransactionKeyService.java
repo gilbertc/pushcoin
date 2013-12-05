@@ -27,6 +27,7 @@ import com.pushcoin.srv.gateway.alarms.TransactionKeyAlarm;
 import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.data.TransactionKey;
 import com.pushcoin.lib.core.net.PcosServer;
+import com.pushcoin.lib.core.net.PcosServerResponseListener;
 import com.pushcoin.lib.core.security.KeyStore;
 import com.pushcoin.lib.core.utils.Logger;
 import com.pushcoin.lib.pcos.BlockWriter;
@@ -78,7 +79,7 @@ public class TransactionKeyService extends WakefulIntentService {
 
 				this.server = new PcosServer();
 				this.server.postAsync(url, writer,
-						new TransactionKeyQueryResponseListener(server));
+						new TransactionKeyQueryResponseListener());
 
 			} catch (Exception ex) {
 				log.e("exception when querying transaction key", ex);
@@ -88,9 +89,9 @@ public class TransactionKeyService extends WakefulIntentService {
 	}
 
 	public class TransactionKeyQueryResponseListener extends
-			PcosServer.PcosResponseListener {
-		public TransactionKeyQueryResponseListener(PcosServer server) {
-			server.super();
+			PcosServerResponseListener {
+		public TransactionKeyQueryResponseListener() {
+		
 		}
 
 		@Override

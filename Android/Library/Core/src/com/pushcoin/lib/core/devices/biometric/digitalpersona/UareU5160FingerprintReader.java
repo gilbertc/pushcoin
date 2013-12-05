@@ -13,7 +13,7 @@
   
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.pushcoin.lib.core.devices.biometric.digitalpersona;
 
@@ -32,8 +32,6 @@ public class UareU5160FingerprintReader implements IQueryDevice {
 	public static int VENDOR_ID = 1466;
 	public static int PRODUCT_ID = 11;
 
-	private static UareU5160FingerprintReader instance = null;
-
 	public static boolean Match(UsbDevice device) {
 		return device.getVendorId() == VENDOR_ID
 				&& device.getProductId() == PRODUCT_ID;
@@ -44,10 +42,7 @@ public class UareU5160FingerprintReader implements IQueryDevice {
 	}
 
 	public static UareU5160FingerprintReader newInstance(DeviceManager manager) {
-		if (instance == null)
-			instance = new UareU5160FingerprintReader(manager);
-
-		return instance;
+		return new UareU5160FingerprintReader(manager);
 	}
 
 	private UareUFingerprintReaderKernel kernel;
@@ -68,23 +63,18 @@ public class UareU5160FingerprintReader implements IQueryDevice {
 
 	@Override
 	public void enable(QueryListener receiver) throws IOException {
-		synchronized (this) {
-			this.kernel.enable(receiver);
-		}
+		this.kernel.enable(receiver);
 	}
 
 	@Override
 	public void disable() {
-		synchronized (this) {
-			this.kernel.disable();
-		}
+		this.kernel.disable();
 	}
 
 	@Override
 	public boolean isEnabled() {
-		synchronized (this) {
-			return this.kernel.isEnabled();
-		}
+		return this.kernel.isEnabled();
+
 	}
 
 }

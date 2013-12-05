@@ -90,21 +90,12 @@ public class Server {
 		return defaultUrl;
 	}
 
-	public abstract class ResponseListener {
-		public abstract void onError(Object tag, Exception ex);
-
-		public abstract void onResponse(Object tag, byte[] res);
-
-		public void onFinished(Object tag) {
-		}
-	}
-
-	public void postAsync(String url, byte[] data, ResponseListener listener) {
+	public void postAsync(String url, byte[] data, ServerResponseListener listener) {
 		postAsync(null, url, data, listener);
 	}
 
 	public void postAsync(Object tag, String url, byte[] data,
-			ResponseListener listener) {
+			ServerResponseListener listener) {
 
 		AsyncPostParams params = new AsyncPostParams();
 		params.tag = tag;
@@ -131,17 +122,18 @@ public class Server {
 		return post(params).data;
 	}
 
-	public void stageAsync(byte[] data, ResponseListener listener) {
+	public void stageAsync(byte[] data, ServerResponseListener listener) {
 		stageAsync(null, data, listener);
 	}
 
-	public void stageAsync(Object tag, byte[] data, ResponseListener listener) {
+	public void stageAsync(Object tag, byte[] data, ServerResponseListener listener) {
 		AsyncPostParams params = new AsyncPostParams();
 		params.tag = tag;
 		params.url = "";
 		params.data = data;
 		params.listener = listener;
 		params.isStagedResponse = true;
+		log.d("staging");
 
 		new PostTask().execute(params);
 	}
@@ -170,7 +162,7 @@ public class Server {
 	}
 
 	private class AsyncPostParams extends PostParams {
-		public ResponseListener listener;
+		public ServerResponseListener listener;
 	}
 
 	private class PostResult {

@@ -13,7 +13,7 @@
   
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.pushcoin.srv.gateway.activities;
 
@@ -22,6 +22,7 @@ import java.net.UnknownHostException;
 import com.pushcoin.srv.gateway.R;
 import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.net.PcosServer;
+import com.pushcoin.lib.core.net.PcosServerResponseListener;
 import com.pushcoin.lib.core.security.KeyStore;
 import com.pushcoin.lib.core.utils.Logger;
 import com.pushcoin.ifce.connect.Keys;
@@ -158,8 +159,8 @@ public class RegisterDeviceActivity extends Activity {
 
 				String url = PcosServer.getDefaultUrl();
 				server = new PcosServer();
-				server.postAsync(url, writer, new RegistrationResponseListener(
-						server));
+				server.postAsync(url, writer,
+						new RegistrationResponseListener());
 
 			} catch (Exception ex) {
 				registrationCodeView.setError(ex.getMessage());
@@ -213,9 +214,9 @@ public class RegisterDeviceActivity extends Activity {
 	}
 
 	public class RegistrationResponseListener extends
-			PcosServer.PcosResponseListener {
-		RegistrationResponseListener(PcosServer server) {
-			server.super();
+			PcosServerResponseListener {
+		RegistrationResponseListener() {
+
 		}
 
 		@Override

@@ -147,7 +147,7 @@ public class UareUFingerprintReaderKernel {
 		if (this.reader == null || this.engine == null) {
 			log.d("no reader for capture");
 		} else {
-			new CaptureTask().execute(this.reader);
+			new CaptureTask().executeOnExecutor(CaptureTask.THREAD_POOL_EXECUTOR, this.reader);
 		}
 	}
 

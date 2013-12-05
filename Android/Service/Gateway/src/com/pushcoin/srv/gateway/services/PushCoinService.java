@@ -39,6 +39,7 @@ import com.pushcoin.lib.core.data.PcosAmount;
 import com.pushcoin.lib.core.data.Preferences;
 import com.pushcoin.lib.core.exceptions.MATUnavailableException;
 import com.pushcoin.lib.core.net.PcosServer;
+import com.pushcoin.lib.core.net.PcosServerResponseListener;
 import com.pushcoin.lib.core.query.IQuery;
 import com.pushcoin.lib.core.security.KeyStore;
 import com.pushcoin.lib.core.utils.Logger;
@@ -148,8 +149,7 @@ public class PushCoinService extends Service {
 			PcosServer server = new PcosServer();
 			if (Preferences.isDemoMode(this, false)) {
 				OutputDocument doc = createQuerySuccessResult();
-				server.stageAsync(params, doc,
-						new QueryResponseListener(server));
+				server.stageAsync(params, doc, new QueryResponseListener());
 			} else {
 				onError(params, "Query not supported in Production");
 			}
@@ -168,7 +168,7 @@ public class PushCoinService extends Service {
 			if (Preferences.isDemoMode(this, false)) {
 				OutputDocument doc = createPaymentSuccessResult();
 				server.stageAsync(params, doc, new PaymentResponseListener(
-						server, false));
+						false));
 			} else {
 				onError(params, "Charge not supported in Production");
 			}
@@ -280,13 +280,13 @@ public class PushCoinService extends Service {
 			PcosServer server = new PcosServer();
 			if (Preferences.isDemoMode(this, false)) {
 				OutputDocument doc = createPaymentSuccessResult();
-				server.stageAsync(params, doc, new PaymentResponseListener(
-						server, true));
+				server.stageAsync(params, doc,
+						new PaymentResponseListener(true));
 			} else {
 				String url = PcosServer.getDefaultUrl();
 				OutputDocument doc = createPaymentRequest(params, pta);
 				server.postAsync(params, url, doc, new PaymentResponseListener(
-						server, true));
+						true));
 			}
 
 		} catch (Exception ex) {
@@ -501,9 +501,8 @@ public class PushCoinService extends Service {
 
 	}
 
-	public class QueryResponseListener extends PcosServer.PcosResponseListener {
-		QueryResponseListener(PcosServer server) {
-			server.super();
+	public class QueryResponseListener extends PcosServerResponseListener {
+		QueryResponseListener() {
 		}
 
 		@Override
@@ -525,12 +524,10 @@ public class PushCoinService extends Service {
 		}
 	}
 
-	public class PaymentResponseListener extends
-			PcosServer.PcosResponseListener {
+	public class PaymentResponseListener extends PcosServerResponseListener {
 		private boolean thankyou = false;
 
-		PaymentResponseListener(PcosServer server, boolean thankyou) {
-			server.super();
+		PaymentResponseListener(boolean thankyou) {
 			this.thankyou = thankyou;
 		}
 
